@@ -1,0 +1,461 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage{elearning_i18n}
+\usepackage{microtype}
+
+\ElearnPlatformName{Delta}
+\ElearnOrganization{Delta Education}
+\ElearnDocumentType{Specyfikacja funkcjonalna platformy e-learningowej}
+\ElearnDocumentTitle{Analiza interfejsu i wymagania funkcjonalne}
+\ElearnDocumentSubtitle{Wnioski z przeglądu makiet, komentarze produktowe i kierunki implementacji}
+\ElearnDocumentVersion{1.0}
+\ElearnDocumentStatus{Dokument roboczy po przeglądzie makiet}
+\ElearnDocumentOwner{Zespół Delta}
+\ElearnDocumentAudience{Właściciele produktu, projektanci UX/UI, programiści i autorzy treści}
+\ElearnDocumentDate{22 lipca 2026}
+\ElearnDocumentKeywords{Delta, e-learning, matematyka, wymagania funkcjonalne, UX, kursy online}
+\ElearnConfidentiality{Dokument wewnętrzny}
+
+% Logo path is relative to this main .tex file / compilation directory.
+% Replace it with the actual Delta logo path.
+\ElearnLogoPath{assets/logo_large.png}
+% Width only, expressed as a percentage of \textwidth.
+% The logo aspect ratio is preserved automatically.
+\ElearnLogoWidthPercent{40}
+
+\ElearnWatermarkText{DELTA}
+\ElearnWatermarkColor{black!4}
+\ElearnWatermarkAngle{35}
+
+\begin{document}
+\selectlanguage{polish}
+\ElearnFrontMatter
+\chapter{Cel i zakres dokumentu}
+
+Dokument porządkuje materiały z pliku źródłowego zawierającego makiety interfejsu oraz komentarze recenzenckie. Zrzuty ekranu zostały zachowane jako materiał referencyjny, a komentarze umieszczono przy odpowiadających im obszarach funkcjonalnych. Na ich podstawie sformułowano wymagania, decyzje produktowe i kwestie wymagające doprecyzowania.
+
+\section{Najważniejsze decyzje produktowe}
+\begin{itemize}
+  \item Konto użytkownika i potwierdzenie adresu e-mail są podstawą dostępu do większości funkcji platformy.
+  \item Główna zakładka z materiałami ma nosić nazwę "Nauka", a jej struktura powinna obsługiwać kolejne przedmioty i poziomy edukacji.
+  \item Zadania rozwiązane poprawnie są usuwane z puli, natomiast zadania rozwiązane błędnie wracają do późniejszej powtórki.
+  \item Lekcje i rozwiązania zadań mają być prezentowane jako materiały z narracją głosową; notatki mają być dostępne jako PDF.
+  \item Profil użytkownika ma zawierać informacje o koncie, aktywnym kursie, terminie ważności i kodach rabatowych.
+  \item Moduł maturalny ma koncentrować się na zadaniach, w tym zadaniach z arkuszy, bez obietnic "pewniaków maturalnych".
+  \item System autorski musi umożliwiać przygotowywanie rysunków geometrycznych oraz wykresów funkcji.
+\end{itemize}
+\section{Materiały źródłowe}
+
+Dokument źródłowy składał się z 19 osadzonych obrazów i 17 komentarzy. Jeden komentarz był pusty. Obrazy są prezentowane w kolejności logicznej odpowiadającej przepływowi użytkownika oraz strukturze produktu.
+
+\chapter{Rejestracja, konto i początkowa konfiguracja}
+\section{Wybór dni nauki i dostęp do platformy}
+\ElearnScreenshot[0.72]{assets/screen_01.png}{Ekran konfiguracji dni, w których użytkownik chce otrzymywać przypomnienia o nauce.}
+\begin{ElearnObservedUI}
+\begin{itemize}
+  \item Adres e-mail użytkownika w nagłówku.
+  \item Wybór dni tygodnia od poniedziałku do niedzieli.
+  \item Informacja o częstotliwości nauki i komunikat motywacyjny.
+  \item Przycisk "Kontynuuj".
+\end{itemize}
+\end{ElearnObservedUI}
+\begin{ElearnReviewComment}[title={Komentarz nr 0 -- Anna Kogut, 2026-07-22}]
+Ustalanie ile dni w tygodniu mamy wysłać przypomnienie o nauce
+
+Przede wszystkim żeby cokolwiek zobaczyć (oprócz cen kursów i dostępu do zadań) trzeba utworzyć konto, podając imię i nazwisko , adres email i utworzyć hasło.
+
+Potwierdzenie rejestracji przyjdzie na podany adres emailowy i trzeba będzie potwierdzić.
+
+Wchodząc w zakładkę kursu i chcąc kupić kurs - trzeba podać adres emailowy. Jeżeli adres emailowy nie zostanie rozpoznany w bazie danych, przekieruje do utworzenia konta i potwierdzenia w emailu. Wtedy użytkownik może przejść ponownie na kurs i kupić odpwiedni pakiet.
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Użytkownik określa, w które dni tygodnia platforma ma wysyłać przypomnienia o nauce.
+  \item Dostęp do większości treści i funkcji wymaga utworzenia konta z imieniem, nazwiskiem, adresem e-mail i hasłem.
+  \item Rejestracja wymaga potwierdzenia adresu e-mail za pomocą wiadomości aktywacyjnej.
+  \item Przy zakupie kursu system sprawdza adres e-mail. Nieznany adres uruchamia proces rejestracji i potwierdzenia konta.
+  \item Po aktywacji konta użytkownik wraca do oferty i wybiera właściwy pakiet.
+\end{itemize}
+\end{ElearnRequirement}
+\begin{ElearnWarning}
+Do doprecyzowania pozostaje zakres publicznego dostępu bez konta. Komentarz źródłowy wskazuje ceny kursów i dostęp do zadań jako wyjątki, ale docelowe ograniczenia powinny zostać jednoznacznie opisane w regułach autoryzacji.
+\end{ElearnWarning}
+\clearpage
+
+\chapter{Plan nauki i powiadomienia}
+\section{Dzienny cel}
+\ElearnScreenshot[0.92]{assets/screen_02.png}{Wariant ekranu ustawiania dziennego celu w widoku przeglądarkowym.}
+\ElearnScreenshot[0.67]{assets/screen_04.png}{Wariant mobilny ustawiania dziennego celu na siedem lekcji i zadań.}
+\begin{ElearnObservedUI}
+\begin{itemize}
+  \item Kontrolka minus / wartość / plus służąca do zmiany dziennego celu.
+  \item Komunikat motywacyjny zależny od wybranej wartości.
+  \item Przycisk zapisania ustawienia.
+\end{itemize}
+\end{ElearnObservedUI}
+\begin{ElearnReviewComment}[title={Komentarz nr 1 -- Anna Kogut, 2026-07-22}]
+Ustalanie ile tematów dziennie uczeń chce przerobić, ile zadań - tutaj tylko zadania a nie tematy. Jak uczeń chce przejść do innego tematu, jego wola. Musi zezwolić o przesłaniu powiadomienia na email
+
+Komentarz odnosi się do ustawiania dziennego celu oraz zgody na powiadomienia.
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Dzienny cel powinien dotyczyć liczby zadań do wykonania, a nie liczby tematów obowiązkowo przechodzonych przez ucznia.
+  \item Uczeń zachowuje swobodę przechodzenia do innych tematów niezależnie od ustawionego celu.
+  \item Włączenie przypomnień e-mail wymaga świadomej zgody użytkownika.
+\end{itemize}
+\end{ElearnRequirement}
+\section{Zgoda na powiadomienia}
+\ElearnScreenshot[0.68]{assets/screen_03.png}{Prośba o zezwolenie na wysyłanie przypomnień o nauce.}
+\begin{ElearnRequirement}[title={Uzupełniające wymagania UX}]
+\begin{itemize}
+  \item System powinien wyjaśniać cel powiadomień przed poproszeniem o zgodę.
+  \item Odmowa nie może blokować korzystania z kursu; zgodę można ponownie zmienić w profilu lub ustawieniach.
+\end{itemize}
+\end{ElearnRequirement}
+\section{Podsumowanie planu nauki}
+\ElearnScreenshot[0.62]{assets/screen_05.png}{Podsumowanie osobistego planu nauczania: dzienny cel, dni nauki i godzina przypomnienia.}
+\begin{ElearnReviewComment}[title={Komentarz nr 2 -- Anna Kogut, 2026-07-22}]
+Podsumowanie
+
+Komentarz pełni rolę oznaczenia ekranu podsumowującego i nie zawiera dodatkowych zaleceń.
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Podsumowanie pokazuje dzienny cel, dni nauki i godzinę przypomnienia.
+  \item Każdy parametr powinien być edytowalny bez ponownego przechodzenia całego onboardingu.
+  \item Po zatwierdzeniu użytkownik przechodzi bezpośrednio do kursu.
+\end{itemize}
+\end{ElearnRequirement}
+\clearpage
+\chapter{Strona główna, rabaty i funkcje dodatkowe}
+\section{Panel główny i kody rabatowe}
+\ElearnScreenshot[0.78]{assets/screen_06.png}{Panel główny z serią nauki, kodem rabatowym i odnośnikami społecznościowymi.}
+\begin{ElearnObservedUI}
+\begin{itemize}
+  \item Licznik kolejnych dni nauki.
+  \item Karta z kodem rabatowym i ograniczeniem czasowym.
+  \item Odnośniki do grup społecznościowych.
+\end{itemize}
+\end{ElearnObservedUI}
+\begin{ElearnReviewComment}[title={Komentarz nr 3 -- Anna Kogut, 2026-07-22}]
+Po wejściu w zakladke kursy możemy podać kod do rabatu. Natomiast ograniczenie ze kod wygaśnie za 2 dni jest wymuszeniem kupienia kolejnego kursu.
+
+Uczeń wykupuje miesięczny abonanment - dostanie 5\% rabatu od ceny wyjściowej (do jednorazowego wykorzystania, który będzie widniał w jego profilu (koło zębate).
+
+Uczeń wykupuje 3 m-czny abonament dostanie 10\% rabatu.
+
+Uczeń wykupi 6 m-czny kurs dostanie 15\%rabatu.
+
+Uczeń wykupi roczny abonament - dostanie 20\% pod warunkiem, że wykupi w kolenym roku roczny abonament.
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Nie należy stosować krótkiego, dwudniowego terminu ważności kodu jako mechanizmu presji zakupowej.
+  \item Zakup miesięcznego abonamentu daje jednorazowy rabat 5\% od ceny wyjściowej.
+  \item Zakup abonamentu trzymiesięcznego daje rabat 10\%, sześciomiesięcznego 15\%, a rocznego 20\% przy odnowieniu rocznego abonamentu w kolejnym roku.
+  \item Niewykorzystane kody rabatowe są widoczne w profilu użytkownika.
+  \item Regulamin powinien definiować sposób naliczania, ważność i możliwość łączenia rabatów.
+\end{itemize}
+\end{ElearnRequirement}
+\section{Opinie, kontakt i zapisane materiały}
+\ElearnScreenshot[0.70]{assets/screen_07.png}{Karty funkcji dodatkowych: głosowanie na ulepszenia, obsługa klienta, zapisane materiały i aplikacja mobilna.}
+\begin{ElearnReviewComment}[title={Komentarz nr 4 -- Anna Kogut, 2026-07-22}]
+Zagłosuje na ulepszenia - super ...trzeba pomyśleć o ankiecie. Pytanie gdzie te dane będą gromadzone.
+
+Czat z obsługą klienta zamieniłabym na kontakt - możliwość napisania emaila. Formularz z imieniem , adres emailowy i okienko do napisania tekstu w czym problem i wyślij
+
+Zapisane - usunęłabym, bo notatki z lekcji będzie można wydrukować lub sciągnąć i zapisać sobie na własny komputer
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Funkcja "Zagłosuj na ulepszenie" powinna prowadzić do ankiety lub formularza opinii; trzeba określić miejsce przechowywania i analizowania danych.
+  \item Czat z obsługą klienta należy zastąpić formularzem kontaktowym zawierającym imię, adres e-mail, treść problemu i przycisk wysłania.
+  \item Oddzielna sekcja "Zapisane" nie jest wymagana, ponieważ notatki mają być pobierane lub drukowane i przechowywane lokalnie przez użytkownika.
+  \item Odnośnik do aplikacji mobilnej może pozostać jako element przyszłej wersji produktu.
+\end{itemize}
+\end{ElearnRequirement}
+\clearpage
+\chapter{Struktura sekcji Nauka}
+\section{Nawigacja po poziomach i działach}
+\ElearnScreenshot[0.92]{assets/screen_08.png}{Widok hierarchii materiałów z podziałem na klasy i działy.}
+\begin{ElearnReviewComment}[title={Komentarz nr 5 -- Anna Kogut, 2026-07-22}]
+Działy nazwałabym "nauka" bo w przyszłości dodamy tam rózne sekcje (matematyka w szkole średniej, matematyka w szkole podstawowej, fizyka itd....)
+
+Na początek z zakładce NAUKA umieścimy trzy podfoldery "matematyka - szkoła średnia" "matura - poziom podstawowy" oraz "matura - poziom rozszerzony"
+
+W szkole średniej będzie jak tutaj podział na klasy i po rozwinięciu pokażą się rozdziały.
+
+Klikając na poszczególny rozdział będą widoczne zadagnienia do omówienia oraz zadania do rozwiązania ---> patrz niżej
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Zakładkę "Działy" należy nazwać "Nauka", aby mogła obejmować wiele przedmiotów i poziomów edukacji.
+  \item Pierwsza wersja sekcji Nauka zawiera trzy obszary: "Matematyka - szkoła średnia", "Matura - poziom podstawowy" oraz "Matura - poziom rozszerzony".
+  \item W obszarze szkoły średniej materiały są podzielone na klasy, następnie na działy i zagadnienia.
+  \item Po wejściu do działu użytkownik widzi zagadnienia do omówienia i zadania do rozwiązania.
+  \item Architektura nawigacji powinna być rozszerzalna o kolejne przedmioty, np. fizykę.
+\end{itemize}
+\end{ElearnRequirement}
+\section{Widok zagadnienia i pula zadań}
+\ElearnScreenshot[0.92]{assets/screen_09.png}{Widok zagadnienia z notatkami, lekcją wprowadzającą, zadaniami i generowaniem sprawdzianu.}
+\begin{ElearnReviewComment}[title={Komentarz nr 6 -- Anna Kogut, 2026-07-22}]
+Po wejściu w dany temat - zaganienie, pojawi się Lekcja oraz zadania. Na końcu dałabym notatki do wydrukowania
+
+Przy zadanaich też umieściłabym liczbę zadań do rozwiązania (liczba wszystkich zadań do rozwiązania) z wyświeleniem ile zostało zrobionych poprawnie. Błędne wracają do puli zadań do rozwiązania. Nie wyświetlamy błędnych. Zrobione dobrze nie wracają do puli. Uczeń mając poprawnie rozwiazane 5 zadań z 135, będzie miał 130 do rozwiązania.
+
+Wygeneruj sprawdzian - na razie to usuwamy.
+
+Generowanie zestawu zadań zrobiłabym w "matura" gdzie uczeń będzie mógł się sprawdzić z całego materiału ale o tym później
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Po wejściu w zagadnienie widoczne są: lekcja, zadania oraz na końcu notatki do pobrania lub wydruku.
+  \item Sekcja zadań pokazuje całkowitą liczbę zadań oraz liczbę zadań rozwiązanych poprawnie.
+  \item Zadanie rozwiązane błędnie wraca do puli, natomiast zadanie rozwiązane poprawnie nie pojawia się ponownie w bieżącej puli.
+  \item Licznik "do rozwiązania" jest obliczany jako liczba wszystkich zadań pomniejszona o liczbę poprawnie rozwiązanych.
+  \item Funkcję "Wygeneruj sprawdzian" należy usunąć z pierwszej wersji.
+  \item Generowanie zestawów zadań zostanie rozważone później w module maturalnym.
+\end{itemize}
+\end{ElearnRequirement}
+\clearpage
+\chapter{Materiały edukacyjne}
+\section{Notatki do lekcji}
+\ElearnScreenshot[0.92]{assets/screen_10.png}{Przykład notatki z lekcji prezentowanej w platformie.}
+\begin{ElearnReviewComment}[title={Komentarz nr 7 -- Anna Kogut, 2026-07-22}]
+Notatki będą w formie PDF do sciągnięcia lub wydrukowania - najważniejsze notatki z lekcji
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Notatki zawierają najważniejsze informacje z lekcji.
+  \item Notatki są dostarczane jako pliki PDF.
+  \item Użytkownik może pobrać plik lub wydrukować go bezpośrednio z platformy.
+\end{itemize}
+\end{ElearnRequirement}
+\section{Wyjaśnienie rozwiązania zadania}
+\ElearnScreenshot[0.70]{assets/screen_11.png}{Przykład materiału pokazującego ręczne rozwiązanie zadania.}
+\begin{ElearnReviewComment}[title={Komentarz nr 8 -- Anna Kogut, 2026-07-22}]
+Dane zadanie zawsze pod spodem odpowiedzi a b c d będzie miało plik w formie ??? z wyjaśnieniem jak to zadanie rozwiązać.. Tu dałambym plik o którym rozmawialiśmy, z głosem i ewentualnie czerwony kursor wskazujący w którym momencie opowiadam o zagadnieniu
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Każde zadanie powinno mieć powiązany materiał wyjaśniający sposób rozwiązania.
+  \item Materiał powinien zawierać narrację głosową i wizualne wskazywanie omawianego fragmentu, np. czerwonym kursorem.
+  \item Docelowy format pliku należy wybrać na etapie projektu technicznego; praktycznym kandydatem jest wideo MP4/WebM lub nagranie ekranu z warstwą audio.
+  \item Odtwarzacz powinien działać w przeglądarce i na urządzeniach mobilnych.
+\end{itemize}
+\end{ElearnRequirement}
+\clearpage
+\chapter{Mechanika rozwiązywania zadań}
+\section{Zadania zamknięte i informacja zwrotna}
+\ElearnScreenshot[0.92]{assets/screen_12.png}{Zadanie wielokrotnego wyboru z zaznaczoną poprawną odpowiedzią i materiałem wideo pod zadaniem.}
+\begin{ElearnReviewComment}[title={Komentarz nr 9 -- Anna Kogut, 2026-07-22}]
+Każde zadanie ma odpowiedź a, b c d. Po kliknięciu w prawidłową odpowiedź, będzie się wyświetlało jak obok i dodałabym cos w rodzaju uśmiechu że uczeń robi postępy.
+
+Gdy jednak zaznaczy źle, zadanie wróci do puli zadań do rozwiązania z tekstem "spróbuj ponownie za chwilę" nie koniecznie od razu
+
+Wyświetli mu się wtedy plik w rozwiązaniem zadania
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Standardowe zadanie zamknięte zawiera odpowiedzi A, B, C i D.
+  \item Po wskazaniu poprawnej odpowiedzi interfejs potwierdza wynik i prezentuje pozytywną, motywującą informację zwrotną.
+  \item Po odpowiedzi błędnej zadanie wraca do puli i nie musi być pokazane ponownie natychmiast; komunikat może brzmieć "Spróbuj ponownie za chwilę".
+  \item Po błędnej odpowiedzi użytkownik otrzymuje dostęp do materiału z rozwiązaniem i wyjaśnieniem.
+  \item Stan zadania powinien być zapisany w historii użytkownika, ale widok bieżącej puli nie pokazuje osobnego licznika błędnych odpowiedzi.
+\end{itemize}
+\end{ElearnRequirement}
+\clearpage
+\chapter{Postępy użytkownika}
+\section{Postęp według działów}
+\ElearnScreenshot[0.92]{assets/screen_13.png}{Referencyjny widok historii aktywności i postępów użytkownika.}
+\begin{ElearnReviewComment}[title={Komentarz nr 10 -- Anna Kogut, 2026-07-22}]
+Wchodząc w zakładkę postępy widziałabym to tak:
+
+Dane zaganienie ( klasa 1 - zbiory liczb)  i do niego przypisane ilość poprawnie rozwiązanych na ilość wszystkich zadań, bez dat i godzin
+
+Bez przypisywania co było robione dziś czy wczoraj. Aby zaliczyć dział trzeba rozwiązać wszystkie zadania z tego działu poprawnie
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Widok postępów ma być agregowany według zagadnienia lub działu, np. "Klasa 1 - zbiory liczb".
+  \item Dla każdego elementu należy pokazywać liczbę poprawnie rozwiązanych zadań w relacji do liczby wszystkich zadań.
+  \item Nie jest wymagany dziennik aktywności z datami i godzinami ani podział na "dzisiaj" i "wczoraj".
+  \item Dział zostaje zaliczony po poprawnym rozwiązaniu wszystkich przypisanych do niego zadań.
+  \item Interfejs powinien jasno odróżniać postęp częściowy od pełnego zaliczenia.
+\end{itemize}
+\end{ElearnRequirement}
+\clearpage
+\chapter{Lekcje i prezentacja treści}
+\section{Lista lekcji w dziale}
+\ElearnScreenshot[0.92]{assets/screen_14.png}{Lista lekcji w dziale "Klasa 1: Wyrażenia algebraiczne".}
+\begin{ElearnReviewComment}[title={Komentarz nr 11 -- Anna Kogut, 2026-07-22}]
+Wchodzą w zakładkę Nauka ---> Matematyka - szkoła średnia ---> klasa 1 ---> dział "wyrażenia algebraiczne" ...widzę lekcje dotyczące tego działu
+
+Po kliknięciu tematu mam to co na stronie 7 tego pliku , czyli lekcja wprowadzająca, pod spodem jest "zadania" i notatki do wydruku lub sciągnięcia
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Ścieżka nawigacji ma postać: Nauka -> Matematyka - szkoła średnia -> Klasa -> Dział -> Lekcja.
+  \item Po wybraniu działu użytkownik widzi listę lekcji dotyczących tego działu.
+  \item Po wejściu w temat strona zawiera lekcję wprowadzającą, zadania oraz notatki do pobrania lub wydruku.
+  \item Nawigacja powinna pokazywać kontekst bieżącego działu i umożliwiać powrót o jeden poziom.
+\end{itemize}
+\end{ElearnRequirement}
+\section{Format lekcji}
+\ElearnScreenshot[0.92]{assets/screen_15.png}{Przykład lekcji w formie nagrania omawiającego notatkę i wykres funkcji.}
+\begin{ElearnReviewComment}[title={Komentarz nr 12 -- Anna Kogut, 2026-07-22}]
+Każda lekcja wolałabym żeby była w pliku jako nagranie z głosem z którym wyjaśniam dane zagadnienie
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Każda lekcja powinna być dostępna jako nagranie z narracją głosową nauczyciela.
+  \item Nagranie może prezentować notatkę, rysunek, zapis rozumowania lub wykres.
+  \item Odtwarzacz powinien zapewniać pauzę, przewijanie, zmianę głośności oraz działanie pełnoekranowe.
+  \item W przyszłości warto przewidzieć napisy lub transkrypcję dla dostępności.
+\end{itemize}
+\end{ElearnRequirement}
+\clearpage
+\chapter{Profil użytkownika}
+\section{Zakres danych w profilu}
+\ElearnScreenshot[0.92]{assets/screen_16.png}{Referencyjny widok profilu i ustawień użytkownika.}
+\begin{ElearnReviewComment}[title={Komentarz nr 13 -- Anna Kogut, 2026-07-22}]
+Zakładka koło zębate to profil użtkownika w którym będzie:
+
+- konto z jego adres email, resetuj hasło
+
+- plan nauki bym nie wstawiała (pomijamy to)
+
+- rodzaj kursu z którego obecnie korzysta z data ważności.
+
+- twoje kody rabatowe
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Profil zawiera adres e-mail użytkownika oraz funkcję resetowania hasła.
+  \item Sekcja "Plan nauki" nie jest wymagana w profilu i może zostać pominięta.
+  \item Profil pokazuje rodzaj aktualnie wykupionego kursu lub abonamentu oraz datę jego ważności.
+  \item Profil zawiera listę dostępnych kodów rabatowych i ich warunki wykorzystania.
+  \item Należy zachować funkcję wylogowania oraz możliwość zarządzania zgodami na powiadomienia.
+\end{itemize}
+\end{ElearnRequirement}
+\clearpage
+\chapter{Narzędzia do przygotowywania zadań}
+\section{Rysunki geometryczne i wykresy funkcji}
+\ElearnScreenshot[0.73]{assets/screen_17.png}{Przykład zadania wymagającego rysunku bryły geometrycznej.}
+\ElearnScreenshot[0.92]{assets/screen_18.png}{Przykład zewnętrznego edytora wykresów funkcji.}
+\begin{ElearnReviewComment}[title={Komentarz nr 14 -- Anna Kogut, 2026-07-22}]
+Niektóre zadania będą wymagały rysunków, więc potrzebny będzie edytor to tworzenia takich rysunków do zadań, albo np. Będę musiała narysować funcję do zadania, jakiś wykres
+
+Na matemks.pl jest taki program do rysowania funkcji.
+\end{ElearnReviewComment}
+\begin{ElearnReviewComment}[title={Komentarz nr 15 -- Anna Kogut, 2026-07-22}]
+Komentarz w dokumencie źródłowym nie zawierał treści.
+
+Pusty komentarz występował obok materiału dotyczącego narzędzia do rysowania wykresów.
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item Panel autorski musi umożliwiać dodawanie rysunków do treści zadań.
+  \item Potrzebne jest narzędzie do przygotowywania prostych diagramów geometrycznych oraz wykresów funkcji.
+  \item Możliwe są dwa warianty: wbudowany edytor albo integracja z zewnętrznym narzędziem i import gotowego obrazu.
+  \item Obraz powinien mieć tekst alternatywny i zachowywać czytelność na ekranach mobilnych.
+  \item Wymagania edytora należy opisać osobno: obsługiwane obiekty, osie, skala, etykiety, eksport SVG/PNG i przechowywanie plików źródłowych.
+\end{itemize}
+\end{ElearnRequirement}
+\clearpage
+\chapter{Moduł maturalny}
+\section{Matura - poziom podstawowy i rozszerzony}
+\ElearnScreenshot[0.92]{assets/screen_19.png}{Widok oferty kursu maturalnego z listą działów, liczbą lekcji i zadań.}
+\begin{ElearnReviewComment}[title={Komentarz nr 16 -- Anna Kogut, 2026-07-22}]
+W zakładce nauka będzie segment matura - podstawowa. Po wejściu w ten segment będą działy z podziałem na działy jak w działach we wszystkich klasach.
+
+Po wejściu w dział będą zadania z danego działu (więc tu będzie mniej pracy , bo połączymy wszystkie zadania ze wszystkich lekcji z danego działu) oraz zadania dodatkowe z matur z arkuszy maturalnych
+
+Zadania otwarte będą pomieszane z zamkniętymi.
+
+Zadnia otwarte będą miały jedną odpowiedź, którą uczeń będzie musiał wpisać w okienko. Błędnie wpisana odpowiedź spowoduje, że zadanie wróci do puli zadań do wykonania.
+
+W tym segmencie nie będzie lekcji. Tylko w przypadku błędnej odpowiedzi pojawi się rozwiązanie do tego zadania z wyjaśnieniem. Tutaj tez mamy mniej pracy, bo rozwiązania zadania z lekcji powielą się. Jedynie będę musiała zrobić rozwiżąnia z wyjaśnieniem do zadań z arkuszy.
+
+U nas nie ma i będzie pewniaków maturalnych. Bo to jest bzdura. To tak jakby uczeń zagrał w toto lotka. Matury teraz są na zasadzie zadań, z każdego praktycznie działu z podstawy programowej, choćby jedno zadanie ale jest.
+
+W trakcie rozwoju strony będę dodawać swoje indywidualne zadania.
+\end{ElearnReviewComment}
+\begin{ElearnRequirement}[title={Wymagania wynikające z komentarza}]
+\begin{itemize}
+  \item W sekcji Nauka dostępny jest segment "Matura - poziom podstawowy"; analogiczna struktura może zostać przygotowana dla poziomu rozszerzonego.
+  \item Segment jest podzielony na działy odpowiadające działom realizowanym w klasach szkoły średniej.
+  \item Po wejściu do działu użytkownik otrzymuje zadania z całego działu oraz dodatkowe zadania z arkuszy maturalnych.
+  \item Zadania otwarte i zamknięte mogą być mieszane w jednej puli.
+  \item W zadaniach otwartych użytkownik wpisuje pojedynczą odpowiedź w polu tekstowym; odpowiedź błędna powoduje powrót zadania do puli.
+  \item Moduł maturalny nie zawiera odrębnych lekcji. Materiał z rozwiązaniem pojawia się po błędnej odpowiedzi.
+  \item Rozwiązania istniejących zadań mogą być współdzielone z materiałami lekcyjnymi, a nowe rozwiązania są potrzebne przede wszystkim dla zadań z arkuszy.
+  \item Platforma nie obiecuje "pewniaków maturalnych"; materiał ma systematycznie obejmować pełną podstawę programową.
+  \item System treści musi umożliwiać regularne dodawanie autorskich zadań.
+\end{itemize}
+\end{ElearnRequirement}
+\clearpage
+\chapter{Skonsolidowany backlog funkcjonalny}
+
+\begin{longtable}{@{}p{0.08\textwidth}p{0.27\textwidth}p{0.45\textwidth}p{0.12\textwidth}@{}}
+\toprule
+\textbf{ID} & \textbf{Obszar} & \textbf{Zakres} & \textbf{Priorytet}\\
+\midrule
+\endhead
+F-01 & Rejestracja & Konto, potwierdzenie e-mail, powrót do zakupu po aktywacji. & MVP\\
+F-02 & Plan nauki & Dni, godzina, dzienny cel liczony zadaniami, zgody na przypomnienia. & MVP\\
+F-03 & Nauka & Hierarchia przedmiot -> poziom -> klasa -> dział -> zagadnienie. & MVP\\
+F-04 & Zadania & Pula zadań, odpowiedzi A--D, zadania otwarte, mechanizm ponownych prób. & MVP\\
+F-05 & Materiały & Lekcje z głosem, rozwiązania z narracją, notatki PDF. & MVP\\
+F-06 & Postępy & Liczba poprawnych odpowiedzi względem wszystkich zadań w dziale. & MVP\\
+F-07 & Profil & Konto, hasło, kurs i ważność, kody rabatowe, zgody. & MVP\\
+F-08 & Kontakt & Formularz e-mail zamiast czatu czasu rzeczywistego. & MVP\\
+F-09 & Rabaty & Reguły 5/10/15/20\%, przechowywanie kuponów w profilu. & MVP\\
+F-10 & Matura & Zadania działowe i arkuszowe, otwarte i zamknięte, bez osobnych lekcji. & V1\\
+F-11 & Opinie & Ankieta dotycząca ulepszeń i repozytorium zgłoszeń. & V1\\
+F-12 & Edytor & Diagramy, geometria, wykresy funkcji, eksport zasobów. & V1/V2\\
+F-13 & Aplikacja mobilna & Odnośniki do sklepów i dostosowanie odtwarzacza. & V2\\
+\bottomrule
+\end{longtable}
+
+\section{Kwestie wymagające decyzji}
+\begin{itemize}
+  \item Dokładny zakres treści dostępnych bez konta.
+  \item Kanały powiadomień: wyłącznie e-mail czy także powiadomienia przeglądarkowe i mobilne.
+  \item Format i sposób hostowania nagrań lekcji oraz rozwiązań zadań.
+  \item Szczegółowy regulamin rabatów, terminy ważności i zasady odnowienia abonamentu.
+  \item Miejsce przechowywania odpowiedzi z ankiety "Zagłosuj na ulepszenie".
+  \item Wybór edytora rysunków i wykresów oraz wymagania dotyczące eksportu.
+  \item Sposób oceniania równoważnych odpowiedzi w zadaniach otwartych, np. ułamków, jednostek i różnych formatów zapisu.
+\end{itemize}
+\begin{ElearnImportant}
+Niniejszy dokument jest punktem wyjścia do przygotowania makiet docelowych, modeli danych, reguł biznesowych i kryteriów akceptacji. Przed implementacją każda pozycja backlogu powinna otrzymać właściciela, priorytet oraz testowalne warunki odbioru.
+\end{ElearnImportant}
+
+\appendix
+\chapter{Mapa obrazów i komentarzy}
+\begin{longtable}{@{}p{0.12\textwidth}p{0.48\textwidth}p{0.28\textwidth}@{}}
+\toprule
+\textbf{Obraz} & \textbf{Zakres} & \textbf{Komentarz źródłowy}\\
+\midrule
+\endhead
+01 & Dni przypomnień i rejestracja & 0\\
+02--05 & Cel dzienny, zgody i podsumowanie & 1--2\\
+06 & Panel główny i rabaty & 3\\
+07 & Opinie, kontakt, zapisane materiały & 4\\
+08 & Struktura sekcji Nauka & 5\\
+09 & Widok zagadnienia i zadania & 6\\
+10 & Notatki PDF & 7\\
+11 & Wyjaśnienia rozwiązań & 8\\
+12 & Odpowiedzi i ponowne próby & 9\\
+13 & Postępy & 10\\
+14 & Lista lekcji & 11\\
+15 & Nagranie lekcji & 12\\
+16 & Profil użytkownika & 13\\
+17--18 & Diagramy i wykresy & 14--15\\
+19 & Moduł maturalny & 16\\
+\bottomrule
+\end{longtable}
+
+\end{document}
