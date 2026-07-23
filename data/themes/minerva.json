@@ -1,0 +1,44 @@
+{
+  "name": "Minerva",
+  "font": "Cinzel",
+  "colors": {
+    "primary-bg-light": "#F8F6F1",
+    "header-bg-light": "#0E2344",
+    "appbar-bg-light": "#17345E",
+    "appbar-text-light": "#F8F6F1",
+    "bubble-bg-light": "#F3EFE6",
+    "footer-bg-light": "#0E2344",
+    "footer-text-light": "#F8F6F1",
+    "text-main-light": "#1D2430",
+    "accent-light": "#CFA548",
+    "warn-light": "#C94A42",
+    "caution-light": "#B8860B",
+    "success-light": "#4F7C58",
+    "sunken-light": "#ECE7DD",
+    "link-light": "#1F4E9C",
+    "primary-bg-dark": "#081322",
+    "header-bg-dark": "#0B1931",
+    "appbar-bg-dark": "#102344",
+    "appbar-text-dark": "#F5F2EA",
+    "bubble-bg-dark": "#162846",
+    "footer-bg-dark": "#0B1931",
+    "footer-text-dark": "#F5F2EA",
+    "text-main-dark": "#E9E4D8",
+    "accent-dark": "#D9B55A",
+    "warn-dark": "#FF6660",
+    "caution-dark": "#E2B93C",
+    "success-dark": "#6DAF78",
+    "sunken-dark": "#111C30",
+    "link-dark": "#82A9FF",
+    "accent-1": "#CFA548",
+    "accent-2": "#17345E"
+  },
+  "header": {
+    "light": "bg-[#0E2344] text-[#F8F6F1] shadow-md",
+    "dark": "bg-[#0B1931] text-[#F5F2EA] shadow-md"
+  },
+  "footer": {
+    "light": "bg-[#0E2344] text-[#F8F6F1] py-4",
+    "dark": "bg-[#0B1931] text-[#F5F2EA] py-4"
+  }
+}
