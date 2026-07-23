@@ -357,6 +357,11 @@ APPS_TO_SYNC = [
     "locations", "events", "socialhub",
 ]
 
+# toto.locations is installed only as a model dependency (people/socialhub/events
+# FK into it) — delta mounts no locations URLs, so keep its UI (manual section,
+# links) off or reverse('locations:…') would 500 (same pattern as faros).
+LOCATIONS_UI_ENABLED = False
+
 LOCATIONS_GEOCODING = {
     "enabled": True,
     "reverse_url": "https://nominatim.openstreetmap.org/reverse",
