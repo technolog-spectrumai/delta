@@ -1,0 +1,107 @@
+{% extends "quizzes/base.html" %}
+{% load i18n %}
+
+{% block quizzes_title %}{{ quiz.title }} — {% trans "Practice" %}{% endblock %}
+
+{% block quizzes_content %}
+<section
+  :class="darkMode ? 'bg-primary-bg-dark text-text-main-dark' : 'bg-primary-bg-light text-text-main-light'"
+  class="min-h-screen px-4 py-10 transition-colors duration-300 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-2xl space-y-6">
+
+    <header class="space-y-3">
+      <a href="{% url 'quizzes:quiz-detail' quiz.pk %}"
+         class="inline-flex items-center gap-2 text-sm underline hover:opacity-80">
+        <i class="fa-solid fa-arrow-left"></i> {{ quiz.title }}
+      </a>
+      {# Progress: solved / total for this section (spec F-06). #}
+      <div>
+        <div class="flex items-center justify-between text-sm">
+          <span class="font-semibold">{% trans "Solved" %}: {{ stats.solved }} / {{ stats.total }}</span>
+          <span class="opacity-70">{% trans "To solve" %}: {{ stats.remaining }}</span>
+        </div>
+        <div class="mt-1 h-2 w-full overflow-hidden rounded-full bg-black/10 dark:bg-white/10">
+          {% widthratio stats.solved stats.total 100 as pct %}
+          <div class="h-full rounded-full bg-green-500" style="width: {{ pct }}%"></div>
+        </div>
+      </div>
+    </header>
+
+    {% if feedback %}
+      {# ---- result of the answer just submitted ---- #}
+      {% if feedback.is_correct %}
+        <div class="rounded-lg border border-green-500/50 bg-green-500/10 p-5 text-center">
+          <p class="text-2xl">🙂</p>
+          <p class="mt-1 text-lg font-bold text-green-700 dark:text-green-300">{% trans "Correct — nice progress!" %}</p>
+        </div>
+      {% else %}
+        <div class="rounded-lg border border-amber-500/50 bg-amber-500/10 p-5">
+          <p class="text-lg font-bold text-amber-700 dark:text-amber-300">{% trans "Not quite — try again in a moment." %}</p>
+          <p class="mt-1 text-sm opacity-80">{% trans "This task goes back into your pool. Here is how to solve it:" %}</p>
+          <div class="mt-3 space-y-2 text-sm">
+            {% for ans in feedback.correct_answers %}
+              <p><i class="fa-solid fa-circle-check text-green-600"></i>
+                 <strong>{% trans "Answer" %}:</strong> {{ ans.text }}
+                 {% if ans.explanation %}<span class="opacity-80"> — {{ ans.explanation }}</span>{% endif %}
+              </p>
+            {% endfor %}
+            {% if feedback.question.explanation %}
+              <p class="opacity-90">{{ feedback.question.explanation }}</p>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+      <a href="{% url 'quizzes:quiz-practice' quiz.pk %}?after={{ after_id }}"
+         class="block w-full rounded-md bg-indigo-600 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-indigo-500">
+        {% trans "Continue" %} <i class="fa-solid fa-arrow-right"></i>
+      </a>
+
+    {% elif question %}
+      {# ---- the current task ---- #}
+      <form method="post" action="{% url 'quizzes:quiz-practice' quiz.pk %}"
+            :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+            class="space-y-5 rounded-lg border p-6 shadow-sm">
+        {% csrf_token %}
+        <input type="hidden" name="question_id" value="{{ question.pk }}">
+        <p class="text-lg font-medium">{{ question.text|linebreaksbr }}</p>
+
+        {% if question.question_type == "open" %}
+          <input type="text" name="open_answer" autocomplete="off" required
+                 placeholder="{% trans 'Type your answer' %}"
+                 class="w-full rounded-md border px-4 py-2 text-black" />
+        {% else %}
+          <div class="space-y-2">
+            {% for answer in answers %}
+              <label class="flex cursor-pointer items-center gap-3 rounded-md border px-4 py-2 hover:bg-black/5 dark:hover:bg-white/5">
+                {% if question.is_multiple_choice %}
+                  <input type="checkbox" name="answer" value="{{ answer.pk }}">
+                {% else %}
+                  <input type="radio" name="answer" value="{{ answer.pk }}" required>
+                {% endif %}
+                <span>{{ answer.text }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <button type="submit"
+                class="w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500">
+          {% trans "Check answer" %}
+        </button>
+      </form>
+
+    {% else %}
+      {# ---- pool empty: section complete ---- #}
+      <div class="rounded-lg border border-green-500/50 bg-green-500/10 p-8 text-center">
+        <p class="text-4xl">🎉</p>
+        <p class="mt-2 text-xl font-bold">{% trans "All tasks solved!" %}</p>
+        <p class="mt-1 text-sm opacity-80">{% trans "You have completed every task in this section." %}</p>
+        <a href="{% url 'quizzes:quiz-detail' quiz.pk %}"
+           class="mt-4 inline-block rounded-md bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-500">
+          {% trans "Back to the section" %}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

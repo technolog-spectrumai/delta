@@ -1,0 +1,29 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Version control
+.git/
+
+# Python virtualenvs
+venv/
+*.venv
+.venv/
+.venv_test*/
+env/
+
+**/node_modules/
+**/target/
+
+# deploy.py generated artifacts, local DBs/logs/certs
+.compose/
+*.sqlite3
+*.sqlite3-*
+*.log
+**/cert/localhost.*
+
+# caches
+.pytest_cache/
+.coverage
+htmlcov/
