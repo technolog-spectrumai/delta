@@ -45,6 +45,9 @@ env:
   REDIS_CACHE_URL: redis://redis:6379/1
   PLATFORM_NAME: Delta
   PLATFORM_DOMAIN: localhost
+  # Delta crest as the platform logo (resolved relative to BASE_DIR = the delta/
+  # project dir, so ../data/img is delta/data/img).
+  PLATFORM_LOGO_PATH: "../data/img/delta.png"
   EMAIL_BACKEND: console
 
 nginx:
