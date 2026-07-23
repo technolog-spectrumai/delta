@@ -279,7 +279,7 @@ class TeacherDetailView(AcademyContextMixin, DetailView):
         )
         context["lessons"] = (
             teacher.owned_lessons
-            .select_related("module", "module__course", "lecture")
+            .select_related("module", "module__course", "video_file", "notes_file")
             .order_by("module__course__order", "module__order", "order", "title")
         )
         context["certificates"] = (
@@ -347,7 +347,6 @@ class CourseDetailView(AcademyContextMixin, DetailView):
             .prefetch_related(
                 "modules",
                 "modules__lessons",
-                "modules__lessons__lecture",
                 "modules__unlocks_badge",
                 "modules__unlocks_badge__group",
                 "modules__unlocks_badge__prerequisites",
@@ -382,8 +381,8 @@ class CourseDetailView(AcademyContextMixin, DetailView):
             )
             .prefetch_related(
                 "lessons",
-                "lessons__lecture",
                 "lessons__video_file",
+                "lessons__notes_file",
                 "lessons__owner",
                 "lessons__owner__person",
                 "attached_quizzes",

@@ -372,26 +372,34 @@ LOCATIONS_GEOCODING = {
 # Dashboard / navigation
 # ---------------------------------------------------------------------------
 
+# Header mirrors zenobia: Dashboard + My Profile only — content is reached
+# through the dashboard cards below.
 HEADER_NAV_ITEMS = [
     {"label": _("Dashboard"), "icon": "fas fa-tachometer-alt", "url_name": "core:dashboard", "requires_auth": False},
-    {"label": _("Nauka"), "icon": "fas fa-graduation-cap", "url_name": "academy:course-list", "requires_auth": False},
     {"label": _("My Profile"), "icon": "fas fa-user", "url_name": "sso:my_profile", "requires_auth": True},
 ]
 
 DASHBOARD_ITEMS = [
-    # public — no login required
+    # --- learning ---
     {"title": _("Nauka"),        "icon": "fa-solid fa-graduation-cap",      "description": _("Courses, lessons and practice tasks — high-school maths and matura."), "link": "academy:course-list",       "visibility": "public"},
+    {"title": _("Zadania"),      "icon": "fa-solid fa-circle-question",     "description": _("Practice task pools — solve until every task in a section is done."),  "link": "quizzes:quiz-list",         "visibility": "public"},
     {"title": _("My progress"),  "icon": "fa-solid fa-chart-line",          "description": _("See how many tasks you have solved in each section."),                  "link": "academy:student-progress",  "visibility": "private"},
     {"title": _("Skills"),       "icon": "fa-solid fa-diagram-project",     "description": _("The skill tree — badges you earn as you complete modules."),           "link": "academy:skill-forest",      "visibility": "public"},
-    {"title": _("Subscription"), "icon": "fa-solid fa-id-card",             "description": _("Your active course, its validity and your discount codes."),           "link": "subscriptions:plan_list",   "visibility": "private"},
-    {"title": _("Library"),      "icon": "fa-solid fa-book",                "description": _("Reference materials, books and articles."),                            "link": "library:book_list",         "visibility": "private"},
+    # --- materials ---
+    {"title": _("Notatki"),      "icon": "fa-solid fa-pen-nib",             "description": _("Lesson notes and articles from your teachers."),                       "link": "palimpsest:page_list",      "visibility": "public"},
+    {"title": _("Books"),        "icon": "fa-solid fa-book",                "description": _("Recommended books and reference materials."),                          "link": "library:book_list",         "visibility": "private"},
+    {"title": _("Articles"),     "icon": "fa-solid fa-newspaper",           "description": _("Curated articles and further reading."),                               "link": "library:article_list",      "visibility": "private"},
     {"title": _("Storage"),      "icon": "fa-solid fa-vault",               "description": _("Your files and downloadable PDF notes in encrypted storage."),         "link": "/vault/",                   "visibility": "private"},
+    # --- account / community ---
+    {"title": _("Subscription"), "icon": "fa-solid fa-id-card",             "description": _("Your active course, its validity and your discount codes."),           "link": "subscriptions:plan_list",   "visibility": "private"},
+    {"title": _("SocialHub"),    "icon": "fa-solid fa-users",               "description": _("Meet other students and stay connected."),                             "link": "socialhub:profile_list",    "visibility": "private"},
     {"title": _("Events"),       "icon": "fa-solid fa-calendar-days",       "description": _("Upcoming lessons, deadlines and events."),                             "link": "events:event_list",         "visibility": "public"},
 ]
 
 DASHBOARD_CATEGORIES = [
-    {"title": _("Learning"), "items": ["Nauka", "My progress", "Skills", "Library"]},
-    {"title": _("Account"),  "items": ["Subscription", "Storage", "Events"]},
+    {"title": _("Learning"),  "items": ["Nauka", "Zadania", "My progress", "Skills"]},
+    {"title": _("Materials"), "items": ["Notatki", "Books", "Articles", "Storage"]},
+    {"title": _("Account"),   "items": ["Subscription", "SocialHub", "Events"]},
 ]
 
 # ---------------------------------------------------------------------------

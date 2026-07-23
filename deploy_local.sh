@@ -17,7 +17,14 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG="${CONFIG:-$ROOT/delta/deploy/configs/delta_local.yaml}"
-CMD="${1:-up}"
+
+# If the first arg is an option flag (e.g. --dev), keep the default command 'up'
+# and pass every arg through; otherwise the first arg is the deploy.py command.
+if [ $# -gt 0 ] && [ "${1#-}" != "$1" ]; then
+  CMD="up"; ARGS=("$@")
+else
+  CMD="${1:-up}"; ARGS=("${@:2}")
+fi
 
 # Rebuild only when image build inputs changed; BUILD=1 forces a rebuild.
 EXTRA=()
@@ -36,4 +43,4 @@ else
   PY="$(command -v python3)"
 fi
 
-exec "$PY" "$ROOT/delta/scripts/deploy.py" "$CONFIG" "$CMD" ${EXTRA[@]+"${EXTRA[@]}"} "${@:2}"
+exec "$PY" "$ROOT/delta/scripts/deploy.py" "$CONFIG" "$CMD" ${EXTRA[@]+"${EXTRA[@]}"} ${ARGS[@]+"${ARGS[@]}"}

@@ -144,7 +144,18 @@
               class="border rounded-lg p-4 shadow-md space-y-2">
               <div class="font-bold">{{ lesson.title }}</div>
               <div class="text-sm opacity-70">{{ lesson.module.course.title }} / {{ lesson.module.title }}</div>
-              <a href="{% url 'memo:card-list' slug=lesson.lecture.slug %}" class="text-sm underline hover:opacity-80">{% trans "Lecture deck" %}</a>
+              <div class="flex gap-4">
+                {% if lesson.video_file %}
+                  <a href="{{ lesson.video_file.file.url }}" target="_blank" class="text-sm underline hover:opacity-80">
+                    <i class="fa-solid fa-play"></i> {% trans "Video" %}</a>
+                {% endif %}
+                {% if lesson.notes_file %}
+                  <a href="{{ lesson.notes_file.file.url }}" target="_blank" class="text-sm underline hover:opacity-80">
+                    <i class="fa-solid fa-file-pdf"></i> {% trans "Notes" %}</a>
+                {% endif %}
+                <a href="{% url 'academy:course-detail' slug=lesson.module.course.slug %}" class="text-sm underline hover:opacity-80">
+                  <i class="fa-solid fa-arrow-right"></i> {% trans "Open course" %}</a>
+              </div>
             </article>
           {% empty %}
             <p class="text-sm opacity-60">{% trans "No lessons assigned directly." %}</p>

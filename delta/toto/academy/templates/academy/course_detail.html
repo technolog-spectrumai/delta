@@ -184,9 +184,13 @@
                        target="_blank">
                       <i class="fa-solid fa-play"></i>{% trans "Video" %}</a>
                     {% endif %}
-                    <a href="{% url 'memo:card-list' slug=lesson.lecture.slug %}"
+                    {% if lesson.notes_file %}
+                    <a href="{{ lesson.notes_file.file.url }}"
                        :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
-                       class="shrink-0 px-3 py-1 rounded text-xs font-semibold">{% trans "Lecture" %}</a>
+                       class="shrink-0 px-3 py-1 rounded text-xs font-semibold inline-flex items-center gap-1"
+                       target="_blank">
+                      <i class="fa-solid fa-file-pdf"></i>{% trans "Notes" %}</a>
+                    {% endif %}
                   </div>
                 </div>
               {% endfor %}
@@ -281,9 +285,13 @@
                target="_blank">
               <i class="fa-solid fa-play"></i>{% trans "Video" %}</a>
             {% endif %}
-            <a href="{% url 'memo:card-list' slug=lesson.lecture.slug %}"
+            {% if lesson.notes_file %}
+            <a href="{{ lesson.notes_file.file.url }}"
                :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
-               class="px-3 py-1 rounded text-xs font-semibold">{% trans "Lecture" %}</a>
+               class="px-3 py-1 rounded text-xs font-semibold inline-flex items-center gap-1"
+               target="_blank">
+              <i class="fa-solid fa-file-pdf"></i>{% trans "Notes" %}</a>
+            {% endif %}
           </div>
         </div>
       {% empty %}

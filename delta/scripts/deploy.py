@@ -906,12 +906,21 @@ def build_nginx_conf(cfg: dict) -> str:
             "}\n"
         )
 
+    # Redirect to the *host-mapped* HTTPS port: the container always listens on
+    # 443, but when nginx.https_port maps it to e.g. 8443 the browser must be
+    # sent to https://host:8443/... — a bare https://$host/... would land on
+    # port 443 where nothing is published.
+    https_port = int(cfg.get("nginx", {}).get("https_port", 443) or 443)
+    _redirect_target = (
+        "https://$host$request_uri" if https_port == 443
+        else f"https://$host:{https_port}$request_uri"
+    )
     redirect_block = (
         "server {\n"
         "    listen 80;\n"
         "    listen [::]:80;\n"
         f"    server_name {server_names};\n"
-        "    return 301 https://$host$request_uri;\n"
+        f"    return 301 {_redirect_target};\n"
         "}\n"
     )
 
