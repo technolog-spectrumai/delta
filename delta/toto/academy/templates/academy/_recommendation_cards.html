@@ -1,0 +1,77 @@
+{% load i18n %}
+{% if recommended_goals %}
+  <section class="space-y-4">
+    <h2 class="text-xl font-bold">
+      <i class="fa-solid fa-lightbulb"></i>
+      {% trans "Suggested goals" %}
+    </h2>
+
+    {% if active_path or active_paths %}
+      <p class="text-xs opacity-60">{% trans "Starting a new goal archives your current path." %}</p>
+    {% endif %}
+
+    <div class="grid gap-4 md:grid-cols-2">
+      {% for rec in recommended_goals %}
+        <div
+          :class="darkMode
+            ? 'bg-bubble-bg-dark border-accent-1'
+            : 'bg-bubble-bg-light border-accent-2'"
+          class="border rounded-lg p-5 shadow-md space-y-3 transition-colors duration-300">
+
+          <div>
+            <span class="text-lg font-bold">
+              <i class="{{ rec.badge.icon }}"></i>
+              {{ rec.badge.title }}
+            </span>
+            <span class="block text-xs opacity-60">{{ rec.badge.group.title }}</span>
+          </div>
+
+          {% if rec.reasons %}
+            <div class="flex flex-wrap gap-1 text-xs">
+              {% for reason in rec.reasons %}
+                {% if reason.kind == "ready" %}
+                  <span :class="darkMode ? 'border-accent-1' : 'border-accent-2'"
+                        class="rounded-full border px-2 py-0.5">
+                    <i class="fa-solid fa-unlock"></i>
+                    {% trans "Ready to start" %}
+                  </span>
+                {% elif reason.kind == "unlocks" %}
+                  <span :class="darkMode ? 'border-accent-1' : 'border-accent-2'"
+                        class="rounded-full border px-2 py-0.5">
+                    <i class="fa-solid fa-key"></i>
+                    {% blocktrans with count=reason.count %}Unlocks {{ count }} skills{% endblocktrans %}
+                  </span>
+                {% elif reason.kind == "continues" %}
+                  <span :class="darkMode ? 'border-accent-1' : 'border-accent-2'"
+                        class="rounded-full border px-2 py-0.5">
+                    <i class="fa-solid fa-forward"></i>
+                    {% blocktrans with group=reason.group.title %}Continues {{ group }}{% endblocktrans %}
+                  </span>
+                {% elif reason.kind == "popular" %}
+                  <span :class="darkMode ? 'border-accent-1' : 'border-accent-2'"
+                        class="rounded-full border px-2 py-0.5">
+                    <i class="fa-solid fa-users"></i>
+                    {% trans "Popular with similar students" %}
+                  </span>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <form method="post" action="{% url 'academy:personal-path-create' %}">
+            {% csrf_token %}
+            <input type="hidden" name="goal_badge" value="{{ rec.badge.pk }}">
+            <button type="submit"
+              :class="darkMode
+                ? 'bg-accent-dark text-primary-bg-dark'
+                : 'bg-accent-light text-primary-bg-light'"
+              class="inline-flex items-center gap-2 rounded px-3 py-1.5 text-sm font-semibold hover:opacity-90 transition">
+              <i class="fa-solid fa-route"></i>
+              {% trans "Build path" %}
+            </button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}

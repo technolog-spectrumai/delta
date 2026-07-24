@@ -22,6 +22,7 @@ from .models import (
     Script, Student, StudentBadge, Teacher,
 )
 from .paths import generate_steps, regenerate_path, sync_path
+from .recommendations import recommend_goals
 
 
 def build_skill_tree_graph(tree):
@@ -753,6 +754,9 @@ class PersonalPathListView(LoginRequiredMixin, AcademyContextMixin, TemplateView
         context["active_paths"] = active_paths
         context["completed_paths"] = completed_paths
         context["archived_paths"] = archived_paths
+        context["recommended_goals"] = (
+            recommend_goals(student, limit=4) if student else []
+        )
 
         return context
 
@@ -781,6 +785,9 @@ class PersonalPathCreateView(LoginRequiredMixin, AcademyContextMixin, FormView):
             .filter(student=student, status=PersonalPath.Status.ACTIVE)
             .first()
             if student else None
+        )
+        context["recommended_goals"] = (
+            recommend_goals(student) if student else []
         )
         return context
 

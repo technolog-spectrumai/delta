@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.db import IntegrityError, transaction
 from django.test import TestCase
 from django.urls import reverse
@@ -15,6 +16,7 @@ from .models import (
     StudentBadge,
 )
 from .paths import compute_gap_badges, generate_steps, regenerate_path, sync_path
+from .recommendations import _cf_model, recommend_goals
 
 
 def _person_user_field():
@@ -219,6 +221,197 @@ class PathConstraintTests(PathFixtureMixin, TestCase):
             PersonalPath.objects.create(
                 student=self.student, title="Goal-less", goal_badge=None,
                 goal_group=None)
+
+
+class RecommendationFixtureMixin(PathFixtureMixin):
+    """Path fixture plus a second skill group and peers for CF signal."""
+
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.physics = SkillGroup.objects.create(
+            title="Physics", slug="physics", order=2)
+        cls.badge_p1 = SkillBadge.objects.create(
+            group=cls.physics, title="Mechanics", slug="mechanics", order=1)
+        cls.badge_p2 = SkillBadge.objects.create(
+            group=cls.physics, title="Optics", slug="optics", order=2)
+
+        cls.peers = []
+        for index in range(3):
+            person = Person.objects.create(display_name=f"Peer {index}")
+            cls.peers.append(Student.objects.create(person=person))
+
+    def setUp(self):
+        super().setUp()
+        # The default LocMem cache persists across tests in-process; any test
+        # touching the recommendation CF model must start from a clean cache.
+        cache.clear()
+
+    def rec_for(self, badge, **kwargs):
+        for entry in recommend_goals(self.student, **kwargs):
+            if entry["badge"] == badge:
+                return entry
+        return None
+
+    def reason_kinds(self, entry):
+        return {reason["kind"] for reason in entry["reasons"]}
+
+
+class RecommendationTests(RecommendationFixtureMixin, TestCase):
+
+    def test_earned_badges_are_excluded(self):
+        StudentBadge.objects.create(student=self.student, badge=self.badge_a)
+        self.assertIsNone(self.rec_for(self.badge_a))
+
+    def test_active_path_coverage_is_excluded(self):
+        path = self.make_path()  # goal C -> steps cover A, B, C
+        generate_steps(path)
+
+        recommended = {
+            entry["badge"] for entry in recommend_goals(self.student)}
+        self.assertEqual(recommended, {self.badge_p1, self.badge_p2})
+
+    def test_readiness_fraction_of_transitive_prereqs(self):
+        StudentBadge.objects.create(student=self.student, badge=self.badge_a)
+
+        # B's only prerequisite (A) is earned; C is half-way (A of {A, B}).
+        entry_b = self.rec_for(self.badge_b)
+        entry_c = self.rec_for(self.badge_c)
+        self.assertIn("ready", self.reason_kinds(entry_b))
+        self.assertNotIn("ready", self.reason_kinds(entry_c))
+        self.assertGreater(entry_b["score"], entry_c["score"])
+
+        # No prerequisites at all -> immediately ready.
+        self.assertIn(
+            "ready", self.reason_kinds(self.rec_for(self.badge_p1)))
+
+    def test_unlock_power_normalized_by_max(self):
+        # A unlocks B and C (2 descendants, the max); score with no earned
+        # badges is pure content: 0.5*readiness + 0.25*unlock + 0.25*0.
+        entry_a = self.rec_for(self.badge_a)
+        self.assertAlmostEqual(entry_a["score"], 0.75)
+
+        entry_b = self.rec_for(self.badge_b)
+        self.assertAlmostEqual(entry_b["score"], 0.125)
+
+        unlocks_a = [r for r in entry_a["reasons"] if r["kind"] == "unlocks"]
+        self.assertEqual(unlocks_a[0]["count"], 2)
+        self.assertNotIn("unlocks", self.reason_kinds(self.rec_for(self.badge_c)))
+
+    def test_continuation_proportional_and_zero_for_untouched_group(self):
+        StudentBadge.objects.create(student=self.student, badge=self.badge_a)
+
+        entry_b = self.rec_for(self.badge_b)
+        self.assertIn("continues", self.reason_kinds(entry_b))
+
+        entry_p1 = self.rec_for(self.badge_p1)
+        self.assertNotIn("continues", self.reason_kinds(entry_p1))
+
+        # Earned 1 of 3 maths badges: B = 0.5*1 + 0.25*0.5 + 0.25*(1/3)
+        self.assertAlmostEqual(entry_b["score"], 0.5 + 0.125 + 1 / 12, places=4)
+
+    def test_cf_lifts_cooccurring_badge(self):
+        # Peers earned {A, P1}; the student earned A. P1 and P2 have
+        # identical content metrics, so any gap comes from the CF term.
+        for peer in self.peers:
+            StudentBadge.objects.create(student=peer, badge=self.badge_a)
+            StudentBadge.objects.create(student=peer, badge=self.badge_p1)
+        StudentBadge.objects.create(student=self.student, badge=self.badge_a)
+
+        entry_p1 = self.rec_for(self.badge_p1)
+        entry_p2 = self.rec_for(self.badge_p2)
+        self.assertGreater(entry_p1["score"], entry_p2["score"])
+
+    def test_cf_weight_zero_without_earned_badges(self):
+        for peer in self.peers:
+            StudentBadge.objects.create(student=peer, badge=self.badge_a)
+            StudentBadge.objects.create(student=peer, badge=self.badge_p1)
+
+        # Nothing earned -> pure content score, no popularity claims.
+        entry_a = self.rec_for(self.badge_a)
+        self.assertAlmostEqual(entry_a["score"], 0.75)
+        for entry in recommend_goals(self.student):
+            self.assertNotIn("popular", self.reason_kinds(entry))
+
+    def test_limit_and_score_ordering(self):
+        entries = recommend_goals(self.student, limit=2)
+
+        self.assertEqual(len(entries), 2)
+        # A (0.75) then the ready no-prereq physics badge (0.5).
+        self.assertEqual(entries[0]["badge"], self.badge_a)
+        self.assertEqual(entries[1]["badge"], self.badge_p1)
+        self.assertGreaterEqual(entries[0]["score"], entries[1]["score"])
+
+    def test_cf_model_cache_stamp_invalidates_on_new_award(self):
+        model = _cf_model()
+        self.assertNotIn(self.badge_a.pk, model["badge_students"])
+
+        StudentBadge.objects.create(student=self.student, badge=self.badge_a)
+
+        model = _cf_model()
+        self.assertIn(
+            self.student.pk, model["badge_students"][self.badge_a.pk])
+
+
+class RecommendationViewTests(RecommendationFixtureMixin, TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.user_field = _person_user_field()
+        if cls.user_field is None:
+            return
+
+        User = get_user_model()
+        cls.user = User.objects.create_user(
+            username="rec-student", password="secret")
+        setattr(cls.person, cls.user_field, cls.user)
+        cls.person.save(update_fields=[cls.user_field])
+
+    def setUp(self):
+        super().setUp()
+        if self.user_field is None:
+            self.skipTest(
+                "Person model exposes no auth-user link in this environment")
+        self.client.force_login(self.user)
+
+    def test_list_page_shows_suggested_goals(self):
+        response = self.client.get(reverse("academy:personal-path-list"))
+
+        self.assertContains(response, "Suggested goals")
+        badges = [
+            entry["badge"] for entry in response.context["recommended_goals"]]
+        self.assertIn(self.badge_a, badges)
+        self.assertLessEqual(len(badges), 4)
+
+    def test_create_page_shows_suggested_goals(self):
+        response = self.client.get(reverse("academy:personal-path-create"))
+
+        self.assertContains(response, "Suggested goals")
+        self.assertTrue(response.context["recommended_goals"])
+
+    def test_build_path_button_creates_path_and_archives_active(self):
+        old = self.make_path(goal_badge=self.badge_c)
+
+        response = self.client.post(
+            reverse("academy:personal-path-create"),
+            {"goal_badge": self.badge_p1.pk})
+
+        new = PersonalPath.objects.get(
+            student=self.student, goal_badge=self.badge_p1)
+        self.assertRedirects(response, new.get_absolute_url())
+        old.refresh_from_db()
+        self.assertEqual(old.status, PersonalPath.Status.ARCHIVED)
+
+    def test_section_hidden_when_no_candidates(self):
+        for badge in (self.badge_a, self.badge_b, self.badge_c,
+                      self.badge_p1, self.badge_p2):
+            StudentBadge.objects.create(student=self.student, badge=badge)
+
+        response = self.client.get(reverse("academy:personal-path-list"))
+
+        self.assertNotContains(response, "Suggested goals")
+        self.assertEqual(response.context["recommended_goals"], [])
 
 
 class PersonalPathViewTests(PathFixtureMixin, TestCase):
