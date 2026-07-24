@@ -1,0 +1,12 @@
+{% extends "oya/base.html" %}
+{% load i18n %}
+
+{% block title %}{% block palimpsest_title %}Blog{% endblock %} | {{ platform.site_name }}{% endblock %}
+
+{% block start_script %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}{% block palimpsest_content %}{% endblock %}{% endblock %}

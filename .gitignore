@@ -1,0 +1,98 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Django
+*.log
+*.pot
+db.sqlite3
+db.delta.sqlite3
+db.delta.sqlite3-shm
+db.delta.sqlite3-wal
+media/
+forum_attachments/
+staticfiles/
+
+# Virtual environment
+venv/
+env/
+ENV/
+*.venv
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test and coverage
+htmlcov/
+.coverage
+.venv_test*/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.cache
+.pytest_cache/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+MANIFEST
+
+# Node
+node_modules/
+
+# Celery / Redis runtime files
+celerybeat-schedule
+redis.log
+dump.rdb
+
+# Logs
+logs/
+*.log.*
+log.txt
+
+# Certificates
+**/cert/*
+!**/cert/.gitkeep
+
+# deploy.py generated artifacts (recreated on every run)
+.compose/
+
+# Rust / WASM (rotor sources and the vendored rotor_wasm live in toto_libs now)
+target/
+**/target/
+Cargo.lock
+*.o
+*.so
+*.rlib
+*.rmeta
+*.d
+*.wasm
+*.whl
+/last_logs.txt
+
+# deploy artifacts written by faros/deploy/run.sh
+onion.txt
+tailscale.txt
+
+# generated local-dev SSO bundles (contain secrets)
+run/sso_*.json
+addr.txt

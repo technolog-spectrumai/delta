@@ -1,0 +1,66 @@
+{% extends "oya/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "My subscription" %} | {{ platform.site_name }}{% endblock %}
+
+{% block content %}
+<section
+  :class="darkMode ? 'bg-primary-bg-dark text-text-main-dark' : 'bg-primary-bg-light text-text-main-light'"
+  class="min-h-screen px-4 py-10 transition-colors duration-300 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-3xl space-y-8">
+
+    <header class="space-y-2">
+      <a href="{% url 'core:dashboard' %}" class="inline-flex items-center gap-2 text-sm underline hover:opacity-80">
+        <i class="fa-solid fa-arrow-left"></i> {% trans "Dashboard" %}
+      </a>
+      <h1 class="flex items-center gap-3 text-3xl font-bold">
+        <i class="fa-solid fa-id-card"></i> {% trans "My subscription" %}
+      </h1>
+    </header>
+
+    <div>
+      <h2 class="mb-2 text-lg font-semibold">{% trans "Current plan" %}</h2>
+      {% if active_subscription %}
+        <div class="rounded-lg border border-green-500/40 bg-green-500/10 p-4">
+          <p class="text-lg font-bold">{{ active_subscription.plan.name }}</p>
+          <p class="text-sm opacity-70">
+            {% blocktrans with until=active_subscription.expires_at|date:"Y-m-d" %}Valid until {{ until }}{% endblocktrans %}
+          </p>
+        </div>
+      {% else %}
+        <div class="rounded-lg border border-amber-500/40 bg-amber-500/10 p-4 text-sm">
+          {% trans "You have no active plan." %}
+          <a href="{% url 'subscriptions:plan_list' %}" class="underline">{% trans "See plans" %}</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <div>
+      <h2 class="mb-2 text-lg font-semibold">{% trans "Your discount codes" %}</h2>
+      {% if discount_codes %}
+        <ul class="space-y-2">
+          {% for code in discount_codes %}
+            <li class="flex items-center justify-between rounded-md border px-4 py-2 text-sm">
+              <span class="font-mono font-semibold">{{ code.code }}</span>
+              <span class="text-green-600 dark:text-green-400">-{{ code.percent }}%</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-sm opacity-70">{% trans "No discount codes yet." %}</p>
+      {% endif %}
+    </div>
+
+    {% if history %}
+    <div>
+      <h2 class="mb-2 text-lg font-semibold">{% trans "History" %}</h2>
+      <ul class="space-y-1 text-sm opacity-80">
+        {% for sub in history %}
+          <li>{{ sub.plan.name }} — {{ sub.started_at|date:"Y-m-d" }} → {{ sub.expires_at|date:"Y-m-d" }} ({{ sub.get_status_display }})</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

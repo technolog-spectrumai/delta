@@ -1,0 +1,66 @@
+# Delta (local) — the maths e-learning host on a local docker compose stack.
+#
+# Django (WSGI/gunicorn) + Postgres + Redis + nginx. GIS is off (BUILD_GEO=0) for
+# a lean, fast local image: toto.locations loads geometry-less and Postgres runs
+# without PostGIS. Set BUILD_GEO: "1" to bring the map/GIS stack back.
+#
+# Dry-runs (no docker needed):  validate | config | env | nginx
+# Bring up:                     ./deploy_local.sh          (deploy.py … up --smart)
+
+deployment:
+  name: delta
+  project_dir: delta
+
+server: wsgi
+
+target:
+  type: local
+
+admin:
+  username: admin
+  password: admin
+  person:
+    display_name: "Delta Admin"
+
+env:
+  DJANGO_ENV: PROD
+  DEBUG: "0"
+  RESET: "1"
+  # FULL_INGRESS seeds the demo maths course tree + subscription plans.
+  FULL_INGRESS: "1"
+  LANGUAGE_CODE: pl
+  LOGIN_RETRY_COOLDOWN_SECONDS: "1"
+
+  # GIS off — no PostGIS/GDAL. locations is present but geometry-less.
+  BUILD_GEO: "0"
+
+  DB_NAME: delta
+  DB_USER: delta
+  DB_PASSWORD: change_me_in_prod
+  DB_PORT: "5432"
+
+  ALLOWED_HOSTS: "localhost,127.0.0.1,web_delta,nginx,delta.local"
+  CSRF_TRUSTED_ORIGINS: "https://localhost,https://localhost:8443"
+
+  REDIS_CACHE_URL: redis://redis:6379/1
+  PLATFORM_NAME: Delta
+  PLATFORM_DOMAIN: localhost
+  # Delta crest as the platform logo (resolved relative to BASE_DIR = the delta/
+  # project dir, so ../data/img is delta/data/img).
+  PLATFORM_LOGO_PATH: "../data/img/delta.png"
+  EMAIL_BACKEND: console
+
+nginx:
+  http_port: 8082
+  https_port: 8443
+  bind: 127.0.0.1
+
+ssl:
+  mode: gervazy
+
+cert:
+  common_name: localhost
+  dns_names:
+    - localhost
+  ip_addresses:
+    - 127.0.0.1

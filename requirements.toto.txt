@@ -1,0 +1,22 @@
+# The toto version this host deploys — the single place delta declares it.
+#
+# Exact pins only, all at the same version (the toto suite releases lockstep).
+# No URLs: check out the matching tag in your toto_libs clone yourself. deploy.py
+# rejects the build if the checkout, or the wheels it produces, are not exactly
+# these versions.
+#
+# To upgrade: edit the version here, then
+#   git -C ../toto_libs checkout v<version>
+#   ./deploy_local.sh            (or deploy.py <config> push)
+#
+# delta is a small e-learning host: it needs only toto-base (core / people /
+# vault / gervazy / verbena / locations / socialhub / events / quota / sso). It
+# deliberately does not install toto-flow, toto-works, toto-media, toto-chat,
+# toto-ai, toto-graph or toto-geo — no realtime, media pipeline, graph or AI.
+#
+# Not listed here because delta owns them outright: toto.academy, toto.quizzes,
+# toto.competence, toto.palimpsest, toto.library and toto.subscriptions live in
+# this repo under delta/toto/ as a namespace portion (revived from
+# toto_libs/limbo/ — see toto_libs/README.md "Future-host outlook"). They need no
+# pin — they version with delta.
+toto-base==1.7

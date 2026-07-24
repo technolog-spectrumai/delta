@@ -1,0 +1,59 @@
+# Delta (remote) — production template for a VPS.
+#
+# Full GIS on (BUILD_GEO=1, PostGIS). TLS via Let's Encrypt (certbot --standalone).
+# Fill in the target:, ALLOWED_HOSTS / CSRF_TRUSTED_ORIGINS / PLATFORM_DOMAIN and
+# cert.dns_names with your real host before pushing. Bring up with:
+#   ./deploy_server.sh provision      # first time only
+#   ./deploy_server.sh                # rsync + start (push)
+
+deployment:
+  name: delta
+  project_dir: delta
+
+server: wsgi
+
+target:
+  type: ssh
+  host: your-server.example.com      # <-- edit
+  user: root                          # <-- edit
+  # key: ~/.ssh/id_ed25519            # optional explicit key
+  remote_dir: /opt/delta
+
+admin:
+  username: admin
+  person:
+    display_name: "Delta Admin"
+
+env:
+  DJANGO_ENV: PROD
+  DEBUG: "0"
+  RESET: "0"
+  FULL_INGRESS: "1"
+  LANGUAGE_CODE: pl
+
+  BUILD_GEO: "1"
+
+  DB_NAME: delta
+  DB_USER: delta
+  DB_PASSWORD: change_me_in_prod      # <-- edit (or let deploy.py mint a secret)
+  DB_PORT: "5432"
+
+  ALLOWED_HOSTS: "delta.example.com,web_delta,nginx,localhost,127.0.0.1"   # <-- edit
+  CSRF_TRUSTED_ORIGINS: "https://delta.example.com"                        # <-- edit
+  PLATFORM_NAME: Delta
+  PLATFORM_DOMAIN: delta.example.com                                       # <-- edit
+
+  REDIS_CACHE_URL: redis://redis:6379/1
+  EMAIL_BACKEND: console
+
+nginx:
+  http_port: 80
+  https_port: 443
+
+ssl:
+  mode: letsencrypt
+
+cert:
+  common_name: delta.example.com      # <-- edit
+  dns_names:
+    - delta.example.com               # <-- edit

@@ -1,0 +1,688 @@
+% ============================================================
+% elearning_documentation_i18n.sty
+% Self-contained style for e-learning platform documentation
+% - configurable platform and organization metadata
+% - Polish / English labels through babel
+% - documentation title page, headers, footers and watermark
+% - code listings, notes, warnings, examples and requirement boxes
+% ============================================================
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{elearning_i18n}
+  [2026/07/22 v1.1 Self-contained e-learning documentation style]
+
+% ------------------------------------------------------------
+% Core packages
+% ------------------------------------------------------------
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[polish,english]{babel}
+
+\RequirePackage{amsmath,amssymb,amsthm}
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+\RequirePackage{enumitem}
+\RequirePackage{geometry}
+\RequirePackage{fancyhdr}
+\RequirePackage{eso-pic}
+\RequirePackage{titlesec}
+\RequirePackage{booktabs}
+\RequirePackage{longtable}
+\RequirePackage{tabularx}
+\RequirePackage{array}
+\RequirePackage{multirow}
+\RequirePackage{caption}
+\RequirePackage{subcaption}
+\RequirePackage{xurl}
+\RequirePackage{listings}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{etoolbox}
+\RequirePackage{xparse}
+\RequirePackage{xfp}
+\RequirePackage[colorlinks=true]{hyperref}
+
+\Urlmuskip=0mu plus 2mu\relax
+
+% ------------------------------------------------------------
+% Page geometry
+% ------------------------------------------------------------
+\geometry{
+  a4paper,
+  top=2.4cm,
+  bottom=2.4cm,
+  left=2.6cm,
+  right=2.6cm,
+  headheight=15pt,
+  headsep=0.7cm,
+  footskip=1.1cm
+}
+
+% ------------------------------------------------------------
+% Color palette
+% ------------------------------------------------------------
+\definecolor{ElearnPrimary}{HTML}{2457A7}
+\definecolor{ElearnSecondary}{HTML}{4B7BC1}
+\definecolor{ElearnAccent}{HTML}{E8F1FF}
+\definecolor{ElearnSuccess}{HTML}{2E7D32}
+\definecolor{ElearnWarning}{HTML}{B26A00}
+\definecolor{ElearnDanger}{HTML}{B3261E}
+\definecolor{ElearnCodeBackground}{HTML}{F5F7FA}
+\definecolor{ElearnBorder}{HTML}{D7DEE8}
+\definecolor{ElearnMuted}{HTML}{5F6B7A}
+
+\newcommand{\ElearnPrimaryColor}[1]{\colorlet{ElearnPrimary}{#1}}
+\newcommand{\ElearnSecondaryColor}[1]{\colorlet{ElearnSecondary}{#1}}
+
+% ------------------------------------------------------------
+% Configurable document metadata
+% ------------------------------------------------------------
+% The package deliberately does not hardcode a product name.
+% Configure the current platform in the document preamble:
+%
+%   \ElearnPlatformName{Delta}
+%   \ElearnOrganization{Your organization}
+%   \ElearnDocumentVersion{1.0}
+%   \ElearnDocumentStatus{Draft}
+%
+\newcommand{\ElearnPlatformNameValue}{E-Learning Platform}
+\newcommand{\ElearnOrganizationValue}{}
+\newcommand{\ElearnDocumentTypeValue}{Platform Documentation}
+\newcommand{\ElearnDocumentTitleValue}{Platform Documentation}
+\newcommand{\ElearnDocumentSubtitleValue}{}
+\newcommand{\ElearnDocumentVersionValue}{0.1}
+\newcommand{\ElearnDocumentStatusValue}{Draft}
+\newcommand{\ElearnDocumentOwnerValue}{}
+\newcommand{\ElearnDocumentAudienceValue}{}
+\newcommand{\ElearnDocumentDateValue}{\today}
+\newcommand{\ElearnDocumentKeywordsValue}{e-learning, documentation, platform}
+
+\newcommand{\ElearnPlatformName}[1]{\renewcommand{\ElearnPlatformNameValue}{#1}}
+\newcommand{\ElearnOrganization}[1]{\renewcommand{\ElearnOrganizationValue}{#1}}
+\newcommand{\ElearnDocumentType}[1]{\renewcommand{\ElearnDocumentTypeValue}{#1}}
+\newcommand{\ElearnDocumentTitle}[1]{\renewcommand{\ElearnDocumentTitleValue}{#1}}
+\newcommand{\ElearnDocumentSubtitle}[1]{\renewcommand{\ElearnDocumentSubtitleValue}{#1}}
+\newcommand{\ElearnDocumentVersion}[1]{\renewcommand{\ElearnDocumentVersionValue}{#1}}
+\newcommand{\ElearnDocumentStatus}[1]{\renewcommand{\ElearnDocumentStatusValue}{#1}}
+\newcommand{\ElearnDocumentOwner}[1]{\renewcommand{\ElearnDocumentOwnerValue}{#1}}
+\newcommand{\ElearnDocumentAudience}[1]{\renewcommand{\ElearnDocumentAudienceValue}{#1}}
+\newcommand{\ElearnDocumentDate}[1]{\renewcommand{\ElearnDocumentDateValue}{#1}}
+\newcommand{\ElearnDocumentKeywords}[1]{\renewcommand{\ElearnDocumentKeywordsValue}{#1}}
+
+% ------------------------------------------------------------
+% Configurable title-page logo
+% ------------------------------------------------------------
+% The logo path is resolved relative to the main .tex file / compilation
+% working directory. With pdfLaTeX use PDF, PNG or JPG.
+%
+% Example:
+%   \ElearnLogoPath{assets/delta-logo.png}
+%   \ElearnLogoWidthPercent{24}  % 24 percent of \textwidth
+%
+% Logo scaling is controlled only by its width as a percentage of \textwidth.
+% Its original aspect ratio is always preserved. A missing or empty path does
+% not stop compilation; the logo is omitted and a warning is written to the log.
+\newcommand{\ElearnLogoPathValue}{}
+\newcommand{\ElearnLogoWidthPercentValue}{24}
+
+\newif\ifElearnLogoEnabled
+\ElearnLogoEnabledtrue
+
+\newcommand{\ElearnLogoPath}[1]{%
+  \renewcommand{\ElearnLogoPathValue}{#1}%
+}
+
+\newcommand{\ElearnLogoWidthPercent}[1]{%
+  \renewcommand{\ElearnLogoWidthPercentValue}{#1}%
+}
+
+\newcommand{\ElearnLogoOff}{\ElearnLogoEnabledfalse}
+\newcommand{\ElearnLogoOn}{\ElearnLogoEnabledtrue}
+
+\newcommand{\ElearnRenderTitleLogo}{%
+  \ifElearnLogoEnabled
+    \ifdefempty{\ElearnLogoPathValue}{}{%
+      \IfFileExists{\ElearnLogoPathValue}{%
+        \includegraphics[
+          width=\fpeval{\ElearnLogoWidthPercentValue/100}\textwidth,
+          keepaspectratio
+        ]{\ElearnLogoPathValue}\par
+      }{%
+        \PackageWarning{elearning_documentation_i18n}{%
+          Logo file `\ElearnLogoPathValue' not found; title-page logo omitted%
+        }%
+      }%
+    }%
+  \fi
+}
+
+% ------------------------------------------------------------
+% Language-aware labels
+% ------------------------------------------------------------
+\newcommand{\ElearnLabelPlatformEN}{Platform}
+\newcommand{\ElearnLabelPlatformPL}{Platforma}
+
+\newcommand{\ElearnLabelVersionEN}{Version}
+\newcommand{\ElearnLabelVersionPL}{Wersja}
+
+\newcommand{\ElearnLabelStatusEN}{Status}
+\newcommand{\ElearnLabelStatusPL}{Status}
+
+\newcommand{\ElearnLabelOwnerEN}{Document owner}
+\newcommand{\ElearnLabelOwnerPL}{Właściciel dokumentu}
+
+\newcommand{\ElearnLabelAudienceEN}{Intended audience}
+\newcommand{\ElearnLabelAudiencePL}{Odbiorcy dokumentu}
+
+\newcommand{\ElearnLabelUpdatedEN}{Last updated}
+\newcommand{\ElearnLabelUpdatedPL}{Ostatnia aktualizacja}
+
+\newcommand{\ElearnLabelContentsEN}{Contents}
+\newcommand{\ElearnLabelContentsPL}{Spis treści}
+
+\newcommand{\ElearnLabelNoteEN}{Note}
+\newcommand{\ElearnLabelNotePL}{Uwaga}
+
+\newcommand{\ElearnLabelImportantEN}{Important}
+\newcommand{\ElearnLabelImportantPL}{Ważne}
+
+\newcommand{\ElearnLabelWarningEN}{Warning}
+\newcommand{\ElearnLabelWarningPL}{Ostrzeżenie}
+
+\newcommand{\ElearnLabelExampleEN}{Example}
+\newcommand{\ElearnLabelExamplePL}{Przykład}
+
+\newcommand{\ElearnLabelRequirementEN}{Requirement}
+\newcommand{\ElearnLabelRequirementPL}{Wymaganie}
+
+\newcommand{\ElearnLabelRightsEN}{All rights reserved}
+\newcommand{\ElearnLabelRightsPL}{Wszelkie prawa zastrzeżone}
+
+\newcommand{\ElearnResolvedPlatformLabel}{%
+  \iflanguage{polish}{\ElearnLabelPlatformPL}{\ElearnLabelPlatformEN}}
+\newcommand{\ElearnResolvedVersionLabel}{%
+  \iflanguage{polish}{\ElearnLabelVersionPL}{\ElearnLabelVersionEN}}
+\newcommand{\ElearnResolvedStatusLabel}{%
+  \iflanguage{polish}{\ElearnLabelStatusPL}{\ElearnLabelStatusEN}}
+\newcommand{\ElearnResolvedOwnerLabel}{%
+  \iflanguage{polish}{\ElearnLabelOwnerPL}{\ElearnLabelOwnerEN}}
+\newcommand{\ElearnResolvedAudienceLabel}{%
+  \iflanguage{polish}{\ElearnLabelAudiencePL}{\ElearnLabelAudienceEN}}
+\newcommand{\ElearnResolvedUpdatedLabel}{%
+  \iflanguage{polish}{\ElearnLabelUpdatedPL}{\ElearnLabelUpdatedEN}}
+\newcommand{\ElearnResolvedContentsLabel}{%
+  \iflanguage{polish}{\ElearnLabelContentsPL}{\ElearnLabelContentsEN}}
+\newcommand{\ElearnResolvedNoteLabel}{%
+  \iflanguage{polish}{\ElearnLabelNotePL}{\ElearnLabelNoteEN}}
+\newcommand{\ElearnResolvedImportantLabel}{%
+  \iflanguage{polish}{\ElearnLabelImportantPL}{\ElearnLabelImportantEN}}
+\newcommand{\ElearnResolvedWarningLabel}{%
+  \iflanguage{polish}{\ElearnLabelWarningPL}{\ElearnLabelWarningEN}}
+\newcommand{\ElearnResolvedExampleLabel}{%
+  \iflanguage{polish}{\ElearnLabelExamplePL}{\ElearnLabelExampleEN}}
+\newcommand{\ElearnResolvedRequirementLabel}{%
+  \iflanguage{polish}{\ElearnLabelRequirementPL}{\ElearnLabelRequirementEN}}
+\newcommand{\ElearnResolvedRightsLabel}{%
+  \iflanguage{polish}{\ElearnLabelRightsPL}{\ElearnLabelRightsEN}}
+
+% ------------------------------------------------------------
+% Footer and confidentiality overrides
+% ------------------------------------------------------------
+\newcommand{\ElearnFooterTextCustom}{}
+\newcommand{\ElearnConfidentialityValue}{}
+
+\newcommand{\ElearnFooterText}[1]{\renewcommand{\ElearnFooterTextCustom}{#1}}
+\newcommand{\ElearnConfidentiality}[1]{\renewcommand{\ElearnConfidentialityValue}{#1}}
+
+\newcommand{\ElearnResolvedFooterText}{%
+  \ifdefempty{\ElearnFooterTextCustom}{%
+    \ifdefempty{\ElearnOrganizationValue}{%
+      \ElearnResolvedRightsLabel. \copyright\ \ElearnPlatformNameValue
+    }{%
+      \ElearnResolvedRightsLabel. \copyright\ \ElearnOrganizationValue
+    }%
+  }{%
+    \ElearnFooterTextCustom
+  }%
+}
+
+% ------------------------------------------------------------
+% Configurable watermark
+% ------------------------------------------------------------
+% Examples:
+%   \ElearnWatermarkText{\ElearnPlatformNameValue}
+%   \ElearnWatermarkColor{black!6}
+%   \ElearnWatermarkFontSize{38}{46}
+%   \ElearnWatermarkAngle{35}
+%   \ElearnWatermarkOff
+%
+\newcommand{\ElearnWatermarkTextValue}{\ElearnPlatformNameValue}
+\newcommand{\ElearnWatermarkColorValue}{black!7}
+\newcommand{\ElearnWatermarkSizeValue}{42}
+\newcommand{\ElearnWatermarkBaselineValue}{50}
+\newcommand{\ElearnWatermarkAngleValue}{45}
+
+\newif\ifElearnWatermarkEnabled
+\ElearnWatermarkEnabledtrue
+
+\newcommand{\ElearnWatermarkText}[1]{%
+  \renewcommand{\ElearnWatermarkTextValue}{#1}%
+  \ifElearnWatermarkEnabled
+    \ClearShipoutPictureBG
+    \ElearnInstallWatermark
+  \fi
+}
+
+\newcommand{\ElearnWatermarkColor}[1]{%
+  \renewcommand{\ElearnWatermarkColorValue}{#1}%
+}
+
+\newcommand{\ElearnWatermarkFontSize}[2]{%
+  \renewcommand{\ElearnWatermarkSizeValue}{#1}%
+  \renewcommand{\ElearnWatermarkBaselineValue}{#2}%
+}
+
+\newcommand{\ElearnWatermarkAngle}[1]{%
+  \renewcommand{\ElearnWatermarkAngleValue}{#1}%
+}
+
+\newcommand{\ElearnInstallWatermark}{%
+  \ifElearnWatermarkEnabled
+    \AddToShipoutPictureBG{%
+      \AtPageCenter{%
+        \makebox[0pt]{%
+          \rotatebox{\ElearnWatermarkAngleValue}{%
+            \textcolor{\ElearnWatermarkColorValue}{%
+              \fontsize{\ElearnWatermarkSizeValue}
+                {\ElearnWatermarkBaselineValue}\selectfont
+              \bfseries \ElearnWatermarkTextValue
+            }%
+          }%
+        }%
+      }%
+    }%
+  \fi
+}
+
+\newcommand{\ElearnWatermarkOff}{%
+  \ElearnWatermarkEnabledfalse
+  \ClearShipoutPictureBG
+}
+
+\newcommand{\ElearnWatermarkOn}{%
+  \ElearnWatermarkEnabledtrue
+  \ClearShipoutPictureBG
+  \ElearnInstallWatermark
+}
+
+\newcommand{\ElearnWatermarkStrong}{%
+  \ElearnWatermarkColor{black!16}%
+  \ElearnWatermarkOn
+}
+
+% ------------------------------------------------------------
+% Header and footer
+% ------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{%
+  \small\bfseries\color{ElearnPrimary}\ElearnPlatformNameValue}
+\fancyhead[C]{%
+  \small\color{ElearnMuted}\ElearnDocumentTypeValue}
+\fancyhead[R]{%
+  \small\color{ElearnMuted}%
+  \ElearnResolvedVersionLabel\ \ElearnDocumentVersionValue}
+
+\fancyfoot[L]{\scriptsize\color{ElearnMuted}\ElearnResolvedFooterText}
+\fancyfoot[R]{\small\thepage}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyfoot[L]{\scriptsize\color{ElearnMuted}\ElearnResolvedFooterText}
+  \fancyfoot[R]{\small\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+% ------------------------------------------------------------
+% PDF metadata
+% ------------------------------------------------------------
+\AtBeginDocument{%
+  \hypersetup{
+    linkcolor=ElearnPrimary,
+    urlcolor=ElearnSecondary,
+    citecolor=ElearnPrimary,
+    pdfauthor={\ElearnOrganizationValue},
+    pdftitle={\ElearnDocumentTitleValue\space---\space\ElearnPlatformNameValue},
+    pdfsubject={\ElearnDocumentTypeValue},
+    pdfkeywords={\ElearnDocumentKeywordsValue},
+    bookmarksopen=true,
+    bookmarksnumbered=true
+  }%
+  \ElearnInstallWatermark
+  \renewcommand{\contentsname}{\ElearnResolvedContentsLabel}%
+}
+
+% ------------------------------------------------------------
+% Heading styles
+% ------------------------------------------------------------
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\color{ElearnPrimary}}
+  {\filleft\Large\chaptertitlename\ \thechapter}
+  {0.8ex}
+  {\titlerule\vspace{1ex}\Huge}
+  [\vspace{0.7ex}\titlerule]
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{ElearnPrimary}}
+  {\thesection}
+  {0.8em}
+  {}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{ElearnSecondary}}
+  {\thesubsection}
+  {0.8em}
+  {}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries}
+  {\thesubsubsection}
+  {0.8em}
+  {}
+
+\titlespacing*{\chapter}{0pt}{-10pt}{28pt}
+\titlespacing*{\section}{0pt}{2.4ex plus .5ex minus .2ex}{1.0ex}
+\titlespacing*{\subsection}{0pt}{2.0ex plus .4ex minus .2ex}{0.8ex}
+
+% ------------------------------------------------------------
+% Lists, tables, figures and paragraphs
+% ------------------------------------------------------------
+\setlist{
+  topsep=0.5em,
+  itemsep=0.25em,
+  parsep=0pt
+}
+\setlist[itemize,1]{label=\textcolor{ElearnPrimary}{\textbullet}}
+\setlist[enumerate,1]{label=\textcolor{ElearnPrimary}{\arabic*.}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlength{\emergencystretch}{3em}
+
+\captionsetup{
+  font=small,
+  labelfont={bf,color=ElearnPrimary},
+  justification=raggedright,
+  singlelinecheck=false
+}
+
+\renewcommand{\arraystretch}{1.18}
+
+% ------------------------------------------------------------
+% Code listings
+% ------------------------------------------------------------
+\lstdefinestyle{ElearnCodeStyle}{
+  backgroundcolor=\color{ElearnCodeBackground},
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries\color{ElearnPrimary},
+  commentstyle=\itshape\color{ElearnMuted},
+  stringstyle=\color{ElearnSuccess},
+  numbers=left,
+  numberstyle=\scriptsize\color{ElearnMuted},
+  numbersep=10pt,
+  frame=single,
+  rulecolor=\color{ElearnBorder},
+  breaklines=true,
+  breakatwhitespace=false,
+  showstringspaces=false,
+  tabsize=2,
+  columns=fullflexible,
+  keepspaces=true,
+  xleftmargin=0.5em,
+  xrightmargin=0.5em,
+  aboveskip=0.8em,
+  belowskip=0.8em
+}
+
+\lstnewenvironment{ElearnCode}[1][]
+  {\lstset{style=ElearnCodeStyle,#1}}
+  {}
+
+\newcommand{\ElearnInlineCode}[1]{%
+  \colorbox{ElearnCodeBackground}{\texttt{\detokenize{#1}}}%
+}
+
+% ------------------------------------------------------------
+% Documentation boxes
+% ------------------------------------------------------------
+\tcbset{
+  elearnbox/.style={
+    enhanced,
+    breakable,
+    boxrule=0.7pt,
+    arc=2pt,
+    left=8pt,
+    right=8pt,
+    top=7pt,
+    bottom=7pt,
+    before skip=0.8em,
+    after skip=0.8em,
+    fonttitle=\bfseries
+  }
+}
+
+\newtcolorbox{ElearnNote}[1][]{%
+  elearnbox,
+  colback=ElearnAccent,
+  colframe=ElearnPrimary,
+  title=\ElearnResolvedNoteLabel,
+  #1
+}
+
+\newtcolorbox{ElearnImportant}[1][]{%
+  elearnbox,
+  colback=ElearnSuccess!7,
+  colframe=ElearnSuccess,
+  title=\ElearnResolvedImportantLabel,
+  #1
+}
+
+\newtcolorbox{ElearnWarning}[1][]{%
+  elearnbox,
+  colback=ElearnWarning!8,
+  colframe=ElearnWarning,
+  title=\ElearnResolvedWarningLabel,
+  #1
+}
+
+\newtcolorbox{ElearnExample}[1][]{%
+  elearnbox,
+  colback=ElearnCodeBackground,
+  colframe=ElearnSecondary,
+  title=\ElearnResolvedExampleLabel,
+  #1
+}
+
+\newtcolorbox{ElearnRequirement}[1][]{%
+  elearnbox,
+  colback=ElearnDanger!5,
+  colframe=ElearnDanger,
+  title=\ElearnResolvedRequirementLabel,
+  #1
+}
+
+% ------------------------------------------------------------
+% Semantic helpers
+% ------------------------------------------------------------
+\newcommand{\doctitle}[1]{\textbf{#1}}
+\newcommand{\docterm}[1]{\textit{#1}}
+\newcommand{\dochighlight}[1]{\textbf{\color{ElearnPrimary}#1}}
+\newcommand{\docstatus}[1]{%
+  \tcbox[
+    on line,
+    boxrule=0.5pt,
+    arc=2pt,
+    colback=ElearnAccent,
+    colframe=ElearnPrimary,
+    left=4pt,
+    right=4pt,
+    top=1pt,
+    bottom=1pt
+  ]{\small\bfseries #1}%
+}
+
+\newcommand{\docurl}[1]{\url{#1}}
+\newcommand{\doclink}[2]{\href{#1}{#2}}
+\newcommand{\docaccess}[1]{%
+  \iflanguage{polish}{Dostęp:}{Access:}\ \url{#1}}
+
+\newenvironment{ElearnBibliography}{%
+  \small
+  \setlength{\emergencystretch}{3em}%
+}{}
+
+% ------------------------------------------------------------
+% Title page
+% ------------------------------------------------------------
+% Configure metadata in the preamble, then call:
+%
+%   \ElearnTitlePage
+%
+% Required before use:
+%   \ElearnPlatformName{Delta}
+%   \ElearnDocumentTitle{Dokumentacja platformy}
+%
+\newcommand{\ElearnMetadataRow}[2]{%
+  \textbf{#1} & #2\\[0.22em]
+}
+
+\newcommand{\ElearnTitlePage}{%
+  \begin{titlepage}
+    \thispagestyle{empty}
+    \centering
+
+    % Compact top block
+    \vspace*{0.35cm}
+
+    {\large\color{ElearnMuted}\ElearnDocumentTypeValue\par}
+    \vspace{0.25cm}
+
+    {\LARGE\bfseries\color{ElearnPrimary}\ElearnPlatformNameValue\par}
+    \vspace{0.45cm}
+
+    \textcolor{ElearnPrimary}{\rule{0.94\textwidth}{1.2pt}}
+    \vspace{0.35cm}
+
+    {\huge\bfseries\ElearnDocumentTitleValue\par}
+
+    % Logo sits directly below the document title and above its description.
+    \ifdefempty{\ElearnLogoPathValue}{}{%
+      \vspace{0.28cm}
+      \ElearnRenderTitleLogo
+    }
+
+    \ifdefempty{\ElearnDocumentSubtitleValue}{}{%
+      \vspace{0.28cm}
+      {\large\itshape\color{ElearnMuted}\ElearnDocumentSubtitleValue\par}
+    }
+
+    \vspace{0.35cm}
+    \textcolor{ElearnPrimary}{\rule{0.94\textwidth}{1.2pt}}
+
+    \vspace{0.55cm}
+
+    \begin{tcolorbox}[
+      width=0.90\textwidth,
+      colback=white,
+      colframe=ElearnBorder,
+      boxrule=0.7pt,
+      arc=2pt,
+      left=8pt,
+      right=8pt,
+      top=6pt,
+      bottom=6pt
+    ]
+      \small
+      \renewcommand{\arraystretch}{1.05}
+      \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.31\linewidth}X@{}}
+        \ElearnMetadataRow{\ElearnResolvedPlatformLabel}{\ElearnPlatformNameValue}
+        \ElearnMetadataRow{\ElearnResolvedVersionLabel}{\ElearnDocumentVersionValue}
+        \ElearnMetadataRow{\ElearnResolvedStatusLabel}{\ElearnDocumentStatusValue}
+        \ifdefempty{\ElearnDocumentOwnerValue}{}{%
+          \ElearnMetadataRow{\ElearnResolvedOwnerLabel}{\ElearnDocumentOwnerValue}
+        }
+        \ifdefempty{\ElearnDocumentAudienceValue}{}{%
+          \ElearnMetadataRow{\ElearnResolvedAudienceLabel}{\ElearnDocumentAudienceValue}
+        }
+        \ElearnMetadataRow{\ElearnResolvedUpdatedLabel}{\ElearnDocumentDateValue}
+      \end{tabularx}
+    \end{tcolorbox}
+
+    \vfill
+
+    \ifdefempty{\ElearnOrganizationValue}{}{%
+      {\normalsize\bfseries \ElearnOrganizationValue\par}
+      \vspace{0.18cm}
+    }
+
+    \ifdefempty{\ElearnConfidentialityValue}{}{%
+      {\small\bfseries\color{ElearnDanger}\ElearnConfidentialityValue\par}
+      \vspace{0.18cm}
+    }
+
+    {\scriptsize\color{ElearnMuted}\ElearnResolvedFooterText\par}
+    \vspace*{0.15cm}
+  \end{titlepage}
+}
+
+% ------------------------------------------------------------
+% Convenience macro for the standard opening pages
+% ------------------------------------------------------------
+\newcommand{\ElearnFrontMatter}{%
+  \pagenumbering{roman}
+  \ElearnTitlePage
+  \setcounter{page}{2}
+  \tableofcontents
+  \clearpage
+  \pagenumbering{arabic}
+}
+
+
+
+% ------------------------------------------------------------
+% Screenshot and review-comment helpers
+% ------------------------------------------------------------
+\newtcolorbox{ElearnReviewComment}[1][]{%
+  elearnbox,
+  colback=ElearnWarning!5,
+  colframe=ElearnWarning,
+  title={Komentarz z dokumentu źródłowego},
+  #1
+}
+
+\newtcolorbox{ElearnObservedUI}[1][]{%
+  elearnbox,
+  colback=ElearnAccent,
+  colframe=ElearnSecondary,
+  title={Treść i elementy widoczne na makiecie},
+  #1
+}
+
+\NewDocumentCommand{\ElearnScreenshot}{O{0.92} m m}{%
+  \begin{center}
+    \includegraphics[
+      width=#1\textwidth,
+      height=0.67\textheight,
+      keepaspectratio
+    ]{#2}
+    \captionof{figure}{#3}
+  \end{center}
+}
+
+% ------------------------------------------------------------
+% End of file
+% ------------------------------------------------------------
