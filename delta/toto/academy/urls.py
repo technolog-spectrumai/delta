@@ -6,6 +6,9 @@ from . import views as academy_views
 from .views import (
     CourseDetailView,
     CourseListView,
+    PersonalPathCreateView,
+    PersonalPathDetailView,
+    PersonalPathListView,
     ScriptDetailView,
     SkillForestView,
     SkillTreeDetailView,
@@ -72,6 +75,48 @@ urlpatterns = [
         "skills/<slug:slug>/",
         SkillTreeDetailView.as_view(),
         name="skill-tree-detail",
+    ),
+
+    # Personalized learning paths
+    path(
+        "paths/",
+        PersonalPathListView.as_view(),
+        name="personal-path-list",
+    ),
+    path(
+        "paths/new/",
+        PersonalPathCreateView.as_view(),
+        name="personal-path-create",
+    ),
+    path(
+        "paths/<int:pk>/",
+        PersonalPathDetailView.as_view(),
+        name="personal-path-detail",
+    ),
+    path(
+        "paths/<int:pk>/steps/<int:step_pk>/toggle/",
+        academy_views.personal_path_step_toggle,
+        name="personal-path-step-toggle",
+    ),
+    path(
+        "paths/<int:pk>/steps/<int:step_pk>/delete/",
+        academy_views.personal_path_step_delete,
+        name="personal-path-step-delete",
+    ),
+    path(
+        "paths/<int:pk>/tasks/add/",
+        academy_views.personal_path_task_add,
+        name="personal-path-task-add",
+    ),
+    path(
+        "paths/<int:pk>/regenerate/",
+        academy_views.personal_path_regenerate,
+        name="personal-path-regenerate",
+    ),
+    path(
+        "paths/<int:pk>/archive/",
+        academy_views.personal_path_archive,
+        name="personal-path-archive",
     ),
 
     # Self-enrollment (subscription-gated)

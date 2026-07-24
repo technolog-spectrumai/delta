@@ -1,0 +1,77 @@
+{% extends "academy/base.html" %}
+{% load i18n %}
+
+{% block academy_title %}{% trans "New Learning Path" %}{% endblock %}
+{% block tab_courses %}border-b-2 border-current -mb-px{% endblock %}
+
+{% block academy_content %}
+
+  <div class="space-y-2">
+    <a href="{% url 'academy:personal-path-list' %}" class="text-sm underline hover:opacity-80">{% trans "My Learning Paths" %}</a>
+
+    <h1 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="text-3xl font-bold">
+      {% trans "New Learning Path" %}
+    </h1>
+
+    <p class="opacity-75">
+      {% trans "Pick a goal — a single skill or a whole skill tree. Your path will contain every skill you still need, ordered so prerequisites always come first." %}
+    </p>
+  </div>
+
+  {% include "academy/_recommendation_cards.html" %}
+
+  <section
+    :class="darkMode
+      ? 'bg-bubble-bg-dark border-accent-1'
+      : 'bg-bubble-bg-light border-accent-2'"
+    class="max-w-2xl border rounded-lg p-6 shadow-md space-y-5 transition-colors duration-300">
+
+    {% if active_path %}
+      <p :class="darkMode ? 'bg-warn-dark text-primary-bg-dark' : 'bg-warn-light text-primary-bg-light'"
+         class="rounded px-4 py-3 text-sm font-semibold">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        {% blocktrans with title=active_path.title %}Creating a new path will archive your current path "{{ title }}".{% endblocktrans %}
+      </p>
+    {% endif %}
+
+    <form method="post" class="space-y-5">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div :class="darkMode ? 'text-warn-dark' : 'text-warn-light'" class="text-sm font-semibold">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <div class="space-y-1">
+        <label for="{{ form.goal_badge.id_for_label }}" class="block text-sm font-semibold">
+          <i class="fa-solid fa-award"></i>
+          {{ form.goal_badge.label }}
+        </label>
+        {{ form.goal_badge }}
+        <p class="text-xs opacity-60">{{ form.goal_badge.help_text }}</p>
+      </div>
+
+      <div class="text-center text-xs font-semibold uppercase tracking-wide opacity-60">{% trans "or" %}</div>
+
+      <div class="space-y-1">
+        <label for="{{ form.goal_group.id_for_label }}" class="block text-sm font-semibold">
+          <i class="fa-solid fa-diagram-project"></i>
+          {{ form.goal_group.label }}
+        </label>
+        {{ form.goal_group }}
+        <p class="text-xs opacity-60">{{ form.goal_group.help_text }}</p>
+      </div>
+
+      <button type="submit"
+        :class="darkMode
+          ? 'bg-accent-dark text-primary-bg-dark'
+          : 'bg-accent-light text-primary-bg-light'"
+        class="inline-flex items-center gap-2 rounded px-4 py-2 text-sm font-semibold hover:opacity-90 transition">
+        <i class="fa-solid fa-route"></i>
+        {% trans "Build my path" %}
+      </button>
+    </form>
+  </section>
+
+{% endblock %}

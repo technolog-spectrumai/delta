@@ -17,7 +17,7 @@ from django.utils.text import slugify
 from toto.ingress import IngressCommand
 
 from toto.academy.models import Course, CourseModule, Lesson, Teacher
-from toto.competence.models import SkillBadge, SkillGroup
+from toto.competence.models import SkillBadge, SkillBadgePrerequisite, SkillGroup
 from toto.people.models import Person
 from toto.quizzes.models import Quiz, QuizAnswer, QuizQuestion
 
@@ -156,7 +156,29 @@ class Command(IngressCommand):
                     )
                     lesson.attached_quizzes.add(quiz)
 
-        self.stdout.write("  🎓  academy: demo maths course tree seeded (Nauka).")
+        # Skill DAG for personalized learning paths: matura builds on algebra,
+        # and "Funkcje" has no unlocking module — it demos pure "earn badge"
+        # steps in a generated path.
+        algebra = SkillBadge.objects.filter(slug="badge-wyrazenia-algebraiczne").first()
+        matura = SkillBadge.objects.filter(slug="badge-matura-wyrazenia").first()
+        if algebra and matura:
+            SkillBadgePrerequisite.objects.get_or_create(
+                badge=matura, prerequisite=algebra)
+
+        funkcje, _ = SkillBadge.objects.get_or_create(
+            slug="badge-funkcje",
+            defaults={
+                "group": group,
+                "title": "Funkcje",
+                "icon": "fa-solid fa-wave-square",
+                "order": 3,
+            },
+        )
+        if algebra:
+            SkillBadgePrerequisite.objects.get_or_create(
+                badge=funkcje, prerequisite=algebra)
+
+        self.stdout.write("  🎓  academy: demo maths course tree + skill DAG seeded (Nauka).")
 
     def _ensure_quiz(self, mspec, owner_person):
         quiz, created = Quiz.objects.get_or_create(

@@ -1,0 +1,116 @@
+{% extends "academy/base.html" %}
+{% load i18n %}
+
+{% block academy_title %}{% trans "My Path" %}{% endblock %}
+{% block tab_courses %}border-b-2 border-current -mb-px{% endblock %}
+
+{% block academy_content %}
+
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div class="space-y-2">
+      <a href="{% url 'academy:student-progress' %}" class="text-sm underline hover:opacity-80">{% trans "My Progress" %}</a>
+
+      <h1 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="text-3xl font-bold">
+        <i class="fa-solid fa-route"></i>
+        {% trans "My Learning Paths" %}
+      </h1>
+
+      <p class="opacity-75">{% trans "Pick a skill goal and follow an ordered path that closes your skill gaps." %}</p>
+    </div>
+
+    <a href="{% url 'academy:personal-path-create' %}"
+       :class="darkMode
+         ? 'bg-accent-dark text-primary-bg-dark'
+         : 'bg-accent-light text-primary-bg-light'"
+       class="inline-flex items-center gap-2 rounded px-4 py-2 text-sm font-semibold hover:opacity-90 transition">
+      <i class="fa-solid fa-plus"></i>
+      {% trans "New path" %}
+    </a>
+  </div>
+
+  {% if not person %}
+    <p class="opacity-75">{% trans "No community profile is connected to this account yet." %}</p>
+  {% endif %}
+
+  {% include "academy/_recommendation_cards.html" %}
+
+  <section class="space-y-4">
+    <h2 class="text-xl font-bold">{% trans "Active" %}</h2>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      {% for entry in active_paths %}
+        <a href="{{ entry.path.get_absolute_url }}"
+           :class="darkMode
+             ? 'bg-bubble-bg-dark border-accent-1'
+             : 'bg-bubble-bg-light border-accent-2'"
+           class="block border rounded-lg p-5 shadow-md space-y-3 hover:opacity-90 transition-colors duration-300">
+          <div class="flex items-start justify-between gap-2">
+            <span class="text-lg font-bold">
+              {% if entry.path.goal_badge %}<i class="{{ entry.path.goal_badge.icon }}"></i>{% else %}<i class="fa-solid fa-diagram-project"></i>{% endif %}
+              {{ entry.path.title }}
+            </span>
+            <span class="text-xs font-semibold uppercase tracking-wide opacity-60">{{ entry.path.get_status_display }}</span>
+          </div>
+
+          <div :class="darkMode ? 'bg-sunken-dark' : 'bg-sunken-light'" class="h-2 w-full overflow-hidden rounded">
+            <div :class="darkMode ? 'bg-success-dark' : 'bg-success-light'"
+                 class="h-full rounded" style="width: {{ entry.progress.percent }}%"></div>
+          </div>
+
+          <div class="text-sm opacity-75">
+            {% blocktrans with done=entry.progress.done total=entry.progress.total %}{{ done }} of {{ total }} steps completed{% endblocktrans %}
+          </div>
+        </a>
+      {% empty %}
+        <p class="text-sm opacity-60">{% trans "No active path. Create one to get started." %}</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% if completed_paths %}
+    <section class="space-y-4">
+      <h2 class="text-xl font-bold">{% trans "Completed" %}</h2>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        {% for entry in completed_paths %}
+          <a href="{{ entry.path.get_absolute_url }}"
+             :class="darkMode
+               ? 'bg-bubble-bg-dark border-accent-1'
+               : 'bg-bubble-bg-light border-accent-2'"
+             class="block border rounded-lg p-5 shadow-md space-y-2 hover:opacity-90 transition-colors duration-300">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-lg font-bold">
+                <i :class="darkMode ? 'text-success-dark' : 'text-success-light'" class="fa-solid fa-circle-check"></i>
+                {{ entry.path.title }}
+              </span>
+              <span class="text-xs opacity-60">{{ entry.path.completed_at|date:"M d, Y" }}</span>
+            </div>
+            <div class="text-sm opacity-75">
+              {% blocktrans with total=entry.progress.total %}All {{ total }} steps completed{% endblocktrans %}
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% if archived_paths %}
+    <section class="space-y-4">
+      <h2 class="text-xl font-bold opacity-70">{% trans "Archived" %}</h2>
+
+      <div class="space-y-2">
+        {% for entry in archived_paths %}
+          <a href="{{ entry.path.get_absolute_url }}"
+             :class="darkMode
+               ? 'bg-bubble-bg-dark border-accent-1'
+               : 'bg-bubble-bg-light border-accent-2'"
+             class="block border rounded p-3 opacity-70 hover:opacity-90 transition">
+            <span class="font-semibold">{{ entry.path.title }}</span>
+            <span class="block text-xs opacity-60">{{ entry.path.created_at|date:"M d, Y" }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+{% endblock %}

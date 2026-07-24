@@ -13,6 +13,8 @@ from .models import (
     LearningPath,
     LearningPathBadge,
     Lesson,
+    PersonalPath,
+    PersonalPathStep,
     Script,
     ScriptSection,
     Student,
@@ -482,6 +484,63 @@ class LearningPathBadgeAdmin(admin.ModelAdmin):
         "learning_path",
         "badge",
     )
+
+
+class PersonalPathStepInline(admin.TabularInline):
+    model = PersonalPathStep
+    extra = 0
+    fields = (
+        "step_type",
+        "badge",
+        "module",
+        "title",
+        "order",
+        "is_completed",
+        "completed_at",
+    )
+    autocomplete_fields = (
+        "badge",
+        "module",
+    )
+    readonly_fields = (
+        "completed_at",
+    )
+
+
+@admin.register(PersonalPath)
+class PersonalPathAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "student",
+        "status",
+        "goal_badge",
+        "goal_group",
+        "created_at",
+        "completed_at",
+    )
+    list_filter = (
+        "status",
+        "created_at",
+    )
+    search_fields = (
+        "title",
+        "student__person__display_name",
+        "goal_badge__title",
+        "goal_group__title",
+    )
+    autocomplete_fields = (
+        "student",
+        "goal_badge",
+        "goal_group",
+    )
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+        "completed_at",
+    )
+    inlines = [
+        PersonalPathStepInline,
+    ]
 
 
 # Cohorts

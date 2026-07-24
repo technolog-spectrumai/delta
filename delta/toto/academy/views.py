@@ -3,19 +3,26 @@ import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import IntegrityError, transaction
+from django.db.models import Max
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import TemplateView
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, FormView, ListView
 
 from toto.competence.models import SkillBadge, SkillGroup
 from toto.ui import PageProcessor
 from toto.verbena.views import PageDetailMixin
 
+from .forms import PathTaskStepForm, PersonalPathGoalForm
 from .models import (
-    Certificate, Cohort, Course, CourseModule, Script, Student, Teacher,
+    Certificate, Cohort, Course, CourseModule, PersonalPath, PersonalPathStep,
+    Script, Student, StudentBadge, Teacher,
 )
+from .paths import generate_steps, regenerate_path, sync_path
+from .recommendations import recommend_goals
 
 
 def build_skill_tree_graph(tree):
@@ -693,6 +700,262 @@ def course_metrics(request, slug):
         "enrollment_chart_json": enrollment_chart,
     }
     return render(request, "academy/course_metrics.html", PageProcessor().decorate(context, request))
+
+
+# ---------------------------------------------------------------------------
+# Personalized learning paths (self-service)
+# ---------------------------------------------------------------------------
+
+def _get_own_path(request, pk):
+    person = getattr(request.user, "community_profile", None)
+    if not person:
+        raise Http404
+    return get_object_or_404(
+        PersonalPath.objects.select_related("goal_badge", "goal_group", "student"),
+        pk=pk,
+        student__person=person,
+    )
+
+
+class PersonalPathListView(LoginRequiredMixin, AcademyContextMixin, TemplateView):
+    template_name = "academy/personal_path_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        person = getattr(self.request.user, "community_profile", None)
+        student = None
+
+        if person:
+            student, _ = Student.objects.get_or_create(person=person)
+
+        active_paths = []
+        completed_paths = []
+        archived_paths = []
+
+        if student:
+            paths = (
+                student.personal_paths
+                .select_related("goal_badge", "goal_badge__group", "goal_group")
+                .prefetch_related("steps")
+            )
+            for path in paths:
+                if path.status == PersonalPath.Status.ARCHIVED:
+                    archived_paths.append({"path": path, "progress": None})
+                    continue
+
+                entry = {"path": path, "progress": sync_path(path)}
+                if path.status == PersonalPath.Status.COMPLETED:
+                    completed_paths.append(entry)
+                else:
+                    active_paths.append(entry)
+
+        context["person"] = person
+        context["student"] = student
+        context["active_paths"] = active_paths
+        context["completed_paths"] = completed_paths
+        context["archived_paths"] = archived_paths
+        context["recommended_goals"] = (
+            recommend_goals(student, limit=4) if student else []
+        )
+
+        return context
+
+
+class PersonalPathCreateView(LoginRequiredMixin, AcademyContextMixin, FormView):
+    template_name = "academy/personal_path_form.html"
+    form_class = PersonalPathGoalForm
+
+    def get_student(self):
+        person = getattr(self.request.user, "community_profile", None)
+        if not person:
+            return None
+        student, _ = Student.objects.get_or_create(person=person)
+        return student
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["student"] = self.get_student()
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        student = self.get_student()
+        context["active_path"] = (
+            PersonalPath.objects
+            .filter(student=student, status=PersonalPath.Status.ACTIVE)
+            .first()
+            if student else None
+        )
+        context["recommended_goals"] = (
+            recommend_goals(student) if student else []
+        )
+        return context
+
+    def form_valid(self, form):
+        student = self.get_student()
+        if student is None:
+            messages.error(
+                self.request,
+                "You need a community profile to create a learning path.",
+            )
+            return redirect("academy:personal-path-list")
+
+        goal = form.cleaned_data["goal_badge"] or form.cleaned_data["goal_group"]
+
+        try:
+            with transaction.atomic():
+                # One active path per student: starting a new goal archives
+                # the current one.
+                PersonalPath.objects.filter(
+                    student=student, status=PersonalPath.Status.ACTIVE
+                ).update(status=PersonalPath.Status.ARCHIVED)
+
+                path = PersonalPath.objects.create(
+                    student=student,
+                    title=f"Path to {goal.title}",
+                    goal_badge=form.cleaned_data["goal_badge"],
+                    goal_group=form.cleaned_data["goal_group"],
+                )
+                generate_steps(path)
+        except IntegrityError:
+            existing = PersonalPath.objects.filter(
+                student=student, status=PersonalPath.Status.ACTIVE
+            ).first()
+            if existing:
+                return redirect(existing.get_absolute_url())
+            return redirect("academy:personal-path-list")
+
+        messages.success(self.request, f"Your path to {goal.title} is ready.")
+        return redirect(path.get_absolute_url())
+
+
+class PersonalPathDetailView(LoginRequiredMixin, AcademyContextMixin, DetailView):
+    model = PersonalPath
+    template_name = "academy/personal_path_detail.html"
+    context_object_name = "path"
+
+    def get_queryset(self):
+        person = getattr(self.request.user, "community_profile", None)
+        if not person:
+            return PersonalPath.objects.none()
+        return (
+            PersonalPath.objects
+            .select_related("goal_badge", "goal_badge__group", "goal_group", "student")
+            .filter(student__person=person)
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        path = self.object
+
+        context["progress"] = sync_path(path)
+        context["steps"] = (
+            path.steps
+            .select_related("badge", "badge__group", "module", "module__course")
+            .order_by("order", "id")
+        )
+        context["task_form"] = PathTaskStepForm()
+
+        return context
+
+
+@login_required
+def personal_path_step_toggle(request, pk, step_pk):
+    path = _get_own_path(request, pk)
+    if request.method != "POST":
+        return redirect(path.get_absolute_url())
+
+    step = get_object_or_404(path.steps, pk=step_pk)
+
+    if step.step_type == PersonalPathStep.StepType.BADGE:
+        messages.info(
+            request,
+            "This step completes automatically when you earn the skill.",
+        )
+        return redirect(path.get_absolute_url())
+
+    badge_earned = step.badge_id and StudentBadge.objects.filter(
+        student=path.student, badge_id=step.badge_id
+    ).exists()
+    if step.is_completed and badge_earned:
+        messages.info(
+            request,
+            "This step is backed by an earned skill and cannot be unchecked.",
+        )
+        return redirect(path.get_absolute_url())
+
+    step.is_completed = not step.is_completed
+    step.completed_at = timezone.now() if step.is_completed else None
+    step.save(update_fields=["is_completed", "completed_at"])
+
+    return redirect(path.get_absolute_url())
+
+
+@login_required
+def personal_path_task_add(request, pk):
+    path = _get_own_path(request, pk)
+    if request.method != "POST":
+        return redirect(path.get_absolute_url())
+
+    form = PathTaskStepForm(request.POST)
+    if form.is_valid():
+        last_order = path.steps.aggregate(max_order=Max("order"))["max_order"] or 0
+        PersonalPathStep.objects.create(
+            path=path,
+            step_type=PersonalPathStep.StepType.TASK,
+            title=form.cleaned_data["title"],
+            note=form.cleaned_data["note"],
+            order=last_order + 10,
+        )
+        messages.success(request, "Task added to your path.")
+    else:
+        messages.error(request, "Enter a task title.")
+
+    return redirect(path.get_absolute_url())
+
+
+@login_required
+def personal_path_step_delete(request, pk, step_pk):
+    path = _get_own_path(request, pk)
+    if request.method != "POST":
+        return redirect(path.get_absolute_url())
+
+    step = get_object_or_404(
+        path.steps, pk=step_pk, step_type=PersonalPathStep.StepType.TASK
+    )
+    step.delete()
+    messages.success(request, "Task removed.")
+
+    return redirect(path.get_absolute_url())
+
+
+@login_required
+def personal_path_regenerate(request, pk):
+    path = _get_own_path(request, pk)
+    if request.method != "POST":
+        return redirect(path.get_absolute_url())
+
+    regenerate_path(path)
+    messages.success(
+        request,
+        "Path rebuilt against your current skills. "
+        "Completed steps and your tasks were kept.",
+    )
+
+    return redirect(path.get_absolute_url())
+
+
+@login_required
+def personal_path_archive(request, pk):
+    path = _get_own_path(request, pk)
+    if request.method != "POST":
+        return redirect(path.get_absolute_url())
+
+    path.status = PersonalPath.Status.ARCHIVED
+    path.save(update_fields=["status", "updated_at"])
+    messages.success(request, "Path archived.")
+
+    return redirect("academy:personal-path-list")
 
 
 # ---------------------------------------------------------------------------

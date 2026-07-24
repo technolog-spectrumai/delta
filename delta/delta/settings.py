@@ -389,6 +389,7 @@ DASHBOARD_ITEMS = [
     {"title": _("Nauka"),        "icon": "fa-solid fa-graduation-cap",      "description": _("Courses, lessons and practice tasks — high-school maths and matura."), "link": "academy:course-list",       "visibility": "public"},
     {"title": _("Zadania"),      "icon": "fa-solid fa-circle-question",     "description": _("Practice task pools — solve until every task in a section is done."),  "link": "quizzes:quiz-list",         "visibility": "public"},
     {"title": _("My progress"),  "icon": "fa-solid fa-chart-line",          "description": _("See how many tasks you have solved in each section."),                  "link": "academy:student-progress",  "visibility": "private"},
+    {"title": _("My path"),      "icon": "fa-solid fa-route",               "description": _("Your personalized learning path — ordered steps to close your skill gaps."), "link": "academy:personal-path-list", "visibility": "private"},
     {"title": _("Skills"),       "icon": "fa-solid fa-diagram-project",     "description": _("The skill tree — badges you earn as you complete modules."),           "link": "academy:skill-forest",      "visibility": "public"},
     # --- materials ---
     {"title": _("Notatki"),      "icon": "fa-solid fa-pen-nib",             "description": _("Lesson notes and articles from your teachers."),                       "link": "palimpsest:page_list",      "visibility": "public"},
@@ -402,7 +403,7 @@ DASHBOARD_ITEMS = [
 ]
 
 DASHBOARD_CATEGORIES = [
-    {"title": _("Learning"),  "items": ["Nauka", "Zadania", "My progress", "Skills"]},
+    {"title": _("Learning"),  "items": ["Nauka", "Zadania", "My progress", "My path", "Skills"]},
     {"title": _("Materials"), "items": ["Notatki", "Books", "Articles", "Storage"]},
     {"title": _("Account"),   "items": ["Subscription", "SocialHub", "Events"]},
 ]
