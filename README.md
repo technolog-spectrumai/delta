@@ -6,9 +6,10 @@ server). It stands up the base toto platform plus a suite of education apps
 revived from `toto_libs/limbo/` and carried here as delta's own `toto.*`
 namespace portion.
 
-It is deliberately lean: a WSGI host with **no** Neo4j/graph, AI, realtime chat,
-media/ffmpeg pipeline or Celery worker. The whole learning flow is synchronous
-HTTP.
+It is deliberately lean: a WSGI host with **no** Neo4j/graph, AI, realtime chat
+or media/ffmpeg pipeline. The learning flow is synchronous HTTP; the one piece
+of background machinery is a small **Celery worker + beat pair** that recomputes
+the recommendation similarity matrix daily (and on demand from the admin).
 
 The product is specified (in Polish) in [`doc/plan/wymagania.tex`](doc/plan/wymagania.tex)
 — a functional spec for a maths platform: registration + email confirmation, a
@@ -24,11 +25,26 @@ progress, a profile with subscription + discount codes, and a matura module.
   *Matematyka - szkoła średnia*, *Matura - poziom podstawowy* (extendable).
 - **Task pool practice** — the core learning loop (`toto.quizzes`, delta additions):
   each section is a pool of tasks (A–D **and** open-typed answers). A **correct**
-  answer leaves the pool; a **wrong** one stays and the worked solution is shown
-  ("spróbuj ponownie za chwilę"). Progress = *solved / total* per section; a section
-  is complete when every task is solved.
+  answer leaves the pool; a **wrong** one stays ("spróbuj ponownie za chwilę").
+  After any submission a **rich worked solution** (WYSIWYG, trix — the verbena
+  editor) renders as a blog-section-style card, falling back to the plain
+  explanations when absent. A stuck student can open an optional **hint** in a
+  modal before answering. Progress = *solved / total* per section; a section is
+  complete when every task is solved.
 - **Skills** — `toto.competence` badges unlocked by completing modules, drawn as a
   skill forest.
+- **Personalized learning paths** — a student picks a goal (a skill badge or a
+  whole tree) and gets an ordered, self-service path that closes their skill
+  gaps: transitive prerequisite closure over the badge DAG, minus earned badges,
+  topologically sorted in curriculum order. Steps auto-complete as badges are
+  earned; free-form tasks can be added; one active path per student.
+- **Suggested goals** — a hybrid recommender ranks next badges on the path pages:
+  content-based graph metrics (readiness, unlock power, tree continuation)
+  blended with item-based collaborative filtering over a **numpy** badge×badge
+  cosine-similarity matrix, precomputed into Redis and refreshed daily by Celery
+  beat. Cold-start shrinkage keeps a fresh install purely content-based; staff
+  tune the collaborative strength and trigger recomputes from the
+  **Recommendation configuration** admin page.
 - **Materials** — video lessons (`Lesson.video_file` from Vault or an external
   URL) and downloadable PDF notes (`Lesson.notes_file`); reference materials via
   `toto.library`; textbook pages via `toto.palimpsest`.
@@ -48,8 +64,8 @@ installed wheels):
 
 | App | Role |
 |---|---|
-| `toto.academy` | LMS core — courses, modules, lessons, enrollment, certificates, cohorts, skill forest |
-| `toto.quizzes` | tasks (A–D + open), attempts, and the **practice pool** (`QuestionProgress`) |
+| `toto.academy` | LMS core — courses, modules, lessons, enrollment, certificates, cohorts, skill forest, **personalized learning paths + goal recommendations** |
+| `toto.quizzes` | tasks (A–D + open), attempts, the **practice pool** (`QuestionProgress`), rich worked solutions + hints |
 | `toto.competence` | skill groups / badges (prereq DAG) |
 | `toto.palimpsest` | page/section content (module notes / textbook) |
 | `toto.library` | bibliography / reference manager |
