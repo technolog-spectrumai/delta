@@ -1,0 +1,20 @@
+{% load i18n %}
+{# Blog-section-style card for a question's rich worked solution. Expects `question`. #}
+{% if question.solution %}
+  <article
+    :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+    class="overflow-hidden rounded-2xl border shadow-sm">
+    <header
+      :class="darkMode ? 'bg-sunken-dark' : 'bg-sunken-light'"
+      class="border-b border-current/10 px-5 py-3">
+      <p :class="darkMode ? 'text-accent-dark' : 'text-accent-light'"
+         class="text-xs font-semibold uppercase tracking-wide">
+        <i class="fa-solid fa-lightbulb mr-1"></i>{% trans "Worked solution" %}
+      </p>
+    </header>
+    <div class="px-5 py-4">
+      {# Solution HTML is trusted staff input (admin trix editor / escaped migration). #}
+      <div class="quiz-prose max-w-none text-sm">{{ question.solution|safe }}</div>
+    </div>
+  </article>
+{% endif %}

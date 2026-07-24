@@ -1,5 +1,8 @@
 from django.contrib import admin
 
+from trix_editor.fields import TrixEditorField
+from trix_editor.widgets import TrixEditorWidget
+
 from .models import (
     Quiz,
     QuizAnswer,
@@ -36,9 +39,12 @@ class QuizAnswerInline(admin.TabularInline):
 class QuizQuestionInline(admin.StackedInline):
     model = QuizQuestion
     extra = 0
-    fields = ("text", "explanation", "is_multiple_choice", "order")
+    fields = ("text", "explanation", "solution", "is_multiple_choice", "order")
     ordering = ("order",)
     show_change_link = True
+    formfield_overrides = {
+        TrixEditorField: {"widget": TrixEditorWidget},
+    }
 
 
 @admin.register(Quiz)
@@ -57,9 +63,12 @@ class QuizAdmin(admin.ModelAdmin):
 class QuizQuestionAdmin(admin.ModelAdmin):
     list_display = ("text_preview", "quiz", "is_multiple_choice", "max_time", "order")
     list_filter = ("is_multiple_choice", "quiz")
-    search_fields = ("text", "explanation", "quiz__title")
+    search_fields = ("text", "explanation", "solution", "quiz__title")
     autocomplete_fields = ("quiz",)
     inlines = [QuizAnswerInline]
+    formfield_overrides = {
+        TrixEditorField: {"widget": TrixEditorWidget},
+    }
 
     @admin.display(description="Question")
     def text_preview(self, obj):
