@@ -1,20 +1,27 @@
+import json
+
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.db import IntegrityError, transaction
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 from toto.competence.models import SkillBadge, SkillBadgePrerequisite, SkillGroup
 from toto.people.models import Person
 
 from .models import (
+    Cohort,
+    CohortMembership,
     Course,
+    CourseEnrollment,
     CourseModule,
     PersonalPath,
     PersonalPathStep,
     RecommendationConfig,
     Student,
     StudentBadge,
+    Teacher,
 )
 from .paths import compute_gap_badges, generate_steps, regenerate_path, sync_path
 from .recommendations import (
@@ -654,6 +661,183 @@ class RecommendationAdminTests(RecommendationFixtureMixin, TestCase):
             "admin:academy_recommendationconfig_changelist"))
 
         self.assertEqual(response.status_code, 200)
+
+
+class ClassroomViewTests(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        from toto.quizzes.models import QuestionProgress, Quiz, QuizQuestion
+        from toto.competence.models import SkillBadge, SkillGroup
+
+        cls.user_field = _person_user_field()
+        if cls.user_field is None:
+            return
+
+        group = SkillGroup.objects.create(title="Class", slug="class", order=1)
+        cls.badge_1 = SkillBadge.objects.create(
+            group=group, title="Class badge 1", slug="class-badge-1", order=1)
+        cls.badge_2 = SkillBadge.objects.create(
+            group=group, title="Class badge 2", slug="class-badge-2", order=2)
+
+        cls.course = Course.objects.create(
+            title="Classroom course", slug="classroom-course",
+            is_published=True, order=1)
+        cls.module_1 = CourseModule.objects.create(
+            course=cls.course, unlocks_badge=cls.badge_1,
+            title="Module one", slug="module-one", order=1)
+        CourseModule.objects.create(
+            course=cls.course, unlocks_badge=cls.badge_2,
+            title="Module two", slug="module-two", order=2)
+
+        cls.quiz = Quiz.objects.create(
+            title="Classroom quiz", slug="classroom-quiz", is_published=True)
+        cls.questions = [
+            QuizQuestion.objects.create(quiz=cls.quiz, text=f"Q{i}", order=i)
+            for i in range(1, 4)
+        ]
+        cls.module_1.attached_quizzes.add(cls.quiz)
+
+        User = get_user_model()
+
+        def make_teacher(username, display_name):
+            user = User.objects.create_user(username=username, password="x")
+            person = Person.objects.create(display_name=display_name)
+            setattr(person, cls.user_field, user)
+            person.save(update_fields=[cls.user_field])
+            teacher = Teacher.objects.create(person=person)
+            return user, teacher
+
+        cls.teacher_user, cls.teacher = make_teacher("t1", "Teacher One")
+        cls.other_teacher_user, cls.other_teacher = make_teacher(
+            "t2", "Teacher Two")
+        cls.staff_user = User.objects.create_user(
+            username="class-staff", password="x", is_staff=True)
+        cls.plain_user = User.objects.create_user(
+            username="plain", password="x")
+        plain_person = Person.objects.create(display_name="Plain Person")
+        setattr(plain_person, cls.user_field, cls.plain_user)
+        plain_person.save(update_fields=[cls.user_field])
+
+        cls.cohort = Cohort.objects.create(
+            course=cls.course, teacher=cls.teacher,
+            title="Class 1A", slug="class-1a")
+        cls.other_cohort = Cohort.objects.create(
+            course=cls.course, teacher=cls.other_teacher,
+            title="Class 1B", slug="class-1b")
+
+        cls.member_a = Student.objects.create(
+            person=Person.objects.create(display_name="Member A"))
+        cls.member_b = Student.objects.create(
+            person=Person.objects.create(display_name="Member B"))
+        for student in (cls.member_a, cls.member_b):
+            CohortMembership.objects.create(cohort=cls.cohort, student=student)
+            CourseEnrollment.objects.create(student=student, course=cls.course)
+
+        enrollment = CourseEnrollment.objects.get(
+            student=cls.member_a, course=cls.course)
+        enrollment.completed_at = timezone.now()
+        enrollment.save()
+
+        for question in cls.questions[:2]:
+            progress, _ = QuestionProgress.objects.get_or_create(
+                participant=cls.member_a.person, question=question)
+            progress.record_attempt(True)
+        StudentBadge.objects.create(student=cls.member_a, badge=cls.badge_1)
+
+    def setUp(self):
+        if self.user_field is None:
+            self.skipTest(
+                "Person model exposes no auth-user link in this environment")
+
+    def dashboard_url(self, cohort=None):
+        return reverse("academy:classroom-dashboard",
+                       kwargs={"pk": (cohort or self.cohort).pk})
+
+    def test_list_requires_login(self):
+        response = self.client.get(reverse("academy:classroom-list"))
+        self.assertEqual(response.status_code, 302)
+
+    def test_list_shows_own_cohorts_only(self):
+        self.client.force_login(self.teacher_user)
+        response = self.client.get(reverse("academy:classroom-list"))
+
+        self.assertContains(response, "Class 1A")
+        self.assertNotContains(response, "Class 1B")
+
+    def test_staff_sees_all_cohorts(self):
+        self.client.force_login(self.staff_user)
+        response = self.client.get(reverse("academy:classroom-list"))
+
+        self.assertContains(response, "Class 1A")
+        self.assertContains(response, "Class 1B")
+
+    def test_non_teacher_gets_404(self):
+        self.client.force_login(self.plain_user)
+
+        self.assertEqual(
+            self.client.get(reverse("academy:classroom-list")).status_code, 404)
+        self.assertEqual(
+            self.client.get(self.dashboard_url()).status_code, 404)
+
+    def test_dashboard_404_for_foreign_cohort(self):
+        self.client.force_login(self.teacher_user)
+        response = self.client.get(self.dashboard_url(self.other_cohort))
+        self.assertEqual(response.status_code, 404)
+
+    def test_staff_opens_any_dashboard(self):
+        self.client.force_login(self.staff_user)
+        response = self.client.get(self.dashboard_url())
+        self.assertEqual(response.status_code, 200)
+
+    def test_dashboard_numbers(self):
+        self.client.force_login(self.teacher_user)
+        response = self.client.get(self.dashboard_url())
+
+        self.assertEqual(response.context["member_count"], 2)
+        self.assertEqual(response.context["enrolled_count"], 2)
+        self.assertEqual(response.context["completed_count"], 1)
+        self.assertEqual(response.context["total_questions"], 3)
+
+        rows = response.context["member_rows"]
+        self.assertEqual(rows[0]["person"], self.member_a.person)
+        self.assertEqual(rows[0]["solved"], 2)
+        self.assertEqual(rows[0]["pct"], 67)
+        self.assertEqual(rows[0]["badge_count"], 1)
+        self.assertTrue(rows[0]["completed"])
+        self.assertEqual(rows[1]["solved"], 0)
+        self.assertEqual(
+            response.context["average_pct"], round((67 + 0) / 2))
+
+    def test_chart_json_shapes(self):
+        self.client.force_login(self.teacher_user)
+        response = self.client.get(self.dashboard_url())
+
+        funnel = json.loads(response.context["funnel_chart_json"])
+        self.assertEqual(funnel["chart_type"], "bar")
+        self.assertEqual(funnel["datasets"][0]["data"], [2, 2, 1])
+
+        practice = json.loads(response.context["practice_chart_json"])
+        self.assertEqual(practice["datasets"][0]["data"], [67, 0])
+
+        badges = json.loads(response.context["badges_chart_json"])
+        self.assertEqual(badges["labels"], ["Class badge 1", "Class badge 2"])
+        self.assertEqual(badges["datasets"][0]["data"], [1, 0])
+
+        activity = json.loads(response.context["activity_chart_json"])
+        self.assertEqual(activity["chart_type"], "line")
+        self.assertEqual(len(activity["labels"]), 8)
+        # Fixture activity all happened just now -> current (last) week.
+        self.assertEqual(activity["datasets"][0]["data"][-1], 2)
+        self.assertEqual(activity["datasets"][1]["data"][-1], 1)
+
+    def test_empty_cohort_renders(self):
+        self.client.force_login(self.other_teacher_user)
+        response = self.client.get(self.dashboard_url(self.other_cohort))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["member_count"], 0)
+        self.assertEqual(response.context["average_pct"], 0)
 
 
 class PersonalPathViewTests(PathFixtureMixin, TestCase):

@@ -1,0 +1,175 @@
+{% extends "academy/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block academy_title %}{{ cohort.title }} — {% trans "Classroom" %}{% endblock %}
+{% block tab_courses %}border-b-2 border-current -mb-px{% endblock %}
+
+{% block academy_start_script %}
+<script src="{% static 'vendor/chartjs/chart.umd.min.js' %}"></script>
+{% include "oya/partials/dim.html" %}
+{% endblock %}
+
+{% block academy_content %}
+
+    <!-- Header -->
+    <header class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div class="space-y-2">
+        <a href="{% url 'academy:classroom-list' %}"
+           class="inline-flex items-center gap-2 text-sm underline hover:opacity-80">
+          <i class="fa-solid fa-arrow-left"></i>
+          {% trans "Classrooms" %}
+        </a>
+
+        <div>
+          <p :class="darkMode ? 'text-accent-dark' : 'text-accent-light'"
+             class="text-xs font-semibold uppercase tracking-wide">{% trans "Classroom performance" %}</p>
+          <h1 class="mt-1 flex items-center gap-3 text-3xl font-bold">
+            <i class="fa-solid fa-chalkboard-user"></i>
+            {{ cohort.title }}
+          </h1>
+          <p class="mt-1 text-sm opacity-70">
+            <a href="{% url 'academy:course-detail' slug=course.slug %}" class="underline hover:opacity-80">{{ course.title }}</a>
+            {% if cohort.teacher %} · {{ cohort.teacher.display_name }}{% endif %}
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Summary cards -->
+    <section class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <article :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+               class="rounded-2xl border p-5 shadow-sm">
+        <p class="text-xs font-semibold uppercase tracking-wide opacity-60">{% trans "Members" %}</p>
+        <p class="mt-2 text-3xl font-bold">{{ member_count }}</p>
+      </article>
+
+      <article :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+               class="rounded-2xl border p-5 shadow-sm">
+        <p class="text-xs font-semibold uppercase tracking-wide opacity-60">{% trans "Enrolled" %}</p>
+        <p class="mt-2 text-3xl font-bold">{{ enrolled_count }}</p>
+      </article>
+
+      <article :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+               class="rounded-2xl border p-5 shadow-sm">
+        <p class="text-xs font-semibold uppercase tracking-wide opacity-60">{% trans "Completed" %}</p>
+        <p class="mt-2 text-3xl font-bold">{{ completed_count }}</p>
+      </article>
+
+      <article :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+               class="rounded-2xl border p-5 shadow-sm">
+        <p class="text-xs font-semibold uppercase tracking-wide opacity-60">{% trans "Avg. progress" %}</p>
+        <p class="mt-2 text-3xl font-bold">{{ average_pct }}%</p>
+      </article>
+    </section>
+
+    <!-- Charts -->
+    <section class="grid gap-4 lg:grid-cols-2">
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="rounded-2xl border p-5 shadow-sm">
+        <h2 class="flex items-center gap-2 text-lg font-bold mb-4">
+          <i class="fa-solid fa-filter"></i>{% trans "Completion funnel" %}</h2>
+        <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'"
+             class="rounded-xl border p-4">
+          {% include "oya/partials/chart.html" with chart_id="funnelChart" data=funnel_chart_json %}
+        </div>
+      </div>
+
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="rounded-2xl border p-5 shadow-sm">
+        <h2 class="flex items-center gap-2 text-lg font-bold mb-4">
+          <i class="fa-solid fa-chart-line"></i>{% trans "Activity (last 8 weeks)" %}</h2>
+        <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'"
+             class="rounded-xl border p-4">
+          {% include "oya/partials/chart.html" with chart_id="activityChart" data=activity_chart_json %}
+        </div>
+      </div>
+
+      {% if member_rows and total_questions %}
+        <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+             class="rounded-2xl border p-5 shadow-sm">
+          <h2 class="flex items-center gap-2 text-lg font-bold mb-4">
+            <i class="fa-solid fa-list-check"></i>{% trans "Practice progress by student" %}</h2>
+          <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'"
+               class="rounded-xl border p-4">
+            {% include "oya/partials/chart.html" with chart_id="practiceChart" data=practice_chart_json %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if course_badges %}
+        <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+             class="rounded-2xl border p-5 shadow-sm">
+          <h2 class="flex items-center gap-2 text-lg font-bold mb-4">
+            <i class="fa-solid fa-award"></i>{% trans "Skill badges earned" %}</h2>
+          <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'"
+               class="rounded-xl border p-4">
+            {% include "oya/partials/chart.html" with chart_id="badgesChart" data=badges_chart_json %}
+          </div>
+        </div>
+      {% endif %}
+    </section>
+
+    <!-- Per-student table -->
+    <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+             class="rounded-2xl border shadow-sm overflow-hidden">
+      <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'"
+           class="border-b p-5">
+        <h2 class="font-bold text-lg">
+          <i class="fa-solid fa-users"></i>
+          {% trans "Students" %}
+        </h2>
+        {% if total_questions %}
+          <p class="text-sm opacity-70 mt-1">
+            {% blocktrans with total=total_questions %}Progress over {{ total }} practice tasks in this course.{% endblocktrans %}
+          </p>
+        {% endif %}
+      </div>
+
+      <div class="divide-y" :class="darkMode ? 'divide-accent-1/30' : 'divide-accent-2/30'">
+        {% for row in member_rows %}
+          <div class="flex flex-wrap items-center gap-4 p-5">
+            <div class="min-w-0 flex-1">
+              <p class="font-semibold text-sm">{{ row.person.display_name }}</p>
+              <p class="text-xs opacity-60 mt-0.5">
+                {% if row.completed %}
+                  <i class="fa-solid fa-circle-check text-success-light"></i> {% trans "Course completed" %}
+                {% elif row.enrolled %}
+                  <i class="fa-solid fa-book-open-reader"></i> {% trans "Enrolled" %}
+                {% else %}
+                  <i class="fa-solid fa-circle-minus opacity-50"></i> {% trans "Not enrolled" %}
+                {% endif %}
+                {% if row.last_activity %}
+                  · {% trans "last active" %} {{ row.last_activity|date:"M j, Y" }}
+                {% endif %}
+              </p>
+            </div>
+
+            <div class="w-40">
+              <div class="flex items-center justify-between text-xs mb-1">
+                <span class="opacity-70">{{ row.solved }}/{{ row.total }}</span>
+                <span class="font-bold">{{ row.pct }}%</span>
+              </div>
+              <div :class="darkMode ? 'bg-primary-bg-dark' : 'bg-primary-bg-light'"
+                   class="h-2 w-full overflow-hidden rounded-full">
+                <div :class="darkMode ? 'bg-accent-dark' : 'bg-accent-light'"
+                     class="h-full rounded-full transition-all"
+                     style="width: {{ row.pct }}%"></div>
+              </div>
+            </div>
+
+            <span :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'"
+                  class="inline-flex shrink-0 items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold">
+              <i class="fa-solid fa-award opacity-60"></i>
+              {{ row.badge_count }}
+            </span>
+          </div>
+        {% empty %}
+          <div class="p-8 text-center text-sm italic opacity-70">
+            {% trans "No students in this classroom yet. Add members in the admin." %}
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+{% endblock %}

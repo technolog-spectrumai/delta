@@ -11,12 +11,18 @@ Only runs under FULL_INGRESS.
 """
 from __future__ import annotations
 
+from datetime import timedelta
+
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from django.utils.text import slugify
 
 from toto.ingress import IngressCommand
 
-from toto.academy.models import Course, CourseModule, Lesson, Teacher
+from toto.academy.models import (
+    Cohort, CohortMembership, Course, CourseEnrollment, CourseModule, Lesson,
+    Student, StudentBadge, Teacher,
+)
 from toto.competence.models import SkillBadge, SkillBadgePrerequisite, SkillGroup
 from toto.people.models import Person
 from toto.quizzes.models import Quiz, QuizAnswer, QuizQuestion
@@ -190,7 +196,61 @@ class Command(IngressCommand):
             SkillBadgePrerequisite.objects.get_or_create(
                 badge=funkcje, prerequisite=algebra)
 
+        self._seed_demo_classroom(teacher)
+
         self.stdout.write("  🎓  academy: demo maths course tree + skill DAG seeded (Nauka).")
+
+    def _seed_demo_classroom(self, teacher):
+        """Demo cohort with two students and some practice activity, so the
+        classroom performance dashboard has data to chart. Idempotent."""
+        from toto.quizzes.models import QuestionProgress
+
+        course = Course.objects.filter(slug="matematyka-szkola-srednia").first()
+        if course is None:
+            return
+
+        cohort, _ = Cohort.objects.get_or_create(
+            course=course,
+            slug="klasa-1a",
+            defaults={"title": "Klasa 1A", "teacher": teacher, "is_active": True},
+        )
+
+        algebra_badge = SkillBadge.objects.filter(
+            slug="badge-wyrazenia-algebraiczne").first()
+        questions = list(
+            self._course_questions(course).order_by("order", "id"))
+
+        for index, name in enumerate(["Uczeń Demo 1", "Uczeń Demo 2"], start=1):
+            person, _ = Person.objects.get_or_create(display_name=name)
+            student, _ = Student.objects.get_or_create(person=person)
+            CohortMembership.objects.get_or_create(cohort=cohort, student=student)
+            enrollment, _ = CourseEnrollment.objects.get_or_create(
+                student=student, course=course)
+
+            # First demo student has solved a couple of tasks (spread over two
+            # weeks so the activity chart shows a line), earned the algebra
+            # badge and finished the course; the second is just starting out.
+            if index == 1:
+                for qi, question in enumerate(questions[:2]):
+                    progress, _ = QuestionProgress.objects.get_or_create(
+                        participant=person, question=question)
+                    if not progress.is_solved:
+                        progress.record_attempt(True)
+                        if qi == 0:
+                            progress.solved_at = timezone.now() - timedelta(weeks=1)
+                            progress.save(update_fields=["solved_at"])
+                if algebra_badge:
+                    StudentBadge.objects.get_or_create(
+                        student=student, badge=algebra_badge)
+                if not enrollment.completed_at:
+                    enrollment.completed_at = timezone.now()
+                    enrollment.save()
+
+    @staticmethod
+    def _course_questions(course):
+        from toto.quizzes.models import QuizQuestion
+        return QuizQuestion.objects.filter(
+            quiz__academy_modules__course=course).distinct()
 
     def _ensure_quiz(self, mspec, owner_person):
         quiz, created = Quiz.objects.get_or_create(

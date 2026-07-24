@@ -1,0 +1,81 @@
+{% extends "academy/base.html" %}
+{% load i18n %}
+
+{% block academy_title %}{% trans "Classrooms" %}{% endblock %}
+{% block tab_courses %}border-b-2 border-current -mb-px{% endblock %}
+
+{% block academy_content %}
+
+  <header class="space-y-2">
+    <p :class="darkMode ? 'text-accent-dark' : 'text-accent-light'"
+       class="text-xs font-semibold uppercase tracking-wide">{% trans "Classroom performance" %}</p>
+    <h1 class="flex items-center gap-3 text-3xl font-bold">
+      <i class="fa-solid fa-chalkboard-user"></i>
+      {% trans "Classrooms" %}
+    </h1>
+    <p class="opacity-75">
+      {% if request.user.is_staff %}
+        {% trans "All cohorts across the platform." %}
+      {% else %}
+        {% trans "Cohorts you teach." %}
+      {% endif %}
+    </p>
+  </header>
+
+  <section class="grid gap-4 md:grid-cols-2">
+    {% for row in rows %}
+      <a href="{% url 'academy:classroom-dashboard' pk=row.cohort.pk %}"
+         :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+         class="block rounded-2xl border p-5 shadow-sm space-y-3 hover:opacity-90 transition-colors duration-300">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="text-lg font-bold">{{ row.cohort.title }}</p>
+            <p class="text-sm opacity-70">{{ row.cohort.course.title }}</p>
+            {% if row.cohort.teacher %}
+              <p class="text-xs opacity-60 mt-0.5">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                {{ row.cohort.teacher.display_name }}
+              </p>
+            {% endif %}
+          </div>
+          <div class="flex flex-col items-end gap-2 text-xs">
+            {% if row.cohort.is_active %}
+              <span :class="darkMode ? 'border-accent-1' : 'border-accent-2'"
+                    class="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 font-semibold">
+                <i class="fa-solid fa-circle text-success-light text-[8px]"></i>{% trans "Active" %}
+              </span>
+            {% endif %}
+            <span :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'"
+                  class="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 font-semibold">
+              <i class="fa-solid fa-user-group"></i>
+              {% if row.cohort.capacity %}{{ row.member_count }}/{{ row.cohort.capacity }}{% else %}{{ row.member_count }}{% endif %}
+            </span>
+          </div>
+        </div>
+
+        {% if row.cohort.starts_at or row.cohort.ends_at %}
+          <div class="flex flex-wrap gap-4 text-xs opacity-60">
+            {% if row.cohort.starts_at %}
+              <span><i class="fa-solid fa-calendar-day mr-1"></i>{{ row.cohort.starts_at|date:"M j, Y" }}</span>
+            {% endif %}
+            {% if row.cohort.ends_at %}
+              <span><i class="fa-solid fa-calendar-check mr-1"></i>{{ row.cohort.ends_at|date:"M j, Y" }}</span>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        <span :class="darkMode ? 'text-accent-dark' : 'text-accent-light'"
+              class="inline-flex items-center gap-2 text-sm font-semibold">
+          <i class="fa-solid fa-chart-line"></i>
+          {% trans "Open dashboard" %}
+        </span>
+      </a>
+    {% empty %}
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="rounded-2xl border border-dashed p-8 text-center text-sm italic opacity-70 md:col-span-2">
+        {% trans "No classrooms yet. Cohorts are created in the admin." %}
+      </div>
+    {% endfor %}
+  </section>
+
+{% endblock %}

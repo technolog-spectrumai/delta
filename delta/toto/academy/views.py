@@ -1,4 +1,6 @@
 import json
+from collections import Counter
+from datetime import timedelta
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -18,8 +20,8 @@ from toto.verbena.views import PageDetailMixin
 
 from .forms import PathTaskStepForm, PersonalPathGoalForm
 from .models import (
-    Certificate, Cohort, Course, CourseModule, PersonalPath, PersonalPathStep,
-    Script, Student, StudentBadge, Teacher,
+    Certificate, Cohort, Course, CourseEnrollment, CourseModule, PersonalPath,
+    PersonalPathStep, Script, Student, StudentBadge, Teacher,
 )
 from .paths import generate_steps, regenerate_path, sync_path
 from .recommendations import recommend_goals
@@ -700,6 +702,261 @@ def course_metrics(request, slug):
         "enrollment_chart_json": enrollment_chart,
     }
     return render(request, "academy/course_metrics.html", PageProcessor().decorate(context, request))
+
+
+# ---------------------------------------------------------------------------
+# Classroom (cohort) performance dashboard — teachers see their own cohorts,
+# staff see all
+# ---------------------------------------------------------------------------
+
+def _get_teacher(request):
+    person = getattr(request.user, "community_profile", None)
+    if not person:
+        return None
+    return Teacher.objects.filter(person=person).first()
+
+
+def _course_question_ids(course):
+    """Ids of all practice-pool questions across the course's modules."""
+    from toto.quizzes.models import QuizQuestion
+    return set(
+        QuizQuestion.objects
+        .filter(quiz__academy_modules__course=course)
+        .values_list("id", flat=True)
+    )
+
+
+@login_required
+def classroom_list(request):
+    teacher = _get_teacher(request)
+    if not (teacher or request.user.is_staff):
+        raise Http404
+
+    cohorts = (
+        Cohort.objects
+        .select_related("course", "teacher", "teacher__person")
+        .prefetch_related("memberships")
+    )
+    if not request.user.is_staff:
+        cohorts = cohorts.filter(teacher=teacher)
+
+    rows = [
+        {"cohort": cohort, "member_count": len(cohort.memberships.all())}
+        for cohort in cohorts
+    ]
+
+    context = {
+        "rows": rows,
+        "teacher": teacher,
+    }
+    return render(request, "academy/classroom_list.html",
+                  PageProcessor().decorate(context, request))
+
+
+@login_required
+def classroom_dashboard(request, pk):
+    teacher = _get_teacher(request)
+    if not (teacher or request.user.is_staff):
+        raise Http404
+
+    cohort = get_object_or_404(
+        Cohort.objects.select_related("course", "teacher", "teacher__person"),
+        pk=pk,
+    )
+    if not request.user.is_staff and cohort.teacher_id != teacher.pk:
+        raise Http404
+
+    from toto.quizzes.models import QuestionProgress
+
+    course = cohort.course
+    memberships = list(
+        cohort.memberships
+        .select_related("student", "student__person")
+        .order_by("joined_at")
+    )
+    students = [membership.student for membership in memberships]
+    student_ids = [student.pk for student in students]
+    person_ids = [student.person_id for student in students]
+
+    # --- completion funnel: members -> enrolled -> completed -----------------
+    enrollments = {
+        enrollment.student_id: enrollment
+        for enrollment in CourseEnrollment.objects.filter(
+            course=course, student_id__in=student_ids)
+    }
+    enrolled_count = len(enrollments)
+    completed_count = sum(
+        1 for enrollment in enrollments.values() if enrollment.completed_at)
+
+    # --- practice progress over the course's task pools ----------------------
+    question_ids = _course_question_ids(course)
+    total_questions = len(question_ids)
+
+    progress_rows = list(
+        QuestionProgress.objects
+        .filter(participant_id__in=person_ids, question_id__in=question_ids)
+        .values_list("participant_id", "is_solved", "solved_at", "last_attempt_at")
+    )
+    solved_by_person = Counter(
+        participant_id
+        for participant_id, is_solved, _, _ in progress_rows
+        if is_solved
+    )
+    last_activity_by_person = {}
+    for participant_id, _, _, last_attempt_at in progress_rows:
+        if last_attempt_at and (
+            participant_id not in last_activity_by_person
+            or last_attempt_at > last_activity_by_person[participant_id]
+        ):
+            last_activity_by_person[participant_id] = last_attempt_at
+
+    # --- badge distribution over the course's skill badges -------------------
+    course_badges = list(
+        SkillBadge.objects
+        .filter(unlocking_modules__course=course)
+        .select_related("group")
+        .distinct()
+        .order_by("group__order", "order", "title")
+    )
+    badge_awards = list(
+        StudentBadge.objects
+        .filter(student_id__in=student_ids,
+                badge_id__in=[badge.pk for badge in course_badges])
+        .values_list("student_id", "badge_id", "awarded_at")
+    )
+    holders_by_badge = Counter(badge_id for _, badge_id, _ in badge_awards)
+    badges_by_student = Counter(student_id for student_id, _, _ in badge_awards)
+
+    # --- per-member table ----------------------------------------------------
+    member_rows = []
+    for student in students:
+        solved = solved_by_person.get(student.person_id, 0)
+        pct = round(solved * 100 / total_questions) if total_questions else 0
+        enrollment = enrollments.get(student.pk)
+        member_rows.append({
+            "student": student,
+            "person": student.person,
+            "enrolled": enrollment is not None,
+            "completed": bool(enrollment and enrollment.completed_at),
+            "solved": solved,
+            "total": total_questions,
+            "pct": pct,
+            "badge_count": badges_by_student.get(student.pk, 0),
+            "last_activity": last_activity_by_person.get(student.person_id),
+        })
+    member_rows.sort(key=lambda row: (-row["pct"], str(row["person"])))
+    average_pct = (
+        round(sum(row["pct"] for row in member_rows) / len(member_rows))
+        if member_rows else 0
+    )
+
+    # --- activity over the last 8 ISO weeks ----------------------------------
+    today = timezone.localdate()
+    current_week_start = today - timedelta(days=today.weekday())
+    week_starts = [
+        current_week_start - timedelta(weeks=offset)
+        for offset in range(7, -1, -1)
+    ]
+    week_index = {week: i for i, week in enumerate(week_starts)}
+    solved_per_week = [0] * len(week_starts)
+    badges_per_week = [0] * len(week_starts)
+
+    def _bucket(counts, moment):
+        if not moment:
+            return
+        day = timezone.localtime(moment).date()
+        week = day - timedelta(days=day.weekday())
+        if week in week_index:
+            counts[week_index[week]] += 1
+
+    for participant_id, is_solved, solved_at, _ in progress_rows:
+        if is_solved:
+            _bucket(solved_per_week, solved_at)
+    for _, _, awarded_at in badge_awards:
+        _bucket(badges_per_week, awarded_at)
+
+    # --- chart payloads (oya/partials/chart.html contract) -------------------
+    funnel_chart_json = json.dumps({
+        "chart_type": "bar",
+        "labels": ["Members", "Enrolled", "Completed"],
+        "datasets": [{
+            "label": "Students",
+            "data": [len(students), enrolled_count, completed_count],
+            "backgroundColor": ["#4F46E5", "#F59E0B", "#10B981"],
+        }],
+        "options": {
+            "plugins": {"legend": {"display": False}},
+            "scales": {"y": {"beginAtZero": True, "ticks": {"precision": 0}}},
+        },
+    })
+    practice_chart_json = json.dumps({
+        "chart_type": "bar",
+        "labels": [str(row["person"])[:20] for row in member_rows],
+        "datasets": [{
+            "label": "Solved %",
+            "data": [row["pct"] for row in member_rows],
+            "backgroundColor": "#4F46E5",
+        }],
+        "options": {
+            "plugins": {"legend": {"display": False}},
+            "scales": {"y": {"beginAtZero": True, "max": 100}},
+        },
+    })
+    badges_chart_json = json.dumps({
+        "chart_type": "bar",
+        "labels": [badge.title for badge in course_badges],
+        "datasets": [{
+            "label": "Members holding",
+            "data": [holders_by_badge.get(badge.pk, 0) for badge in course_badges],
+            "backgroundColor": "#10B981",
+        }],
+        "options": {
+            "plugins": {"legend": {"display": False}},
+            "scales": {"y": {"beginAtZero": True, "ticks": {"precision": 0}}},
+        },
+    })
+    activity_chart_json = json.dumps({
+        "chart_type": "line",
+        "labels": [week.strftime("%d.%m") for week in week_starts],
+        "datasets": [
+            {
+                "label": "Tasks solved",
+                "data": solved_per_week,
+                "borderColor": "#10B981",
+                "backgroundColor": "#10B981",
+                "tension": 0.3,
+            },
+            {
+                "label": "Badges earned",
+                "data": badges_per_week,
+                "borderColor": "#4F46E5",
+                "backgroundColor": "#4F46E5",
+                "tension": 0.3,
+            },
+        ],
+        "options": {
+            "scales": {"y": {"beginAtZero": True, "ticks": {"precision": 0}}},
+        },
+    })
+
+    context = {
+        "cohort": cohort,
+        "course": course,
+        "member_rows": member_rows,
+        "member_count": len(students),
+        "enrolled_count": enrolled_count,
+        "completed_count": completed_count,
+        "average_pct": average_pct,
+        "total_questions": total_questions,
+        "course_badges": course_badges,
+        "holders_by_badge": holders_by_badge,
+        "funnel_chart_json": funnel_chart_json,
+        "practice_chart_json": practice_chart_json,
+        "badges_chart_json": badges_chart_json,
+        "activity_chart_json": activity_chart_json,
+    }
+    return render(request, "academy/classroom_dashboard.html",
+                  PageProcessor().decorate(context, request))
 
 
 # ---------------------------------------------------------------------------

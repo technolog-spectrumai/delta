@@ -94,6 +94,10 @@
                   {% endif %}
                 </div>
                 <div class="flex flex-wrap gap-2 text-xs">
+                  <a href="{% url 'academy:classroom-dashboard' pk=cs.cohort.pk %}"
+                     :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+                     class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1 font-semibold transition hover:opacity-90">
+                    <i class="fa-solid fa-chart-line"></i>{% trans "Dashboard" %}</a>
                   {% if cs.cohort.is_active %}
                     <span :class="darkMode ? 'border-accent-1' : 'border-accent-2'"
                           class="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 font-semibold">

@@ -77,6 +77,18 @@ urlpatterns = [
         name="skill-tree-detail",
     ),
 
+    # Classroom (cohort) performance dashboards
+    path(
+        "classrooms/",
+        academy_views.classroom_list,
+        name="classroom-list",
+    ),
+    path(
+        "classrooms/<int:pk>/",
+        academy_views.classroom_dashboard,
+        name="classroom-dashboard",
+    ),
+
     # Personalized learning paths
     path(
         "paths/",
