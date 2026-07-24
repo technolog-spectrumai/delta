@@ -1,2 +1,6 @@
-# delta is a WSGI host and runs no Celery worker, so there is no celery_app to
-# import here (unlike zenobia/faros). Kept as a regular package marker.
+# delta runs a Celery worker + beat pair (recommendation similarity matrix
+# recomputation); the compose entrypoint `celery -A delta ...` needs the app
+# importable from the project package.
+from .celery import app as celery_app
+
+__all__ = ["celery_app"]

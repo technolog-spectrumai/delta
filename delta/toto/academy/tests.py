@@ -12,11 +12,18 @@ from .models import (
     CourseModule,
     PersonalPath,
     PersonalPathStep,
+    RecommendationConfig,
     Student,
     StudentBadge,
 )
 from .paths import compute_gap_badges, generate_steps, regenerate_path, sync_path
-from .recommendations import _cf_model, recommend_goals
+from .recommendations import (
+    SIMILARITY_MATRIX_KEY,
+    get_similarity_matrix,
+    recommend_goals,
+    refresh_similarity_matrix,
+)
+from .tasks import recompute_similarity_matrix
 
 
 def _person_user_field():
@@ -30,6 +37,58 @@ def _person_user_field():
         if field.is_relation and field.related_model is User:
             return field.name
     return None
+
+
+class AcademySmokeTests(TestCase):
+    """End-to-end wiring checks: imports, registrations, URLs, empty-DB paths."""
+
+    def test_celery_app_registers_recompute_task(self):
+        from delta import celery_app
+        import toto.academy.tasks  # noqa: F401 — import registers the task
+
+        self.assertIn(
+            "toto.academy.tasks.recompute_similarity_matrix",
+            celery_app.tasks)
+
+    def test_beat_schedule_references_registered_task(self):
+        from django.conf import settings
+
+        entry = settings.CELERY_BEAT_SCHEDULE[
+            "academy-recompute-badge-similarity"]
+        self.assertEqual(entry["task"], recompute_similarity_matrix.name)
+
+    def test_personal_path_urls_reverse(self):
+        reverse("academy:personal-path-list")
+        reverse("academy:personal-path-create")
+        reverse("academy:personal-path-detail", kwargs={"pk": 1})
+        reverse("academy:personal-path-step-toggle",
+                kwargs={"pk": 1, "step_pk": 1})
+        reverse("academy:personal-path-regenerate", kwargs={"pk": 1})
+        reverse("admin:academy_recommendationconfig_recalculate_matrix")
+
+    def test_matrix_builds_on_empty_database(self):
+        cache.clear()
+        payload = refresh_similarity_matrix()
+
+        self.assertEqual(payload["badge_ids"], [])
+        self.assertEqual(payload["matrix"].shape, (0, 0))
+        self.assertEqual(payload["n_pair_students"], 0)
+
+    def test_recommendations_smoke_on_fresh_student(self):
+        cache.clear()
+        person = Person.objects.get_or_create(display_name="Smoke Student")[0]
+        student = Student.objects.create(person=person)
+
+        # No badges, no graph data at all — must not raise.
+        self.assertEqual(recommend_goals(student), [])
+
+        group = SkillGroup.objects.create(title="Smoke", slug="smoke", order=1)
+        badge = SkillBadge.objects.create(
+            group=group, title="Smoke badge", slug="smoke-badge", order=1)
+        results = recommend_goals(student)
+
+        self.assertEqual(results[0]["badge"], badge)
+        self.assertEqual(RecommendationConfig.objects.count(), 1)
 
 
 class PathFixtureMixin:
@@ -342,15 +401,60 @@ class RecommendationTests(RecommendationFixtureMixin, TestCase):
         self.assertEqual(entries[1]["badge"], self.badge_p1)
         self.assertGreaterEqual(entries[0]["score"], entries[1]["score"])
 
-    def test_cf_model_cache_stamp_invalidates_on_new_award(self):
-        model = _cf_model()
-        self.assertNotIn(self.badge_a.pk, model["badge_students"])
+    def test_matrix_stays_stale_until_recomputed(self):
+        # The stored matrix deliberately ignores new awards until the next
+        # beat run (or manual recompute) — no per-award invalidation.
+        payload = get_similarity_matrix()
+        self.assertEqual(payload["badge_ids"], [])
 
         StudentBadge.objects.create(student=self.student, badge=self.badge_a)
 
-        model = _cf_model()
-        self.assertIn(
-            self.student.pk, model["badge_students"][self.badge_a.pk])
+        payload = get_similarity_matrix()
+        self.assertEqual(payload["badge_ids"], [])
+
+        recompute_similarity_matrix()  # eager mode runs inline
+        payload = get_similarity_matrix()
+        self.assertEqual(payload["badge_ids"], [self.badge_a.pk])
+
+    def test_cf_share_uses_config_knob(self):
+        for peer in self.peers:
+            StudentBadge.objects.create(student=peer, badge=self.badge_a)
+            StudentBadge.objects.create(student=peer, badge=self.badge_p1)
+        StudentBadge.objects.create(student=self.student, badge=self.badge_a)
+        refresh_similarity_matrix()
+
+        # Default knob 0.4, confidence 3/20 -> w_cf = 0.06.
+        self.assertAlmostEqual(self.rec_for(self.badge_p1)["score"], 0.53)
+        self.assertAlmostEqual(self.rec_for(self.badge_p2)["score"], 0.47)
+
+        config = RecommendationConfig.load()
+        config.cf_strength = 0.0
+        config.save()
+        self.assertAlmostEqual(self.rec_for(self.badge_p1)["score"], 0.5)
+        self.assertAlmostEqual(self.rec_for(self.badge_p2)["score"], 0.5)
+
+        config.cf_strength = 1.0
+        config.cold_start_students = 3
+        config.save()
+        self.assertAlmostEqual(self.rec_for(self.badge_p1)["score"], 1.0)
+        self.assertAlmostEqual(self.rec_for(self.badge_p2)["score"], 0.0)
+
+    def test_popular_reason_gated_by_effective_weight(self):
+        for peer in self.peers:
+            StudentBadge.objects.create(student=peer, badge=self.badge_a)
+            StudentBadge.objects.create(student=peer, badge=self.badge_p1)
+        StudentBadge.objects.create(student=self.student, badge=self.badge_a)
+        refresh_similarity_matrix()
+
+        # Default w_cf = 0.06 < 0.15 -> CF too weak to claim popularity.
+        entry = self.rec_for(self.badge_p1)
+        self.assertNotIn("popular", self.reason_kinds(entry))
+
+        config = RecommendationConfig.load()
+        config.cold_start_students = 3  # w_cf = 0.4
+        config.save()
+        entry = self.rec_for(self.badge_p1)
+        self.assertIn("popular", self.reason_kinds(entry))
 
 
 class RecommendationViewTests(RecommendationFixtureMixin, TestCase):
@@ -412,6 +516,144 @@ class RecommendationViewTests(RecommendationFixtureMixin, TestCase):
 
         self.assertNotContains(response, "Suggested goals")
         self.assertEqual(response.context["recommended_goals"], [])
+
+
+class SimilarityMatrixTests(RecommendationFixtureMixin, TestCase):
+
+    def test_matrix_values(self):
+        for peer in self.peers:
+            StudentBadge.objects.create(student=peer, badge=self.badge_a)
+            StudentBadge.objects.create(student=peer, badge=self.badge_p1)
+
+        payload = refresh_similarity_matrix()
+        index = {b: i for i, b in enumerate(payload["badge_ids"])}
+        matrix = payload["matrix"]
+
+        # Perfect co-occurrence: 3/sqrt(3*3) = 1.0; zero diagonal.
+        self.assertAlmostEqual(
+            float(matrix[index[self.badge_a.pk], index[self.badge_p1.pk]]), 1.0)
+        self.assertEqual(
+            float(matrix[index[self.badge_a.pk], index[self.badge_a.pk]]), 0.0)
+
+        # A fourth holder of A dilutes the cosine: 3/sqrt(3*4).
+        StudentBadge.objects.create(student=self.student, badge=self.badge_a)
+        payload = refresh_similarity_matrix()
+        index = {b: i for i, b in enumerate(payload["badge_ids"])}
+        self.assertAlmostEqual(
+            float(payload["matrix"][index[self.badge_a.pk], index[self.badge_p1.pk]]),
+            3 / (3 * 4) ** 0.5)
+
+    def test_payload_schema_and_counts(self):
+        for peer in self.peers:
+            StudentBadge.objects.create(student=peer, badge=self.badge_a)
+            StudentBadge.objects.create(student=peer, badge=self.badge_p1)
+        StudentBadge.objects.create(student=self.student, badge=self.badge_b)
+
+        payload = refresh_similarity_matrix()
+
+        self.assertEqual(payload["n_students"], 4)
+        self.assertEqual(payload["n_pair_students"], 3)
+        self.assertEqual(payload["badge_ids"], sorted(payload["badge_ids"]))
+        self.assertTrue(payload["computed_at"])
+        self.assertEqual(
+            payload["matrix"].shape,
+            (len(payload["badge_ids"]), len(payload["badge_ids"])))
+
+    def test_lazy_build_on_cache_miss(self):
+        self.assertIsNone(cache.get(SIMILARITY_MATRIX_KEY))
+
+        recommend_goals(self.student)
+
+        self.assertIsNotNone(cache.get(SIMILARITY_MATRIX_KEY))
+
+    def test_cache_round_trip(self):
+        import numpy.testing
+
+        for peer in self.peers:
+            StudentBadge.objects.create(student=peer, badge=self.badge_a)
+            StudentBadge.objects.create(student=peer, badge=self.badge_b)
+
+        stored = refresh_similarity_matrix()
+        loaded = get_similarity_matrix()
+
+        numpy.testing.assert_allclose(loaded["matrix"], stored["matrix"])
+        self.assertEqual(loaded["badge_ids"], stored["badge_ids"])
+
+    def test_task_returns_summary(self):
+        StudentBadge.objects.create(student=self.student, badge=self.badge_a)
+
+        summary = recompute_similarity_matrix()
+
+        self.assertEqual(summary["badges"], 1)
+        self.assertEqual(summary["students"], 1)
+        self.assertEqual(summary["pair_students"], 0)
+        self.assertTrue(summary["computed_at"])
+
+
+class RecommendationConfigTests(TestCase):
+
+    def test_load_creates_singleton(self):
+        config = RecommendationConfig.load()
+        self.assertEqual(config.pk, 1)
+        self.assertEqual(config.cf_strength, 0.4)
+        self.assertEqual(config.cold_start_students, 20)
+        self.assertEqual(RecommendationConfig.load().pk, config.pk)
+        self.assertEqual(RecommendationConfig.objects.count(), 1)
+
+    def test_save_forces_single_row(self):
+        RecommendationConfig.load()
+        RecommendationConfig(cf_strength=0.7).save()
+
+        self.assertEqual(RecommendationConfig.objects.count(), 1)
+        self.assertEqual(RecommendationConfig.load().cf_strength, 0.7)
+
+    def test_cf_strength_bounds_validated(self):
+        from django.core.exceptions import ValidationError
+
+        for value in (1.5, -0.1):
+            config = RecommendationConfig(cf_strength=value)
+            with self.assertRaises(ValidationError):
+                config.full_clean()
+
+
+class RecommendationAdminTests(RecommendationFixtureMixin, TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        User = get_user_model()
+        cls.admin_user = User.objects.create_superuser(
+            username="rec-admin", password="secret")
+
+    def test_recalculate_endpoint_builds_matrix(self):
+        StudentBadge.objects.create(student=self.student, badge=self.badge_a)
+        self.client.force_login(self.admin_user)
+        self.assertIsNone(cache.get(SIMILARITY_MATRIX_KEY))
+
+        response = self.client.get(reverse(
+            "admin:academy_recommendationconfig_recalculate_matrix"))
+
+        self.assertRedirects(
+            response,
+            reverse("admin:academy_recommendationconfig_changelist"))
+        self.assertIsNotNone(cache.get(SIMILARITY_MATRIX_KEY))
+
+    def test_recalculate_endpoint_requires_staff(self):
+        response = self.client.get(reverse(
+            "admin:academy_recommendationconfig_recalculate_matrix"))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/admin/login", response["Location"])
+        self.assertIsNone(cache.get(SIMILARITY_MATRIX_KEY))
+
+    def test_changelist_renders_with_config(self):
+        RecommendationConfig.load()
+        self.client.force_login(self.admin_user)
+
+        response = self.client.get(reverse(
+            "admin:academy_recommendationconfig_changelist"))
+
+        self.assertEqual(response.status_code, 200)
 
 
 class PersonalPathViewTests(PathFixtureMixin, TestCase):

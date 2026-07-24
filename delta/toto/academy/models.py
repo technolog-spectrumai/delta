@@ -1,6 +1,7 @@
 import uuid
 
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
@@ -635,6 +636,49 @@ class PersonalPathStep(models.Model):
                 kwargs={"slug": self.badge.group.slug},
             )
         return ""
+
+
+class RecommendationConfig(models.Model):
+    """Singleton (pk=1) tuning knobs for the hybrid badge recommender.
+
+    cf_strength caps the collaborative share of the hybrid score; the
+    automatic cold-start shrinkage still applies on top (effective weight =
+    cf_strength * data confidence). Content sub-weights stay as constants in
+    recommendations.py. Changing these fields needs no matrix rebuild — the
+    similarity matrix stores similarities only; weights blend per request.
+    """
+
+    cf_strength = models.FloatField(
+        default=0.4,
+        validators=[MinValueValidator(0.0), MaxValueValidator(1.0)],
+        help_text=(
+            "Maximum collaborative-filtering share of the hybrid score "
+            "(0 = pure content-based)."
+        ),
+    )
+    cold_start_students = models.PositiveIntegerField(
+        default=20,
+        help_text=(
+            "Students with at least two badges needed for the collaborative "
+            "share to reach full strength."
+        ),
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Recommendation configuration"
+
+    def __str__(self):
+        return "Recommendation configuration"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
 
 
 # ────────────────────────────────────────────────

@@ -7,9 +7,10 @@ revived education apps carried as delta's own toto.* namespace portion under
 delta/toto/ (academy, quizzes, competence, palimpsest, library, subscriptions).
 
 It deliberately omits the heavy tiers — no Neo4j/graph, no AI, no realtime chat,
-no Celery worker, no media/ffmpeg pipeline. Video lessons ride a plain
-vault.VaultFile upload (Lesson.video_file) or an external URL
-(Lesson.lecture_video_url); the practice/quiz flow is all synchronous HTTP.
+no media/ffmpeg pipeline. Video lessons ride a plain vault.VaultFile upload
+(Lesson.video_file) or an external URL (Lesson.lecture_video_url); the
+practice/quiz flow is all synchronous HTTP. A small Celery worker + beat pair
+exists solely to recompute the recommendation similarity matrix (daily).
 
 All configuration is driven by environment variables — no YAML is read here.
 
@@ -22,6 +23,8 @@ Key env vars:
   ALLOWED_HOSTS, CSRF_TRUSTED_ORIGINS, PLATFORM_DOMAIN
   DB_ENGINE(postgis|spatialite), DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT
   REDIS_CACHE_URL
+  CELERY_BROKER_URL              (unset -> tasks run eagerly in-process)
+  CELERY_TASK_ALWAYS_EAGER=1     (force eager mode even with a broker)
   EMAIL_BACKEND(console|smtp|dummy), EMAIL_HOST, EMAIL_PORT, EMAIL_USE_TLS, ...
   FULL_INGRESS=1
 """
@@ -213,7 +216,8 @@ else:
     CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
 
 # ---------------------------------------------------------------------------
-# Vault — encrypt synchronously (delta runs no Celery worker).
+# Vault — encrypt synchronously by default. A Celery worker now runs in the
+# stack (recommendation matrix), so VAULT_ENCRYPT_ASYNC=1 is viable if needed.
 # ---------------------------------------------------------------------------
 VAULT_ENCRYPT_ASYNC = os.environ.get("VAULT_ENCRYPT_ASYNC", "0") == "1"
 
@@ -308,6 +312,27 @@ if DJANGO_ENV == "PROD":
     CSRF_COOKIE_SECURE = _env_bool("CSRF_COOKIE_SECURE", _secure_default)
     # Must stay readable by JS: AJAX endpoints read the CSRF token from document.cookie.
     CSRF_COOKIE_HTTPONLY = False
+
+# ---------------------------------------------------------------------------
+# Celery — broker on redis db 0 (the cache stays on db 1). Without a broker
+# URL (bare local dev, tests) tasks run eagerly in-process, so nothing needs
+# a worker; the beat schedule then simply never fires. The deploy stack runs
+# dedicated worker + beat containers (scripts/deploy.py, services.celery).
+# ---------------------------------------------------------------------------
+
+from celery.schedules import crontab
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "")
+CELERY_TASK_ALWAYS_EAGER = _env_bool("CELERY_TASK_ALWAYS_EAGER", not bool(CELERY_BROKER_URL))
+CELERY_TASK_EAGER_PROPAGATES = True
+CELERY_TIMEZONE = TIME_ZONE
+# No result backend: the task's outcome is the refreshed cache payload itself.
+CELERY_BEAT_SCHEDULE = {
+    "academy-recompute-badge-similarity": {
+        "task": "toto.academy.tasks.recompute_similarity_matrix",
+        "schedule": crontab(hour=3, minute=0),
+    },
+}
 
 # ---------------------------------------------------------------------------
 # Secrets / encryption
