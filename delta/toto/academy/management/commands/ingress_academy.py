@@ -24,7 +24,8 @@ from toto.quizzes.models import Quiz, QuizAnswer, QuizQuestion
 
 # ── demo content ────────────────────────────────────────────────────────────
 # A task is (text, type, [(answer, is_correct, explanation), ...]) with an
-# optional 4th element: rich solution HTML (trix) shown as the worked solution.
+# optional 4th element: rich solution HTML (trix) shown as the worked solution,
+# and an optional 5th element: a plain-text hint (shown in the practice modal).
 _ALG_TASKS = [
     ("Uprość wyrażenie: 2x + 3x", "choice",
         [("5x", True, "2x + 3x = (2 + 3)x = 5x"), ("6x", False, ""), ("5", False, ""), ("x", False, "")]),
@@ -34,7 +35,8 @@ _ALG_TASKS = [
         "<h2>Rozwiązanie krok po kroku</h2>"
         "<p>Korzystamy ze wzoru skróconego mnożenia: <strong>(a + b)² = a² + 2ab + b²</strong>.</p>"
         "<p>Dla a = x oraz b = 2 mamy: x² + 2·x·2 + 2² = <strong>x² + 4x + 4</strong>.</p>"
-        "<blockquote>Wzory skróconego mnożenia warto znać na pamięć — wracają na maturze.</blockquote>"),
+        "<blockquote>Wzory skróconego mnożenia warto znać na pamięć — wracają na maturze.</blockquote>",
+        "Przypomnij sobie wzór (a + b)² — kwadrat pierwszego, podwojony iloczyn, kwadrat drugiego."),
     ("Oblicz wartość wyrażenia: 3 · (2 + 4)", "open",
         [("18", True, "3 · 6 = 18")]),
     ("Dla jakiego x zachodzi równość x + 5 = 12? Podaj samo x.", "open",
@@ -49,7 +51,8 @@ _MATURA_TASKS = [
         "<h2>Rozwiązanie</h2>"
         "<p>Przenosimy wyraz wolny na prawą stronę: <strong>2x = 10 + 4 = 14</strong>.</p>"
         "<p>Dzielimy obie strony przez 2: <strong>x = 7</strong>.</p>"
-        "<p>Sprawdzenie: 2·7 − 4 = 10 ✓</p>"),
+        "<p>Sprawdzenie: 2·7 − 4 = 10 ✓</p>",
+        "Zacznij od przeniesienia −4 na prawą stronę równania."),
     ("Zadanie otwarte. Podaj największą liczbę całkowitą mniejszą od 3,5.", "open",
         [("3", True, "Największa liczba całkowita < 3,5 to 3")]),
 ]
@@ -203,9 +206,10 @@ class Command(IngressCommand):
             for qi, task in enumerate(mspec["tasks"], start=1):
                 text, qtype, answers = task[0], task[1], task[2]
                 solution = task[3] if len(task) > 3 else ""
+                hint = task[4] if len(task) > 4 else ""
                 question = QuizQuestion.objects.create(
                     quiz=quiz, text=text, question_type=qtype, order=qi,
-                    solution=solution)
+                    solution=solution, hint=hint)
                 for ai, (atext, correct, expl) in enumerate(answers, start=1):
                     QuizAnswer.objects.create(
                         question=question, text=atext, is_correct=correct,

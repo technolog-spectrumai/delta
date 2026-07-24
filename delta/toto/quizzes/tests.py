@@ -9,7 +9,14 @@ from trix_editor.fields import TrixEditorField
 
 from toto.people.models import Person
 
-from .models import Quiz, QuizAnswer, QuizAttempt, QuizAttemptAnswer, QuizQuestion
+from .models import (
+    QuestionProgress,
+    Quiz,
+    QuizAnswer,
+    QuizAttempt,
+    QuizAttemptAnswer,
+    QuizQuestion,
+)
 
 SOLUTION_HTML = "<h2>Worked solution</h2><p><strong>Step 1:</strong> count the items.</p>"
 PLAIN_PROBE = "Plain <b>text</b> hint"
@@ -88,6 +95,19 @@ class QuizSolutionModelTests(TestCase):
         field = QuizQuestion._meta.get_field("solution")
         self.assertIsInstance(field, TrixEditorField)
 
+    def test_has_hint_property(self):
+        quiz = Quiz.objects.create(title="H", slug="h")
+
+        with_hint = QuizQuestion.objects.create(
+            quiz=quiz, text="T1", hint="Try factoring first.")
+        without_hint = QuizQuestion.objects.create(quiz=quiz, text="T2")
+        whitespace_hint = QuizQuestion.objects.create(
+            quiz=quiz, text="T3", hint="   \n  ")
+
+        self.assertTrue(with_hint.has_hint)
+        self.assertFalse(without_hint.has_hint)
+        self.assertFalse(whitespace_hint.has_hint)
+
 
 class QuizSolutionPracticeViewTests(QuizSolutionFixtureMixin, TestCase):
 
@@ -120,6 +140,43 @@ class QuizSolutionPracticeViewTests(QuizSolutionFixtureMixin, TestCase):
         self.assertNotContains(response, "Plain &lt;b&gt;text&lt;/b&gt; hint")
         self.assertNotContains(response, PLAIN_PROBE, html=False)
         self.assertContains(response, "short answer note")
+
+
+class QuizHintViewTests(QuizSolutionFixtureMixin, TestCase):
+    HINT_TEXT = "Try factoring <first>"
+
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.question_rich.hint = cls.HINT_TEXT
+        cls.question_rich.save(update_fields=["hint"])
+
+    def test_show_hint_button_and_escaped_hint_in_question_form(self):
+        # First unsolved question is question_rich (order 1), which has a hint.
+        response = self.client.get(
+            reverse("quizzes:quiz-practice", kwargs={"pk": self.quiz.pk}))
+
+        self.assertContains(response, "Show hint")
+        self.assertContains(response, "Try factoring &lt;first&gt;")
+        self.assertNotContains(response, self.HINT_TEXT, html=False)
+
+    def test_no_hint_button_for_hintless_question(self):
+        # Solve the hinted question so the pool serves question_plain next.
+        progress, _ = QuestionProgress.objects.get_or_create(
+            participant=self.person, question=self.question_rich)
+        progress.record_attempt(True)
+
+        response = self.client.get(
+            reverse("quizzes:quiz-practice", kwargs={"pk": self.quiz.pk}))
+
+        self.assertContains(response, self.question_plain.text)
+        self.assertNotContains(response, "Show hint")
+
+    def test_hint_absent_from_feedback_screen(self):
+        # The hint belongs to the question form, not the answer feedback.
+        response = self.practice_post(self.question_rich, self.wrong_rich)
+
+        self.assertNotContains(response, "Show hint")
 
 
 class QuizSolutionDetailViewTests(QuizSolutionFixtureMixin, TestCase):
