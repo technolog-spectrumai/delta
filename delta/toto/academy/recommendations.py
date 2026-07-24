@@ -1,20 +1,34 @@
 """Hybrid badge goal recommendations for personalized learning paths.
 
-Blends content-based graph metrics computed on the SkillBadge prerequisite
-DAG (readiness, unlock power, tree continuation) with item-based
-collaborative filtering over StudentBadge co-occurrence ("students who
-earned X also earned Y", cosine-normalized). The collaborative weight
-shrinks automatically while there is little co-occurrence data, so a
-fresh install degrades cleanly to pure content-based ranking.
+Blends content-based graph metrics computed per-request on the SkillBadge
+prerequisite DAG (readiness, unlock power, tree continuation) with
+item-based collaborative filtering read from a precomputed badge x badge
+cosine-similarity matrix (numpy) stored in the Django cache (Redis in
+production, LocMem in dev/tests).
+
+The matrix is rebuilt daily by Celery beat (toto.academy.tasks
+.recompute_similarity_matrix), on demand from the RecommendationConfig
+admin, and lazily on cache miss — so views work before the first beat run.
+Collaborative signal may therefore lag badge awards by up to a day; that
+staleness is the accepted trade-off for request-time speed.
+
+Tuning lives in the RecommendationConfig singleton: cf_strength caps the
+collaborative share of the score, and cold-start shrinkage still applies
+on top (effective weight = cf_strength * data confidence), so a fresh
+install degrades cleanly to pure content-based ranking.
+
+The cached payload contains a pickled numpy array (django-redis pickles
+transparently); the Redis instance is compose-internal, which is the trust
+boundary that makes pickle acceptable here.
 """
-from math import sqrt
+import numpy as np
 
 from django.core.cache import cache
-from django.db.models import Count, Max
+from django.utils import timezone
 
 from toto.competence.models import SkillBadge
 
-from .models import PersonalPath, StudentBadge
+from .models import PersonalPath, RecommendationConfig, StudentBadge
 from .paths import load_prerequisite_graph, transitive_closure
 
 RECOMMENDATION_LIMIT = 6
@@ -24,14 +38,11 @@ W_READINESS = 0.5
 W_UNLOCK = 0.25
 W_CONTINUATION = 0.25
 
-# Collaborative share of the hybrid score at full confidence, and how many
-# students with >=2 badges are needed to reach it.
-W_CF_MAX = 0.4
-CF_COLD_START_STUDENTS = 20
-
-CF_MODEL_TTL = 3600
 CACHE_KEY_PREFIX = "academy:recs"
-CACHE_VERSION = 1
+CACHE_VERSION = 2
+SIMILARITY_MATRIX_KEY = f"{CACHE_KEY_PREFIX}:simmatrix:v{CACHE_VERSION}"
+# Beat refreshes daily; the TTL is only a safety net against orphaned keys.
+SIMILARITY_MATRIX_TTL = 7 * 24 * 3600
 
 # Reason-chip thresholds: "popular" is only claimed when the collaborative
 # signal is strong and actually carried weight in the score.
@@ -39,48 +50,60 @@ POPULAR_MIN_CF = 0.5
 POPULAR_MIN_WEIGHT = 0.15
 
 
-def _build_cf_model():
-    """Global co-occurrence model over StudentBadge.
+def build_similarity_matrix():
+    """Item-item cosine similarity over StudentBadge, as a numpy matrix.
 
-    Returns {"badge_students": {badge_id: set(student_ids)},
-             "n_pair_students": int}, where n_pair_students counts students
-    holding at least two badges — the only ones creating co-occurrence
-    signal.
+    Returns the cache payload:
+      {"matrix": ndarray (n_badges x n_badges, float64, zero diagonal),
+       "badge_ids": sorted list mapping row/col index -> badge id,
+       "n_students": int,
+       "n_pair_students": int,   # students holding >= 2 badges
+       "computed_at": iso datetime string}
     """
-    badge_students = {}
-    student_badge_counts = {}
-    for student_id, badge_id in StudentBadge.objects.values_list(
-        "student_id", "badge_id"
-    ):
-        badge_students.setdefault(badge_id, set()).add(student_id)
-        student_badge_counts[student_id] = student_badge_counts.get(student_id, 0) + 1
+    rows = list(StudentBadge.objects.values_list("student_id", "badge_id"))
+
+    badge_ids = sorted({badge_id for _, badge_id in rows})
+    student_ids = sorted({student_id for student_id, _ in rows})
+    badge_index = {badge_id: i for i, badge_id in enumerate(badge_ids)}
+    student_index = {student_id: i for i, student_id in enumerate(student_ids)}
+
+    interactions = np.zeros((len(badge_ids), len(student_ids)), dtype=np.float64)
+    for student_id, badge_id in rows:
+        interactions[badge_index[badge_id], student_index[student_id]] = 1.0
+
+    if len(badge_ids):
+        norms = np.sqrt(interactions.sum(axis=1))
+        normalized = interactions / np.where(norms == 0, 1.0, norms)[:, None]
+        matrix = normalized @ normalized.T
+        np.fill_diagonal(matrix, 0.0)
+        n_pair_students = int((interactions.sum(axis=0) >= 2).sum())
+    else:
+        matrix = np.zeros((0, 0), dtype=np.float64)
+        n_pair_students = 0
 
     return {
-        "badge_students": badge_students,
-        "n_pair_students": sum(
-            1 for count in student_badge_counts.values() if count >= 2
-        ),
+        "matrix": matrix,
+        "badge_ids": badge_ids,
+        "n_students": len(student_ids),
+        "n_pair_students": n_pair_students,
+        "computed_at": timezone.now().isoformat(),
     }
 
 
-def _cf_model():
-    """Cached CF model; the key is stamped with the StudentBadge state so any
-    new award switches to a fresh key and old entries expire via TTL."""
-    stats = StudentBadge.objects.aggregate(n=Count("id"), max_id=Max("id"))
-    key = (
-        f"{CACHE_KEY_PREFIX}:cf:v{CACHE_VERSION}"
-        f":{stats['n'] or 0}:{stats['max_id'] or 0}"
-    )
-    return cache.get_or_set(key, _build_cf_model, CF_MODEL_TTL)
+def refresh_similarity_matrix():
+    """Build the similarity matrix and store it in the cache."""
+    payload = build_similarity_matrix()
+    cache.set(SIMILARITY_MATRIX_KEY, payload, SIMILARITY_MATRIX_TTL)
+    return payload
 
 
-def _cosine_similarity(candidate_students, earned_students):
-    if not candidate_students or not earned_students:
-        return 0.0
-    overlap = len(candidate_students & earned_students)
-    if not overlap:
-        return 0.0
-    return overlap / sqrt(len(candidate_students) * len(earned_students))
+def get_similarity_matrix():
+    """Cached matrix payload; built synchronously on a cache miss so views
+    keep working before the first beat run (or without a worker at all)."""
+    payload = cache.get(SIMILARITY_MATRIX_KEY)
+    if payload is None:
+        payload = refresh_similarity_matrix()
+    return payload
 
 
 def recommend_goals(student, limit=RECOMMENDATION_LIMIT):
@@ -129,17 +152,24 @@ def recommend_goals(student, limit=RECOMMENDATION_LIMIT):
     }
     max_descendants = max(descendant_counts.values(), default=0)
 
-    model = _cf_model()
-    badge_students = model["badge_students"]
-    confidence = (
-        min(1.0, model["n_pair_students"] / CF_COLD_START_STUDENTS)
-        if earned else 0.0
-    )
-    w_cf = W_CF_MAX * confidence
+    config = RecommendationConfig.load()
+    payload = get_similarity_matrix()
+    matrix = payload["matrix"]
+    badge_index = {badge_id: i for i, badge_id in enumerate(payload["badge_ids"])}
 
-    earned_student_sets = [
-        badge_students.get(badge_id, set()) - {student.pk}
-        for badge_id in earned
+    if earned and config.cold_start_students:
+        confidence = min(
+            1.0, payload["n_pair_students"] / config.cold_start_students)
+    elif earned and payload["n_pair_students"]:
+        confidence = 1.0
+    else:
+        confidence = 0.0
+    w_cf = config.cf_strength * confidence
+
+    # Badges awarded/created after the last recompute are simply absent from
+    # the matrix and score 0 collaboratively — content still ranks them.
+    earned_indices = [
+        badge_index[badge_id] for badge_id in earned if badge_id in badge_index
     ]
 
     scored = []
@@ -163,14 +193,10 @@ def recommend_goals(student, limit=RECOMMENDATION_LIMIT):
             + W_CONTINUATION * continuation
         )
 
-        candidate_students = badge_students.get(badge.pk, set())
-        cf_raw = (
-            sum(
-                _cosine_similarity(candidate_students, earned_students)
-                for earned_students in earned_student_sets
-            ) / len(earned_student_sets)
-            if earned_student_sets else 0.0
-        )
+        if earned_indices and badge.pk in badge_index:
+            cf_raw = float(matrix[badge_index[badge.pk], earned_indices].mean())
+        else:
+            cf_raw = 0.0
 
         scored.append({
             "badge": badge,

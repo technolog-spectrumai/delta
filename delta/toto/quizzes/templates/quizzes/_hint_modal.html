@@ -1,0 +1,46 @@
+{% load i18n %}
+{# "Show hint" button + modal for a question's optional plain-text hint. Expects `question`. #}
+{% if question.has_hint %}
+  <div x-data="{ showHint: false }">
+    <button type="button" @click="showHint = true"
+      :class="darkMode ? 'border-accent-1 hover:bg-white/5' : 'border-accent-2 hover:bg-black/5'"
+      class="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold transition">
+      <i class="fa-solid fa-circle-question"></i>
+      {% trans "Show hint" %}
+    </button>
+
+    <div x-show="showHint" x-cloak
+         @keydown.escape.window="showHint = false"
+         class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/60" @click="showHint = false"></div>
+
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark text-text-main-dark' : 'border-accent-2 bg-bubble-bg-light text-text-main-light'"
+           class="relative w-full max-w-md overflow-hidden rounded-2xl border shadow-lg">
+        <header :class="darkMode ? 'bg-sunken-dark' : 'bg-sunken-light'"
+                class="flex items-center justify-between border-b border-current/10 px-5 py-3">
+          <p :class="darkMode ? 'text-accent-dark' : 'text-accent-light'"
+             class="text-xs font-semibold uppercase tracking-wide">
+            <i class="fa-solid fa-lightbulb mr-1"></i>{% trans "Hint" %}
+          </p>
+          <button type="button" @click="showHint = false"
+                  class="opacity-60 hover:opacity-100 transition"
+                  aria-label="{% trans 'Close' %}">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </header>
+
+        <div class="px-5 py-4 text-sm leading-relaxed">
+          {{ question.hint|linebreaksbr }}
+        </div>
+
+        <footer class="px-5 pb-4">
+          <button type="button" @click="showHint = false"
+            :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+            class="rounded px-4 py-2 text-sm font-semibold hover:opacity-90 transition">
+            {% trans "Got it" %}
+          </button>
+        </footer>
+      </div>
+    </div>
+  </div>
+{% endif %}

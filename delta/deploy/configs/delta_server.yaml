@@ -12,6 +12,10 @@ deployment:
 
 server: wsgi
 
+# Celery worker + beat: daily recompute of the recommendation similarity matrix.
+services:
+  celery: true
+
 target:
   type: ssh
   host: your-server.example.com      # <-- edit
@@ -44,6 +48,8 @@ env:
   PLATFORM_DOMAIN: delta.example.com                                       # <-- edit
 
   REDIS_CACHE_URL: redis://redis:6379/1
+  # Celery broker on redis db 0 (cache uses db 1).
+  CELERY_BROKER_URL: redis://redis:6379/0
   EMAIL_BACKEND: console
 
 nginx:

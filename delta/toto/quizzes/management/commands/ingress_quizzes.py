@@ -31,6 +31,15 @@ class Command(IngressCommand):
                     {
                         "text": "What does `len([1, 2, 3])` return?",
                         "explanation": "`len()` returns the number of items in a sequence. A list with three elements has length 3.",
+                        "solution": (
+                            "<h2>Worked solution</h2>"
+                            "<p><strong>len()</strong> counts the items in a sequence.</p>"
+                            "<p>The list <strong>[1, 2, 3]</strong> holds three elements, so "
+                            "<strong>len([1, 2, 3]) == 3</strong>.</p>"
+                            "<blockquote>len() works on any sized container: lists, tuples, "
+                            "strings, dicts and sets.</blockquote>"
+                        ),
+                        "hint": "Count the elements between the brackets.",
                         "is_multiple_choice": False,
                         "max_time": None,
                         "answers": [
@@ -74,6 +83,13 @@ class Command(IngressCommand):
                     {
                         "text": "What does `python manage.py migrate` do?",
                         "explanation": "`migrate` applies pending migration files to the database, creating or altering tables to match your current model definitions.",
+                        "solution": (
+                            "<h2>Worked solution</h2>"
+                            "<p><strong>migrate</strong> applies pending migration files to the "
+                            "database, creating or altering tables to match your models.</p>"
+                            "<p>Contrast with <strong>makemigrations</strong>, which only "
+                            "<em>writes</em> the migration files from model changes.</p>"
+                        ),
                         "is_multiple_choice": False,
                         "max_time": None,
                         "answers": [
@@ -170,6 +186,8 @@ class Command(IngressCommand):
                 quiz=quiz,
                 text=question_spec["text"],
                 explanation=question_spec["explanation"],
+                solution=question_spec.get("solution", ""),
+                hint=question_spec.get("hint", ""),
                 is_multiple_choice=question_spec["is_multiple_choice"],
                 max_time=question_spec["max_time"],
                 order=question_order,
