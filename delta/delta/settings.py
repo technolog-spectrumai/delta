@@ -255,6 +255,17 @@ TEMPLATES = [
 ]
 
 # ---------------------------------------------------------------------------
+# Markdown (markdownx) — rich content for academy scripts. The custom math
+# extension shields LaTeX ($…$, $$…$$) so Markdown never mangles a formula;
+# KaTeX renders it client-side.
+# ---------------------------------------------------------------------------
+MARKDOWNX_MARKDOWN_EXTENSIONS = [
+    "toto.academy.mdx_math",
+    "fenced_code",
+    "tables",
+]
+
+# ---------------------------------------------------------------------------
 # Storage / static / media
 # ---------------------------------------------------------------------------
 

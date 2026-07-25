@@ -493,6 +493,17 @@ class ScriptDetailView(PageDetailMixin, DetailView):
     template_name = "academy/script_detail.html"
     context_object_name = "page"
 
+    def render_sections(self, obj):
+        # Script section content is Markdown (with LaTeX shielded); render it.
+        from django.utils.safestring import mark_safe
+        from markdownx.utils import markdownify
+        return [{
+            "pk": section.pk,
+            "title": section.title,
+            "author": getattr(section, "author", None),
+            "html": mark_safe(markdownify(section.content or "")),
+        } for section in obj.sections.all()]
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["sections"] = self.render_sections(self.object)

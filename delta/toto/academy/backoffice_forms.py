@@ -6,7 +6,7 @@ from django import forms
 from django.forms.models import inlineformset_factory
 from django.utils.translation import gettext_lazy as _
 
-from trix_editor.widgets import TrixEditorWidget
+from markdownx.widgets import MarkdownxWidget
 
 from toto.backoffice.utils import unique_slug
 from toto.competence.models import SkillBadge
@@ -189,12 +189,15 @@ class ScriptForm(forms.ModelForm):
 
 
 class ScriptSectionForm(forms.ModelForm):
+    # Declared explicitly so the Markdown widget overrides TrixEditorField's own
+    # formfield widget (Meta.widgets alone is ignored by custom model fields).
+    content = forms.CharField(required=False, label=_("Content"), widget=MarkdownxWidget())
+
     class Meta:
         model = ScriptSection
         fields = ["title", "content"]
         widgets = {
             "title": forms.TextInput(attrs={"placeholder": _("Section heading (optional)")}),
-            "content": TrixEditorWidget(),
         }
 
     def __init__(self, *args, **kwargs):

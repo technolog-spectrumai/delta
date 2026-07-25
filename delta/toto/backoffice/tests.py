@@ -608,3 +608,43 @@ class CourseMathRenderingTests(TestCase):
         self.assertContains(resp, "katex")      # the _katex.html include
         self.assertContains(resp, "js-math")    # math wrappers present
         self.assertContains(resp, "limit $x_1$")  # summary $…$ survives for KaTeX
+
+
+# ---------------------------------------------------------------------------
+# Markdown + math for script sections (Part B)
+# ---------------------------------------------------------------------------
+
+class ScriptMarkdownMathTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.staff = _staff("bo-scriptmd")
+        group = SkillGroup.objects.create(title="G", slug="smg")
+        badge = SkillBadge.objects.create(group=group, title="B", slug="smb")
+        course = Course.objects.create(title="SC", slug="sc", is_published=True)
+        module = CourseModule.objects.create(
+            course=course, title="M", slug="smm", unlocks_badge=badge)
+        from toto.academy.models import Script, ScriptSection
+        cls.script = Script.objects.create(module=module, title="S1", slug="s1")
+        ScriptSection.objects.create(
+            page=cls.script, title="Sec", content="Solve $a*b$ and **bold**", order=1)
+
+    def test_mdx_math_protects_latex(self):
+        from markdownx.utils import markdownify
+        out = markdownify("mass $a*b*c$ and $x_1$ and **bold**")
+        self.assertIn("$a*b*c$", out)   # asterisks not turned into <em>
+        self.assertIn("$x_1$", out)
+        self.assertIn("<strong>bold</strong>", out)
+
+    def test_script_form_uses_markdownx_widget(self):
+        from toto.academy.backoffice_forms import ScriptSectionForm
+        from markdownx.widgets import MarkdownxWidget
+        self.assertIsInstance(ScriptSectionForm().fields["content"].widget, MarkdownxWidget)
+
+    def test_script_detail_renders_markdown_and_loads_katex(self):
+        self.client.force_login(self.staff)
+        resp = self.client.get(reverse("academy:script-detail", kwargs={"pk": self.script.pk}))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "<strong>bold</strong>", html=False)  # markdown rendered
+        self.assertContains(resp, "$a*b$")   # math delimiter survives for KaTeX
+        self.assertContains(resp, "katex")   # _katex.html include present
