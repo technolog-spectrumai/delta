@@ -1,4 +1,8 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.core.cache import cache
+from django.shortcuts import redirect
+from django.urls import path
+
 from toto.competence.models import SkillBadge
 from toto.quizzes.models import Quiz
 from toto.verbena.admin import SectionInlineMixin, PageAdminMixin
@@ -15,12 +19,15 @@ from .models import (
     Lesson,
     PersonalPath,
     PersonalPathStep,
+    RecommendationConfig,
     Script,
     ScriptSection,
     Student,
     StudentBadge,
     Teacher,
 )
+from .recommendations import SIMILARITY_MATRIX_KEY, refresh_similarity_matrix
+from .tasks import recompute_similarity_matrix
 
 
 class ScriptSectionInline(SectionInlineMixin):
@@ -541,6 +548,75 @@ class PersonalPathAdmin(admin.ModelAdmin):
     inlines = [
         PersonalPathStepInline,
     ]
+
+
+@admin.register(RecommendationConfig)
+class RecommendationConfigAdmin(admin.ModelAdmin):
+    list_display = (
+        "__str__",
+        "cf_strength",
+        "cold_start_students",
+        "updated_at",
+    )
+    fields = (
+        "cf_strength",
+        "cold_start_students",
+        "matrix_status",
+        "updated_at",
+    )
+    readonly_fields = (
+        "matrix_status",
+        "updated_at",
+    )
+    actions = ["recalculate_matrix_action"]
+
+    # Singleton: one row, never addable past the first, never deletable.
+    def has_add_permission(self, request):
+        return not RecommendationConfig.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def get_urls(self):
+        return [
+            path(
+                "recalculate-matrix/",
+                self.admin_site.admin_view(self.recalculate_matrix_view),
+                name="academy_recommendationconfig_recalculate_matrix",
+            ),
+        ] + super().get_urls()
+
+    def matrix_status(self, obj):
+        payload = cache.get(SIMILARITY_MATRIX_KEY)
+        if payload is None:
+            return (
+                "Not computed yet — built lazily on the first recommendation "
+                "request, or trigger the recalculation action."
+            )
+        size = len(payload["badge_ids"])
+        return (
+            f"{size} x {size} badges, {payload['n_students']} students "
+            f"({payload['n_pair_students']} with >=2 badges), "
+            f"computed {payload['computed_at']}"
+        )
+    matrix_status.short_description = "Similarity matrix"
+
+    def recalculate_matrix_action(self, request, queryset):
+        return redirect("admin:academy_recommendationconfig_recalculate_matrix")
+    recalculate_matrix_action.short_description = "Recalculate similarity matrix now"
+
+    def recalculate_matrix_view(self, request):
+        try:
+            recompute_similarity_matrix.delay()
+            self.message_user(request, "Similarity matrix recalculation queued.")
+        except Exception:  # kombu OperationalError / OSError: broker down
+            refresh_similarity_matrix()
+            self.message_user(
+                request,
+                "Broker unavailable — matrix recalculated synchronously.",
+                level=messages.WARNING,
+            )
+        return redirect("admin:academy_recommendationconfig_changelist")
 
 
 # Cohorts

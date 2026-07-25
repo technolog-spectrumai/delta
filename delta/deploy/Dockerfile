@@ -2,7 +2,8 @@ FROM python:3.11-slim
 
 # delta — a small maths e-learning host (WSGI). Base toto platform + the revived
 # education apps (academy / quizzes / competence / palimpsest / library /
-# subscriptions). No Neo4j, no AI, no realtime, no media/ffmpeg, no Celery.
+# subscriptions). No Neo4j, no AI, no realtime, no media/ffmpeg. A small Celery
+# worker + beat pair (same image) recomputes the recommendation matrix daily.
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -35,7 +36,8 @@ ENV DJANGO_SETTINGS_MODULE=delta.settings
 WORKDIR /app/delta
 
 # Single requirements file: WSGI base (Django + gunicorn + whitenoise + GIS/
-# imaging + markdownx/trix for the education apps). No celery/channels layer.
+# imaging + markdownx/trix for the education apps) + celery/numpy for the
+# recommendation matrix. No channels layer.
 COPY requirements.txt ./
 RUN pip install --upgrade pip && pip install -r requirements.txt
 RUN pip install build setuptools wheel
