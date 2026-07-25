@@ -36,6 +36,8 @@ from pathlib import Path
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
+from toto.auth_config import authentication_backends, login_url, resolve_auth
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ---------------------------------------------------------------------------
@@ -275,7 +277,11 @@ TOTO_RUN_DIR = str(BASE_DIR.parent / "run")
 # Auth
 # ---------------------------------------------------------------------------
 
-AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
+# Login strategy (toto.auth_config): delta is a standalone OIDC provider
+# (the resolver default); registration is env-toggled and defaults open.
+_A = resolve_auth(os.environ.get, default_open_registration=True)
+
+AUTHENTICATION_BACKENDS = authentication_backends(_A)
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -284,7 +290,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-LOGIN_URL = reverse_lazy("sso:login")
+LOGIN_URL = reverse_lazy(login_url(_A))
 
 # ---------------------------------------------------------------------------
 # i18n — delta is a Polish math e-learning product (English available too).
@@ -347,7 +353,7 @@ CELERY_BEAT_SCHEDULE = {
 
 FIELD_ENCRYPTION_KEY = os.environ.get("FIELD_ENCRYPTION_KEY") or base64.urlsafe_b64encode(os.urandom(32)).decode()
 SSO_VAULT_PASSWORD = os.environ.get("SSO_VAULT_PASSWORD", "")
-SSO_OPEN_REGISTRATION = os.environ.get("SSO_OPEN_REGISTRATION", "1") == "1"
+SSO_OPEN_REGISTRATION = _A.open_registration
 WALLET_VAULT_SECRET = os.environ.get("WALLET_VAULT_SECRET", SECRET_KEY)
 
 if not SSO_VAULT_PASSWORD:
@@ -366,8 +372,8 @@ if not SSO_VAULT_PASSWORD:
 # ---------------------------------------------------------------------------
 
 FULL_INGRESS = os.environ.get("FULL_INGRESS", "0") == "1"
-LOGIN_RETRY_COOLDOWN_SECONDS = int(os.environ.get("LOGIN_RETRY_COOLDOWN_SECONDS", "3"))
-CAPTCHA_RETRY_COOLDOWN_SECONDS = int(os.environ.get("CAPTCHA_RETRY_COOLDOWN_SECONDS", "3"))
+LOGIN_RETRY_COOLDOWN_SECONDS = _A.login_retry_cooldown_seconds
+CAPTCHA_RETRY_COOLDOWN_SECONDS = _A.captcha_retry_cooldown_seconds
 TOTO_ADMIN_READONLY = os.environ.get("TOTO_ADMIN_READONLY", "0") == "1"
 PLATFORM_LOGO_PATH = os.environ.get("PLATFORM_LOGO_PATH", os.path.join("..", "data", "img", "okti_old.png"))
 ACME_CHALLENGE_ROOT = str(BASE_DIR / "acme-challenges")
