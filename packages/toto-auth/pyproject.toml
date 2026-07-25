@@ -4,11 +4,9 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-# Graph integrations are lazy on purpose: toto-graph depends on this
-# package, never the other way round.
-name = "toto-ai"
+name = "toto-auth"
 version = "1.8"
-description = "toto AI agents, embeddings and assistants"
+description = "toto authentication: OIDC provider/consumer apps and the login strategy resolver"
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
@@ -16,6 +14,9 @@ requires-python = ">=3.10"
 # scripts/release.py — never edit them by hand.
 dependencies = [
     "toto-base==1.8",
+    "PyJWT>=2.0",
+    "cryptography>=41",
+    "requests>=2.28",
 ]
 
 [tool.setuptools.packages.find]
@@ -30,5 +31,4 @@ namespaces = true
 "*" = [
     "templates/**/*",
     "static/**/*",
-    "graph/*.yaml",
 ]
