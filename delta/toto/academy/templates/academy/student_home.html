@@ -1,0 +1,89 @@
+{% extends "academy/base.html" %}
+{% load i18n %}
+
+{% block academy_title %}My Learning{% endblock %}
+
+{% block academy_content %}
+<div class="space-y-8">
+
+  <!-- Greeting + continue / start -->
+  <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="rounded-2xl border p-6 shadow-sm">
+    <h2 class="text-2xl font-bold">
+      {% if person %}{% blocktrans with name=person.display_name %}Welcome back, {{ name }}{% endblocktrans %}{% else %}{% trans "Welcome" %}{% endif %} 👋
+    </h2>
+    {% if continue_course %}
+      <p class="mt-1 opacity-70">{% trans "Pick up where you left off." %}</p>
+      <a href="{% url 'academy:course-detail' slug=continue_course.slug %}"
+         :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+         class="mt-4 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90">
+        <i class="fa-solid fa-play"></i> {% blocktrans with title=continue_course.title %}Continue “{{ title }}”{% endblocktrans %}
+      </a>
+    {% elif recommended_course %}
+      <p class="mt-1 opacity-70">{% trans "Ready to start? Here’s a great first course." %}</p>
+      <a href="{% url 'academy:course-detail' slug=recommended_course.slug %}"
+         :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+         class="mt-4 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90">
+        <i class="fa-solid fa-graduation-cap"></i> {% blocktrans with title=recommended_course.title %}Start “{{ title }}”{% endblocktrans %}
+      </a>
+    {% else %}
+      <p class="mt-1 opacity-70">{% trans "Browse the catalog to find your first course." %}</p>
+      <a href="{% url 'academy:course-list' %}"
+         :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+         class="mt-4 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90">
+        <i class="fa-solid fa-compass"></i> {% trans "Browse courses" %}
+      </a>
+    {% endif %}
+    {% if not person %}
+      <p class="mt-3 text-sm italic opacity-60">{% trans "Connect a profile to track your progress and earn certificates." %}</p>
+    {% endif %}
+  </section>
+
+  <!-- My courses -->
+  {% if course_rows %}
+  <section class="space-y-3">
+    <div class="flex items-center justify-between">
+      <h3 class="text-lg font-bold"><i class="fa-solid fa-book-open-reader"></i> {% trans "My courses" %}</h3>
+      <a href="{% url 'academy:course-list' %}" class="text-sm underline hover:opacity-80">{% trans "Browse all" %} →</a>
+    </div>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {% for row in course_rows %}
+        <a href="{% url 'academy:course-detail' slug=row.course.slug %}"
+           :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'"
+           class="block rounded-xl border p-4 shadow-sm transition hover:opacity-90">
+          <div class="flex items-center justify-between gap-2">
+            <span class="min-w-0 flex-1 truncate font-semibold">{{ row.course.title }}</span>
+            {% if row.completed %}<span class="rounded-full border border-success-light/40 px-2 py-0.5 text-[10px] text-success-light"><i class="fa-solid fa-circle-check"></i> {% trans "done" %}</span>{% endif %}
+          </div>
+          <div :class="darkMode ? 'bg-white/10' : 'bg-black/10'" class="mt-3 h-2 w-full overflow-hidden rounded-full">
+            <div :class="darkMode ? 'bg-accent-dark' : 'bg-accent-light'" class="h-full rounded-full" style="width: {{ row.pct }}%"></div>
+          </div>
+          <p class="mt-1 text-xs opacity-60">{{ row.pct }}%</p>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Quick links -->
+  <section class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    {% url 'academy:course-list' as browse_url %}
+    {% url 'academy:student-progress' as progress_url %}
+    {% url 'academy:personal-path-list' as path_url %}
+    {% url 'academy:skill-forest' as skills_url %}
+    <a href="{{ browse_url }}" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="flex items-center gap-3 rounded-xl border p-4 shadow-sm transition hover:opacity-90">
+      <i class="fa-solid fa-compass text-lg"></i><span class="font-semibold">{% trans "Browse courses" %}</span>
+    </a>
+    <a href="{{ progress_url }}" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="flex items-center gap-3 rounded-xl border p-4 shadow-sm transition hover:opacity-90">
+      <i class="fa-solid fa-chart-line text-lg"></i><span class="font-semibold">{% trans "My progress" %}</span>
+    </a>
+    <a href="{{ path_url }}" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="flex items-center gap-3 rounded-xl border p-4 shadow-sm transition hover:opacity-90">
+      <i class="fa-solid fa-route text-lg"></i><span class="font-semibold">{% trans "My path" %}</span>
+    </a>
+    <a href="{{ skills_url }}" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="flex items-center gap-3 rounded-xl border p-4 shadow-sm transition hover:opacity-90">
+      <i class="fa-solid fa-diagram-project text-lg"></i><span class="font-semibold">{% trans "Skills" %}</span>
+    </a>
+  </section>
+
+</div>
+{% endblock %}

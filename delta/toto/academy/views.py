@@ -18,8 +18,8 @@ from toto.verbena.views import PageDetailMixin
 
 from .forms import PathTaskStepForm, PersonalPathGoalForm
 from .models import (
-    Certificate, Cohort, Course, CourseModule, PersonalPath, PersonalPathStep,
-    Script, Student, StudentBadge, Teacher,
+    Certificate, Cohort, Course, CourseEnrollment, CourseModule, PersonalPath,
+    PersonalPathStep, Script, Student, StudentBadge, Teacher,
 )
 from .paths import generate_steps, regenerate_path, sync_path
 from .recommendations import recommend_goals
@@ -339,6 +339,58 @@ class StudentProgressView(LoginRequiredMixin, AcademyContextMixin, TemplateView)
         context["certificates"] = certificates
         context["progress_graph"] = build_student_progress_graph(student)
 
+        return context
+
+
+class StudentHomeView(LoginRequiredMixin, AcademyContextMixin, TemplateView):
+    """A learner's landing page: continue where you left off, enrolled courses
+    with progress, a cold-start recommendation, and quick links into the
+    learning surfaces."""
+
+    template_name = "academy/student_home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        person = getattr(self.request.user, "community_profile", None)
+        student = Student.objects.get_or_create(person=person)[0] if person else None
+
+        rows = []
+        continue_course = None
+        if student:
+            earned_ids = set(student.badges.values_list("id", flat=True))
+            enrollments = (
+                CourseEnrollment.objects
+                .filter(student=student)
+                .select_related("course")
+                .prefetch_related("course__modules")
+                .order_by("-enrolled_at")
+            )
+            for enrollment in enrollments:
+                modules = list(enrollment.course.modules.all())
+                total = len(modules)
+                done = sum(1 for m in modules if m.unlocks_badge_id in earned_ids)
+                completed = bool(enrollment.completed_at)
+                pct = 100 if completed else (round(100 * done / total) if total else 0)
+                rows.append({"course": enrollment.course, "pct": pct, "completed": completed})
+                if continue_course is None and not completed:
+                    continue_course = enrollment.course
+
+        recommended_course = None
+        if not rows:
+            recommended_course = (
+                Course.objects
+                .filter(is_published=True, is_virtual=False)
+                .order_by("order", "title")
+                .first()
+            )
+
+        context.update({
+            "person": person,
+            "student": student,
+            "course_rows": rows,
+            "continue_course": continue_course,
+            "recommended_course": recommended_course,
+        })
         return context
 
 

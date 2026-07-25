@@ -140,7 +140,7 @@ MUST_200 = {
     },
     "student": {
         "core:dashboard", "academy:course-list", "academy:course-detail",
-        "academy:student-progress", "academy:personal-path-list",
+        "academy:student-home", "academy:student-progress", "academy:personal-path-list",
         "academy:personal-path-detail", "quizzes:quiz-detail",
         "subscriptions:my_subscription",
     },

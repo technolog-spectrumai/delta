@@ -13,6 +13,7 @@ from .views import (
     ScriptDetailView,
     SkillForestView,
     SkillTreeDetailView,
+    StudentHomeView,
     StudentProgressView,
     TeacherDetailView,
     certificate_detail,
@@ -40,6 +41,11 @@ urlpatterns = [
         "courses/<slug:slug>/",
         CourseDetailView.as_view(),
         name="course-detail",
+    ),
+    path(
+        "home/",
+        StudentHomeView.as_view(),
+        name="student-home",
     ),
     path(
         "progress/",

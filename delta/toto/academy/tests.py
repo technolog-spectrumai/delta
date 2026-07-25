@@ -823,3 +823,45 @@ class WelcomeCopyTests(TestCase):
         ctx = welcome_copy_cp(None)
         self.assertIn("welcome_copy", ctx)
         self.assertTrue(str(ctx["welcome_copy"].headline).strip())
+
+
+class StudentHomeViewTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Platform.objects.create(site_name="Test", author="tests", publication_year=2026)
+        cls.user_field = _person_user_field()
+        cls.group = SkillGroup.objects.create(title="Maths", slug="sh-maths", order=1)
+        cls.badge = SkillBadge.objects.create(
+            group=cls.group, title="Alg", slug="sh-alg", order=1)
+        cls.course = Course.objects.create(
+            title="Algebra", slug="sh-alg-course", is_published=True, order=1)
+        CourseModule.objects.create(
+            course=cls.course, unlocks_badge=cls.badge, title="M", slug="sh-m", order=1)
+        cls.person = Person.objects.create(display_name="Home Student")
+        cls.user = get_user_model().objects.create_user("home-student", password="x")
+        if cls.user_field:
+            setattr(cls.person, cls.user_field, cls.user)
+            cls.person.save(update_fields=[cls.user_field])
+
+    def setUp(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.user)
+
+    def test_anonymous_redirected_to_login(self):
+        self.client.logout()
+        self.assertEqual(self.client.get(reverse("academy:student-home")).status_code, 302)
+
+    def test_cold_start_shows_recommended_course(self):
+        resp = self.client.get(reverse("academy:student-home"))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, reverse("academy:course-detail", kwargs={"slug": self.course.slug}))
+        self.assertContains(resp, reverse("academy:course-list"))
+
+    def test_enrolled_course_listed_with_continue(self):
+        from .models import CourseEnrollment
+        student = Student.objects.get_or_create(person=self.person)[0]
+        CourseEnrollment.objects.create(student=student, course=self.course)
+        resp = self.client.get(reverse("academy:student-home"))
+        self.assertContains(resp, "Algebra")  # enrolled course title
+        self.assertContains(resp, reverse("academy:course-detail", kwargs={"slug": self.course.slug}))
