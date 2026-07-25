@@ -14,7 +14,7 @@
        class="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold shadow-sm transition hover:opacity-85">
       <i class="fa-solid fa-chart-line"></i>{% trans "My Progress" %}</a>
   {% endif %}
-  {% if request.user.community_profile.academy_teacher %}
+  {% if request.user.community_profile.academy_teacher.is_active %}
     <a href="{% url 'academy:course-metrics' slug=course.slug %}"
        :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
        class="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold shadow-sm transition hover:opacity-85">

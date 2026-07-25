@@ -83,8 +83,9 @@
           </div>
           <div class="flex items-center gap-2">
             {% if cohort.member_count %}
+              {% trans "Mark all members complete and issue a certificate to each?" as award_confirm %}
               <form method="post" action="{% url 'backoffice_courses:cohort-award-certificates' pk=cohort.pk %}"
-                    onsubmit="return confirm('{% trans "Mark all members complete and issue a certificate to each?" %}')">{% csrf_token %}
+                    onsubmit="return confirm('{{ award_confirm|escapejs }}')">{% csrf_token %}
                 <button type="submit" class="rounded border px-2 py-1 text-xs hover:opacity-85" title="{% trans 'Award certificates to all members' %}"><i class="fa-solid fa-certificate"></i></button>
               </form>
             {% endif %}

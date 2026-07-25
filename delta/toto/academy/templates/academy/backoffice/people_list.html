@@ -28,8 +28,9 @@
           </div>
           <div class="flex items-center gap-2">
             {% if t.is_active %}
+              {% trans "Remove teacher access for this person?" as demote_confirm %}
               <form method="post" action="{% url 'backoffice_people:demote-teacher' pk=person.pk %}"
-                    onsubmit="return confirm('{% trans "Remove teacher access for this person?" %}')">{% csrf_token %}
+                    onsubmit="return confirm('{{ demote_confirm|escapejs }}')">{% csrf_token %}
                 <button type="submit" class="rounded-lg border border-warn-light/40 px-3 py-1.5 text-xs font-semibold text-warn-light hover:opacity-85">{% trans "Remove" %}</button>
               </form>
             {% else %}

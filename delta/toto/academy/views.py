@@ -528,7 +528,7 @@ def certificate_detail(request, uuid):
     person = getattr(request.user, "community_profile", None)
     teacher = None
     if person:
-        teacher = Teacher.objects.filter(person=person).first()
+        teacher = Teacher.objects.filter(person=person, is_active=True).first()
 
     return _render(request, "academy/certificate_detail.html", {
         "certificate": certificate,
@@ -549,7 +549,7 @@ def certificate_sign(request, uuid):
     person = getattr(request.user, "community_profile", None)
     teacher = None
     if person:
-        teacher = Teacher.objects.filter(person=person).first()
+        teacher = Teacher.objects.filter(person=person, is_active=True).first()
 
     strongboxes = []
     existing_signing_key = None
@@ -660,7 +660,7 @@ def course_metrics(request, slug):
     )
 
     person = getattr(request.user, "community_profile", None)
-    is_teacher = person and Teacher.objects.filter(person=person).exists()
+    is_teacher = person and Teacher.objects.filter(person=person, is_active=True).exists()
     if not is_teacher:
         from django.http import Http404
         raise Http404

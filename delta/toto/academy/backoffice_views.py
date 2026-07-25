@@ -664,5 +664,12 @@ def demote_teacher(request, pk):
         messages.error(request, _("You cannot remove your own teacher access."))
     else:
         Teacher.objects.filter(person=person).update(is_active=False)
-        messages.success(request, _("%(name)s is no longer a teacher.") % {"name": person.display_name})
+        if getattr(person.user, "is_staff", False):
+            # Staff bypass the teacher gate, so deactivating the row does not lock
+            # them out — say so plainly instead of claiming access was revoked.
+            messages.warning(request, _(
+                "%(name)s still has staff access; remove their staff status in the "
+                "admin to fully revoke panel access.") % {"name": person.display_name})
+        else:
+            messages.success(request, _("%(name)s is no longer a teacher.") % {"name": person.display_name})
     return redirect("backoffice_people:people-list")

@@ -985,3 +985,54 @@ class PromoteToTeacherTests(TestCase):
     def test_people_list_shows_teacher(self):
         self.client.post(self._url("promote-teacher", pk=self.person.pk))
         self.assertContains(self.client.get(self._url("people-list")), "Nowy Nauczyciel")
+
+
+# ---------------------------------------------------------------------------
+# Soft-demote must revoke teacher powers gated outside the backoffice too
+# (certificate signing + course metrics), not just /panel/ access.
+# ---------------------------------------------------------------------------
+
+class SoftDemoteRevokesTeacherPowersTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.user_field = _person_user_field()
+        cls.course = Course.objects.create(title="SC", slug="sc", is_published=True)
+        grad = Person.objects.create(display_name="Grad", email="grad@example.com")
+        cls.cert = Certificate.objects.create(person=grad, course=cls.course)
+
+    def setUp(self):
+        if self.user_field is None:
+            self.skipTest("Person model exposes no auth-user link")
+        from toto.academy.models import Teacher
+        self.user = get_user_model().objects.create_user("demoted", password="x")
+        self.person = Person.objects.create(display_name="Demoted", email="dt@example.com")
+        setattr(self.person, self.user_field, self.user)
+        self.person.save(update_fields=[self.user_field])
+        Teacher.objects.create(person=self.person, is_active=True)
+        self.client.force_login(self.user)
+
+    def _deactivate(self):
+        from toto.academy.models import Teacher
+        Teacher.objects.filter(person=self.person).update(is_active=False)
+
+    def test_metrics_allowed_while_active_then_404_after_demote(self):
+        url = reverse("academy:course-metrics", kwargs={"slug": self.course.slug})
+        self.assertEqual(self.client.get(url).status_code, 200)
+        self._deactivate()
+        self.assertEqual(self.client.get(url).status_code, 404)
+
+    def test_demoted_teacher_cannot_sign_certificate(self):
+        self._deactivate()
+        url = reverse("academy:certificate-sign", kwargs={"uuid": self.cert.uuid})
+        resp = self.client.post(url, {"strongbox_password": "x"})
+        self.assertEqual(resp.status_code, 302)  # bounced to detail with an error
+        self.cert.refresh_from_db()
+        self.assertEqual(self.cert.cryptographic_signature, "")
+
+    def test_metrics_link_hidden_for_demoted_teacher(self):
+        course_url = reverse("academy:course-detail", kwargs={"slug": self.course.slug})
+        metrics_url = reverse("academy:course-metrics", kwargs={"slug": self.course.slug})
+        self.assertContains(self.client.get(course_url), metrics_url)  # active: link shown
+        self._deactivate()
+        self.assertNotContains(self.client.get(course_url), metrics_url)
