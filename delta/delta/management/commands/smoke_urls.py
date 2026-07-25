@@ -50,6 +50,41 @@ STAFF_ONLY = {
     "academy:course-metrics",
     "quizzes:quiz-metrics",
     "sso:admin_test_login",
+    # Teacher back office (Panel autorski) — teacher/staff only; student -> 404.
+    "backoffice:dashboard",
+    "backoffice_quizzes:quiz-list",
+    "backoffice_quizzes:quiz-create",
+    "backoffice_quizzes:quiz-edit",
+    "backoffice_quizzes:quiz-delete",
+    "backoffice_quizzes:question-list",
+    "backoffice_quizzes:question-create",
+    "backoffice_quizzes:question-reorder",
+    "backoffice_quizzes:question-edit",
+    "backoffice_quizzes:question-delete",
+    # skills & badges
+    "backoffice_skills:skill-overview", "backoffice_skills:group-create",
+    "backoffice_skills:group-edit", "backoffice_skills:group-delete",
+    "backoffice_skills:badge-create", "backoffice_skills:badge-edit",
+    "backoffice_skills:badge-delete", "backoffice_skills:badge-quick-create",
+    # courses
+    "backoffice_courses:course-list", "backoffice_courses:course-create",
+    "backoffice_courses:course-edit", "backoffice_courses:course-delete",
+    "backoffice_courses:module-list", "backoffice_courses:module-create",
+    "backoffice_courses:module-reorder", "backoffice_courses:module-edit",
+    "backoffice_courses:module-delete", "backoffice_courses:lesson-create",
+    "backoffice_courses:lesson-reorder", "backoffice_courses:lesson-edit",
+    "backoffice_courses:lesson-delete", "backoffice_courses:script-create",
+    "backoffice_courses:script-edit", "backoffice_courses:script-delete",
+    # notes
+    "backoffice_notes:page-list", "backoffice_notes:page-create",
+    "backoffice_notes:tag-create", "backoffice_notes:page-edit",
+    "backoffice_notes:page-delete", "backoffice_notes:section-create",
+    "backoffice_notes:section-edit", "backoffice_notes:section-delete",
+    # library
+    "backoffice_library:reference-list", "backoffice_library:collection-create",
+    "backoffice_library:collection-edit", "backoffice_library:collection-delete",
+    "backoffice_library:reference-create", "backoffice_library:reference-edit",
+    "backoffice_library:reference-delete",
 }
 
 # (key) -> extra allowed statuses for authenticated personas (anon is already
@@ -185,6 +220,46 @@ PARAM_SOURCES = {
     "quizzes:quiz-detail": (True, lambda: _kw(_first("quizzes.Quiz", is_published=True), pk="pk")),
     "quizzes:quiz-practice": (True, lambda: _kw(_first("quizzes.Quiz", is_published=True), pk="pk")),
     "quizzes:quiz-metrics": (True, lambda: _kw(_first("quizzes.Quiz", is_published=True), pk="pk")),
+    # quizzes back office (Panel autorski) — quiz-pk and question-pk routes
+    "backoffice_quizzes:quiz-edit": (True, lambda: _kw(_first("quizzes.Quiz"), pk="pk")),
+    "backoffice_quizzes:quiz-delete": (True, lambda: _kw(_first("quizzes.Quiz"), pk="pk")),
+    "backoffice_quizzes:question-list": (True, lambda: _kw(_first("quizzes.Quiz"), pk="pk")),
+    "backoffice_quizzes:question-create": (True, lambda: _kw(_first("quizzes.Quiz"), pk="pk")),
+    "backoffice_quizzes:question-reorder": (True, lambda: _kw(_first("quizzes.Quiz"), pk="pk")),
+    "backoffice_quizzes:question-edit": (True, lambda: _kw(_first("quizzes.QuizQuestion"), pk="pk")),
+    "backoffice_quizzes:question-delete": (True, lambda: _kw(_first("quizzes.QuizQuestion"), pk="pk")),
+    # back office — skills & badges (competence)
+    "backoffice_skills:group-edit": (True, lambda: _kw(_first("competence.SkillGroup"), pk="pk")),
+    "backoffice_skills:group-delete": (True, lambda: _kw(_first("competence.SkillGroup"), pk="pk")),
+    "backoffice_skills:badge-edit": (False, lambda: _kw(_first("competence.SkillBadge"), pk="pk")),
+    "backoffice_skills:badge-delete": (False, lambda: _kw(_first("competence.SkillBadge"), pk="pk")),
+    # back office — courses (academy)
+    "backoffice_courses:course-edit": (True, lambda: _kw(_first("academy.Course"), pk="pk")),
+    "backoffice_courses:course-delete": (True, lambda: _kw(_first("academy.Course"), pk="pk")),
+    "backoffice_courses:module-list": (True, lambda: _kw(_first("academy.Course"), pk="pk")),
+    "backoffice_courses:module-create": (True, lambda: _kw(_first("academy.Course"), pk="pk")),
+    "backoffice_courses:module-reorder": (True, lambda: _kw(_first("academy.Course"), pk="pk")),
+    "backoffice_courses:module-edit": (False, lambda: _kw(_first("academy.CourseModule"), pk="pk")),
+    "backoffice_courses:module-delete": (False, lambda: _kw(_first("academy.CourseModule"), pk="pk")),
+    "backoffice_courses:lesson-create": (False, lambda: _kw(_first("academy.CourseModule"), pk="pk")),
+    "backoffice_courses:lesson-reorder": (False, lambda: _kw(_first("academy.CourseModule"), pk="pk")),
+    "backoffice_courses:script-create": (False, lambda: _kw(_first("academy.CourseModule"), pk="pk")),
+    "backoffice_courses:lesson-edit": (False, lambda: _kw(_first("academy.Lesson"), pk="pk")),
+    "backoffice_courses:lesson-delete": (False, lambda: _kw(_first("academy.Lesson"), pk="pk")),
+    "backoffice_courses:script-edit": (False, lambda: _kw(_first("academy.Script"), pk="pk")),
+    "backoffice_courses:script-delete": (False, lambda: _kw(_first("academy.Script"), pk="pk")),
+    # back office — notes (palimpsest)
+    "backoffice_notes:page-edit": (True, lambda: _kw(_first("palimpsest.Page"), pk="pk")),
+    "backoffice_notes:page-delete": (True, lambda: _kw(_first("palimpsest.Page"), pk="pk")),
+    "backoffice_notes:section-create": (True, lambda: _kw(_first("palimpsest.Page"), pk="pk")),
+    "backoffice_notes:section-edit": (False, lambda: _kw(_first("palimpsest.Section"), pk="pk")),
+    "backoffice_notes:section-delete": (False, lambda: _kw(_first("palimpsest.Section"), pk="pk")),
+    # back office — library
+    "backoffice_library:reference-create": (True, lambda: {"kind": "book"}),
+    "backoffice_library:reference-edit": (True, lambda: _lib_ref()),
+    "backoffice_library:reference-delete": (True, lambda: _lib_ref()),
+    "backoffice_library:collection-edit": (False, lambda: _kw(_first("library.LibraryCollection"), pk="pk")),
+    "backoffice_library:collection-delete": (False, lambda: _kw(_first("library.LibraryCollection"), pk="pk")),
     # palimpsest — ingress_palimpsest
     "palimpsest:page_detail": (True, lambda: _kw(_first("palimpsest.Page"), slug="slug")),
     "palimpsest:page_update": (True, lambda: _kw(_first("palimpsest.Page"), slug="slug")),
@@ -259,6 +334,12 @@ def _kw(obj, **mapping):
             return None
         out[kwarg] = value
     return out
+
+
+def _lib_ref():
+    """{kind, pk} for a seeded library Book (back-office reference edit/delete)."""
+    book = _first("library.Book")
+    return {"kind": "book", "pk": book.pk} if book else None
 
 
 def _kw2_step():

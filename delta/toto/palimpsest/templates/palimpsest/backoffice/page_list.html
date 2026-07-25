@@ -1,0 +1,37 @@
+{% extends "backoffice/base.html" %}
+{% load i18n %}
+
+{% block backoffice_header_action %}
+<div class="flex items-center gap-2">
+  <a href="{% url 'backoffice_notes:tag-create' %}" class="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold hover:opacity-85"><i class="fa-solid fa-tag"></i> {% trans "New tag" %}</a>
+  <a href="{% url 'backoffice_notes:page-create' %}"
+     :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+     class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90"><i class="fa-solid fa-plus"></i> {% trans "New page" %}</a>
+</div>
+{% endblock %}
+
+{% block backoffice_content %}
+<div class="space-y-2">
+  {% for page in pages %}
+    <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+         class="flex items-start gap-3 rounded-xl border p-4 shadow-sm">
+      <div class="min-w-0 flex-1">
+        <a href="{% url 'backoffice_notes:page-edit' pk=page.pk %}" class="font-semibold hover:underline">{{ page.title }}</a>
+        <div class="mt-1 flex flex-wrap items-center gap-2 text-xs opacity-70">
+          <span>{{ page.sections.count }} {% trans "sections" %}</span>
+          {% if page.is_private %}<span><i class="fa-solid fa-lock"></i> {% trans "private" %}</span>{% endif %}
+          {% for tag in page.tags.all %}<span class="rounded-full border px-2 py-0.5">{{ tag.name }}</span>{% endfor %}
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="{% url 'backoffice_notes:page-edit' pk=page.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-pen-to-square"></i> {% trans "Edit" %}</a>
+        <a href="{% url 'backoffice_notes:page-delete' pk=page.pk %}" class="rounded-lg border border-warn-light/40 px-3 py-1.5 text-xs font-semibold text-warn-light hover:opacity-85" aria-label="{% trans 'Delete' %}"><i class="fa-solid fa-trash"></i></a>
+      </div>
+    </div>
+  {% empty %}
+    <div :class="darkMode ? 'border-accent-1' : 'border-accent-2'" class="rounded-xl border border-dashed p-10 text-center opacity-60">
+      {% trans "No pages yet. Create your first note page." %}
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

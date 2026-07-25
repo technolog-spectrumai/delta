@@ -135,6 +135,7 @@ INSTALLED_APPS = [
     "toto.library",      # bibliography / reference manager
     "toto.subscriptions",  # course gating + plans (academy soft-dep for enrollment)
     "toto.academy",      # LMS core: Course -> CourseModule -> Lesson
+    "toto.backoffice",   # teacher back office (Panel autorski): shell + module registry
 
     # The host project package itself — carries host-only tooling like the
     # smoke_urls management command (no models, no templates).
@@ -246,6 +247,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "toto.core.context_processors.last_visited",
+                "toto.backoffice.context_processors.backoffice_access",
             ]
         },
     }

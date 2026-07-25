@@ -1,0 +1,36 @@
+{% extends "backoffice/base.html" %}
+{% load i18n %}
+
+{% block backoffice_content %}
+<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  {% for m in backoffice_modules %}
+    <article :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+             class="flex flex-col gap-3 rounded-2xl border p-5 shadow-sm {% if not m.live %}opacity-60{% endif %}">
+      <div class="flex items-center gap-3">
+        <span :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'"
+              class="inline-flex h-10 w-10 items-center justify-center rounded-xl border text-lg">
+          <i class="{{ m.icon }}"></i>
+        </span>
+        <h2 class="text-lg font-bold">{{ m.label }}</h2>
+        {% if not m.live %}
+          <span class="ml-auto rounded-full border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide opacity-70">{% trans "Coming soon" %}</span>
+        {% endif %}
+      </div>
+      <p class="text-sm opacity-70">{{ m.blurb }}</p>
+      <div class="mt-auto pt-2">
+        {% if m.live and m.url_name %}
+          <a href="{% url m.url_name %}"
+             :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+             class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90">
+            <i class="fa-solid fa-arrow-right"></i> {% trans "Open" %}
+          </a>
+        {% else %}
+          <span class="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold opacity-50">
+            <i class="fa-solid fa-lock"></i> {% trans "Not available yet" %}
+          </span>
+        {% endif %}
+      </div>
+    </article>
+  {% endfor %}
+</div>
+{% endblock %}

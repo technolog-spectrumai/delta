@@ -1,0 +1,20 @@
+{% extends "backoffice/base.html" %}
+{% load i18n %}
+
+{% comment %}Context: title, object_label, warning, cancel_url. POSTs to the current URL.{% endcomment %}
+
+{% block backoffice_content %}
+<div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+     class="max-w-xl space-y-4 rounded-2xl border p-6 shadow-sm">
+  <h2 class="flex items-center gap-2 text-xl font-bold text-warn-light"><i class="fa-solid fa-triangle-exclamation"></i> {{ title }}</h2>
+  <p class="text-sm font-medium">{{ object_label }}</p>
+  <p class="text-sm opacity-70">{{ warning|default:_("This cannot be undone.") }}</p>
+  <form method="post" class="flex items-center justify-end gap-3">
+    {% csrf_token %}
+    <a href="{{ cancel_url }}"
+       :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'"
+       class="rounded-lg border px-4 py-2 text-sm font-semibold hover:opacity-85">{% trans "Cancel" %}</a>
+    <button type="submit" class="rounded-lg bg-warn-light px-4 py-2 text-sm font-semibold text-white hover:opacity-90"><i class="fa-solid fa-trash"></i> {% trans "Delete" %}</button>
+  </form>
+</div>
+{% endblock %}

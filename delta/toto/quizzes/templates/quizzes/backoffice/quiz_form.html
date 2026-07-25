@@ -1,0 +1,57 @@
+{% extends "backoffice/base.html" %}
+{% load i18n %}
+
+{% block backoffice_content %}
+<form method="post"
+      :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+      class="max-w-3xl space-y-5 rounded-2xl border p-6 shadow-sm">
+  {% csrf_token %}
+  <h2 class="flex items-center gap-2 text-xl font-bold"><i class="{{ icon }}"></i> {{ title }}</h2>
+
+  {% if form.non_field_errors %}
+    <div class="rounded-xl border border-warn-light/40 bg-warn-light/10 p-4 text-sm">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <div class="space-y-2">
+    <label for="{{ form.title.id_for_label }}" class="block text-sm font-semibold">{{ form.title.label }}</label>
+    {{ form.title }}
+    {% if form.title.errors %}<p class="text-sm text-warn-light">{{ form.title.errors }}</p>{% endif %}
+  </div>
+
+  <div class="grid gap-5 md:grid-cols-[1fr_140px]">
+    <div class="space-y-2">
+      <label for="{{ form.slug.id_for_label }}" class="block text-sm font-semibold">{{ form.slug.label }}</label>
+      {{ form.slug }}
+      <p class="text-xs opacity-60">{% trans "Leave blank to generate from the title." %}</p>
+      {% if form.slug.errors %}<p class="text-sm text-warn-light">{{ form.slug.errors }}</p>{% endif %}
+    </div>
+    <div class="space-y-2">
+      <label for="{{ form.order.id_for_label }}" class="block text-sm font-semibold">{{ form.order.label }}</label>
+      {{ form.order }}
+      {% if form.order.errors %}<p class="text-sm text-warn-light">{{ form.order.errors }}</p>{% endif %}
+    </div>
+  </div>
+
+  <div class="space-y-2">
+    <label for="{{ form.description.id_for_label }}" class="block text-sm font-semibold">{{ form.description.label }}</label>
+    {{ form.description }}
+    {% if form.description.errors %}<p class="text-sm text-warn-light">{{ form.description.errors }}</p>{% endif %}
+  </div>
+
+  <div class="flex flex-wrap gap-6">
+    <label class="inline-flex items-center gap-2 text-sm font-semibold">{{ form.is_published }} {{ form.is_published.label }}</label>
+    <label class="inline-flex items-center gap-2 text-sm font-semibold">{{ form.is_official }} {{ form.is_official.label }}</label>
+  </div>
+
+  <div class="flex flex-wrap items-center justify-end gap-3 pt-2">
+    <a href="{% url 'backoffice_quizzes:quiz-list' %}"
+       :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'"
+       class="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition hover:opacity-85">{% trans "Cancel" %}</a>
+    <button type="submit"
+            :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+            class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90">
+      <i class="{{ icon }}"></i> {{ submit_label }}
+    </button>
+  </div>
+</form>
+{% endblock %}

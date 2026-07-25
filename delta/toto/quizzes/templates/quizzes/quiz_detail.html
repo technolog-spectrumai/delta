@@ -7,6 +7,7 @@
 {% block quizzes_start_script %}
 {% include "oya/partials/dim.html" %}
 {% include "quizzes/_solution_prose_style.html" %}
+{% include "quizzes/_katex.html" %}
 <style>[x-cloak] { display: none !important; }</style>
 {% endblock %}
 
@@ -38,12 +39,20 @@
         </div>
       </div>
 
-      {% if can_view_metrics %}
-        <a href="{% url 'quizzes:quiz-metrics' pk=quiz.pk %}"
-           :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark text-accent-dark' : 'border-accent-2 bg-bubble-bg-light text-accent-light'"
-           class="inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-85">
-          <i class="fa-solid fa-chart-bar"></i>{% trans "Metrics" %}</a>
-      {% endif %}
+      <div class="flex flex-wrap items-center gap-2">
+        {% if can_access_backoffice %}
+          <a href="{% url 'backoffice_quizzes:question-list' pk=quiz.pk %}"
+             :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark text-accent-dark' : 'border-accent-2 bg-bubble-bg-light text-accent-light'"
+             class="inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-85">
+            <i class="fa-solid fa-pen-to-square"></i>{% trans "Edit questions" %}</a>
+        {% endif %}
+        {% if can_view_metrics %}
+          <a href="{% url 'quizzes:quiz-metrics' pk=quiz.pk %}"
+             :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark text-accent-dark' : 'border-accent-2 bg-bubble-bg-light text-accent-light'"
+             class="inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-85">
+            <i class="fa-solid fa-chart-bar"></i>{% trans "Metrics" %}</a>
+        {% endif %}
+      </div>
     </header>
 
     <!-- Already completed banner -->
@@ -72,7 +81,7 @@
               <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'"
                    class="border-b p-5">
                 <div class="flex items-start justify-between gap-4">
-                  <p class="font-semibold leading-snug">{{ forloop.counter }}. {{ q.text }}</p>
+                  <p class="js-math font-semibold leading-snug">{{ forloop.counter }}. {{ q.text }}</p>
                   {% if q.max_time %}
                     <span :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'"
                           class="shrink-0 inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold">
@@ -107,7 +116,7 @@
                         {% elif answer.is_correct %}fa-circle-check opacity-40 text-success-light
                         {% else %}fa-circle opacity-30{% endif %}"></i>
                       <div class="min-w-0">
-                        <p class="text-sm font-semibold">{{ answer.text }}</p>
+                        <p class="js-math text-sm font-semibold">{{ answer.text }}</p>
                         {% if answer.pk in selected_ids and answer.explanation %}
                           <p class="mt-1 text-xs opacity-70">{{ answer.explanation }}</p>
                         {% endif %}
@@ -156,7 +165,7 @@
               <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'"
                    class="border-b p-5">
                 <div class="flex items-start justify-between gap-4">
-                  <p class="font-semibold leading-snug">{{ forloop.counter }}. {{ q.text }}</p>
+                  <p class="js-math font-semibold leading-snug">{{ forloop.counter }}. {{ q.text }}</p>
                   {% if q.max_time %}
                     <span :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'"
                           class="shrink-0 inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold">
@@ -181,7 +190,7 @@
                       value="{{ answer.pk }}"
                       @change="answered = true"
                       class="mt-1 h-4 w-4 accent-current">
-                    <span class="text-sm font-semibold leading-snug">{{ answer.text }}</span>
+                    <span class="js-math text-sm font-semibold leading-snug">{{ answer.text }}</span>
                   </label>
                 {% empty %}
                   <p class="text-sm opacity-60 italic">{% trans "No answers configured." %}</p>

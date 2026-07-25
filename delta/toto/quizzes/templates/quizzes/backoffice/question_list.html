@@ -1,0 +1,73 @@
+{% extends "backoffice/base.html" %}
+{% load i18n %}
+
+{% block backoffice_header_action %}
+<div class="flex items-center gap-2">
+  <a href="{% url 'backoffice_quizzes:quiz-edit' pk=quiz.pk %}" class="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold hover:opacity-85"><i class="fa-solid fa-gear"></i> {% trans "Quiz settings" %}</a>
+  <a href="{% url 'backoffice_quizzes:question-create' pk=quiz.pk %}"
+     :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+     class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90"><i class="fa-solid fa-plus"></i> {% trans "New question" %}</a>
+</div>
+{% endblock %}
+
+{% block backoffice_content %}
+<div class="space-y-4">
+  <div class="flex flex-wrap items-center gap-3">
+    <a href="{% url 'backoffice_quizzes:quiz-list' %}" class="text-sm underline hover:opacity-80"><i class="fa-solid fa-arrow-left"></i> {% trans "All quizzes" %}</a>
+    <h2 class="text-lg font-bold">{{ quiz.title }}</h2>
+    {% if quiz.is_published %}
+      <span class="rounded-full border px-2 py-0.5 text-[11px] uppercase text-success-light">{% trans "Published" %}</span>
+    {% else %}
+      <span class="rounded-full border px-2 py-0.5 text-[11px] uppercase opacity-60">{% trans "Draft" %}</span>
+    {% endif %}
+  </div>
+
+  <div class="space-y-2">
+    {% for row in rows %}
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="flex items-start gap-3 rounded-xl border p-4 shadow-sm">
+        <div class="flex flex-col gap-1 pt-0.5">
+          <form method="post" action="{% url 'backoffice_quizzes:question-reorder' pk=quiz.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="question" value="{{ row.q.pk }}">
+            <input type="hidden" name="direction" value="up">
+            <button type="submit" class="opacity-50 hover:opacity-100" aria-label="{% trans 'Move up' %}"><i class="fa-solid fa-chevron-up"></i></button>
+          </form>
+          <form method="post" action="{% url 'backoffice_quizzes:question-reorder' pk=quiz.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="question" value="{{ row.q.pk }}">
+            <input type="hidden" name="direction" value="down">
+            <button type="submit" class="opacity-50 hover:opacity-100" aria-label="{% trans 'Move down' %}"><i class="fa-solid fa-chevron-down"></i></button>
+          </form>
+        </div>
+
+        <div class="min-w-0 flex-1">
+          <p class="js-math font-semibold leading-snug">{{ forloop.counter }}. {{ row.q.text }}</p>
+          <div class="mt-1 flex flex-wrap items-center gap-2 text-xs opacity-70">
+            <span class="rounded-full border px-2 py-0.5">{{ row.format }}</span>
+            {% if row.q.question_type == 'open' %}
+              <span>{{ row.num_options }} {% trans "accepted answer(s)" %}</span>
+            {% else %}
+              <span>{{ row.num_options }} {% trans "options" %} · {{ row.num_correct }} {% trans "correct" %}</span>
+            {% endif %}
+            {% if row.q.max_time %}<span><i class="fa-solid fa-clock"></i> {{ row.q.max_time }} min</span>{% endif %}
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a href="{% url 'backoffice_quizzes:question-edit' pk=row.q.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-pen-to-square"></i> {% trans "Edit" %}</a>
+          <a href="{% url 'backoffice_quizzes:question-delete' pk=row.q.pk %}" class="rounded-lg border border-warn-light/40 px-3 py-1.5 text-xs font-semibold text-warn-light hover:opacity-85" aria-label="{% trans 'Delete' %}"><i class="fa-solid fa-trash"></i></a>
+        </div>
+      </div>
+    {% empty %}
+      <div :class="darkMode ? 'border-accent-1' : 'border-accent-2'" class="rounded-xl border border-dashed p-10 text-center opacity-60">
+        {% trans "No questions yet. Add the first one." %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block backoffice_end_script %}
+{% include "quizzes/_katex.html" %}
+{% endblock %}

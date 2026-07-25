@@ -1,0 +1,63 @@
+{% extends "backoffice/base.html" %}
+{% load i18n %}
+
+{% block backoffice_content %}
+<div class="space-y-6">
+
+  <!-- Add reference toolbar -->
+  <div class="flex flex-wrap items-center gap-2">
+    <span class="text-sm font-semibold opacity-70">{% trans "Add reference:" %}</span>
+    {% for t in types %}
+      <a href="{% url 'backoffice_library:reference-create' kind=t.kind %}"
+         class="inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-semibold hover:opacity-85">
+        <i class="{{ t.icon }}"></i> {{ t.label }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <!-- References -->
+  <div class="space-y-2">
+    {% for it in items %}
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="flex items-start gap-3 rounded-xl border p-4 shadow-sm">
+        <i class="{{ it.icon }} mt-1 text-lg opacity-70"></i>
+        <div class="min-w-0 flex-1">
+          <p class="font-semibold leading-snug">{{ it.obj.title }}</p>
+          <div class="mt-1 flex flex-wrap items-center gap-2 text-xs opacity-70">
+            <span class="rounded-full border px-2 py-0.5">{{ it.label }}</span>
+            {% if it.obj.authors %}<span>{{ it.obj.authors }}</span>{% endif %}
+            {% if it.obj.year %}<span>· {{ it.obj.year }}</span>{% endif %}
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="{% url 'backoffice_library:reference-edit' kind=it.kind pk=it.obj.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-pen-to-square"></i> {% trans "Edit" %}</a>
+          <a href="{% url 'backoffice_library:reference-delete' kind=it.kind pk=it.obj.pk %}" class="rounded-lg border border-warn-light/40 px-3 py-1.5 text-xs font-semibold text-warn-light hover:opacity-85" aria-label="{% trans 'Delete' %}"><i class="fa-solid fa-trash"></i></a>
+        </div>
+      </div>
+    {% empty %}
+      <div :class="darkMode ? 'border-accent-1' : 'border-accent-2'" class="rounded-xl border border-dashed p-10 text-center opacity-60">
+        {% trans "No references yet. Add a book, article, audio or video." %}
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Collections -->
+  <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="space-y-3 rounded-2xl border p-5 shadow-sm">
+    <div class="flex items-center justify-between">
+      <h3 class="font-bold"><i class="fa-solid fa-layer-group"></i> {% trans "Collections" %}</h3>
+      <a href="{% url 'backoffice_library:collection-create' %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-plus"></i> {% trans "New collection" %}</a>
+    </div>
+    {% for collection in collections %}
+      <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="flex items-center gap-3 rounded-xl border p-3">
+        <span class="min-w-0 flex-1 font-semibold">{{ collection.title }}</span>
+        <span class="text-xs opacity-60">{{ collection.all_items|length }} {% trans "items" %}</span>
+        <a href="{% url 'backoffice_library:collection-edit' pk=collection.pk %}" class="rounded border px-2 py-1 text-xs hover:opacity-85"><i class="fa-solid fa-pen"></i></a>
+        <a href="{% url 'backoffice_library:collection-delete' pk=collection.pk %}" class="rounded border border-warn-light/40 px-2 py-1 text-xs text-warn-light hover:opacity-85"><i class="fa-solid fa-trash"></i></a>
+      </div>
+    {% empty %}
+      <p class="text-sm italic opacity-50">{% trans "No collections yet." %}</p>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}

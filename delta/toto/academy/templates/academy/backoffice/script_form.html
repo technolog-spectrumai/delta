@@ -1,0 +1,67 @@
+{% extends "backoffice/base.html" %}
+{% load i18n %}
+
+{% block backoffice_start_script %}
+{{ formset.media }}
+<style>
+  trix-toolbar .trix-button-row { flex-wrap: wrap; }
+  trix-editor { min-height: 9rem; border-radius: .5rem; border-color: rgba(128,128,128,.35); padding: 1rem; }
+</style>
+{% endblock %}
+
+{% block backoffice_content %}
+<form method="post"
+      :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+      class="max-w-3xl space-y-5 rounded-2xl border p-6 shadow-sm">
+  {% csrf_token %}
+
+  <div class="flex flex-wrap items-center gap-3">
+    <a href="{% url 'backoffice_courses:module-edit' pk=module.pk %}" class="text-sm underline hover:opacity-80"><i class="fa-solid fa-arrow-left"></i> {{ module.title }}</a>
+    <h2 class="flex items-center gap-2 text-xl font-bold"><i class="fa-solid fa-scroll"></i> {{ title }}</h2>
+  </div>
+
+  {% if form.non_field_errors %}<div class="rounded-xl border border-warn-light/40 bg-warn-light/10 p-3 text-sm">{{ form.non_field_errors }}</div>{% endif %}
+
+  <div class="space-y-1">
+    <label for="{{ form.title.id_for_label }}" class="block text-sm font-semibold">{{ form.title.label }}</label>
+    {{ form.title }}
+    {% if form.title.errors %}<p class="text-sm text-warn-light">{{ form.title.errors }}</p>{% endif %}
+  </div>
+  <div class="space-y-1">
+    <label for="{{ form.description.id_for_label }}" class="block text-sm font-semibold">{{ form.description.label }}</label>
+    {{ form.description }}
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="font-bold"><i class="fa-solid fa-align-left"></i> {% trans "Sections" %}</h3>
+    <p class="text-xs opacity-60">{% trans "Fill in as many sections as you need; blank ones are ignored. Add more by saving and editing again." %}</p>
+    {{ formset.management_form }}
+    {% if formset.non_form_errors %}<div class="rounded-xl border border-warn-light/40 bg-warn-light/10 p-3 text-sm">{{ formset.non_form_errors }}</div>{% endif %}
+    {% for sform in formset %}
+      <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="space-y-2 rounded-xl border p-3">
+        {{ sform.id }}
+        <div class="space-y-1">
+          <label for="{{ sform.title.id_for_label }}" class="block text-xs font-semibold opacity-70">{% trans "Section heading" %}</label>
+          {{ sform.title }}
+        </div>
+        <div class="space-y-1">
+          <label for="{{ sform.content.id_for_label }}" class="block text-xs font-semibold opacity-70">{% trans "Content" %}</label>
+          {{ sform.content }}
+        </div>
+        {% if formset.can_delete %}
+          <label class="inline-flex items-center gap-2 text-xs text-warn-light">{{ sform.DELETE }} {% trans "Delete this section" %}</label>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="flex flex-wrap items-center justify-end gap-3 pt-2">
+    <a href="{% url 'backoffice_courses:module-edit' pk=module.pk %}"
+       :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'"
+       class="rounded-lg border px-4 py-2 text-sm font-semibold hover:opacity-85">{% trans "Cancel" %}</a>
+    <button type="submit"
+            :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+            class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90"><i class="fa-solid fa-check"></i> {{ submit_label }}</button>
+  </div>
+</form>
+{% endblock %}

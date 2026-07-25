@@ -1,0 +1,20 @@
+{% load i18n %}
+<nav :class="darkMode ? 'border-accent-1' : 'border-accent-2'"
+     class="flex flex-wrap gap-1 border-b pb-0">
+  {% for m in backoffice_modules %}
+    {% if m.live and m.url_name %}
+      <a href="{% url m.url_name %}"
+         :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+         class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold transition
+                {% if active_module == m.key %}border-b-2 border-current -mb-px{% else %}opacity-50{% endif %}">
+        <i class="{{ m.icon }}"></i> {{ m.label }}
+      </a>
+    {% else %}
+      <span class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold opacity-30"
+            title="{% trans 'Coming soon' %}">
+        <i class="{{ m.icon }}"></i> {{ m.label }}
+        <span class="ml-1 rounded-full border px-1.5 py-0.5 text-[10px] uppercase tracking-wide">{% trans "Soon" %}</span>
+      </span>
+    {% endif %}
+  {% endfor %}
+</nav>

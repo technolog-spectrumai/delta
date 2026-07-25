@@ -1,0 +1,59 @@
+{% extends "backoffice/base.html" %}
+{% load i18n %}
+
+{% comment %}
+Generic back-office form page. Context: form, title, submit_label, icon,
+cancel_url (resolved URL string), optional back_label/back_url.
+Rich forms (Trix, formsets) use their own template instead.
+{% endcomment %}
+
+{% block backoffice_start_script %}{{ form.media }}
+<style>
+  trix-toolbar .trix-button-row { flex-wrap: wrap; }
+  trix-editor { min-height: 10rem; border-radius: .5rem; border-color: rgba(128,128,128,.35); padding: 1rem; }
+</style>
+{% endblock %}
+
+{% block backoffice_content %}
+<form method="post"
+      :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+      class="max-w-3xl space-y-5 rounded-2xl border p-6 shadow-sm">
+  {% csrf_token %}
+
+  <div class="flex flex-wrap items-center gap-3">
+    {% if back_url %}<a href="{{ back_url }}" class="text-sm underline hover:opacity-80"><i class="fa-solid fa-arrow-left"></i> {{ back_label }}</a>{% endif %}
+    <h2 class="flex items-center gap-2 text-xl font-bold"><i class="{{ icon|default:'fa-solid fa-pen-to-square' }}"></i> {{ title }}</h2>
+  </div>
+
+  {% if form.non_field_errors %}
+    <div class="rounded-xl border border-warn-light/40 bg-warn-light/10 p-4 text-sm">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  {% for field in form.visible_fields %}
+    {% if field.field.widget.input_type == 'checkbox' %}
+      <label class="inline-flex items-center gap-2 text-sm font-semibold">{{ field }} {{ field.label }}</label>
+      {% if field.help_text %}<p class="text-xs opacity-60">{{ field.help_text }}</p>{% endif %}
+      {% if field.errors %}<p class="text-sm text-warn-light">{{ field.errors }}</p>{% endif %}
+    {% else %}
+      <div class="space-y-1">
+        <label for="{{ field.id_for_label }}" class="block text-sm font-semibold">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<p class="text-xs opacity-60">{{ field.help_text }}</p>{% endif %}
+        {% if field.errors %}<p class="text-sm text-warn-light">{{ field.errors }}</p>{% endif %}
+      </div>
+    {% endif %}
+  {% endfor %}
+  {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+
+  <div class="flex flex-wrap items-center justify-end gap-3 pt-2">
+    <a href="{{ cancel_url }}"
+       :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'"
+       class="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition hover:opacity-85">{% trans "Cancel" %}</a>
+    <button type="submit"
+            :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+            class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90">
+      <i class="{{ icon|default:'fa-solid fa-check' }}"></i> {{ submit_label }}
+    </button>
+  </div>
+</form>
+{% endblock %}

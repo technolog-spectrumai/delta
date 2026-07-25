@@ -1,4 +1,5 @@
 import importlib
+import json
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -17,6 +18,7 @@ from .models import (
     QuizAttempt,
     QuizAttemptAnswer,
     QuizQuestion,
+    QuizTrait,
 )
 
 SOLUTION_HTML = "<h2>Worked solution</h2><p><strong>Step 1:</strong> count the items.</p>"
@@ -242,3 +244,244 @@ class SolutionBackfillHelperTests(TestCase):
 
         self.assertEqual(build("", []), "")
         self.assertEqual(build("   ", [("x", ""), ("y", "  ")]), "")
+
+
+# ---------------------------------------------------------------------------
+# Teacher back-office quiz editor
+# ---------------------------------------------------------------------------
+
+class QuizBackofficeMixin:
+    """A logged-in staff (=back-office) user and an empty quiz to author into."""
+
+    @classmethod
+    def setUpTestData(cls):
+        Platform.objects.create(
+            site_name="Test", author="tests", publication_year=2026)
+        User = get_user_model()
+        cls.staff = User.objects.create_user(
+            "bo-editor", password="secret", is_staff=True)
+        cls.quiz = Quiz.objects.create(title="Pool", slug="pool")
+
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def _payload(self, **over):
+        """A two-option single-choice question POST payload (formset included)."""
+        data = {
+            "text": "Question?",
+            "answer_format": "single",
+            "solution": "", "hint": "", "explanation": "",
+            "max_time": "", "order": "1",
+            "answers-TOTAL_FORMS": "2",
+            "answers-INITIAL_FORMS": "0",
+            "answers-MIN_NUM_FORMS": "0",
+            "answers-MAX_NUM_FORMS": "1000",
+            "answers-0-text": "A", "answers-0-order": "1", "answers-0-traits_data": "",
+            "answers-1-text": "B", "answers-1-order": "2", "answers-1-traits_data": "",
+        }
+        data.update(over)
+        return data
+
+    def _create(self, **over):
+        return self.client.post(
+            reverse("backoffice_quizzes:question-create", kwargs={"pk": self.quiz.pk}),
+            self._payload(**over))
+
+
+class QuizCrudViewTests(QuizBackofficeMixin, TestCase):
+
+    def test_create_quiz_autoslugs_and_redirects(self):
+        response = self.client.post(
+            reverse("backoffice_quizzes:quiz-create"),
+            {"title": "Klasa 1", "slug": "", "description": "", "order": "0"})
+        quiz = Quiz.objects.get(title="Klasa 1")
+        self.assertRedirects(
+            response,
+            reverse("backoffice_quizzes:question-list", kwargs={"pk": quiz.pk}))
+        self.assertTrue(quiz.slug)
+
+    def test_duplicate_slug_is_made_unique(self):
+        Quiz.objects.create(title="Dup", slug="dup")
+        self.client.post(reverse("backoffice_quizzes:quiz-create"),
+                         {"title": "Dup", "slug": "dup", "description": "", "order": "0"})
+        slugs = set(Quiz.objects.filter(title="Dup").values_list("slug", flat=True))
+        # Two quizzes now share the title but must have distinct slugs.
+        self.assertEqual(len(slugs), 2)
+        self.assertIn("dup", slugs)
+
+    def test_edit_quiz(self):
+        response = self.client.post(
+            reverse("backoffice_quizzes:quiz-edit", kwargs={"pk": self.quiz.pk}),
+            {"title": "Renamed", "slug": self.quiz.slug, "description": "",
+             "order": "3", "is_published": "on"})
+        self.assertEqual(response.status_code, 302)
+        self.quiz.refresh_from_db()
+        self.assertEqual(self.quiz.title, "Renamed")
+        self.assertTrue(self.quiz.is_published)
+
+    def test_delete_quiz(self):
+        doomed = Quiz.objects.create(title="Doomed", slug="doomed")
+        response = self.client.post(
+            reverse("backoffice_quizzes:quiz-delete", kwargs={"pk": doomed.pk}))
+        self.assertRedirects(response, reverse("backoffice_quizzes:quiz-list"))
+        self.assertFalse(Quiz.objects.filter(pk=doomed.pk).exists())
+
+    def test_student_cannot_reach_editor(self):
+        User = get_user_model()
+        student = User.objects.create_user("plain-student", password="x")
+        self.client.force_login(student)
+        response = self.client.get(reverse("backoffice_quizzes:quiz-list"))
+        self.assertEqual(response.status_code, 404)
+
+
+class QuestionEditorTests(QuizBackofficeMixin, TestCase):
+
+    def test_single_choice_creates_choice_question(self):
+        self._create(answer_format="single", **{"answers-0-is_correct": "on"})
+        question = self.quiz.questions.get()
+        self.assertEqual(question.question_type, QuizQuestion.TYPE_CHOICE)
+        self.assertFalse(question.is_multiple_choice)
+        self.assertEqual(question.answers.count(), 2)
+        self.assertEqual(
+            set(question.answers.filter(is_correct=True).values_list("text", flat=True)),
+            {"A"})
+
+    def test_multiple_choice_sets_flag(self):
+        self._create(answer_format="multiple",
+                     **{"answers-0-is_correct": "on", "answers-1-is_correct": "on"})
+        question = self.quiz.questions.get()
+        self.assertEqual(question.question_type, QuizQuestion.TYPE_CHOICE)
+        self.assertTrue(question.is_multiple_choice)
+        self.assertEqual(question.answers.filter(is_correct=True).count(), 2)
+
+    def test_open_forces_accepted_answers(self):
+        self._create(answer_format="open")  # no is_correct posted
+        question = self.quiz.questions.get()
+        self.assertEqual(question.question_type, QuizQuestion.TYPE_OPEN)
+        self.assertFalse(question.is_multiple_choice)
+        self.assertEqual(question.answers.filter(is_correct=True).count(), 2)
+
+    def test_single_requires_exactly_one_correct(self):
+        response = self._create(answer_format="single")  # zero correct
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.quiz.questions.count(), 0)
+
+    def test_open_requires_at_least_one_answer(self):
+        response = self._create(answer_format="open",
+                                **{"answers-0-text": "", "answers-1-text": ""})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.quiz.questions.count(), 0)
+
+    def test_choice_requires_two_options(self):
+        response = self._create(answer_format="single",
+                                **{"answers-0-is_correct": "on", "answers-1-text": ""})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.quiz.questions.count(), 0)
+
+    def test_edit_switches_format_and_correctness(self):
+        question = QuizQuestion.objects.create(
+            quiz=self.quiz, text="orig", question_type=QuizQuestion.TYPE_CHOICE,
+            is_multiple_choice=False, order=1)
+        a1 = QuizAnswer.objects.create(question=question, text="A", is_correct=True, order=1)
+        a2 = QuizAnswer.objects.create(question=question, text="B", order=2)
+        data = self._payload(
+            text="edited", answer_format="multiple",
+            **{
+                "answers-INITIAL_FORMS": "2",
+                "answers-0-id": str(a1.pk), "answers-0-is_correct": "on",
+                "answers-1-id": str(a2.pk), "answers-1-is_correct": "on",
+            })
+        response = self.client.post(
+            reverse("backoffice_quizzes:question-edit", kwargs={"pk": question.pk}), data)
+        self.assertEqual(response.status_code, 302)
+        question.refresh_from_db()
+        self.assertEqual(question.text, "edited")
+        self.assertTrue(question.is_multiple_choice)
+        self.assertEqual(question.answers.filter(is_correct=True).count(), 2)
+
+    def test_delete_question(self):
+        question = QuizQuestion.objects.create(quiz=self.quiz, text="del", order=1)
+        response = self.client.post(
+            reverse("backoffice_quizzes:question-delete", kwargs={"pk": question.pk}))
+        self.assertRedirects(
+            response,
+            reverse("backoffice_quizzes:question-list", kwargs={"pk": self.quiz.pk}))
+        self.assertFalse(QuizQuestion.objects.filter(pk=question.pk).exists())
+
+    def test_reorder_swaps_adjacent(self):
+        q1 = QuizQuestion.objects.create(quiz=self.quiz, text="q1", order=1)
+        q2 = QuizQuestion.objects.create(quiz=self.quiz, text="q2", order=2)
+        self.client.post(
+            reverse("backoffice_quizzes:question-reorder", kwargs={"pk": self.quiz.pk}),
+            {"question": q1.pk, "direction": "down"})
+        q1.refresh_from_db()
+        q2.refresh_from_db()
+        self.assertEqual(q1.order, 2)
+        self.assertEqual(q2.order, 1)
+
+    def test_reorder_get_is_405(self):
+        response = self.client.get(
+            reverse("backoffice_quizzes:question-reorder", kwargs={"pk": self.quiz.pk}))
+        self.assertEqual(response.status_code, 405)
+
+    def test_advanced_traits_create_mappings(self):
+        trait = QuizTrait.objects.create(title="Pragmatist", slug="pragmatist")
+        self._create(
+            answer_format="single",
+            **{
+                "answers-0-is_correct": "on",
+                "answers-0-traits_data": json.dumps([{"trait": trait.id, "weight": 3}]),
+            })
+        answer = self.quiz.questions.get().answers.get(text="A")
+        self.assertEqual(answer.trait_mappings.count(), 1)
+        mapping = answer.trait_mappings.get()
+        self.assertEqual(mapping.trait_id, trait.id)
+        self.assertEqual(mapping.weight, 3)
+
+
+class QuizMathRenderingTests(TestCase):
+    """KaTeX scaffolding is present and the escaping contract is preserved."""
+
+    @classmethod
+    def setUpTestData(cls):
+        Platform.objects.create(
+            site_name="Test", author="tests", publication_year=2026)
+        cls.quiz = Quiz.objects.create(title="Math", slug="math", is_published=True)
+        cls.question = QuizQuestion.objects.create(
+            quiz=cls.quiz, text="Solve $x^2$ and <b>bold</b>", order=1)
+        QuizAnswer.objects.create(
+            question=cls.question, text="$x=2$", is_correct=True, order=1)
+        cls.user_field = _person_user_field()
+        if cls.user_field is None:
+            return
+        User = get_user_model()
+        cls.user = User.objects.create_user("math-student", password="x")
+        cls.person = Person.objects.create(display_name="Math Student")
+        setattr(cls.person, cls.user_field, cls.user)
+        cls.person.save(update_fields=[cls.user_field])
+
+    def setUp(self):
+        if self.user_field is None:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.user)
+
+    def test_practice_page_loads_katex_and_escapes_stem(self):
+        response = self.client.get(
+            reverse("quizzes:quiz-practice", kwargs={"pk": self.quiz.pk}))
+        self.assertContains(response, "katex")
+        self.assertContains(response, "js-math")
+        # $…$ delimiters survive as literal text for KaTeX to pick up client-side,
+        # and raw HTML in the stem is still escaped (no new XSS surface).
+        self.assertContains(response, "Solve $x^2$")
+        self.assertContains(response, "&lt;b&gt;bold&lt;/b&gt;")
+        self.assertNotContains(response, "<b>bold</b>", html=False)
+
+    def test_editor_has_katex_and_live_preview(self):
+        User = get_user_model()
+        editor = User.objects.create_user("bo-math", password="x", is_staff=True)
+        self.client.force_login(editor)
+        response = self.client.get(
+            reverse("backoffice_quizzes:question-create", kwargs={"pk": self.quiz.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "katex")
+        self.assertContains(response, "data-preview")

@@ -1,0 +1,119 @@
+{% extends "backoffice/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block backoffice_start_script %}
+{% include "quizzes/_katex.html" %}
+{{ form.media }}
+<style>
+  trix-toolbar .trix-button-row { flex-wrap: wrap; }
+  trix-editor { min-height: 12rem; border-radius: .5rem; border-color: rgba(128,128,128,.35); padding: 1rem; }
+  .katex { font-size: 1.05em; }
+</style>
+{% endblock %}
+
+{% block backoffice_content %}
+<div x-data="answerEditor({ format: '{{ form.answer_format.value|default:FORMAT_SINGLE }}' })"
+     @input="refreshPreview()">
+  <form method="post" class="grid gap-6 lg:grid-cols-[1fr_360px]">
+    {% csrf_token %}
+
+    <!-- LEFT: editor -->
+    <div class="space-y-5">
+      <div class="flex flex-wrap items-center gap-3">
+        <a href="{% url 'backoffice_quizzes:question-list' pk=quiz.pk %}" class="text-sm underline hover:opacity-80"><i class="fa-solid fa-arrow-left"></i> {{ quiz.title }}</a>
+        <h2 class="text-lg font-bold"><i class="{{ icon }}"></i> {{ title }}</h2>
+      </div>
+
+      {% if form.non_field_errors %}<div class="rounded-xl border border-warn-light/40 bg-warn-light/10 p-3 text-sm">{{ form.non_field_errors }}</div>{% endif %}
+
+      <!-- Stem -->
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="space-y-2 rounded-2xl border p-4 shadow-sm">
+        <label for="{{ form.text.id_for_label }}" class="block text-sm font-semibold">{% trans "Question stem" %}</label>
+        {{ form.text }}
+        <p class="text-xs opacity-60">{% trans "Tip: wrap math in $…$ (inline) or $$…$$ (display). It renders live on the right." %}</p>
+        {% if form.text.errors %}<p class="text-sm text-warn-light">{{ form.text.errors }}</p>{% endif %}
+      </div>
+
+      <!-- Answer format -->
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="space-y-2 rounded-2xl border p-4 shadow-sm">
+        <span class="block text-sm font-semibold">{{ form.answer_format.label }}</span>
+        <div class="flex flex-wrap gap-4 text-sm" @change="format = $event.target.value">
+          {% for radio in form.answer_format %}
+            <label class="inline-flex items-center gap-2">{{ radio.tag }} <span>{{ radio.choice_label }}</span></label>
+          {% endfor %}
+        </div>
+        {% if form.answer_format.errors %}<p class="text-sm text-warn-light">{{ form.answer_format.errors }}</p>{% endif %}
+      </div>
+
+      <!-- Answers -->
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="space-y-3 rounded-2xl border p-4 shadow-sm">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-semibold" x-text="isOpen ? '{% trans "Accepted answers" %}' : '{% trans "Answer options" %}'"></span>
+          <span class="text-xs opacity-60" x-show="isSingle">{% trans "Mark exactly one correct" %}</span>
+          <span class="text-xs opacity-60" x-show="format === 'multiple'">{% trans "Mark all correct options" %}</span>
+          <span class="text-xs opacity-60" x-show="isOpen">{% trans "Each row is an accepted answer" %}</span>
+        </div>
+        {% include "quizzes/backoffice/_answer_rows.html" %}
+        <button type="button" @click="addRow()" class="inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-semibold hover:opacity-85"><i class="fa-solid fa-plus"></i> {% trans "Add answer" %}</button>
+      </div>
+
+      <!-- Worked solution -->
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="space-y-2 rounded-2xl border p-4 shadow-sm">
+        <label for="{{ form.solution.id_for_label }}" class="block text-sm font-semibold">{% trans "Worked solution" %}</label>
+        {{ form.solution }}
+        <p class="text-xs opacity-60">{% trans "Rich solution shown after a submission. You can embed images here." %}</p>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="space-y-2">
+          <label for="{{ form.hint.id_for_label }}" class="block text-sm font-semibold">{% trans "Hint" %}</label>
+          {{ form.hint }}
+        </div>
+        <div class="space-y-2">
+          <label for="{{ form.explanation.id_for_label }}" class="block text-sm font-semibold">{% trans "Plain explanation" %}</label>
+          {{ form.explanation }}
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="space-y-2">
+          <label for="{{ form.max_time.id_for_label }}" class="block text-sm font-semibold">{% trans "Time limit (min)" %}</label>
+          {{ form.max_time }}
+        </div>
+        <div class="space-y-2">
+          <label for="{{ form.order.id_for_label }}" class="block text-sm font-semibold">{% trans "Order" %}</label>
+          {{ form.order }}
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-end gap-3">
+        <a href="{% url 'backoffice_quizzes:question-list' pk=quiz.pk %}"
+           :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'"
+           class="rounded-lg border px-4 py-2 text-sm font-semibold hover:opacity-85">{% trans "Cancel" %}</a>
+        <button type="submit"
+                :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+                class="inline-flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90">
+          <i class="{{ icon }}"></i> {{ submit_label }}
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT: live preview -->
+    <aside class="lg:sticky lg:top-6 lg:self-start">
+      <div data-preview
+           :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'"
+           class="space-y-3 rounded-2xl border p-4 shadow-sm">
+        <p class="text-xs font-semibold uppercase tracking-wide opacity-60">{% trans "Live preview" %}</p>
+        <p data-preview-stem class="text-base font-medium">…</p>
+        <ul data-preview-answers class="space-y-2 text-sm"></ul>
+        <p class="text-[11px] opacity-50">{% trans "Math renders as you type." %}</p>
+      </div>
+    </aside>
+  </form>
+</div>
+{% endblock %}
+
+{% block backoffice_end_script %}
+<script defer src="{% static 'quizzes/js/quiz_editor.js' %}"></script>
+{% endblock %}

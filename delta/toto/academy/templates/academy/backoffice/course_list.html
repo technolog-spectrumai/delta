@@ -1,0 +1,55 @@
+{% extends "backoffice/base.html" %}
+{% load i18n %}
+
+{% block backoffice_header_action %}
+<a href="{% url 'backoffice_courses:course-create' %}"
+   :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+   class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90">
+  <i class="fa-solid fa-plus"></i> {% trans "New course" %}
+</a>
+{% endblock %}
+
+{% block backoffice_content %}
+<div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+     class="overflow-hidden rounded-2xl border shadow-sm">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-sm">
+      <thead :class="darkMode ? 'bg-sunken-dark' : 'bg-sunken-light'" class="text-xs uppercase tracking-wide opacity-70">
+        <tr>
+          <th class="px-4 py-3">{% trans "Course" %}</th>
+          <th class="px-4 py-3">{% trans "Modules" %}</th>
+          <th class="px-4 py-3">{% trans "Status" %}</th>
+          <th class="px-4 py-3 text-right">{% trans "Actions" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for course in courses %}
+          <tr :class="darkMode ? 'border-accent-1' : 'border-accent-2'" class="border-t">
+            <td class="px-4 py-3">
+              <a href="{% url 'backoffice_courses:module-list' pk=course.pk %}" class="font-semibold hover:underline">{{ course.title }}</a>
+              {% if course.is_virtual %}<span class="ml-2 rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide opacity-70">{% trans "Virtual" %}</span>{% endif %}
+            </td>
+            <td class="px-4 py-3">{{ course.n_modules }}</td>
+            <td class="px-4 py-3">
+              {% if course.is_published %}
+                <span class="inline-flex items-center gap-1 text-success-light"><i class="fa-solid fa-circle-check"></i> {% trans "Published" %}</span>
+              {% else %}
+                <span class="inline-flex items-center gap-1 opacity-60"><i class="fa-regular fa-circle"></i> {% trans "Draft" %}</span>
+              {% endif %}
+            </td>
+            <td class="px-4 py-3">
+              <div class="flex items-center justify-end gap-2">
+                <a href="{% url 'backoffice_courses:module-list' pk=course.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-cubes"></i> {% trans "Modules" %}</a>
+                <a href="{% url 'backoffice_courses:course-edit' pk=course.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-pen-to-square"></i> {% trans "Edit" %}</a>
+                <a href="{% url 'backoffice_courses:course-delete' pk=course.pk %}" class="rounded-lg border border-warn-light/40 px-3 py-1.5 text-xs font-semibold text-warn-light hover:opacity-85" aria-label="{% trans 'Delete' %}"><i class="fa-solid fa-trash"></i></a>
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4" class="px-4 py-10 text-center opacity-60">{% trans "No courses yet. Create your first course." %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

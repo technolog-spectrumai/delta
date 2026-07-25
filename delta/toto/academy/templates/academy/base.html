@@ -62,6 +62,14 @@
         <i class="fa-solid fa-book-open"></i>
         {% trans "Library" %}
       </a>
+      {% if can_access_backoffice %}
+        <a href="{% url 'backoffice:dashboard' %}"
+           :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+           class="ml-auto inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold opacity-70 transition hover:opacity-100">
+          <i class="fa-solid fa-chalkboard-user"></i>
+          Panel autorski
+        </a>
+      {% endif %}
     </nav>
 
     {% block academy_content %}{% endblock %}

@@ -40,6 +40,32 @@ for app_label, prefix, module, namespace in _education:
     if apps.is_installed(app_label):
         urlpatterns.append(path(prefix, include(module, namespace=namespace)))
 
+# Teacher back office (Panel autorski) — a shell app plus one URL module per
+# authoring module. Mounted only when the shell is installed; each module's
+# routes are added only when its owning app is present.
+if apps.is_installed("toto.backoffice"):
+    urlpatterns.append(path("panel/", include("toto.backoffice.urls")))
+    if apps.is_installed("toto.quizzes"):
+        urlpatterns.append(
+            path("panel/zadania/", include("toto.quizzes.backoffice_urls"))
+        )
+    if apps.is_installed("toto.competence"):
+        urlpatterns.append(
+            path("panel/kompetencje/", include("toto.competence.backoffice_urls"))
+        )
+    if apps.is_installed("toto.academy"):
+        urlpatterns.append(
+            path("panel/kursy/", include("toto.academy.backoffice_urls"))
+        )
+    if apps.is_installed("toto.palimpsest"):
+        urlpatterns.append(
+            path("panel/notatki/", include("toto.palimpsest.backoffice_urls"))
+        )
+    if apps.is_installed("toto.library"):
+        urlpatterns.append(
+            path("panel/biblioteka/", include("toto.library.backoffice_urls"))
+        )
+
 if apps.is_installed("django_prometheus"):
     urlpatterns.append(path("", include("django_prometheus.urls")))
 

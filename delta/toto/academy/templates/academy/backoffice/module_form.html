@@ -1,0 +1,132 @@
+{% extends "backoffice/base.html" %}
+{% load i18n %}
+
+{% block backoffice_start_script %}<style>[x-cloak]{display:none!important;}</style>{% endblock %}
+
+{% block backoffice_content %}
+<div class="space-y-6">
+  <div class="flex flex-wrap items-center gap-3">
+    <a href="{% url 'backoffice_courses:module-list' pk=course.pk %}" class="text-sm underline hover:opacity-80"><i class="fa-solid fa-arrow-left"></i> {{ course.title }}</a>
+    <h2 class="text-lg font-bold"><i class="fa-solid fa-cubes"></i> {{ title }}</h2>
+  </div>
+
+  <form method="post"
+        :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+        class="max-w-3xl space-y-5 rounded-2xl border p-6 shadow-sm">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="rounded-xl border border-warn-light/40 bg-warn-light/10 p-3 text-sm">{{ form.non_field_errors }}</div>{% endif %}
+
+    <div class="space-y-1">
+      <label for="{{ form.title.id_for_label }}" class="block text-sm font-semibold">{{ form.title.label }}</label>
+      {{ form.title }}
+      {% if form.title.errors %}<p class="text-sm text-warn-light">{{ form.title.errors }}</p>{% endif %}
+    </div>
+    <div class="space-y-1">
+      <label for="{{ form.description.id_for_label }}" class="block text-sm font-semibold">{{ form.description.label }}</label>
+      {{ form.description }}
+    </div>
+
+    <!-- Badge picker + inline quick-create -->
+    <div class="space-y-1">
+      <label for="{{ form.unlocks_badge.id_for_label }}" class="block text-sm font-semibold">{{ form.unlocks_badge.label }}</label>
+      {{ form.unlocks_badge }}
+      <div x-data="{ open: false }" class="text-xs">
+        <button type="button" @click="open = !open" class="underline opacity-70 hover:opacity-100"><i class="fa-solid fa-plus"></i> {% trans "New badge" %}</button>
+        <div x-show="open" x-cloak class="mt-2 flex flex-wrap items-center gap-2 rounded-lg border border-current/20 p-2">
+          <input type="text" name="qc_title" placeholder="{% trans 'Badge title' %}" class="rounded border px-2 py-1 text-black">
+          <select name="qc_group" class="rounded border px-2 py-1 text-black">
+            {% for g in skill_groups %}<option value="{{ g.id }}">{{ g.title }}</option>{% endfor %}
+          </select>
+          <button type="button"
+                  hx-post="{% url 'backoffice_skills:badge-quick-create' %}"
+                  hx-include="[name='qc_title'],[name='qc_group']"
+                  hx-target="#id_unlocks_badge" hx-swap="beforeend"
+                  class="rounded bg-indigo-600 px-2 py-1 font-semibold text-white hover:bg-indigo-500">{% trans "Create & select" %}</button>
+        </div>
+      </div>
+      <p class="text-xs opacity-60">{% trans "Each module unlocks a distinct badge on completion." %}</p>
+      {% if form.unlocks_badge.errors %}<p class="text-sm text-warn-light">{{ form.unlocks_badge.errors }}</p>{% endif %}
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <div class="space-y-1">
+        <label for="{{ form.verbena_page.id_for_label }}" class="block text-sm font-semibold">{{ form.verbena_page.label }}</label>
+        {{ form.verbena_page }}
+      </div>
+      <div class="space-y-1">
+        <label for="{{ form.exam.id_for_label }}" class="block text-sm font-semibold">{{ form.exam.label }}</label>
+        {{ form.exam }}
+      </div>
+    </div>
+
+    <div class="space-y-1">
+      <label for="{{ form.attached_quizzes.id_for_label }}" class="block text-sm font-semibold">{{ form.attached_quizzes.label }}</label>
+      {{ form.attached_quizzes }}
+      <p class="text-xs opacity-60">{% trans "Hold Ctrl/Cmd to select several." %}</p>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <div class="space-y-1">
+        <label for="{{ form.lecture_video_url.id_for_label }}" class="block text-sm font-semibold">{{ form.lecture_video_url.label }}</label>
+        {{ form.lecture_video_url }}
+      </div>
+      <div class="space-y-1">
+        <label for="{{ form.order.id_for_label }}" class="block text-sm font-semibold">{{ form.order.label }}</label>
+        {{ form.order }}
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-end gap-3 pt-2">
+      <a href="{% url 'backoffice_courses:module-list' pk=course.pk %}"
+         :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'"
+         class="rounded-lg border px-4 py-2 text-sm font-semibold hover:opacity-85">{% trans "Cancel" %}</a>
+      <button type="submit"
+              :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+              class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90"><i class="fa-solid fa-check"></i> {{ submit_label }}</button>
+    </div>
+  </form>
+
+  {% if module %}
+    <!-- Lessons -->
+    <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+             class="max-w-3xl space-y-3 rounded-2xl border p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold"><i class="fa-solid fa-list-ol"></i> {% trans "Lessons" %}</h3>
+        <a href="{% url 'backoffice_courses:lesson-create' pk=module.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-plus"></i> {% trans "Add lesson" %}</a>
+      </div>
+      {% for lesson in lessons %}
+        <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="flex items-center gap-3 rounded-xl border p-3">
+          <div class="flex flex-col">
+            <form method="post" action="{% url 'backoffice_courses:lesson-reorder' pk=module.pk %}">{% csrf_token %}<input type="hidden" name="item" value="{{ lesson.pk }}"><input type="hidden" name="direction" value="up"><button class="opacity-50 hover:opacity-100" aria-label="{% trans 'Move up' %}"><i class="fa-solid fa-chevron-up"></i></button></form>
+            <form method="post" action="{% url 'backoffice_courses:lesson-reorder' pk=module.pk %}">{% csrf_token %}<input type="hidden" name="item" value="{{ lesson.pk }}"><input type="hidden" name="direction" value="down"><button class="opacity-50 hover:opacity-100" aria-label="{% trans 'Move down' %}"><i class="fa-solid fa-chevron-down"></i></button></form>
+          </div>
+          <span class="min-w-0 flex-1 font-semibold">{{ forloop.counter }}. {{ lesson.title }}</span>
+          <a href="{% url 'backoffice_courses:lesson-edit' pk=lesson.pk %}" class="rounded border px-2 py-1 text-xs hover:opacity-85"><i class="fa-solid fa-pen"></i></a>
+          <a href="{% url 'backoffice_courses:lesson-delete' pk=lesson.pk %}" class="rounded border border-warn-light/40 px-2 py-1 text-xs text-warn-light hover:opacity-85"><i class="fa-solid fa-trash"></i></a>
+        </div>
+      {% empty %}
+        <p class="text-sm italic opacity-50">{% trans "No lessons yet." %}</p>
+      {% endfor %}
+    </section>
+
+    <!-- Scripts -->
+    <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+             class="max-w-3xl space-y-3 rounded-2xl border p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold"><i class="fa-solid fa-scroll"></i> {% trans "Scripts" %}</h3>
+        <a href="{% url 'backoffice_courses:script-create' pk=module.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-plus"></i> {% trans "Add script" %}</a>
+      </div>
+      {% for script in scripts %}
+        <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="flex items-center gap-3 rounded-xl border p-3">
+          <span class="min-w-0 flex-1 font-semibold">{{ script.title }}</span>
+          <span class="text-xs opacity-60">{{ script.sections.count }} {% trans "sections" %}</span>
+          <a href="{% url 'backoffice_courses:script-edit' pk=script.pk %}" class="rounded border px-2 py-1 text-xs hover:opacity-85"><i class="fa-solid fa-pen"></i></a>
+          <a href="{% url 'backoffice_courses:script-delete' pk=script.pk %}" class="rounded border border-warn-light/40 px-2 py-1 text-xs text-warn-light hover:opacity-85"><i class="fa-solid fa-trash"></i></a>
+        </div>
+      {% empty %}
+        <p class="text-sm italic opacity-50">{% trans "No scripts yet." %}</p>
+      {% endfor %}
+    </section>
+  {% endif %}
+</div>
+{% endblock %}

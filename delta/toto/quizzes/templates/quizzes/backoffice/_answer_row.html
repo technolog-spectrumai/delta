@@ -1,0 +1,40 @@
+{% load i18n %}
+<div data-answer-row
+     :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'"
+     class="rounded-xl border p-3">
+  <div class="flex items-start gap-3">
+    <label class="mt-2 flex shrink-0 flex-col items-center gap-1" x-show="!isOpen">
+      {{ f.is_correct }}
+      <span class="text-[10px] font-semibold uppercase tracking-wide opacity-60">{% trans "Correct" %}</span>
+    </label>
+
+    <div class="min-w-0 flex-1 space-y-1">
+      <div class="text-[10px] font-semibold uppercase tracking-wide opacity-50" x-show="isOpen">{% trans "Accepted answer" %}</div>
+      {{ f.text }}
+      {% if f.text.errors %}<p class="text-xs text-warn-light">{{ f.text.errors }}</p>{% endif %}
+
+      <details class="text-xs">
+        <summary class="cursor-pointer opacity-60 hover:opacity-100">{% trans "Advanced: traits" %}</summary>
+        <div x-data="traitPanel()" class="mt-2 space-y-2">
+          <template x-for="(r, i) in rows" :key="i">
+            <div class="flex items-center gap-2">
+              <select x-model="r.trait" @change="sync()" class="rounded border px-2 py-1 text-black">
+                <option value="">{% trans "— trait —" %}</option>
+                {% for t in traits %}<option value="{{ t.id }}">{{ t.title }}</option>{% endfor %}
+              </select>
+              <input type="number" min="1" x-model="r.weight" @input="sync()" class="w-16 rounded border px-2 py-1 text-black">
+              <button type="button" @click="removeRow(i)" class="opacity-60 hover:text-warn-light"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+          </template>
+          <button type="button" @click="addRow()" class="rounded border px-2 py-1 font-semibold opacity-80"><i class="fa-solid fa-plus"></i> {% trans "Add trait" %}</button>
+        </div>
+      </details>
+    </div>
+
+    <button type="button" @click="removeRow($el)"
+            class="mt-1 shrink-0 rounded-lg border px-2 py-1 text-xs text-warn-light hover:opacity-85"
+            aria-label="{% trans 'Remove answer' %}"><i class="fa-solid fa-trash"></i></button>
+  </div>
+
+  <div class="hidden">{{ f.id }}{{ f.order }}{{ f.DELETE }}{{ f.traits_data }}</div>
+</div>
