@@ -263,7 +263,8 @@ STATIC_URL = "/static/"
 STATIC_ROOT = str(BASE_DIR / "staticfiles")
 STATICFILES_DIRS = [str(BASE_DIR.parent / "data" / "img")]
 MEDIA_URL = "/media/"
-MEDIA_ROOT = str(BASE_DIR / "media")
+# MEDIA_ROOT override keeps harnesses out of the docker-owned media/ dir.
+MEDIA_ROOT = os.environ.get("MEDIA_ROOT", str(BASE_DIR / "media"))
 
 # toto filesystem contract: shared seed/branding data and the run/ dir with local
 # vault-password bundles — both at the repo root (mapped to /app/data + /app/run).

@@ -37,6 +37,8 @@ mkdir -p "$SCRATCH"
 
 export BUILD_GEO=0                       # plain sqlite, no GDAL
 export DB_NAME="$SCRATCH/db.ui_test.sqlite3"
+export MEDIA_ROOT="$SCRATCH/media"       # the real media/ dir is docker-owned
+mkdir -p "$MEDIA_ROOT"
 # One key for ALL steps: encrypted rows seeded in one process must stay
 # decryptable in the next (settings mints a fresh random key per process).
 export FIELD_ENCRYPTION_KEY="${FIELD_ENCRYPTION_KEY:-$("$PY" -c 'import base64,os;print(base64.urlsafe_b64encode(os.urandom(32)).decode())')}"
