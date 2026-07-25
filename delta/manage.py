@@ -5,9 +5,10 @@ delta is a small WSGI e-learning host. Env vars control everything — no YAML i
 needed here. Default: DB_ENGINE=spatialite (no postgres required locally), using a
 delta-specific sqlite file.
 
-toto is an installed package (pip install -e <toto_libs checkout> for dev, or the
-pinned wheel in deployments). TOTO_SRC optionally points at a toto_libs checkout
-root to run against it without installing.
+toto normally runs straight from the vendored subtree at vendor/toto_libs;
+TOTO_SRC overrides it (set-but-missing = explicitly disabled, so the clean-env
+gate can prove wheel-only operation). In the Docker image neither exists and
+the installed wheel provides the namespace.
 
 To customise without exporting env vars, create .env.local in the repo root:
     DB_ENGINE=postgis
@@ -20,9 +21,13 @@ from pathlib import Path
 _HERE = Path(__file__).resolve().parent          # delta/delta  (project dir)
 _REPO_ROOT = _HERE.parent                          # delta        (repo root)
 
-# TOTO_SRC: run against an uninstalled toto_libs checkout by putting each package's
-# namespace portion on sys.path.
+# Vendored tree by default; TOTO_SRC overrides — each package's namespace
+# portion goes on sys.path.
 _toto_src = os.environ.get("TOTO_SRC")
+if _toto_src is None:
+    _vendor = _REPO_ROOT / "vendor" / "toto_libs"
+    if (_vendor / "packages").is_dir():
+        _toto_src = str(_vendor)
 if _toto_src and Path(_toto_src).exists():
     _portions = sorted((Path(_toto_src) / "packages").glob("*/src"))
     for _portion in _portions or [Path(_toto_src)]:

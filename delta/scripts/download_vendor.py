@@ -30,6 +30,11 @@ def _toto_package_dir():
             return portion.parent
         if (Path(toto_src) / "toto").is_dir():          # pre-split checkout
             return Path(toto_src).resolve() / "toto"
+    elif (ROOT / "vendor" / "toto_libs" / "packages").is_dir():
+        # The vendored subtree (absent in the Docker image, where the installed
+        # package below is the target).
+        for portion in sorted((ROOT / "vendor" / "toto_libs").glob("packages/*/src/toto/core")):
+            return portion.parent
     legacy = ROOT / "toto" / "toto"
     if legacy.is_dir():
         return legacy
