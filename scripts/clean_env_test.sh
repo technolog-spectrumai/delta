@@ -24,6 +24,15 @@ PY="$VENV/bin/python"
 # The gate runs GIS-off (delta's local profile): plain sqlite + the
 # locations migrations_nogis graph — no GDAL/GEOS needed on the host.
 export BUILD_GEO=0
+# Gate-owned scratch DB/media: never touch the developer's db.delta.sqlite3
+# or the docker-owned media/ dir. One encryption key for every step, or rows
+# seeded in one process could not be decrypted in the next.
+export DB_NAME="$VENV/db.gate.sqlite3"
+export MEDIA_ROOT="$VENV/media"
+export FIELD_ENCRYPTION_KEY="${FIELD_ENCRYPTION_KEY:-$("$PYTHON" -c 'import base64,os;print(base64.urlsafe_b64encode(os.urandom(32)).decode())')}"
+export ADMIN_PASSWORD="${ADMIN_PASSWORD:-gate-admin}"
+export ADMIN_DISPLAY_NAME="${ADMIN_DISPLAY_NAME:-Delta Admin}"
+export FULL_INGRESS=1
 
 cd "$REPO_ROOT"
 
@@ -103,9 +112,18 @@ echo "==> django check"
 echo "    delta OK"
 
 echo "==> migration (throwaway sqlite DB)"
-rm -f "$REPO_ROOT/db.delta.sqlite3" "$REPO_ROOT/db.delta.sqlite3"-shm "$REPO_ROOT/db.delta.sqlite3"-wal
+rm -f "$DB_NAME" "$DB_NAME"-shm "$DB_NAME"-wal
+mkdir -p "$MEDIA_ROOT"
 "$PY" delta/manage.py migrate --noinput >/dev/null
 echo "    delta migrate OK"
+
+echo "==> seeded three-persona URL sweep"
+"$PY" delta/manage.py init_platform --password "$ADMIN_PASSWORD" >/dev/null
+INGRESS_OUT="$("$PY" delta/manage.py ingress_all)"
+# ingress_all reports failures but always exits 0 — enforce zero here.
+echo "$INGRESS_OUT" | grep -q "Failed: 0" || {
+    echo "$INGRESS_OUT" | tail -5; echo "    ingress_all reported failures"; exit 1; }
+"$PY" delta/manage.py smoke_urls | tail -6
 
 echo "==> collectstatic (ResilientManifestStaticFilesStorage, scratch root)"
 # Collect into a throwaway STATIC_ROOT so the gate never touches the real
@@ -142,7 +160,7 @@ _boot_smoke() {
 _boot_smoke delta delta/manage.py 8767
 
 echo "==> cleanup of generated artifacts"
-rm -f "$REPO_ROOT/db.delta.sqlite3" "$REPO_ROOT/db.delta.sqlite3"-shm "$REPO_ROOT/db.delta.sqlite3"-wal
-rm -rf "$VENV/static_collect"
+rm -f "$DB_NAME" "$DB_NAME"-shm "$DB_NAME"-wal
+rm -rf "$VENV/static_collect" "$MEDIA_ROOT"
 
 echo "==> delta clean-env gate PASSED"

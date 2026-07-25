@@ -108,6 +108,14 @@ boot smoke): `scripts/clean_env_test.sh`.
 To smoke-test a running stack after `./deploy_local.sh` (container health,
 front-door routes, static pipeline): `scripts/smoke_test.sh`.
 
+To test the UI **without Docker** — the early-warning harness: `scripts/ui_test.sh`
+seeds a scratch sqlite DB with the deployment's own seed commands, then sweeps
+every URL of the host (including the admin) with three personas (anonymous,
+student, staff) via `manage.py smoke_urls`. Any 500, unexpected 404/400, or an
+authenticated persona bounced to login fails the run. `--live` re-probes over
+real HTTP against a throwaway runserver; extra args pass through (e.g.
+`--filter academy:`). The clean-env gate runs the same sweep.
+
 Seed the demo maths course tree + subscription plans:
 
 ```bash
