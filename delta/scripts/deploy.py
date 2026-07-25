@@ -2235,6 +2235,18 @@ def build_fingerprint(cfg: dict) -> str:
             out = subprocess.run(["git", "-C", str(TOTO_SRC), *cmd],
                                  capture_output=True, text=True, check=False)
             h.update(out.stdout.encode())
+    elif TOTO_SRC and TOTO_SRC.is_relative_to(ROOT_DIR) and (ROOT_DIR / ".git").exists():
+        # The vendored subtree has no .git of its own; its state is the host
+        # repo's git state of the prefix. Hashed here because --smart's verdict
+        # is taken BEFORE stage_toto_wheels runs, so hashing the staged wheels
+        # would freeze the previous build's toto forever.
+        rel = str(TOTO_SRC.relative_to(ROOT_DIR))
+        for cmd in (["log", "-1", "--format=%H", "--", rel],
+                    ["status", "--porcelain", "--", rel],
+                    ["diff", "--", rel]):
+            out = subprocess.run(["git", "-C", str(ROOT_DIR), *cmd],
+                                 capture_output=True, text=True, check=False)
+            h.update(out.stdout.encode())
     else:
         for whl in sorted(list((ROOT_DIR / "dist").glob("toto-*.whl"))
                           + list((ROOT_DIR / "dist").glob("toto_*.whl"))):
