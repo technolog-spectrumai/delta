@@ -40,6 +40,9 @@ SKIP = {
     # markdownx's ImageUploadView is a BaseFormView with template_name left
     # commented out upstream: GET raises by third-party design, not a delta bug.
     "markdownx_upload": "third-party view 500s on GET by design",
+    # Social login 404s by design until a provider's OAuth credentials are set.
+    "sso:social_login": "social provider redirect; needs configured credentials",
+    "sso:social_callback": "social provider callback; needs configured credentials",
 }
 
 # Staff-gated pages: the student persona being turned away is correct behavior.
