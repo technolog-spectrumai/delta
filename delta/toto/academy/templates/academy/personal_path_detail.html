@@ -1,0 +1,175 @@
+{% extends "academy/base.html" %}
+{% load i18n %}
+
+{% block academy_title %}{{ path.title }}{% endblock %}
+{% block tab_courses %}border-b-2 border-current -mb-px{% endblock %}
+
+{% block academy_content %}
+
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div class="space-y-2">
+      <a href="{% url 'academy:personal-path-list' %}" class="text-sm underline hover:opacity-80">{% trans "My Learning Paths" %}</a>
+
+      <h1 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="text-3xl font-bold">
+        {% if path.goal_badge %}<i class="{{ path.goal_badge.icon }}"></i>{% else %}<i class="fa-solid fa-diagram-project"></i>{% endif %}
+        {{ path.title }}
+      </h1>
+
+      <p class="opacity-75">
+        <span class="text-xs font-semibold uppercase tracking-wide">{{ path.get_status_display }}</span>
+        · {% blocktrans with done=progress.done total=progress.total %}{{ done }} of {{ total }} steps completed{% endblocktrans %}
+      </p>
+    </div>
+
+    {% if path.status != "archived" %}
+      <div class="flex flex-wrap gap-2">
+        <form method="post" action="{% url 'academy:personal-path-regenerate' path.pk %}">
+          {% csrf_token %}
+          <button type="submit"
+            :class="darkMode ? 'border-accent-1 hover:bg-white/5' : 'border-accent-2 hover:bg-black/5'"
+            class="inline-flex items-center gap-2 rounded border px-3 py-2 text-sm font-semibold transition"
+            title="{% trans 'Rebuild pending steps against your current skills. Completed steps and your tasks are kept.' %}">
+            <i class="fa-solid fa-rotate"></i>
+            {% trans "Regenerate" %}
+          </button>
+        </form>
+
+        <form method="post" action="{% url 'academy:personal-path-archive' path.pk %}">
+          {% csrf_token %}
+          <button type="submit"
+            :class="darkMode ? 'border-accent-1 hover:bg-white/5' : 'border-accent-2 hover:bg-black/5'"
+            class="inline-flex items-center gap-2 rounded border px-3 py-2 text-sm font-semibold transition">
+            <i class="fa-solid fa-box-archive"></i>
+            {% trans "Archive" %}
+          </button>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+
+  <div :class="darkMode ? 'bg-sunken-dark' : 'bg-sunken-light'" class="h-3 w-full overflow-hidden rounded">
+    <div :class="darkMode ? 'bg-success-dark' : 'bg-success-light'"
+         class="h-full rounded" style="width: {{ progress.percent }}%"></div>
+  </div>
+
+  <section class="space-y-3">
+    {% for step in steps %}
+      <article
+        :class="darkMode
+          ? 'bg-bubble-bg-dark border-accent-1'
+          : 'bg-bubble-bg-light border-accent-2'"
+        class="flex items-start gap-4 border rounded-lg p-4 shadow-md transition-colors duration-300 {% if step.is_completed %}opacity-70{% endif %}">
+
+        <div class="pt-1 text-xl">
+          {% if step.is_completed %}
+            <i :class="darkMode ? 'text-success-dark' : 'text-success-light'" class="fa-solid fa-circle-check"></i>
+          {% elif step.step_type == "module" %}
+            <i class="fa-solid fa-book-open-reader"></i>
+          {% elif step.step_type == "badge" %}
+            <i class="{{ step.badge.icon }}"></i>
+          {% else %}
+            <i class="fa-solid fa-list-check"></i>
+          {% endif %}
+        </div>
+
+        <div class="min-w-0 flex-1 space-y-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="font-semibold {% if step.is_completed %}line-through{% endif %}">
+              {% if step.target_url %}
+                <a href="{{ step.target_url }}" class="underline hover:opacity-80">{{ step.display_title }}</a>
+              {% else %}
+                {{ step.display_title }}
+              {% endif %}
+            </span>
+            <span class="text-xs uppercase tracking-wide opacity-50">{{ step.get_step_type_display }}</span>
+          </div>
+
+          {% if step.step_type == "module" and step.module %}
+            <p class="text-sm opacity-70">
+              {% blocktrans with course=step.module.course.title badge=step.badge.title %}From course "{{ course }}" — completing it earns the skill "{{ badge }}".{% endblocktrans %}
+            </p>
+          {% elif step.step_type == "badge" %}
+            <p class="text-sm opacity-70">{{ step.badge.group.title }}</p>
+          {% endif %}
+
+          {% if step.note %}
+            <p class="text-sm opacity-70">{{ step.note }}</p>
+          {% endif %}
+
+          {% if step.is_completed and step.completed_at %}
+            <p class="text-xs opacity-60">{% trans "Completed" %} {{ step.completed_at|date:"M d, Y" }}</p>
+          {% endif %}
+        </div>
+
+        <div class="flex shrink-0 items-center gap-2">
+          {% if step.step_type == "badge" %}
+            {% if not step.is_completed %}
+              <span class="text-xs opacity-60" title="{% trans 'Completes automatically when you earn this skill.' %}">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                {% trans "auto" %}
+              </span>
+            {% endif %}
+          {% else %}
+            <form method="post" action="{% url 'academy:personal-path-step-toggle' path.pk step.pk %}">
+              {% csrf_token %}
+              <button type="submit"
+                :class="darkMode ? 'border-accent-1 hover:bg-white/5' : 'border-accent-2 hover:bg-black/5'"
+                class="rounded border px-3 py-1.5 text-xs font-semibold transition">
+                {% if step.is_completed %}{% trans "Undo" %}{% else %}{% trans "Mark done" %}{% endif %}
+              </button>
+            </form>
+          {% endif %}
+
+          {% if step.step_type == "task" %}
+            <form method="post" action="{% url 'academy:personal-path-step-delete' path.pk step.pk %}">
+              {% csrf_token %}
+              <button type="submit"
+                class="rounded px-2 py-1.5 text-xs opacity-60 hover:opacity-100 transition"
+                title="{% trans 'Remove this task' %}">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </form>
+          {% endif %}
+        </div>
+      </article>
+    {% empty %}
+      <p class="text-sm opacity-60">{% trans "This path has no steps. Regenerate it to rebuild them." %}</p>
+    {% endfor %}
+  </section>
+
+  {% if path.status != "archived" %}
+    <section
+      :class="darkMode
+        ? 'bg-bubble-bg-dark border-accent-1'
+        : 'bg-bubble-bg-light border-accent-2'"
+      class="max-w-2xl border rounded-lg p-5 shadow-md space-y-3 transition-colors duration-300">
+      <h2 class="text-lg font-bold">
+        <i class="fa-solid fa-plus"></i>
+        {% trans "Add your own task" %}
+      </h2>
+
+      <form method="post" action="{% url 'academy:personal-path-task-add' path.pk %}" class="space-y-3">
+        {% csrf_token %}
+
+        <div class="space-y-1">
+          <label for="{{ task_form.title.id_for_label }}" class="block text-sm font-semibold">{{ task_form.title.label }}</label>
+          {{ task_form.title }}
+        </div>
+
+        <div class="space-y-1">
+          <label for="{{ task_form.note.id_for_label }}" class="block text-sm font-semibold">{{ task_form.note.label }}</label>
+          {{ task_form.note }}
+        </div>
+
+        <button type="submit"
+          :class="darkMode
+            ? 'bg-accent-dark text-primary-bg-dark'
+            : 'bg-accent-light text-primary-bg-light'"
+          class="inline-flex items-center gap-2 rounded px-4 py-2 text-sm font-semibold hover:opacity-90 transition">
+          {% trans "Add task" %}
+        </button>
+      </form>
+    </section>
+  {% endif %}
+
+{% endblock %}
