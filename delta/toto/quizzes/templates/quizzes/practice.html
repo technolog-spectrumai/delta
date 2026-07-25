@@ -3,7 +3,10 @@
 
 {% block quizzes_title %}{{ quiz.title }} — {% trans "Practice" %}{% endblock %}
 
-{% block quizzes_start_script %}{% include "quizzes/_solution_prose_style.html" %}{% endblock %}
+{% block quizzes_start_script %}
+{% include "quizzes/_solution_prose_style.html" %}
+<style>[x-cloak] { display: none !important; }</style>
+{% endblock %}
 
 {% block quizzes_content %}
 <section
@@ -68,6 +71,8 @@
         {% csrf_token %}
         <input type="hidden" name="question_id" value="{{ question.pk }}">
         <p class="text-lg font-medium">{{ question.text|linebreaksbr }}</p>
+
+        {% include "quizzes/_hint_modal.html" with question=question %}
 
         {% if question.question_type == "open" %}
           <input type="text" name="open_answer" autocomplete="off" required

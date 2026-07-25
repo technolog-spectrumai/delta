@@ -39,6 +39,7 @@ class Command(IngressCommand):
                             "<blockquote>len() works on any sized container: lists, tuples, "
                             "strings, dicts and sets.</blockquote>"
                         ),
+                        "hint": "Count the elements between the brackets.",
                         "is_multiple_choice": False,
                         "max_time": None,
                         "answers": [
@@ -186,6 +187,7 @@ class Command(IngressCommand):
                 text=question_spec["text"],
                 explanation=question_spec["explanation"],
                 solution=question_spec.get("solution", ""),
+                hint=question_spec.get("hint", ""),
                 is_multiple_choice=question_spec["is_multiple_choice"],
                 max_time=question_spec["max_time"],
                 order=question_order,

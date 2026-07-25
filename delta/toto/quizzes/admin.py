@@ -39,7 +39,7 @@ class QuizAnswerInline(admin.TabularInline):
 class QuizQuestionInline(admin.StackedInline):
     model = QuizQuestion
     extra = 0
-    fields = ("text", "explanation", "solution", "is_multiple_choice", "order")
+    fields = ("text", "explanation", "hint", "solution", "is_multiple_choice", "order")
     ordering = ("order",)
     show_change_link = True
     formfield_overrides = {
@@ -61,14 +61,18 @@ class QuizAdmin(admin.ModelAdmin):
 
 @admin.register(QuizQuestion)
 class QuizQuestionAdmin(admin.ModelAdmin):
-    list_display = ("text_preview", "quiz", "is_multiple_choice", "max_time", "order")
+    list_display = ("text_preview", "quiz", "has_hint_display", "is_multiple_choice", "max_time", "order")
     list_filter = ("is_multiple_choice", "quiz")
-    search_fields = ("text", "explanation", "solution", "quiz__title")
+    search_fields = ("text", "explanation", "hint", "solution", "quiz__title")
     autocomplete_fields = ("quiz",)
     inlines = [QuizAnswerInline]
     formfield_overrides = {
         TrixEditorField: {"widget": TrixEditorWidget},
     }
+
+    @admin.display(description="Hint", boolean=True)
+    def has_hint_display(self, obj):
+        return obj.has_hint
 
     @admin.display(description="Question")
     def text_preview(self, obj):

@@ -116,6 +116,13 @@ class QuizQuestion(models.Model):
             "explanation when empty."
         ),
     )
+    hint = models.TextField(
+        blank=True,
+        help_text=(
+            "Optional plain-text hint shown in a modal via the 'Show hint' "
+            "button on the practice page."
+        ),
+    )
     is_multiple_choice = models.BooleanField(
         default=False,
         help_text="Closed questions only: if true, several answers may be selected.",
@@ -132,6 +139,10 @@ class QuizQuestion(models.Model):
 
     def __str__(self):
         return self.text[:80]
+
+    @property
+    def has_hint(self):
+        return bool(self.hint.strip())
 
     def correct_answer_ids(self):
         return set(self.answers.filter(is_correct=True).values_list("id", flat=True))
