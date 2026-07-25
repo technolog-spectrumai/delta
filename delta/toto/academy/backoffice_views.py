@@ -609,3 +609,60 @@ def student_revoke_badge(request, pk, student_pk):
     StudentBadge.objects.filter(student=student, badge_id=request.POST.get("badge")).delete()
     messages.success(request, _("Badge revoked."))
     return redirect("backoffice_courses:student-detail", pk=course.pk, student_pk=student.pk)
+
+
+# --- people: promote / demote teachers -------------------------------------
+
+ACTIVE_PEOPLE = "people"
+
+
+def _promote_candidates(query):
+    """Login-linked People who are not already active teachers, matching query."""
+    query = (query or "").strip()
+    if not query:
+        return Person.objects.none()
+    return (Person.objects.filter(user__isnull=False)
+            .filter(Q(display_name__icontains=query)
+                    | Q(email__icontains=query)
+                    | Q(user__username__icontains=query))
+            .exclude(academy_teacher__is_active=True)
+            .order_by("display_name")[:20])
+
+
+@teacher_required
+def people_list(request):
+    teachers = (Person.objects.filter(academy_teacher__isnull=False)
+                .select_related("academy_teacher", "user")
+                .order_by("display_name"))
+    query = request.GET.get("q", "")
+    return backoffice_render(request, "academy/backoffice/people_list.html", {
+        "teachers": teachers,
+        "query": query,
+        "results": list(_promote_candidates(query)) if query else [],
+    }, active=ACTIVE_PEOPLE)
+
+
+@teacher_required
+@require_POST
+def promote_teacher(request, pk):
+    person = get_object_or_404(Person, pk=pk)
+    Teacher.objects.update_or_create(person=person, defaults={"is_active": True})
+    if person.user_id is None:
+        messages.warning(request, _(
+            "%(name)s has no login account yet, so they cannot enter the panel "
+            "until one is linked.") % {"name": person.display_name})
+    else:
+        messages.success(request, _("%(name)s is now a teacher.") % {"name": person.display_name})
+    return redirect("backoffice_people:people-list")
+
+
+@teacher_required
+@require_POST
+def demote_teacher(request, pk):
+    person = get_object_or_404(Person, pk=pk)
+    if person == getattr(request.user, "community_profile", None):
+        messages.error(request, _("You cannot remove your own teacher access."))
+    else:
+        Teacher.objects.filter(person=person).update(is_active=False)
+        messages.success(request, _("%(name)s is no longer a teacher.") % {"name": person.display_name})
+    return redirect("backoffice_people:people-list")

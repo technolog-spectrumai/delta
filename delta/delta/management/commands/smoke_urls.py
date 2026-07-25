@@ -94,6 +94,9 @@ STAFF_ONLY = {
     "backoffice_library:collection-edit", "backoffice_library:collection-delete",
     "backoffice_library:reference-create", "backoffice_library:reference-edit",
     "backoffice_library:reference-delete",
+    # people / teachers
+    "backoffice_people:people-list", "backoffice_people:promote-teacher",
+    "backoffice_people:demote-teacher",
 }
 
 # (key) -> extra allowed statuses for authenticated personas (anon is already
@@ -278,6 +281,9 @@ PARAM_SOURCES = {
     "backoffice_courses:student-uncomplete": (False, lambda: _kw_course_student()),
     "backoffice_courses:student-award-badge": (False, lambda: _kw_course_student()),
     "backoffice_courses:student-revoke-badge": (False, lambda: _kw_course_student()),
+    # back office — people / teachers (academy)
+    "backoffice_people:promote-teacher": (False, lambda: _kw(_first("people.Person"), pk="pk")),
+    "backoffice_people:demote-teacher": (False, lambda: _kw(_first("people.Person"), pk="pk")),
     # back office — notes (palimpsest)
     "backoffice_notes:page-edit": (True, lambda: _kw(_first("palimpsest.Page"), pk="pk")),
     "backoffice_notes:page-delete": (True, lambda: _kw(_first("palimpsest.Page"), pk="pk")),

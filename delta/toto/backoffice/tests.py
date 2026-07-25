@@ -97,6 +97,7 @@ class BackofficeAccessTests(TestCase):
         self.assertContains(response, reverse("backoffice_skills:skill-overview"))
         self.assertContains(response, reverse("backoffice_notes:page-list"))
         self.assertContains(response, reverse("backoffice_library:reference-list"))
+        self.assertContains(response, reverse("backoffice_people:people-list"))
 
 
 # ---------------------------------------------------------------------------
@@ -915,3 +916,72 @@ class CohortBatchCertTests(TestCase):
         award = self._url("cohort-award-certificates", self.cohort.pk)
         self.assertContains(self.client.get(self._url("cohort-edit", self.cohort.pk)), award)
         self.assertContains(self.client.get(self._url("roster", self.course.pk)), award)
+
+
+# ---------------------------------------------------------------------------
+# Promote / demote teachers ("People" module)
+# ---------------------------------------------------------------------------
+
+class PromoteToTeacherTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.staff = _staff("bo-promote")
+        cls.user_field = _person_user_field()
+        cls.person = Person.objects.create(display_name="Nowy Nauczyciel", email="nn@example.com")
+        if cls.user_field is not None:
+            cls.promo_user = get_user_model().objects.create_user("promo", password="x")
+            setattr(cls.person, cls.user_field, cls.promo_user)
+            cls.person.save(update_fields=[cls.user_field])
+
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def _url(self, name, **kw):
+        return reverse(f"backoffice_people:{name}", kwargs=kw)
+
+    def test_gated_to_staff(self):
+        user = get_user_model().objects.create_user("plain-promote", password="x")
+        self.client.force_login(user)
+        self.assertEqual(self.client.get(self._url("people-list")).status_code, 404)
+        self.assertEqual(
+            self.client.post(self._url("promote-teacher", pk=self.person.pk)).status_code, 404)
+
+    def test_promote_creates_active_teacher(self):
+        from toto.academy.models import Teacher
+        resp = self.client.post(self._url("promote-teacher", pk=self.person.pk))
+        self.assertRedirects(resp, self._url("people-list"))
+        self.assertTrue(Teacher.objects.get(person=self.person).is_active)
+
+    def test_promote_is_idempotent(self):
+        from toto.academy.models import Teacher
+        self.client.post(self._url("promote-teacher", pk=self.person.pk))
+        self.client.post(self._url("promote-teacher", pk=self.person.pk))
+        self.assertEqual(Teacher.objects.filter(person=self.person).count(), 1)
+
+    def test_demote_soft_deactivates_and_preserves_row(self):
+        from toto.academy.models import Teacher
+        self.client.post(self._url("promote-teacher", pk=self.person.pk))
+        self.client.post(self._url("demote-teacher", pk=self.person.pk))
+        self.assertFalse(Teacher.objects.get(person=self.person).is_active)  # row kept
+
+    def test_promote_after_demote_reactivates(self):
+        from toto.academy.models import Teacher
+        self.client.post(self._url("promote-teacher", pk=self.person.pk))
+        self.client.post(self._url("demote-teacher", pk=self.person.pk))
+        self.client.post(self._url("promote-teacher", pk=self.person.pk))
+        self.assertTrue(Teacher.objects.get(person=self.person).is_active)
+
+    def test_soft_demote_closes_the_gate(self):
+        if self.user_field is None:
+            self.skipTest("Person model exposes no auth-user link")
+        from toto.academy.models import Teacher
+        Teacher.objects.create(person=self.person, is_active=True)
+        self.client.force_login(self.promo_user)
+        self.assertEqual(self.client.get(reverse("backoffice:dashboard")).status_code, 200)
+        Teacher.objects.filter(person=self.person).update(is_active=False)
+        self.assertEqual(self.client.get(reverse("backoffice:dashboard")).status_code, 404)
+
+    def test_people_list_shows_teacher(self):
+        self.client.post(self._url("promote-teacher", pk=self.person.pk))
+        self.assertContains(self.client.get(self._url("people-list")), "Nowy Nauczyciel")

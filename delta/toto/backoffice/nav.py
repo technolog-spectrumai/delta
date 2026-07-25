@@ -59,6 +59,15 @@ _MODULES = [
         "app": "toto.library",
         "blurb": _("Manage the bibliography and references."),
     },
+    {
+        "key": "people",
+        "label": _("People"),
+        "icon": "fa-solid fa-chalkboard-user",
+        "url_name": "backoffice_people:people-list",
+        "live": True,
+        "app": "toto.academy",
+        "blurb": _("Promote people to teachers so they can use the panel."),
+    },
 ]
 
 

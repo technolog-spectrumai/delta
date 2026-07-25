@@ -20,7 +20,10 @@ def _has_teacher_row(user):
         from toto.academy.models import Teacher
     except Exception:
         return False
-    return Teacher.objects.filter(person=person).exists()
+    # Only an *active* Teacher row grants access, so a soft-demote (is_active=
+    # False) closes the gate without deleting the row (which would strip course
+    # ownership and certificate signatures via its SET_NULL back-references).
+    return Teacher.objects.filter(person=person, is_active=True).exists()
 
 
 def is_backoffice_user(user):
