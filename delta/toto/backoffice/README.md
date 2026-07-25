@@ -66,10 +66,13 @@ next so teachers can run everything from the panel:
   other `SkillBadge` on the per-student page.
 - [x] **Certificates** — auto-issued on completion; the per-student page shows View +
   Sign links (signing reuses `academy:certificate-sign`, teacher-gated).
-- [ ] **Cohort batch certificate awarding** — one action on a cohort that marks all
-  members complete / issues a certificate to every member at once (deferred).
+- [x] **Cohort batch certificate awarding** — one action (cohort editor + roster) that marks
+  every member's course complete and issues each an (unsigned) certificate; idempotent, keeps
+  original completion dates.
 - [x] **Math (KaTeX)** in lesson/script content, descriptions & answers; script sections
   now use a Markdown editor (markdownx) with a live math preview.
 - [x] **Drag-and-drop reorder** (SortableJS) for modules, lessons, quiz questions,
   script sections and skill groups/badges; up/down buttons kept as a no-JS fallback.
-- [ ] Promote a Person to Teacher from the panel.
+- [x] **Promote a Person to Teacher from the panel** — dedicated *People* module: list
+  teachers, search a login-linked person and promote; demote is a soft `is_active=False`
+  (the gate now requires an active row) so ownership & signatures survive.
