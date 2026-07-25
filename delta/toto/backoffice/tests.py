@@ -581,3 +581,30 @@ class CompletionBadgeCertTests(TestCase):
         resp = self.client.get(self._url("student-detail"))
         self.assertContains(resp, reverse("academy:certificate-detail", kwargs={"uuid": cert.uuid}))
         self.assertContains(resp, reverse("academy:certificate-sign", kwargs={"uuid": cert.uuid}))
+
+
+# ---------------------------------------------------------------------------
+# KaTeX math rendering on student pages (Part A)
+# ---------------------------------------------------------------------------
+
+class CourseMathRenderingTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.staff = _staff("bo-math")
+        group = SkillGroup.objects.create(title="G", slug="mg")
+        badge = SkillBadge.objects.create(group=group, title="B", slug="mb")
+        cls.course = Course.objects.create(
+            title="MC", slug="mc", description="Solve $x^2$", is_published=True)
+        module = CourseModule.objects.create(
+            course=cls.course, title="M", slug="mm", unlocks_badge=badge,
+            description="Sets $\\mathbb{R}$")
+        Lesson.objects.create(module=module, title="L", slug="ml", summary="limit $x_1$")
+
+    def test_course_detail_loads_katex_and_wraps_math(self):
+        self.client.force_login(self.staff)
+        resp = self.client.get(reverse("academy:course-detail", kwargs={"slug": self.course.slug}))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "katex")      # the _katex.html include
+        self.assertContains(resp, "js-math")    # math wrappers present
+        self.assertContains(resp, "limit $x_1$")  # summary $…$ survives for KaTeX
