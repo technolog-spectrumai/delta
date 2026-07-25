@@ -55,8 +55,10 @@ next so teachers can run everything from the panel:
 - [x] **Watch video via a custom VOD app** — `toto.vod` copied into delta (native player +
   vault "Play" plugins) plus an enrollment-gated, Range-seekable inline `<video>` player on
   the course page (`academy:lesson-video` / `lesson-notes`).
-- [ ] **Cohort management** — create cohorts (rosters, capacity, start/end dates).
-- [ ] **Enrolment** — teacher enrols students into a course / cohort.
+- [x] **Cohort management** — per-course roster page: create cohorts (capacity, dates,
+  active) and manage each cohort's members (`backoffice_courses:roster` / `cohort-*`).
+- [x] **Enrolment** — teacher enrols students into a course (search People by name/email)
+  or a cohort (which auto-enrols them in the course).
 - [ ] **Completion** — mark student module/course completion.
 - [ ] **Badge awards** — award `SkillBadge`s to students.
 - [ ] **Certificates** — issue certificates and link the teacher signing flow

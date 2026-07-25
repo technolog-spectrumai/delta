@@ -4,6 +4,7 @@
 {% block backoffice_header_action %}
 <div class="flex items-center gap-2">
   <a href="{% url 'backoffice_courses:course-edit' pk=course.pk %}" class="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold hover:opacity-85"><i class="fa-solid fa-gear"></i> {% trans "Course settings" %}</a>
+  <a href="{% url 'backoffice_courses:roster' pk=course.pk %}" class="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold hover:opacity-85"><i class="fa-solid fa-users"></i> {% trans "Students & cohorts" %}</a>
   <a href="{% url 'backoffice_courses:module-create' pk=course.pk %}"
      :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
      class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90"><i class="fa-solid fa-plus"></i> {% trans "New module" %}</a>

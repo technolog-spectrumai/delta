@@ -1,0 +1,91 @@
+{% extends "backoffice/base.html" %}
+{% load i18n %}
+
+{% block backoffice_content %}
+<div class="space-y-6">
+  <div class="flex flex-wrap items-center gap-3">
+    <a href="{% url 'backoffice_courses:module-list' pk=course.pk %}" class="text-sm underline hover:opacity-80"><i class="fa-solid fa-arrow-left"></i> {{ course.title }}</a>
+    <h2 class="text-lg font-bold"><i class="fa-solid fa-users"></i> {% trans "Students & cohorts" %}</h2>
+  </div>
+
+  <!-- Enrol a student -->
+  <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="space-y-3 rounded-2xl border p-5 shadow-sm">
+    <h3 class="font-bold"><i class="fa-solid fa-user-plus"></i> {% trans "Enrol a student" %}</h3>
+    <form method="get" class="flex flex-wrap gap-2">
+      <input type="text" name="q" value="{{ query }}" placeholder="{% trans 'Search by name or email' %}"
+             class="w-full max-w-sm rounded-lg border px-3 py-2 text-sm text-black">
+      <button type="submit" class="rounded-lg border px-3 py-2 text-sm font-semibold hover:opacity-85">{% trans "Search" %}</button>
+      {% if query %}<a href="{% url 'backoffice_courses:roster' pk=course.pk %}" class="rounded-lg border px-3 py-2 text-sm hover:opacity-85">{% trans "Clear" %}</a>{% endif %}
+    </form>
+    {% if query %}
+      <div class="space-y-2">
+        {% for p in results %}
+          <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="flex items-center justify-between gap-3 rounded-lg border p-2 text-sm">
+            <span>{{ p.display_name }}{% if p.email %} <span class="opacity-60">· {{ p.email }}</span>{% endif %}</span>
+            {% if p.pk in enrolled_person_ids %}
+              <span class="text-xs text-success-light"><i class="fa-solid fa-check"></i> {% trans "Enrolled" %}</span>
+            {% else %}
+              <form method="post" action="{% url 'backoffice_courses:enrol-student' pk=course.pk %}">{% csrf_token %}
+                <input type="hidden" name="person" value="{{ p.pk }}">
+                <button type="submit" class="rounded border px-2 py-1 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-plus"></i> {% trans "Enrol" %}</button>
+              </form>
+            {% endif %}
+          </div>
+        {% empty %}
+          <p class="text-sm italic opacity-50">{% trans "No people match." %}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- Enrolled students -->
+  <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="space-y-3 rounded-2xl border p-5 shadow-sm">
+    <h3 class="font-bold"><i class="fa-solid fa-user-graduate"></i> {% trans "Enrolled students" %} ({{ rows|length }})</h3>
+    <div class="space-y-2">
+      {% for row in rows %}
+        <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="flex items-center justify-between gap-3 rounded-lg border p-3">
+          <div class="min-w-0">
+            <span class="font-semibold">{{ row.person.display_name }}</span>
+            {% if row.person.email %}<span class="text-xs opacity-60"> · {{ row.person.email }}</span>{% endif %}
+            {% for c in row.cohorts %}<span class="ml-1 rounded-full border px-2 py-0.5 text-[10px]">{{ c.title }}</span>{% endfor %}
+          </div>
+          <form method="post" action="{% url 'backoffice_courses:unenrol-student' pk=course.pk %}">{% csrf_token %}
+            <input type="hidden" name="person" value="{{ row.person.pk }}">
+            <button type="submit" class="rounded-lg border border-warn-light/40 px-3 py-1.5 text-xs font-semibold text-warn-light hover:opacity-85">{% trans "Unenrol" %}</button>
+          </form>
+        </div>
+      {% empty %}
+        <p class="text-sm italic opacity-50">{% trans "No students enrolled yet." %}</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Cohorts -->
+  <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="space-y-3 rounded-2xl border p-5 shadow-sm">
+    <div class="flex items-center justify-between">
+      <h3 class="font-bold"><i class="fa-solid fa-people-group"></i> {% trans "Cohorts" %}</h3>
+      <a href="{% url 'backoffice_courses:cohort-create' pk=course.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-plus"></i> {% trans "New cohort" %}</a>
+    </div>
+    <div class="space-y-2">
+      {% for cohort in cohorts %}
+        <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="flex items-center justify-between gap-3 rounded-lg border p-3">
+          <div>
+            <a href="{% url 'backoffice_courses:cohort-edit' pk=cohort.pk %}" class="font-semibold hover:underline">{{ cohort.title }}</a>
+            <span class="ml-2 text-xs opacity-60">{{ cohort.member_count }}{% if cohort.capacity %}/{{ cohort.capacity }}{% endif %} {% trans "members" %}</span>
+            {% if not cohort.is_active %}<span class="ml-1 rounded-full border px-2 py-0.5 text-[10px] opacity-60">{% trans "inactive" %}</span>{% endif %}
+          </div>
+          <div class="flex items-center gap-2">
+            <a href="{% url 'backoffice_courses:cohort-edit' pk=cohort.pk %}" class="rounded border px-2 py-1 text-xs hover:opacity-85"><i class="fa-solid fa-pen"></i></a>
+            <a href="{% url 'backoffice_courses:cohort-delete' pk=cohort.pk %}" class="rounded border border-warn-light/40 px-2 py-1 text-xs text-warn-light hover:opacity-85"><i class="fa-solid fa-trash"></i></a>
+          </div>
+        </div>
+      {% empty %}
+        <p class="text-sm italic opacity-50">{% trans "No cohorts yet." %}</p>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

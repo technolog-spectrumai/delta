@@ -75,6 +75,10 @@ STAFF_ONLY = {
     "backoffice_courses:lesson-reorder", "backoffice_courses:lesson-edit",
     "backoffice_courses:lesson-delete", "backoffice_courses:script-create",
     "backoffice_courses:script-edit", "backoffice_courses:script-delete",
+    "backoffice_courses:roster", "backoffice_courses:enrol-student",
+    "backoffice_courses:unenrol-student", "backoffice_courses:cohort-create",
+    "backoffice_courses:cohort-edit", "backoffice_courses:cohort-delete",
+    "backoffice_courses:cohort-add-member", "backoffice_courses:cohort-remove-member",
     # notes
     "backoffice_notes:page-list", "backoffice_notes:page-create",
     "backoffice_notes:tag-create", "backoffice_notes:page-edit",
@@ -251,6 +255,16 @@ PARAM_SOURCES = {
     "backoffice_courses:lesson-delete": (False, lambda: _kw(_first("academy.Lesson"), pk="pk")),
     "backoffice_courses:script-edit": (False, lambda: _kw(_first("academy.Script"), pk="pk")),
     "backoffice_courses:script-delete": (False, lambda: _kw(_first("academy.Script"), pk="pk")),
+    # roster & cohorts (course pk)
+    "backoffice_courses:roster": (True, lambda: _kw(_first("academy.Course"), pk="pk")),
+    "backoffice_courses:enrol-student": (True, lambda: _kw(_first("academy.Course"), pk="pk")),
+    "backoffice_courses:unenrol-student": (True, lambda: _kw(_first("academy.Course"), pk="pk")),
+    "backoffice_courses:cohort-create": (True, lambda: _kw(_first("academy.Course"), pk="pk")),
+    # cohorts (cohort pk) — none seeded -> skip
+    "backoffice_courses:cohort-edit": (False, lambda: _kw(_first("academy.Cohort"), pk="pk")),
+    "backoffice_courses:cohort-delete": (False, lambda: _kw(_first("academy.Cohort"), pk="pk")),
+    "backoffice_courses:cohort-add-member": (False, lambda: _kw(_first("academy.Cohort"), pk="pk")),
+    "backoffice_courses:cohort-remove-member": (False, lambda: _kw(_first("academy.Cohort"), pk="pk")),
     # back office — notes (palimpsest)
     "backoffice_notes:page-edit": (True, lambda: _kw(_first("palimpsest.Page"), pk="pk")),
     "backoffice_notes:page-delete": (True, lambda: _kw(_first("palimpsest.Page"), pk="pk")),

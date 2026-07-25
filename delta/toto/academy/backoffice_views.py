@@ -1,7 +1,7 @@
 """Teacher back-office: author courses (Course -> Module -> Lesson / Script)."""
 
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -9,9 +9,12 @@ from django.views.decorators.http import require_POST
 
 from toto.backoffice.access import teacher_required
 from toto.backoffice.shell import backoffice_render
+from toto.backoffice.utils import unique_slug
 from toto.backoffice.vault_upload import create_vault_file
+from toto.people.models import Person
 
 from .backoffice_forms import (
+    CohortForm,
     CourseForm,
     LessonForm,
     ModuleForm,
@@ -20,7 +23,17 @@ from .backoffice_forms import (
 )
 from toto.competence.models import SkillGroup
 
-from .models import Course, CourseModule, Lesson, Script, Teacher
+from .models import (
+    Cohort,
+    CohortMembership,
+    Course,
+    CourseEnrollment,
+    CourseModule,
+    Lesson,
+    Script,
+    Student,
+    Teacher,
+)
 
 ACTIVE = "courses"
 
@@ -326,3 +339,166 @@ def script_delete(request, pk):
         "title": _("Delete script"), "object_label": script.title,
         "cancel_url": reverse("backoffice_courses:module-edit", kwargs={"pk": module.pk}),
     }, active=ACTIVE)
+
+
+# --- roster & enrolment ----------------------------------------------------
+
+def _search_people(query):
+    query = (query or "").strip()
+    if not query:
+        return Person.objects.none()
+    return Person.objects.filter(
+        Q(display_name__icontains=query)
+        | Q(email__icontains=query)
+        | Q(user__username__icontains=query)
+    ).order_by("display_name")[:20]
+
+
+def _enrol(person, course):
+    student, _created = Student.objects.get_or_create(person=person)
+    _enrollment, created = CourseEnrollment.objects.get_or_create(student=student, course=course)
+    return created
+
+
+@teacher_required
+def roster(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    enrollments = (
+        CourseEnrollment.objects.filter(course=course)
+        .select_related("student__person")
+        .order_by("student__person__display_name")
+    )
+    cohorts_by_student = {}
+    for membership in (CohortMembership.objects
+                       .filter(cohort__course=course)
+                       .select_related("cohort")):
+        cohorts_by_student.setdefault(membership.student_id, []).append(membership.cohort)
+    rows = [{
+        "person": e.student.person,
+        "cohorts": cohorts_by_student.get(e.student_id, []),
+    } for e in enrollments]
+
+    query = request.GET.get("q", "")
+    enrolled_person_ids = {e.student.person_id for e in enrollments}
+    return backoffice_render(request, "academy/backoffice/roster.html", {
+        "course": course,
+        "rows": rows,
+        "cohorts": course.cohorts.all(),
+        "query": query,
+        "results": list(_search_people(query)) if query else [],
+        "enrolled_person_ids": enrolled_person_ids,
+    }, active=ACTIVE)
+
+
+@teacher_required
+@require_POST
+def enrol_student(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    person = Person.objects.filter(pk=request.POST.get("person")).first()
+    if person is None:
+        messages.error(request, _("Person not found."))
+    elif _enrol(person, course):
+        messages.success(request, _("Enrolled %(name)s.") % {"name": person.display_name})
+    else:
+        messages.info(request, _("%(name)s is already enrolled.") % {"name": person.display_name})
+    return redirect("backoffice_courses:roster", pk=course.pk)
+
+
+@teacher_required
+@require_POST
+def unenrol_student(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    CourseEnrollment.objects.filter(
+        course=course, student__person_id=request.POST.get("person")).delete()
+    messages.success(request, _("Student unenrolled."))
+    return redirect("backoffice_courses:roster", pk=course.pk)
+
+
+# --- cohorts ---------------------------------------------------------------
+
+def _render_cohort_form(request, course, cohort, form):
+    ctx = {
+        "course": course, "cohort": cohort, "form": form,
+        "title": _("Edit cohort") if cohort else _("New cohort"),
+        "submit_label": _("Save cohort") if cohort else _("Create cohort"),
+    }
+    if cohort:
+        members = (cohort.memberships
+                   .select_related("student__person")
+                   .order_by("student__person__display_name"))
+        query = request.GET.get("q", "")
+        ctx.update({
+            "members": members,
+            "query": query,
+            "results": list(_search_people(query)) if query else [],
+            "member_person_ids": {m.student.person_id for m in members},
+        })
+    return backoffice_render(request, "academy/backoffice/cohort_form.html", ctx, active=ACTIVE)
+
+
+@teacher_required
+def cohort_create(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    form = CohortForm(request.POST or None, course=course)
+    if request.method == "POST" and form.is_valid():
+        cohort = form.save(commit=False)
+        cohort.teacher = _teacher(request)
+        cohort.save()
+        messages.success(request, _("Cohort created."))
+        return redirect("backoffice_courses:cohort-edit", pk=cohort.pk)
+    return _render_cohort_form(request, course, None, form)
+
+
+@teacher_required
+def cohort_edit(request, pk):
+    cohort = get_object_or_404(Cohort.objects.select_related("course"), pk=pk)
+    form = CohortForm(request.POST or None, instance=cohort, course=cohort.course)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, _("Cohort saved."))
+        return redirect("backoffice_courses:cohort-edit", pk=cohort.pk)
+    return _render_cohort_form(request, cohort.course, cohort, form)
+
+
+@teacher_required
+def cohort_delete(request, pk):
+    cohort = get_object_or_404(Cohort.objects.select_related("course"), pk=pk)
+    course = cohort.course
+    if request.method == "POST":
+        cohort.delete()
+        messages.success(request, _("Cohort deleted."))
+        return redirect("backoffice_courses:roster", pk=course.pk)
+    return backoffice_render(request, "backoffice/_generic_confirm_delete.html", {
+        "title": _("Delete cohort"), "object_label": cohort.title,
+        "warning": _("This removes the cohort and its membership list (enrolments are kept)."),
+        "cancel_url": reverse("backoffice_courses:roster", kwargs={"pk": course.pk}),
+    }, active=ACTIVE)
+
+
+@teacher_required
+@require_POST
+def cohort_add_member(request, pk):
+    cohort = get_object_or_404(Cohort.objects.select_related("course"), pk=pk)
+    person = Person.objects.filter(pk=request.POST.get("person")).first()
+    if person is None:
+        messages.error(request, _("Person not found."))
+        return redirect("backoffice_courses:cohort-edit", pk=cohort.pk)
+    student, _created = Student.objects.get_or_create(person=person)
+    already = CohortMembership.objects.filter(cohort=cohort, student=student).exists()
+    if not already and cohort.capacity and cohort.member_count >= cohort.capacity:
+        messages.error(request, _("Cohort is full (capacity %(n)s).") % {"n": cohort.capacity})
+        return redirect("backoffice_courses:cohort-edit", pk=cohort.pk)
+    CohortMembership.objects.get_or_create(cohort=cohort, student=student)
+    _enrol(person, cohort.course)  # cohort members are enrolled in the course
+    messages.success(request, _("Added %(name)s to the cohort.") % {"name": person.display_name})
+    return redirect("backoffice_courses:cohort-edit", pk=cohort.pk)
+
+
+@teacher_required
+@require_POST
+def cohort_remove_member(request, pk):
+    cohort = get_object_or_404(Cohort, pk=pk)
+    CohortMembership.objects.filter(
+        cohort=cohort, student__person_id=request.POST.get("person")).delete()
+    messages.success(request, _("Removed from the cohort."))
+    return redirect("backoffice_courses:cohort-edit", pk=cohort.pk)

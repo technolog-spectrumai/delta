@@ -7,6 +7,8 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from toto.academy.models import (
+    Cohort,
+    CohortMembership,
     Course,
     CourseEnrollment,
     CourseModule,
@@ -437,3 +439,75 @@ class LessonPlaybackTests(TestCase):
         self.client.force_login(self.staff)
         resp = self.client.get(reverse("academy:lesson-notes", kwargs={"pk": self.lesson.pk}))
         self.assertEqual(resp.status_code, 404)
+
+
+# ---------------------------------------------------------------------------
+# Cohort management + enrolment
+# ---------------------------------------------------------------------------
+
+class CohortEnrolmentTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.staff = _staff("bo-roster")
+        cls.course = Course.objects.create(title="RC", slug="rc")
+        cls.p1 = Person.objects.create(display_name="Jan Kowalski", email="jan@example.com")
+        cls.p2 = Person.objects.create(display_name="Anna Nowak", email="anna@example.com")
+
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def _url(self, name, pk):
+        return reverse(f"backoffice_courses:{name}", kwargs={"pk": pk})
+
+    def test_roster_gated_to_staff(self):
+        user = get_user_model().objects.create_user("plain-roster", password="x")
+        self.client.force_login(user)
+        self.assertEqual(self.client.get(self._url("roster", self.course.pk)).status_code, 404)
+
+    def test_enrol_creates_student_and_enrollment(self):
+        resp = self.client.post(self._url("enrol-student", self.course.pk), {"person": self.p1.pk})
+        self.assertRedirects(resp, self._url("roster", self.course.pk))
+        student = Student.objects.get(person=self.p1)
+        self.assertTrue(CourseEnrollment.objects.filter(student=student, course=self.course).exists())
+
+    def test_unenrol_removes_enrollment(self):
+        student, _created = Student.objects.get_or_create(person=self.p1)
+        CourseEnrollment.objects.create(student=student, course=self.course)
+        self.client.post(self._url("unenrol-student", self.course.pk), {"person": self.p1.pk})
+        self.assertFalse(CourseEnrollment.objects.filter(student=student, course=self.course).exists())
+
+    def test_people_search_matches_name(self):
+        resp = self.client.get(self._url("roster", self.course.pk), {"q": "kowalski"})
+        self.assertContains(resp, "Jan Kowalski")
+        self.assertNotContains(resp, "Anna Nowak")
+
+    def test_cohort_create_and_delete(self):
+        resp = self.client.post(self._url("cohort-create", self.course.pk),
+                                {"title": "Group A", "capacity": "", "starts_at": "",
+                                 "ends_at": "", "is_active": "on"})
+        cohort = Cohort.objects.get(title="Group A")
+        self.assertRedirects(resp, self._url("cohort-edit", cohort.pk))
+        self.assertEqual(cohort.course, self.course)
+        self.assertTrue(cohort.slug)
+        self.client.post(self._url("cohort-delete", cohort.pk))
+        self.assertFalse(Cohort.objects.filter(pk=cohort.pk).exists())
+
+    def test_add_member_auto_enrols_and_enforces_capacity(self):
+        cohort = Cohort.objects.create(course=self.course, title="Cap", slug="cap", capacity=1)
+        self.client.post(self._url("cohort-add-member", cohort.pk), {"person": self.p1.pk})
+        student = Student.objects.get(person=self.p1)
+        self.assertTrue(CohortMembership.objects.filter(cohort=cohort, student=student).exists())
+        # auto-enrolled in the course
+        self.assertTrue(CourseEnrollment.objects.filter(student=student, course=self.course).exists())
+        # capacity 1 -> a second add is rejected
+        self.client.post(self._url("cohort-add-member", cohort.pk), {"person": self.p2.pk})
+        self.assertEqual(cohort.memberships.count(), 1)
+
+    def test_remove_member_keeps_enrollment(self):
+        cohort = Cohort.objects.create(course=self.course, title="C2", slug="c2")
+        self.client.post(self._url("cohort-add-member", cohort.pk), {"person": self.p1.pk})
+        student = Student.objects.get(person=self.p1)
+        self.client.post(self._url("cohort-remove-member", cohort.pk), {"person": self.p1.pk})
+        self.assertFalse(CohortMembership.objects.filter(cohort=cohort, student=student).exists())
+        self.assertTrue(CourseEnrollment.objects.filter(student=student, course=self.course).exists())

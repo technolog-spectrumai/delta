@@ -14,7 +14,7 @@ from toto.palimpsest.models import Page
 from toto.quizzes.models import Quiz
 from toto.verbena.forms import apply_oya_checkbox_styles, apply_oya_field_styles
 
-from .models import Course, CourseModule, Lesson, Script, ScriptSection
+from .models import Cohort, Course, CourseModule, Lesson, Script, ScriptSection
 
 
 class CourseForm(forms.ModelForm):
@@ -204,3 +204,37 @@ class ScriptSectionForm(forms.ModelForm):
 
 ScriptSectionFormSet = inlineformset_factory(
     Script, ScriptSection, form=ScriptSectionForm, extra=3, can_delete=True)
+
+
+class CohortForm(forms.ModelForm):
+    class Meta:
+        model = Cohort
+        fields = ["title", "capacity", "starts_at", "ends_at", "is_active"]
+        labels = {"is_active": _("Active")}
+        widgets = {
+            "title": forms.TextInput(),
+            "capacity": forms.NumberInput(attrs={"min": 1, "placeholder": _("optional")}),
+            "starts_at": forms.DateTimeInput(
+                attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M"),
+            "ends_at": forms.DateTimeInput(
+                attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M"),
+        }
+
+    def __init__(self, *args, course=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.course = course or (self.instance.course if self.instance.pk else None)
+        for name in ("capacity", "starts_at", "ends_at"):
+            self.fields[name].required = False
+        for name in ("starts_at", "ends_at"):
+            self.fields[name].input_formats = ["%Y-%m-%dT%H:%M", "%Y-%m-%dT%H:%M:%S"]
+        apply_oya_field_styles(self.fields, skip={"is_active"})
+        apply_oya_checkbox_styles(self.fields["is_active"])
+
+    def save(self, commit=True):
+        obj = super().save(commit=False)
+        obj.course = self.course
+        if not obj.slug:
+            obj.slug = unique_slug(Cohort, obj.title, instance=obj, course=self.course)
+        if commit:
+            obj.save()
+        return obj

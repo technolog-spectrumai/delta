@@ -21,4 +21,14 @@ urlpatterns = [
     path("lessons/<int:pk>/delete/", views.lesson_delete, name="lesson-delete"),
     path("scripts/<int:pk>/edit/", views.script_edit, name="script-edit"),
     path("scripts/<int:pk>/delete/", views.script_delete, name="script-delete"),
+    # roster & enrolment
+    path("<int:pk>/roster/", views.roster, name="roster"),
+    path("<int:pk>/roster/enrol/", views.enrol_student, name="enrol-student"),
+    path("<int:pk>/roster/unenrol/", views.unenrol_student, name="unenrol-student"),
+    # cohorts
+    path("<int:pk>/cohorts/new/", views.cohort_create, name="cohort-create"),
+    path("cohorts/<int:pk>/edit/", views.cohort_edit, name="cohort-edit"),
+    path("cohorts/<int:pk>/delete/", views.cohort_delete, name="cohort-delete"),
+    path("cohorts/<int:pk>/members/add/", views.cohort_add_member, name="cohort-add-member"),
+    path("cohorts/<int:pk>/members/remove/", views.cohort_remove_member, name="cohort-remove-member"),
 ]
