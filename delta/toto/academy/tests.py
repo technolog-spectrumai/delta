@@ -908,3 +908,35 @@ class SelfEnrolButtonTests(TestCase):
         self.assertTrue(CourseEnrollment.objects.filter(
             student__person=self.person, course=self.course).exists())
         self.assertNotContains(self._detail(), self._enroll_url)  # button gone once enrolled
+
+
+class WelcomePageTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Platform.objects.create(site_name="Delta", author="tests", publication_year=2026)
+
+    def test_root_redirects_to_welcome(self):
+        resp = self.client.get("/")
+        self.assertEqual(resp.status_code, 302)
+        self.assertIn(reverse("core:welcome"), resp["Location"])
+
+    def test_welcome_renders_rich_page(self):
+        resp = self.client.get(reverse("core:welcome"))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "sigil_hero")  # hero logo asset (hashed or bare)
+        self.assertContains(resp, reverse("academy:student-home"))
+
+    def test_anonymous_teacher_cta_links_to_login(self):
+        self.assertContains(self.client.get(reverse("core:welcome")), reverse("sso:login"))
+
+    def test_staff_sees_panel_cta(self):
+        user = get_user_model().objects.create_user("wp-staff", password="x", is_staff=True)
+        self.client.force_login(user)
+        self.assertContains(
+            self.client.get(reverse("core:welcome")), reverse("backoffice:dashboard"))
+
+    def test_db_copy_overrides_headline(self):
+        WelcomeCopy.objects.create(pk=1, headline_en="Custom Delta Headline")
+        with translation.override("en"):
+            self.assertContains(
+                self.client.get(reverse("core:welcome")), "Custom Delta Headline")

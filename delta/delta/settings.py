@@ -239,7 +239,9 @@ VAULT_ENCRYPT_ASYNC = os.environ.get("VAULT_ENCRYPT_ASYNC", "0") == "1"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        # Project-level templates win over app templates — used to override the
+        # vendored oya/home.html with delta's own education welcome page.
+        "DIRS": [str(BASE_DIR / "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

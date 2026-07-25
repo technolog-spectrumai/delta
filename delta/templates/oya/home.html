@@ -1,0 +1,47 @@
+{% extends "oya/base.html" %}
+{% load i18n static %}
+
+{% block title %}{{ welcome_copy.headline }} | {{ platform.site_name }}{% endblock %}
+
+{% block content %}
+<section :class="darkMode ? 'text-text-main-dark' : 'text-text-main-light'"
+         class="mx-auto flex max-w-4xl flex-col items-center px-4 py-16 text-center sm:py-24">
+
+  <img src="{% static 'sigil_hero.png' %}" alt="{{ platform.site_name }}"
+       class="mb-8 w-40 max-w-full drop-shadow sm:w-56" />
+
+  <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl">{{ welcome_copy.headline }}</h1>
+  <p class="mt-4 max-w-2xl text-lg opacity-80">{{ welcome_copy.subtitle }}</p>
+  <p class="mt-4 max-w-2xl opacity-70">{{ welcome_copy.invitation|linebreaksbr }}</p>
+
+  <div class="mt-10 grid w-full max-w-2xl gap-4 sm:grid-cols-2">
+    <!-- For students -->
+    <a href="{% url 'academy:student-home' %}"
+       :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+       class="flex flex-col items-center gap-2 rounded-2xl border p-6 shadow-sm transition hover:opacity-90">
+      <i class="fa-solid fa-graduation-cap text-3xl"></i>
+      <span class="text-lg font-bold">{{ welcome_copy.student_cta }}</span>
+      <span class="text-sm opacity-70">{% trans "Browse courses, learn and earn badges." %}</span>
+    </a>
+
+    <!-- For teachers -->
+    {% if can_access_backoffice %}
+      <a href="{% url 'backoffice:dashboard' %}"
+         :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+         class="flex flex-col items-center gap-2 rounded-2xl border p-6 shadow-sm transition hover:opacity-90">
+        <i class="fa-solid fa-chalkboard-user text-3xl"></i>
+        <span class="text-lg font-bold">{{ welcome_copy.teacher_cta }}</span>
+        <span class="text-sm opacity-70">{% trans "Open the authoring panel." %}</span>
+      </a>
+    {% else %}
+      <a href="{% url 'sso:login' %}"
+         :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+         class="flex flex-col items-center gap-2 rounded-2xl border p-6 shadow-sm transition hover:opacity-90">
+        <i class="fa-solid fa-chalkboard-user text-3xl"></i>
+        <span class="text-lg font-bold">{{ welcome_copy.teacher_cta }}</span>
+        <span class="text-sm opacity-70">{% trans "Sign in to author lessons." %}</span>
+      </a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
