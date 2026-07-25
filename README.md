@@ -56,7 +56,7 @@ installed wheels):
 | `toto.subscriptions` | plans, per-person subscription validity, discount codes, `gates.is_subscribed` |
 
 These version **with this repo** and need no pin. The rest of the platform is the
-installed **toto suite**: delta pins only `toto-base` in
+installed **toto suite**: delta pins only `toto-base` and `toto-auth` in
 [`requirements.toto.txt`](requirements.toto.txt) (no flow/works/media/graph/ai).
 
 ### The stack
@@ -155,10 +155,10 @@ then:
 
 ### toto version gate
 
-Docker installs toto from a **wheel** `deploy.py` stages into `dist/`, built from
+Docker installs toto from **wheels** `deploy.py` stages into `dist/`, built from
 the in-repo vendored tree at `vendor/toto_libs` (or `TOTO_SRC` / `toto_src:`). The
-build is rejected unless the wheel is exactly the pinned `toto-base` version,
-which must equal `vendor/toto_libs/VERSION`. To upgrade:
+build is rejected unless the wheels are exactly the pinned versions, which must
+equal `vendor/toto_libs/VERSION`. To upgrade:
 
 ```bash
 git subtree pull --prefix=vendor/toto_libs ../toto_libs delta --squash

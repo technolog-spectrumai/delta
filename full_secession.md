@@ -1,8 +1,8 @@
 # Full secession: delta is independent of the toto_libs repo
 
 As of the `full_secession` branch, delta carries every line of toto code it
-runs. The one package it installs (`toto-base`) lives in this repo as a
-**git subtree** at `vendor/toto_libs`, and the whole pipeline — dev server,
+runs. The two packages it installs (`toto-base`, `toto-auth`) live in this repo
+as a **git subtree** at `vendor/toto_libs`, and the whole pipeline — dev server,
 clean-env gate, Docker build, rsync push — works from this repo alone. No
 sibling `../toto_libs` checkout, no external tag, no git URL. The six education
 apps (`toto.academy`, `toto.quizzes`, `toto.competence`, `toto.palimpsest`,
@@ -44,8 +44,8 @@ In order of precedence:
 
 ## Versioning without an external pin
 
-`requirements.toto.txt` keeps its exact pin (`toto-base==1.7`), but it no
-longer points at anything outside the repo: it must equal
+`requirements.toto.txt` keeps its exact pins (`toto-base`, `toto-auth`), but it
+no longer points at anything outside the repo: they must equal
 `vendor/toto_libs/VERSION` and both change in the same commit. `deploy.py`
 still refuses to build on any drift between pin, vendored VERSION, and the
 built wheel. The git-tag / clean-tree gate of `toto.versioning.verify_checkout`
@@ -72,12 +72,19 @@ Notes:
   their `git-subtree-*` trailers drive the next pull.
 - The trim deletions persist across pulls. If upstream *modifies* a trimmed
   file you get a modify/delete conflict: resolve with `git rm` on those paths.
-  If upstream re-adds things under `limbo/` or the eight removed packages,
-  delete them again.
+  If upstream re-adds things under `limbo/` or the removed packages, delete
+  them again (`toto-auth` stays — delta installs it since 1.8).
 - **Branch bookkeeping:** toto_libs' `delta` and `faros` branches started at
   the same commit (`d9c34a0d`). A toto-base fix landed on one branch must be
   merged or cherry-picked to the other, or the two hosts' vendored `toto-base`
   trees silently diverge.
+- **The toto-auth pull:** the `auth-refactoring` branch pulled the subtree
+  from the toto_libs `auth-strategy` branch (the toto-auth split, suite 1.8:
+  the sso apps moved from `toto-base` into the new `toto-auth` package; the
+  login strategy is resolved per host by `toto.auth_config`). Before the next
+  documented `delta`-branch pull, `auth-strategy` must be merged into the
+  toto_libs `delta` branch (plain merge, no squash) so the recorded
+  `git-subtree-split` stays an ancestor of what is pulled.
 - Local fixes made under `vendor/toto_libs` can be sent upstream with
   `git subtree push --prefix=vendor/toto_libs <toto_libs-url> <branch>`.
 
