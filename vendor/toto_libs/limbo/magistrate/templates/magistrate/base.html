@@ -1,0 +1,53 @@
+{% extends "capitol/base.html" %}
+{% load i18n %}
+
+{% block capitol_title %}{% block mag_title %}{% trans "Directors" %}{% endblock %}{% endblock %}
+{% block tab_magistrate %}border-b-2 border-current -mb-px{% endblock %}
+
+{% block capitol_content %}
+
+  <header class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div class="space-y-1">
+      <p :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="text-xs font-semibold uppercase tracking-wide">
+        {% trans "Civic Government" %}
+      </p>
+      <h1 class="mt-1 flex items-center gap-3 text-3xl font-bold">
+        <i class="fa-solid fa-building-columns"></i>
+        {% trans "Directors" %}
+      </h1>
+    </div>
+
+    <nav class="flex flex-wrap gap-2">
+      <a href="{% url 'magistrate:overview' %}"
+         :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+         class="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold shadow-sm transition hover:opacity-85">
+        <i class="fa-solid fa-users-gear"></i> {% trans "Directors" %}
+      </a>
+      <a href="{% url 'magistrate:role_list' %}"
+         :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+         class="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold shadow-sm transition hover:opacity-85">
+        <i class="fa-solid fa-scroll"></i> {% trans "Roles" %}
+      </a>
+      <a href="{% url 'assembly:overview' %}"
+         :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+         class="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold shadow-sm transition hover:opacity-85">
+        <i class="fa-solid fa-landmark"></i> {% trans "Assembly" %}
+      </a>
+    </nav>
+  </header>
+
+  {% if messages %}
+    <div class="space-y-2">
+      {% for message in messages %}
+        <div class="rounded-lg border px-4 py-3 text-sm font-medium
+          {% if message.tags == 'error' %}border-warn-light bg-warn-light/10 text-warn-light
+          {% else %}border-success-light bg-success-light/10 text-success-light{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% block mag_content %}{% endblock %}
+
+{% endblock %}

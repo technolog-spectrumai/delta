@@ -1,0 +1,117 @@
+{% load i18n %}
+
+<section
+  :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+  class="rounded-lg border p-5 shadow-sm">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+    <div>
+      <h3 class="flex items-center gap-2 text-lg font-bold">
+        <i class="{{ asset_plugin_icon }}"></i>
+        {% trans "Underlying object" %}
+      </h3>
+      <p class="mt-1 text-sm opacity-70">
+        {% trans "The inventory object permanently represented by this asset." %}
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-4 space-y-2">
+
+    {% if project_tokenization %}
+      <div
+        :class="darkMode ? 'bg-primary-bg-dark' : 'bg-primary-bg-light'"
+        class="rounded-lg px-4 py-3 text-sm">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <a
+            href="{% url 'kanban:project_detail' project_tokenization.project.pk %}"
+            class="font-semibold underline-offset-4 hover:underline">
+            {{ project_tokenization.project.name }}
+          </a>
+          <span class="shrink-0 rounded border border-current/20 px-2 py-0.5 text-xs">
+            {% trans "Project" %} · {{ project_tokenization.created_at|date:"M d, Y" }}
+          </span>
+        </div>
+        <div class="mt-1 text-xs opacity-60">
+          {% trans "Supervisor" %}: {{ project_tokenization.supervisor|default:"—" }}
+        </div>
+        <div class="mt-2">
+          {% if project_tokenization.is_defaulted %}
+            <span class="rounded border border-current/20 px-2 py-1 text-xs font-semibold"
+                  :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i>{% trans "Defaulted" %}
+            </span>
+            {% if project_tokenization.defaulted_at %}
+              <span class="text-xs opacity-60">· {{ project_tokenization.defaulted_at|date:"M d, Y H:i" }}</span>
+            {% endif %}
+          {% else %}
+            <span class="inline-flex items-center gap-1 rounded-full bg-success-light/15 text-success-light px-2 py-0.5 text-xs font-semibold">
+              <i class="fa-solid fa-circle-check"></i> {% trans "Active" %}
+            </span>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% for tokenization in tokenizations %}
+      <div
+        :class="darkMode ? 'bg-primary-bg-dark' : 'bg-primary-bg-light'"
+        class="rounded-lg px-4 py-3 text-sm">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <a
+            href="{% url 'inventory:object_detail' tokenization.real_world_object.pk %}"
+            class="font-semibold underline-offset-4 hover:underline">
+            {{ tokenization.real_world_object.name }}
+          </a>
+          <span class="shrink-0 rounded border border-current/20 px-2 py-0.5 text-xs">
+            {{ tokenization.created_at|date:"M d, Y" }}
+          </span>
+        </div>
+        <div class="mt-1 text-xs opacity-60">
+          {% trans "Supervisor" %}: {{ tokenization.supervisor|default:"—" }}
+        </div>
+        <div class="mt-3 flex flex-wrap items-center gap-2 text-xs">
+          {% if tokenization.is_defaulted %}
+            <span class="rounded border border-current/20 px-2 py-1 font-semibold"
+                  :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i>{% trans "Defaulted" %}
+            </span>
+            <span class="opacity-60">
+              {{ tokenization.get_default_reason_display }}
+              {% if tokenization.defaulted_at %}· {{ tokenization.defaulted_at|date:"M d, Y H:i" }}{% endif %}
+            </span>
+            {% if tokenization.default_note %}
+              <p class="basis-full opacity-70">{{ tokenization.default_note }}</p>
+            {% endif %}
+          {% elif request.user.is_authenticated %}
+            <form method="post"
+                  action="{% url 'assets:tokenization_default' tokenization.pk %}"
+                  class="grid w-full gap-2 sm:grid-cols-[minmax(0,220px)_minmax(0,1fr)_auto]">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <select name="reason"
+                      class="min-w-0 rounded-lg border border-current/20 bg-transparent px-3 py-2 text-sm">
+                {% for value, label in tokenization_default_reasons %}
+                  <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+              </select>
+              <input name="note"
+                     type="text"
+                     placeholder="{% trans 'Optional note' %}"
+                     class="min-w-0 rounded-lg border border-current/20 bg-transparent px-3 py-2 text-sm">
+              <button type="submit"
+                      class="inline-flex items-center justify-center gap-2 rounded-lg border border-current/20 px-3 py-2 text-sm font-semibold">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                {% trans "Default" %}
+              </button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+
+    {% if not project_tokenization and not tokenizations %}
+      <p class="text-sm opacity-60">{% trans "This asset is not a tokenization asset." %}</p>
+    {% endif %}
+
+  </div>
+</section>

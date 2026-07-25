@@ -1,0 +1,89 @@
+{% extends "capitol/base.html" %}
+{% load i18n %}
+
+{% block community_section %}treasury{% endblock %}
+{% block capitol_title %}{% block treasury_title %}Treasury{% endblock %}{% endblock %}
+{% block tab_treasury %}border-b-2 border-current -mb-px{% endblock %}
+
+{% block capitol_content %}
+
+  <header class="space-y-1">
+    <p :class="darkMode ? 'text-accent-dark' : 'text-accent-light'"
+       class="text-xs font-semibold uppercase tracking-wide">{% trans "Community Budget" %}</p>
+    <h1 class="flex items-center gap-3 text-3xl font-bold">
+      <i class="fa-solid fa-chart-pie"></i>
+      {% trans "Treasury" %}
+    </h1>
+  </header>
+
+  <!-- Treasury tab nav -->
+  <nav :class="darkMode ? 'border-accent-1' : 'border-accent-2'"
+       class="flex flex-wrap gap-1 border-b pb-0">
+    <a href="{% url 'treasury:list' %}"
+       :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+       class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold transition
+              {% block tab_overview %}opacity-50{% endblock %}">
+      <i class="fa-solid fa-chart-pie"></i>
+      {% trans "Overview" %}
+    </a>
+    <a href="{% url 'treasury:revenue' %}"
+       :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+       class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold transition
+              {% block tab_revenue %}opacity-50{% endblock %}">
+      <i class="fa-solid fa-chart-line"></i>
+      {% trans "Revenue" %}
+    </a>
+    <a href="{% url 'tariffs:metrics' %}"
+       :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+       class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold transition
+              {% block tab_tariffs %}opacity-50{% endblock %}">
+      <i class="fa-solid fa-receipt"></i>
+      {% trans "Tariffs" %}
+    </a>
+    <a href="{% url 'subscriptions:metrics' %}"
+       :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+       class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold transition
+              {% block tab_subscriptions %}opacity-50{% endblock %}">
+      <i class="fa-solid fa-repeat"></i>
+      {% trans "Subscriptions" %}
+    </a>
+    <a href="{% url 'payroll:metrics' %}"
+       :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+       class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold transition
+              {% block tab_payroll %}opacity-50{% endblock %}">
+      <i class="fa-solid fa-money-check-dollar"></i>
+      {% trans "Payroll" %}
+    </a>
+    <a href="{% url 'treasury:taxes' %}"
+       :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+       class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold transition
+              {% block tab_taxes %}opacity-50{% endblock %}">
+      <i class="fa-solid fa-percent"></i>
+      {% trans "Taxes" %}
+    </a>
+  </nav>
+
+  {% if messages %}
+    {% for message in messages %}
+      {% if 'error' in message.tags %}
+        <div class="rounded-lg border px-4 py-3 text-sm font-medium"
+             :class="darkMode ? 'border-warn-light/30 bg-warn-light/20 text-warn-light' : 'border-warn-light bg-warn-light/10 text-warn-light'">
+          <i class="fa-solid fa-triangle-exclamation mr-1"></i> {{ message }}
+        </div>
+      {% elif 'success' in message.tags %}
+        <div class="rounded-lg border px-4 py-3 text-sm font-medium"
+             :class="darkMode ? 'border-success-light/30 bg-success-light/20 text-success-light' : 'border-success-light bg-success-light/10 text-success-light'">
+          <i class="fa-solid fa-circle-check mr-1"></i> {{ message }}
+        </div>
+      {% else %}
+        <div class="rounded-lg border px-4 py-3 text-sm font-medium"
+             :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'">
+          {{ message }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% block treasury_content %}{% endblock %}
+
+{% endblock %}

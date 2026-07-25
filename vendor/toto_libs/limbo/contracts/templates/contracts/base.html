@@ -1,0 +1,81 @@
+{% extends "assets/base.html" %}
+{% load i18n %}
+
+{% block assets_title %}{% block contracts_title %}Contracts{% endblock %}{% endblock %}
+{% block tab_contracts %}border-b-2 border-current -mb-px{% endblock %}
+
+{% block end_script %}{% block contracts_scripts %}{% endblock %}{% endblock %}
+
+{% block assets_content %}
+
+  <div class="flex items-center justify-end">
+    <a href="{% url 'contracts:contract_create' %}"
+       :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+       class="inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90">
+      <i class="fa-solid fa-plus"></i>
+      {% trans "New Contract" %}
+    </a>
+  </div>
+
+  <!-- Contracts tab nav -->
+  <nav :class="darkMode ? 'border-accent-1' : 'border-accent-2'"
+       class="flex flex-wrap gap-1 border-b pb-0">
+    <a href="{% url 'contracts:contract_list' %}"
+       :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+       class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold transition
+              {% block tab_all %}opacity-50{% endblock %}">
+      <i class="fa-solid fa-list"></i>
+      {% trans "All" %}
+    </a>
+    <a href="{% url 'contracts:payroll_list' %}"
+       :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+       class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold transition
+              {% block tab_payroll %}opacity-50{% endblock %}">
+      <i class="fa-solid fa-money-check-dollar"></i>
+      {% trans "Payroll" %}
+    </a>
+    <a href="{% url 'contracts:insurance_list' %}"
+       :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+       class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold transition
+              {% block tab_insurance %}opacity-50{% endblock %}">
+      <i class="fa-solid fa-shield-halved"></i>
+      {% trans "Insurance" %}
+    </a>
+    <a href="{% url 'contracts:loan_list' %}"
+       :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+       class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold transition
+              {% block tab_loans %}opacity-50{% endblock %}">
+      <i class="fa-solid fa-hand-holding-dollar"></i>
+      {% trans "Loans" %}
+    </a>
+    <a href="{% url 'contracts:lease_list' %}"
+       :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+       class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold transition
+              {% block tab_leasing %}opacity-50{% endblock %}">
+      <i class="fa-solid fa-key"></i>
+      {% trans "Leasing" %}
+    </a>
+    <a href="{% url 'claims:overview' %}"
+       :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+       class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold transition
+              {% block tab_claims %}opacity-50{% endblock %}">
+      <i class="fa-solid fa-file-contract"></i>
+      {% trans "Claims" %}
+    </a>
+    <span :class="darkMode ? 'border-accent-1' : 'border-accent-2'"
+          class="mx-1 self-center h-5 border-l opacity-30"></span>
+    <a href="{% url 'instruments:instrument_list' %}"
+       :class="darkMode ? 'hover:bg-white/5' : 'hover:bg-black/5'"
+       class="inline-flex items-center gap-2 rounded-t px-4 py-2 text-sm font-semibold transition
+              {% block tab_instruments %}opacity-50{% endblock %}">
+      <i class="fa-solid fa-chart-bar"></i>
+      {% trans "Instruments" %}
+      <span class="rounded-full bg-amber-100 text-amber-700 px-1.5 py-0.5 text-xs font-bold leading-none">
+        {% trans "Advanced" %}
+      </span>
+    </a>
+  </nav>
+
+  {% block contracts_content %}{% endblock %}
+
+{% endblock %}

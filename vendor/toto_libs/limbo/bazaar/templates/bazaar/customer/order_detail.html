@@ -1,0 +1,274 @@
+{% extends "bazaar/base.html" %}
+{% load static %}
+{% load i18n %}
+{% block bazaar_title %}{{ order.order_number }}{% endblock %}
+{% block bazaar_heading %}{{ order.order_number }}{% endblock %}
+{% block bazaar_subtitle %}<p class="mt-2 max-w-2xl text-sm opacity-70">{% trans "Placed" %} {{ order.created_at|date:"F j, Y H:i" }}</p>{% endblock %}
+
+{% block start_script %}
+<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}" />
+<script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
+{% endblock %}
+
+{% block bazaar_content %}
+<script>window.orderMapPayload = JSON.parse(`{{ payload_json|escapejs }}`);</script>
+<section class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+
+  <!-- Items -->
+  <div class="space-y-3">
+    {% for item in order.items.all %}
+    <article :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="rounded-2xl border p-5 shadow-sm">
+      <div class="flex justify-between gap-4">
+        <div>
+          <p class="font-bold">{{ item.product_name_snapshot }}</p>
+          <p class="text-xs opacity-60">{{ item.sku_snapshot|default:"—" }}</p>
+        </div>
+        <p class="font-mono font-bold shrink-0">{{ item.total_price }} {{ order.currency }}</p>
+      </div>
+    </article>
+    {% endfor %}
+
+    <!-- Shipment map -->
+    <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+         class="overflow-hidden rounded-2xl border shadow-sm">
+      <div id="order-detail-map" class="h-[320px] w-full"></div>
+    </div>
+
+    <!-- Shipments -->
+    {% if shipments %}
+    <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+             class="rounded-2xl border p-5 shadow-sm space-y-3">
+      <h3 class="font-bold flex items-center gap-2">
+        <i class="fa-solid fa-truck"></i> {% trans "Shipments" %}
+      </h3>
+      {% for shipment in shipments %}
+      <div :class="darkMode ? 'bg-primary-bg-dark' : 'bg-primary-bg-light'"
+           class="rounded-xl px-4 py-3 text-sm space-y-2">
+        <div class="flex items-center justify-between gap-2">
+          <span class="font-semibold">{{ shipment.carrier|default:"—" }}</span>
+          <span class="rounded-full border border-current/20 px-2 py-0.5 text-xs">{{ shipment.get_status_display }}</span>
+        </div>
+        {% if shipment.tracking_number %}
+        <p class="font-mono text-xs opacity-70">{% trans "Tracking" %}: {{ shipment.tracking_number }}</p>
+        {% endif %}
+        {% if shipment.shipping_method %}
+        <p class="text-xs opacity-60">{{ shipment.shipping_method.name }}</p>
+        {% endif %}
+        {% if shipment.shipped_at %}<p class="text-xs opacity-50">{% trans "Shipped" %}: {{ shipment.shipped_at|date:"M d, Y H:i" }}</p>{% endif %}
+        {% if shipment.delivered_at %}<p class="text-xs opacity-50">{% trans "Delivered" %}: {{ shipment.delivered_at|date:"M d, Y H:i" }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="space-y-4">
+    <!-- Status + totals -->
+    <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="h-fit rounded-2xl border p-5 shadow-sm space-y-4">
+      <h2 class="text-lg font-bold">{% trans "Status" %}</h2>
+      {% include "bazaar/partials/order_status_badges.html" %}
+      <div class="space-y-2 border-t border-current/10 pt-4 text-sm">
+        <div class="flex justify-between"><span>{% trans "Subtotal" %}</span><strong class="font-mono">{{ order.subtotal_amount }}</strong></div>
+        <div class="flex justify-between"><span>{% trans "Discount" %}</span><strong class="font-mono">{{ order.discount_amount }}</strong></div>
+        <div class="flex justify-between"><span>{% trans "Shipping" %}</span><strong class="font-mono">{{ order.shipping_amount }}</strong></div>
+        <div class="flex justify-between text-lg"><span>{% trans "Total" %}</span><strong class="font-mono">{{ order.total_amount }} {{ order.currency }}</strong></div>
+      </div>
+      {% if shipments %}
+      <a href="{% url 'bazaar:order-tracking' order_number=order.order_number %}"
+         :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+         class="flex items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-semibold transition hover:opacity-85">
+        <i class="fa-solid fa-truck text-sm"></i> {% trans "Track shipment" %}
+      </a>
+      {% endif %}
+    </div>
+
+    <!-- Tribunal dispute -->
+    <div :class="darkMode ? 'border-warn-dark/70 bg-bubble-bg-dark' : 'border-warn-light/70 bg-bubble-bg-light'"
+         class="rounded-2xl border p-5 shadow-sm text-sm space-y-3">
+      <div class="flex items-start gap-3">
+        <i class="fa-solid fa-scale-balanced mt-0.5" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'"></i>
+        <div>
+          <h2 class="font-bold">{% trans "Order dispute" %}</h2>
+          <p class="mt-1 opacity-70">
+            {% trans "Opening a dispute starts a formal tribunal process. It can affect both sides and may end with asset obligations, fines, dismissal, or a binding resolution." %}
+          </p>
+        </div>
+      </div>
+
+      {% if tribunal_cases %}
+      <div class="space-y-2">
+        {% for tribunal_case in tribunal_cases %}
+        <a href="{% url 'tribunal:case_detail' tribunal_case.id %}"
+           :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'"
+           class="flex items-center justify-between gap-3 rounded-xl border px-3 py-2 transition hover:opacity-85">
+          <span class="font-semibold">{{ tribunal_case.case_number|default:tribunal_case.title }}</span>
+          <span class="rounded-full border border-current/20 px-2 py-0.5 text-xs">{{ tribunal_case.status }}</span>
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="post" action="{% url 'tribunal:open_order_dispute' order_number=order.order_number %}"
+            onsubmit="return confirm('Opening a dispute starts a formal tribunal process and may have consequences for both sides. Continue?');">
+        {% csrf_token %}
+        <button type="submit"
+          :class="darkMode ? 'bg-warn-dark text-primary-bg-dark' : 'bg-warn-light text-primary-bg-light'"
+          class="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition hover:opacity-85">
+          <i class="fa-solid fa-triangle-exclamation"></i> {% trans "Open dispute" %}
+        </button>
+      </form>
+    </div>
+
+    <!-- Ledger payment receipt -->
+    {% if order.ledger_tx_reference and order.payment_status == 'paid' %}
+    <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+         class="rounded-2xl border p-5 shadow-sm text-sm space-y-1">
+      <p class="font-semibold" :class="darkMode ? 'text-success-dark' : 'text-success-light'"><i class="fa-solid fa-circle-check mr-1"></i>{% trans "Paid via asset ledger" %}</p>
+      <p class="opacity-60">
+        {% trans "Asset" %}: <span class="font-mono">{{ order.ledger_asset.unit_name }}</span>
+        · {% trans "Account" %}: <span class="font-mono">{{ order.ledger_account.code }}</span>
+      </p>
+      <p class="opacity-50 text-xs break-all">{% trans "Ref" %}: {{ order.ledger_tx_reference }}</p>
+    </div>
+    {% endif %}
+
+    <!-- On-delivery obligation -->
+    {% if order.obligation %}
+    {% with order.obligation as ob %}
+    <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+         class="rounded-2xl border p-5 shadow-sm text-sm space-y-2 {% if ob.is_overdue %}ring-2{% endif %}"
+         :class="{% if ob.is_overdue %}(darkMode ? 'ring-warn-dark/60' : 'ring-warn-light/60'){% endif %}">
+      <p class="font-semibold" :class="{% if ob.is_overdue %}(darkMode ? 'text-warn-dark' : 'text-warn-light'){% else %}(darkMode ? 'text-accent-dark' : 'text-accent-light'){% endif %}">
+        <i class="fa-solid fa-{% if ob.is_overdue %}circle-exclamation{% else %}clock{% endif %} mr-1"></i>
+        {% if ob.is_overdue %}{% trans "Obligation overdue!" %}{% elif ob.status == 'fulfilled' %}{% trans "Obligation fulfilled" %}{% else %}{% trans "On-delivery obligation pending" %}{% endif %}
+      </p>
+      <p class="opacity-60">
+        {{ ob.amount_display }} {{ ob.asset.unit_name }} — {% trans "due" %} {{ ob.due_at|date:"M d, Y" }}
+      </p>
+      {% if ob.status == 'pending' %}
+      <form method="post" action="{% url 'bazaar:order-fulfill-obligation' order_number=order.order_number %}">
+        {% csrf_token %}
+        <button type="submit"
+          :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+          class="w-full rounded-xl py-2 text-sm font-bold transition hover:opacity-85">
+          <i class="fa-solid fa-bolt mr-1"></i> {% trans "Pay obligation now" %}
+        </button>
+      </form>
+      {% endif %}
+    </div>
+    {% endwith %}
+    {% endif %}
+
+    <!-- Pay widget if unpaid and no obligation -->
+    {% if order.payment_status != 'paid' and not order.obligation %}
+    {% include "bazaar/partials/ledger_pay.html" %}
+    {% endif %}
+
+    <!-- Map link if shipments exist -->
+    {% if shipments %}
+    <a href="{% url 'bazaar:order-tracking-map' order_number=order.order_number %}"
+       :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+       class="flex items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-semibold transition hover:opacity-85">
+      <i class="fa-solid fa-map-location-dot text-sm"></i> {% trans "View route on map" %}
+    </a>
+    {% endif %}
+  </aside>
+
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const payload = window.orderMapPayload;
+  if (!payload) return;
+
+  const isDark = localStorage.getItem('darkMode') === 'true';
+  const map = L.map('order-detail-map', { zoomControl: false }).setView([52.0, 19.0], 6);
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+  L.tileLayer(
+    isDark
+      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+      : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    { maxZoom: 19, attribution: '© OpenStreetMap' + (isDark ? ' © CARTO' : '') }
+  ).addTo(map);
+
+  function dot(color, size) {
+    size = size || 12;
+    return L.divIcon({
+      className: '',
+      html: '<div style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;background:' + color + ';border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)"></div>',
+      iconSize: [size, size], iconAnchor: [size / 2, size / 2],
+    });
+  }
+
+  function truckIcon(color) {
+    return L.divIcon({
+      className: '',
+      html: '<div style="background:' + color + ';color:#fff;border-radius:8px;padding:3px 5px;font-size:13px;box-shadow:0 1px 4px rgba(0,0,0,.4);line-height:1">🚚</div>',
+      iconSize: [28, 24], iconAnchor: [14, 12],
+    });
+  }
+
+  function houseIcon(color) {
+    return L.divIcon({
+      className: '',
+      html: '<div style="background:' + color + ';color:#fff;border-radius:8px;padding:3px 5px;font-size:13px;box-shadow:0 1px 4px rgba(0,0,0,.4);line-height:1">🏠</div>',
+      iconSize: [28, 24], iconAnchor: [14, 12],
+    });
+  }
+
+  const allPoints = [];
+
+  // Delivery address pin
+  if (payload.delivery && payload.delivery.geometry) {
+    var dc = payload.delivery.geometry.coordinates;
+    L.marker([dc[1], dc[0]], { icon: houseIcon(isDark ? '#f59e0b' : '#d97706'), zIndexOffset: 1000 })
+      .bindPopup('<strong>{% trans "Delivery address" %}</strong><br>' + payload.delivery.label)
+      .addTo(map);
+    allPoints.push([dc[1], dc[0]]);
+  }
+
+  payload.shipments.forEach(function (s, i) {
+    var num = i + 1;
+    if (s.origin && s.origin.geometry) {
+      var coords = s.origin.geometry.coordinates;
+      L.marker([coords[1], coords[0]], { icon: dot('#60a5fa', 13) })
+        .bindPopup('<strong>{% trans "Origin #' + num + '" %}</strong><br>' + s.origin.label)
+        .addTo(map);
+      allPoints.push([coords[1], coords[0]]);
+    }
+    if (s.destination && s.destination.geometry) {
+      var coords = s.destination.geometry.coordinates;
+      L.marker([coords[1], coords[0]], { icon: dot('#4ade80', 13) })
+        .bindPopup('<strong>{% trans "Destination #' + num + '" %}</strong><br>' + s.destination.label)
+        .addTo(map);
+      allPoints.push([coords[1], coords[0]]);
+    }
+    if (s.current_location && s.current_location.geometry) {
+      var coords = s.current_location.geometry.coordinates;
+      L.marker([coords[1], coords[0]], { icon: truckIcon(isDark ? '#818cf8' : '#4f46e5'), zIndexOffset: 900 })
+        .bindPopup('<strong>{% trans "Package location" %}</strong><br>' + s.current_location.label)
+        .addTo(map);
+      allPoints.push([coords[1], coords[0]]);
+    }
+    if (s.origin && s.origin.geometry && s.destination && s.destination.geometry) {
+      var o = s.origin.geometry.coordinates;
+      var d = s.destination.geometry.coordinates;
+      L.polyline([[o[1], o[0]], [d[1], d[0]]], {
+        color: isDark ? '#818cf8' : '#4f46e5',
+        weight: 3,
+        dashArray: '8 6',
+        opacity: 0.75,
+      }).addTo(map);
+    }
+  });
+
+  if (allPoints.length === 1) {
+    map.setView(allPoints[0], 12);
+  } else if (allPoints.length > 1) {
+    map.fitBounds(L.latLngBounds(allPoints), { padding: [36, 36], maxZoom: 14 });
+  }
+});
+</script>
+{% endblock %}

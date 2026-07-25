@@ -1,0 +1,111 @@
+{% extends "instruments/base.html" %}
+{% load i18n %}
+
+{% block instruments_title %}{% trans "New Revenue Share" %}{% endblock %}
+
+{% block instruments_content %}
+<div class="space-y-6 max-w-5xl">
+
+  <div>
+    <a href="{% url 'instruments:instrument_list' %}" class="inline-flex items-center gap-2 text-sm underline hover:opacity-80">
+      <i class="fa-solid fa-arrow-left"></i> {% trans "All instruments" %}
+    </a>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <div class="flex h-10 w-10 items-center justify-center rounded-xl"
+         :class="darkMode ? 'bg-success-dark/10' : 'bg-success-light/10'">
+      <i class="fa-solid fa-percent" :class="darkMode ? 'text-success-dark' : 'text-success-light'"></i>
+    </div>
+    <div>
+      <h2 class="text-2xl font-bold">{% trans "New Revenue Share Contract" %}</h2>
+      <p class="text-sm opacity-60">{% trans "Distributes revenue from a source account to multiple recipients by share." %}</p>
+    </div>
+  </div>
+
+  <form method="post" class="space-y-5">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="rounded-lg border px-4 py-3 text-sm font-semibold"
+         :class="darkMode ? 'border-warn-dark/40 bg-warn-dark/10 text-warn-dark' : 'border-warn-light/40 bg-warn-light/10 text-warn-light'">
+      {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+
+    <!-- Name -->
+    <fieldset class="rounded-xl border p-5 space-y-4" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'">
+      <legend class="px-2 text-xs font-bold uppercase tracking-widest opacity-50">{% trans "Name" %}</legend>
+      <div class="space-y-2">
+        <label for="{{ form.name.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">{{ form.name.label }} <span class="text-warn-light">*</span></label>
+        {{ form.name }}
+        <p class="text-xs opacity-50">{{ form.name.help_text }}</p>
+        {% for e in form.name.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+      </div>
+    </fieldset>
+
+    <!-- Revenue source -->
+    <fieldset class="rounded-xl border p-5 space-y-4" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'">
+      <legend class="px-2 text-xs font-bold uppercase tracking-widest opacity-50">{% trans "Revenue Source" %}</legend>
+      <div class="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+        <div class="space-y-2">
+          <label for="{{ form.revenue_account.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">
+            <i class="fa-solid fa-building mr-1" :class="darkMode ? 'text-success-dark' : 'text-success-light'"></i>
+            {{ form.revenue_account.label }} <span class="text-warn-light">*</span>
+          </label>
+          {{ form.revenue_account }}
+          <p class="text-xs opacity-50">{% trans "Account from which revenue is distributed." %}</p>
+          {% for e in form.revenue_account.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="space-y-2">
+          <label for="{{ form.revenue_asset.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">{{ form.revenue_asset.label }} <span class="text-warn-light">*</span></label>
+          {{ form.revenue_asset }}
+          {% for e in form.revenue_asset.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Active period -->
+    <fieldset class="rounded-xl border p-5 space-y-4" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'">
+      <legend class="px-2 text-xs font-bold uppercase tracking-widest opacity-50">{% trans "Active Period" %}</legend>
+      <div class="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+        <div class="space-y-2">
+          <label for="{{ form.active_from.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">{{ form.active_from.label }} <span class="text-warn-light">*</span></label>
+          {{ form.active_from }}
+          {% for e in form.active_from.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="space-y-2">
+          <label for="{{ form.active_until.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">{{ form.active_until.label }}</label>
+          {{ form.active_until }}
+          <p class="text-xs opacity-50">{% trans "Leave blank for an open-ended contract." %}</p>
+          {% for e in form.active_until.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Metadata -->
+    <fieldset class="rounded-xl border p-5 space-y-4" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'">
+      <legend class="px-2 text-xs font-bold uppercase tracking-widest opacity-50">{% trans "Metadata" %}</legend>
+      <div class="rounded-lg p-3 text-xs opacity-60" :class="darkMode ? 'bg-primary-bg-dark' : 'bg-primary-bg-light'">
+        <i class="fa-solid fa-circle-info mr-1"></i>
+        {% trans "Recipients and their share percentages are added after creation." %}
+      </div>
+      <div class="space-y-2">
+        <label for="{{ form.metadata.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">{{ form.metadata.label }}</label>
+        {{ form.metadata }}
+        {% for e in form.metadata.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+      </div>
+    </fieldset>
+
+    <div class="flex flex-wrap items-center gap-3">
+      <button type="submit" class="rounded-lg px-5 py-2.5 text-sm font-bold shadow-sm transition hover:opacity-90"
+              :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'">
+        <i class="fa-solid fa-percent mr-1"></i> {% trans "Create revenue share" %}
+      </button>
+      <a href="{% url 'instruments:instrument_list' %}" class="rounded-lg border px-5 py-2.5 text-sm font-semibold transition hover:opacity-80"
+         :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'">
+        {% trans "Cancel" %}
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}
