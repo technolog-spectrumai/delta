@@ -49,6 +49,7 @@ probe /                                   # dashboard (may redirect to login)
 probe /sso/login/ 200                     # login page must render
 probe /static/admin/css/base.css 200      # collectstatic manifest asset
 probe /nauka/                             # academy
+probe /nauka/paths/                       # personal learning paths
 probe /zadania/                           # quizzes
 probe /notatki/                           # palimpsest
 probe /biblioteka/books/                  # library (its mount root has no view)
