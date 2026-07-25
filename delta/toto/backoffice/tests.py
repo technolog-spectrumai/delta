@@ -1077,3 +1077,68 @@ class WelcomeEditTests(TestCase):
         self.assertContains(
             self.client.get(reverse("backoffice:dashboard")),
             reverse("backoffice_welcome:welcome-edit"))
+
+
+# ---------------------------------------------------------------------------
+# Role-aware post-login landing (RoleAwareLandingMiddleware)
+# ---------------------------------------------------------------------------
+
+class RoleAwareLandingTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.user_field = _person_user_field()
+        cls.staff = _staff("rl-staff")
+        cls.teacher_user = get_user_model().objects.create_user("rl-teacher", password="x")
+        cls.student_user = get_user_model().objects.create_user("rl-student", password="x")
+        if cls.user_field:
+            from toto.academy.models import Teacher
+            tp = Person.objects.create(display_name="RL Teacher")
+            setattr(tp, cls.user_field, cls.teacher_user)
+            tp.save(update_fields=[cls.user_field])
+            Teacher.objects.create(person=tp, is_active=True)
+            sp = Person.objects.create(display_name="RL Student")
+            setattr(sp, cls.user_field, cls.student_user)
+            sp.save(update_fields=[cls.user_field])
+
+    def _login_pending(self, user):
+        """force_login + set the one-shot flag the login signal would set."""
+        self.client.force_login(user)
+        session = self.client.session
+        session["role_landing_pending"] = True
+        session.save()
+
+    def test_teacher_routed_to_panel(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self._login_pending(self.teacher_user)
+        self.assertRedirects(
+            self.client.get(reverse("core:dashboard")), reverse("backoffice:dashboard"))
+
+    def test_student_routed_to_student_home(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self._login_pending(self.student_user)
+        self.assertRedirects(
+            self.client.get(reverse("core:dashboard")), reverse("academy:student-home"))
+
+    def test_staff_keeps_generic_dashboard(self):
+        self._login_pending(self.staff)
+        self.assertEqual(self.client.get(reverse("core:dashboard")).status_code, 200)
+
+    def test_landing_is_one_shot(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self._login_pending(self.student_user)
+        self.client.get(reverse("core:dashboard"))  # consumes flag + redirects
+        # second visit has no flag -> the generic dashboard renders normally
+        self.assertEqual(self.client.get(reverse("core:dashboard")).status_code, 200)
+
+    def test_no_redirect_without_flag(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.student_user)
+        session = self.client.session  # force_login arms the flag; clear it
+        session.pop("role_landing_pending", None)
+        session.save()
+        self.assertEqual(self.client.get(reverse("core:dashboard")).status_code, 200)

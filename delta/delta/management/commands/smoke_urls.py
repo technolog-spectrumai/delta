@@ -755,6 +755,13 @@ class Command(BaseCommand):
             client.force_login(student)
         elif persona == "staff":
             client.force_login(staff)
+        if persona in ("student", "staff"):
+            # force_login fires user_logged_in, which arms the one-shot
+            # role-landing redirect; clear it so the sweep probes steady-state
+            # navigation (the post-login hop is covered by unit tests).
+            session = client.session
+            if session.pop("role_landing_pending", None) is not None:
+                session.save()
         return client
 
     def _get(self, client, path, persona, key, student, staff, base_url):
