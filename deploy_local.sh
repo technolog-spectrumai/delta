@@ -11,8 +11,8 @@
 # requirements, download_vendor.py, data/, toto library source). Force a full
 # rebuild with:  BUILD=1 ./deploy_local.sh
 #
-# toto resolution: deploy.py auto-detects a sibling ../toto_libs checkout (or
-# TOTO_SRC env / toto_src config key) and stages the toto wheel into dist/.
+# toto resolution: deploy.py uses the in-repo vendored tree at vendor/toto_libs
+# (or TOTO_SRC env / toto_src config key) and stages the toto wheel into dist/.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

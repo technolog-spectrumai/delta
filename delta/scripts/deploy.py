@@ -95,11 +95,14 @@ def _cert_dir(cfg: dict) -> Path:
     own self-signed cert instead of sharing/overwriting one at the repo root."""
     return ROOT_DIR / cfg["deployment"]["project_dir"] / "cert"
 
-# toto is a suite of installed packages sharing the toto.* namespace. TOTO_SRC
-# (env) or a sibling ../toto_libs checkout provides them without installation —
-# see _toto_src() below. Which version this host requires is declared in
+# toto is a suite of installed packages sharing the toto.* namespace. The
+# repo carries its own copy as a git subtree at vendor/toto_libs (see
+# full_secession.md); TOTO_SRC (env) overrides it — set-but-missing means
+# "explicitly disabled" (the clean-env gate relies on that to prove wheel-only
+# operation). Which version this host requires is declared in
 # requirements.toto.txt and enforced at build time (stage_toto_wheels).
 TOTO_MANIFEST = ROOT_DIR / "requirements.toto.txt"
+VENDOR_TOTO = ROOT_DIR / "vendor" / "toto_libs"
 
 
 def _is_suite_checkout(p: Path) -> bool:
@@ -111,8 +114,7 @@ def _toto_src() -> Path | None:
     if env:
         p = Path(env).expanduser().resolve()
         return p if p.exists() else None
-    sibling = ROOT_DIR.parent / "toto_libs"
-    return sibling if _is_suite_checkout(sibling) or (sibling / "pyproject.toml").exists() else None
+    return VENDOR_TOTO if _is_suite_checkout(VENDOR_TOTO) else None
 
 
 TOTO_SRC = _toto_src()
@@ -1093,9 +1095,9 @@ def _resolve_build_features(env_cfg: dict) -> dict:
         from toto.features import resolve_features
     except ImportError:
         _die(
-            "the toto suite is not importable — set TOTO_SRC to a toto_libs "
-            "checkout, install it editable (toto_libs/scripts/install_toto.sh), "
-            "or install the staged wheels "
+            "the toto suite is not importable — restore the vendored tree "
+            "(git checkout -- vendor/toto_libs), set TOTO_SRC to a toto suite "
+            "checkout, or install the staged wheels "
             "(pip install --no-index --find-links dist -r requirements.toto.txt)"
         )
 
@@ -1690,7 +1692,8 @@ def _toto_versioning():
         _die(
             "toto.versioning is not importable — this host cannot verify which "
             "toto version it is building.\n"
-            f"  Point TOTO_SRC (or `toto_src:` in the yaml) at a toto_libs checkout "
+            "  Restore the vendored tree (git checkout -- vendor/toto_libs), "
+            f"point TOTO_SRC (or `toto_src:` in the yaml) at a toto suite checkout "
             f"of v{_manifest_version_hint()}, or install the suite "
             "(pip install --no-index --find-links dist -r requirements.toto.txt).\n"
             "  A checkout older than v1.0 predates the multi-package split."
@@ -1723,9 +1726,8 @@ def stage_toto_wheels(cfg: dict, dev: bool = False) -> list[Path]:
 
     The Dockerfiles install from dist/ against requirements.toto.txt, so what is
     staged here is exactly what runs. Source precedence:
-      1. a toto_libs checkout — `toto_src:` in the yaml, the TOTO_SRC env var,
-         or an auto-detected sibling ../toto_libs.
-         so a freshly synced wasm rides into the wheel.
+      1. a toto suite checkout — `toto_src:` in the yaml, the TOTO_SRC env var,
+         or the in-repo vendored tree at vendor/toto_libs (the default).
       2. `toto_requirement:` in the yaml — a list of complete pip requirement
          strings, one per pinned package, supplied by you (no git host is
          assumed or synthesised).
@@ -1776,11 +1778,12 @@ def stage_toto_wheels(cfg: dict, dev: bool = False) -> list[Path]:
             )
         if not reqs or not isinstance(reqs, list):
             _die(
-                "cannot stage the toto wheels: no toto_libs checkout found "
-                "(`toto_src:` in the yaml, TOTO_SRC env, or a sibling ../toto_libs) "
-                "and no `toto_requirement:` list in the config.\n"
-                f"  Simplest fix: clone toto_libs next to this repo and "
-                f"`git checkout v{manifest.version}`."
+                "cannot stage the toto wheels: no toto suite checkout found "
+                "(`toto_src:` in the yaml, TOTO_SRC env, or the in-repo "
+                "vendor/toto_libs tree) and no `toto_requirement:` list in the "
+                "config.\n"
+                "  Simplest fix: restore the vendored tree with "
+                "`git checkout -- vendor/toto_libs`."
             )
         targets = [(None, str(req)) for req in reqs]
         origin = "toto_requirement pins"
@@ -1845,6 +1848,11 @@ def rsync_to_remote(target: dict) -> None:
         "--exclude=staticfiles/",
         "--exclude=media/",
         "--exclude=out/",
+        # vendor/toto_libs ships (the wheels build from it on the target), but
+        # not its local junk. Anchored: the repo-root dist/ must keep shipping.
+        "--exclude=/vendor/toto_libs/dist/",
+        "--exclude=/vendor/toto_libs/packages/*/build/",
+        "--exclude=/vendor/toto_libs/.venv*/",
     ]
     cmd = [
         "rsync", "-avz", "--delete",
@@ -2306,8 +2314,8 @@ def build_parser() -> argparse.ArgumentParser:
              "otherwise behave like --no-build")
     parser.add_argument(
         "--dev", action="store_true",
-        help="Build against the toto_libs checkout as it is right now, instead "
-             "of requiring it to sit on the tag pinned in requirements.toto.txt. "
+        help="Build against the toto tree as it is right now, instead of "
+             "requiring it to match the version pinned in requirements.toto.txt. "
              "For local up/restart only — refused for push")
     parser.add_argument(
         "--force", action="store_true",
@@ -2447,8 +2455,8 @@ def main() -> None:
     if args.dev and args.command not in ("up", "restart"):
         _die(
             f"--dev is only allowed for a local up/restart, not for '{args.command}'. "
-            "A deployment must build from the toto_libs tag pinned in "
-            "requirements.toto.txt — check it out and drop --dev."
+            "A deployment must build from the vendored toto tree at the version "
+            "pinned in requirements.toto.txt — drop --dev."
         )
 
     config_path = args.config
