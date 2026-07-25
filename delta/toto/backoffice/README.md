@@ -68,5 +68,7 @@ next so teachers can run everything from the panel:
   Sign links (signing reuses `academy:certificate-sign`, teacher-gated).
 - [ ] **Cohort batch certificate awarding** — one action on a cohort that marks all
   members complete / issues a certificate to every member at once (deferred).
-- [ ] Math (KaTeX) in lesson/script content; drag-and-drop reorder (baseline is
-  up/down); promote a Person to Teacher from the panel.
+- [x] **Math (KaTeX)** in lesson/script content, descriptions & answers; script sections
+  now use a Markdown editor (markdownx) with a live math preview.
+- [ ] **Drag-and-drop reorder** (baseline is up/down).
+- [ ] Promote a Person to Teacher from the panel.

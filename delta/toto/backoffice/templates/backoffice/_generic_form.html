@@ -1,5 +1,6 @@
 {% extends "backoffice/base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% comment %}
 Generic back-office form page. Context: form, title, submit_label, icon,
@@ -7,7 +8,9 @@ cancel_url (resolved URL string), optional back_label/back_url.
 Rich forms (Trix, formsets) use their own template instead.
 {% endcomment %}
 
-{% block backoffice_start_script %}{{ form.media }}
+{% block backoffice_end_script %}<script defer src="{% static 'quizzes/js/mathpreview.js' %}"></script>{% endblock %}
+
+{% block backoffice_start_script %}{% include "quizzes/_katex.html" %}{{ form.media }}
 <style>
   trix-toolbar .trix-button-row { flex-wrap: wrap; }
   trix-editor { min-height: 10rem; border-radius: .5rem; border-color: rgba(128,128,128,.35); padding: 1rem; }

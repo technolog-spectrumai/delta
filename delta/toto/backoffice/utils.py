@@ -3,6 +3,12 @@
 from django.utils.text import slugify
 
 
+def add_math_preview(field):
+    """Tag a textarea field so mathpreview.js renders a live KaTeX preview under it."""
+    css = field.widget.attrs.get("class", "")
+    field.widget.attrs["class"] = (css + " js-mathsource").strip()
+
+
 def unique_slug(model, base_text, *, instance=None, slug_field="slug", **scope):
     """A unique slug for ``model`` derived from ``base_text``.
 

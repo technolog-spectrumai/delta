@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from markdownx.widgets import MarkdownxWidget
 
-from toto.backoffice.utils import unique_slug
+from toto.backoffice.utils import add_math_preview, unique_slug
 from toto.competence.models import SkillBadge
 from toto.palimpsest.models import Page
 from toto.quizzes.models import Quiz
@@ -36,6 +36,7 @@ class CourseForm(forms.ModelForm):
         apply_oya_field_styles(self.fields, skip={"is_published", "is_virtual"})
         apply_oya_checkbox_styles(self.fields["is_published"])
         apply_oya_checkbox_styles(self.fields["is_virtual"])
+        add_math_preview(self.fields["description"])
 
     def save(self, commit=True):
         obj = super().save(commit=False)
@@ -84,6 +85,7 @@ class ModuleForm(forms.ModelForm):
         self.fields["exam"].required = False
         self.fields["attached_quizzes"].queryset = Quiz.objects.order_by("title")
         apply_oya_field_styles(self.fields, skip={"attached_quizzes"})
+        add_math_preview(self.fields["description"])
 
     def save(self, commit=True):
         obj = super().save(commit=False)
@@ -133,6 +135,7 @@ class LessonForm(forms.ModelForm):
             self.fields, skip={"attached_quizzes", *self._UPLOAD_FIELDS})
         apply_oya_checkbox_styles(self.fields["remove_video"])
         apply_oya_checkbox_styles(self.fields["remove_notes"])
+        add_math_preview(self.fields["summary"])
 
     @staticmethod
     def _detect(uploaded):

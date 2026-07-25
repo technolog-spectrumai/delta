@@ -1,5 +1,9 @@
 {% extends "backoffice/base.html" %}
 {% load i18n %}
+{% load static %}
+
+{% block backoffice_start_script %}{% include "quizzes/_katex.html" %}{% endblock %}
+{% block backoffice_end_script %}<script defer src="{% static 'quizzes/js/mathpreview.js' %}"></script>{% endblock %}
 
 {% block backoffice_content %}
 <form method="post" enctype="multipart/form-data"

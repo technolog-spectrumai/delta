@@ -648,3 +648,42 @@ class ScriptMarkdownMathTests(TestCase):
         self.assertContains(resp, "<strong>bold</strong>", html=False)  # markdown rendered
         self.assertContains(resp, "$a*b$")   # math delimiter survives for KaTeX
         self.assertContains(resp, "katex")   # _katex.html include present
+
+
+# ---------------------------------------------------------------------------
+# Live math preview on plain-text editor fields (Part C)
+# ---------------------------------------------------------------------------
+
+class MathPreviewEditorTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.staff = _staff("bo-mathprev")
+        group = SkillGroup.objects.create(title="G", slug="mpg")
+        badge = SkillBadge.objects.create(group=group, title="B", slug="mpb")
+        cls.course = Course.objects.create(title="C", slug="mpc")
+        cls.module = CourseModule.objects.create(
+            course=cls.course, title="M", slug="mpm", unlocks_badge=badge)
+
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def test_course_form_wires_math_preview(self):
+        r = self.client.get(reverse("backoffice_courses:course-create"))
+        self.assertContains(r, "js-mathsource")   # description tagged
+        self.assertContains(r, "mathpreview.js")   # preview script loaded
+        self.assertContains(r, "katex")            # KaTeX include
+
+    def test_lesson_form_wires_math_preview(self):
+        r = self.client.get(reverse("backoffice_courses:lesson-create", kwargs={"pk": self.module.pk}))
+        self.assertContains(r, "js-mathsource")
+        self.assertContains(r, "mathpreview.js")
+
+    def test_module_form_wires_math_preview(self):
+        r = self.client.get(reverse("backoffice_courses:module-edit", kwargs={"pk": self.module.pk}))
+        self.assertContains(r, "js-mathsource")
+        self.assertContains(r, "mathpreview.js")
+
+    def test_quiz_form_tags_description(self):
+        r = self.client.get(reverse("backoffice_quizzes:quiz-create"))
+        self.assertContains(r, "js-mathsource")

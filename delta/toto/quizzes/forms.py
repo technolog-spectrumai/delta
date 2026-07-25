@@ -17,6 +17,7 @@ from django.utils.translation import gettext_lazy as _
 
 from trix_editor.widgets import TrixEditorWidget
 
+from toto.backoffice.utils import add_math_preview
 from toto.verbena.forms import apply_oya_checkbox_styles, apply_oya_field_styles
 
 from .models import Quiz, QuizAnswer, QuizAnswerTrait, QuizQuestion, QuizTrait
@@ -42,6 +43,7 @@ class QuizForm(forms.ModelForm):
         apply_oya_field_styles(self.fields, skip={"is_published", "is_official"})
         apply_oya_checkbox_styles(self.fields["is_published"])
         apply_oya_checkbox_styles(self.fields["is_official"])
+        add_math_preview(self.fields["description"])
 
     def clean_slug(self):
         """Auto-slug from the title and keep it unique (Quiz.slug is not unique)."""
