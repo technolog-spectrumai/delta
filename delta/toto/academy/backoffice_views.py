@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
@@ -21,9 +22,10 @@ from .backoffice_forms import (
     ScriptForm,
     ScriptSectionFormSet,
 )
-from toto.competence.models import SkillGroup
+from toto.competence.models import SkillBadge, SkillGroup
 
 from .models import (
+    Certificate,
     Cohort,
     CohortMembership,
     Course,
@@ -32,6 +34,7 @@ from .models import (
     Lesson,
     Script,
     Student,
+    StudentBadge,
     Teacher,
 )
 
@@ -374,8 +377,10 @@ def roster(request, pk):
                        .select_related("cohort")):
         cohorts_by_student.setdefault(membership.student_id, []).append(membership.cohort)
     rows = [{
+        "student": e.student,
         "person": e.student.person,
         "cohorts": cohorts_by_student.get(e.student_id, []),
+        "completed": bool(e.completed_at),
     } for e in enrollments]
 
     query = request.GET.get("q", "")
@@ -502,3 +507,89 @@ def cohort_remove_member(request, pk):
         cohort=cohort, student__person_id=request.POST.get("person")).delete()
     messages.success(request, _("Removed from the cohort."))
     return redirect("backoffice_courses:cohort-edit", pk=cohort.pk)
+
+
+# --- per-student: completion, badges, certificate --------------------------
+
+def _course_student(pk, student_pk):
+    course = get_object_or_404(Course, pk=pk)
+    student = get_object_or_404(Student.objects.select_related("person"), pk=student_pk)
+    return course, student
+
+
+@teacher_required
+def student_detail(request, pk, student_pk):
+    course, student = _course_student(pk, student_pk)
+    enrollment = CourseEnrollment.objects.filter(course=course, student=student).first()
+    earned_ids = set(student.badges.values_list("id", flat=True))
+    modules = (course.modules
+               .select_related("unlocks_badge", "unlocks_badge__group")
+               .order_by("order", "id"))
+    module_rows = [{
+        "module": m,
+        "badge": m.unlocks_badge,
+        "earned": m.unlocks_badge_id in earned_ids,
+    } for m in modules]
+    earned_badges = (student.badges.select_related("group")
+                     .order_by("group__order", "order", "title"))
+    other_badges = (SkillBadge.objects.exclude(id__in=earned_ids)
+                    .select_related("group").order_by("group__order", "order", "title"))
+    certificate = Certificate.objects.filter(person=student.person, course=course).first()
+    return backoffice_render(request, "academy/backoffice/student_detail.html", {
+        "course": course,
+        "student": student,
+        "person": student.person,
+        "enrollment": enrollment,
+        "module_rows": module_rows,
+        "earned_badges": earned_badges,
+        "other_badges": other_badges,
+        "certificate": certificate,
+    }, active=ACTIVE)
+
+
+@teacher_required
+@require_POST
+def student_complete(request, pk, student_pk):
+    course, student = _course_student(pk, student_pk)
+    enrollment, _created = CourseEnrollment.objects.get_or_create(student=student, course=course)
+    enrollment.completed_at = timezone.now()
+    enrollment.save()  # save() auto-issues the Certificate
+    messages.success(request, _("Marked complete — a certificate was issued."))
+    return redirect("backoffice_courses:student-detail", pk=course.pk, student_pk=student.pk)
+
+
+@teacher_required
+@require_POST
+def student_uncomplete(request, pk, student_pk):
+    course, student = _course_student(pk, student_pk)
+    enrollment = CourseEnrollment.objects.filter(student=student, course=course).first()
+    if enrollment:
+        enrollment.completed_at = None
+        enrollment.save(update_fields=["completed_at"])
+    # remove the auto-issued certificate only when it was never cryptographically signed
+    Certificate.objects.filter(
+        person=student.person, course=course, cryptographic_signature="").delete()
+    messages.success(request, _("Marked as in progress."))
+    return redirect("backoffice_courses:student-detail", pk=course.pk, student_pk=student.pk)
+
+
+@teacher_required
+@require_POST
+def student_award_badge(request, pk, student_pk):
+    course, student = _course_student(pk, student_pk)
+    badge = SkillBadge.objects.filter(pk=request.POST.get("badge")).first()
+    if badge is None:
+        messages.error(request, _("Badge not found."))
+    else:
+        StudentBadge.objects.get_or_create(student=student, badge=badge)
+        messages.success(request, _("Awarded “%(b)s”.") % {"b": badge.title})
+    return redirect("backoffice_courses:student-detail", pk=course.pk, student_pk=student.pk)
+
+
+@teacher_required
+@require_POST
+def student_revoke_badge(request, pk, student_pk):
+    course, student = _course_student(pk, student_pk)
+    StudentBadge.objects.filter(student=student, badge_id=request.POST.get("badge")).delete()
+    messages.success(request, _("Badge revoked."))
+    return redirect("backoffice_courses:student-detail", pk=course.pk, student_pk=student.pk)

@@ -79,6 +79,9 @@ STAFF_ONLY = {
     "backoffice_courses:unenrol-student", "backoffice_courses:cohort-create",
     "backoffice_courses:cohort-edit", "backoffice_courses:cohort-delete",
     "backoffice_courses:cohort-add-member", "backoffice_courses:cohort-remove-member",
+    "backoffice_courses:student-detail", "backoffice_courses:student-complete",
+    "backoffice_courses:student-uncomplete", "backoffice_courses:student-award-badge",
+    "backoffice_courses:student-revoke-badge",
     # notes
     "backoffice_notes:page-list", "backoffice_notes:page-create",
     "backoffice_notes:tag-create", "backoffice_notes:page-edit",
@@ -265,6 +268,12 @@ PARAM_SOURCES = {
     "backoffice_courses:cohort-delete": (False, lambda: _kw(_first("academy.Cohort"), pk="pk")),
     "backoffice_courses:cohort-add-member": (False, lambda: _kw(_first("academy.Cohort"), pk="pk")),
     "backoffice_courses:cohort-remove-member": (False, lambda: _kw(_first("academy.Cohort"), pk="pk")),
+    # per-student pages (course pk + student pk)
+    "backoffice_courses:student-detail": (False, lambda: _kw_course_student()),
+    "backoffice_courses:student-complete": (False, lambda: _kw_course_student()),
+    "backoffice_courses:student-uncomplete": (False, lambda: _kw_course_student()),
+    "backoffice_courses:student-award-badge": (False, lambda: _kw_course_student()),
+    "backoffice_courses:student-revoke-badge": (False, lambda: _kw_course_student()),
     # back office — notes (palimpsest)
     "backoffice_notes:page-edit": (True, lambda: _kw(_first("palimpsest.Page"), pk="pk")),
     "backoffice_notes:page-delete": (True, lambda: _kw(_first("palimpsest.Page"), pk="pk")),
@@ -360,6 +369,15 @@ def _lib_ref():
     """{kind, pk} for a seeded library Book (back-office reference edit/delete)."""
     book = _first("library.Book")
     return {"kind": "book", "pk": book.pk} if book else None
+
+
+def _kw_course_student():
+    """{pk: <course>, student_pk: <student>} for the per-student back-office pages."""
+    course = _first("academy.Course")
+    student = _first("academy.Student")
+    if course is None or student is None:
+        return None
+    return {"pk": course.pk, "student_pk": student.pk}
 
 
 def _kw2_step():

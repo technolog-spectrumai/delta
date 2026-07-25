@@ -7,6 +7,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from toto.academy.models import (
+    Certificate,
     Cohort,
     CohortMembership,
     Course,
@@ -14,6 +15,7 @@ from toto.academy.models import (
     CourseModule,
     Lesson,
     Student,
+    StudentBadge,
 )
 from toto.competence.models import SkillBadge, SkillBadgePrerequisite, SkillGroup
 from toto.core.models import Platform
@@ -511,3 +513,71 @@ class CohortEnrolmentTests(TestCase):
         self.client.post(self._url("cohort-remove-member", cohort.pk), {"person": self.p1.pk})
         self.assertFalse(CohortMembership.objects.filter(cohort=cohort, student=student).exists())
         self.assertTrue(CourseEnrollment.objects.filter(student=student, course=self.course).exists())
+
+
+# ---------------------------------------------------------------------------
+# Completion + badge awards + certificates (per-student page)
+# ---------------------------------------------------------------------------
+
+class CompletionBadgeCertTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.staff = _staff("bo-progress")
+        cls.group = SkillGroup.objects.create(title="G", slug="pg")
+        cls.badge = SkillBadge.objects.create(group=cls.group, title="Sets", slug="sets")
+        cls.other_badge = SkillBadge.objects.create(group=cls.group, title="Functions", slug="functions")
+        cls.course = Course.objects.create(title="PC", slug="pc")
+        cls.module = CourseModule.objects.create(
+            course=cls.course, title="Algebra Basics", slug="pm", unlocks_badge=cls.badge)
+        cls.person = Person.objects.create(display_name="Stud", email="stud@example.com")
+        cls.student = Student.objects.create(person=cls.person)
+        CourseEnrollment.objects.create(student=cls.student, course=cls.course)
+
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def _url(self, name):
+        return reverse(f"backoffice_courses:{name}",
+                       kwargs={"pk": self.course.pk, "student_pk": self.student.pk})
+
+    def test_gate_student_404(self):
+        user = get_user_model().objects.create_user("plain-progress", password="x")
+        self.client.force_login(user)
+        self.assertEqual(self.client.get(self._url("student-detail")).status_code, 404)
+
+    def test_detail_renders_module_checklist(self):
+        resp = self.client.get(self._url("student-detail"))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Algebra Basics")
+
+    def test_complete_sets_and_issues_certificate(self):
+        self.client.post(self._url("student-complete"))
+        enrollment = CourseEnrollment.objects.get(student=self.student, course=self.course)
+        self.assertIsNotNone(enrollment.completed_at)
+        self.assertTrue(Certificate.objects.filter(person=self.person, course=self.course).exists())
+
+    def test_uncomplete_clears_and_removes_unsigned_cert(self):
+        self.client.post(self._url("student-complete"))
+        self.assertTrue(Certificate.objects.filter(person=self.person, course=self.course).exists())
+        self.client.post(self._url("student-uncomplete"))
+        enrollment = CourseEnrollment.objects.get(student=self.student, course=self.course)
+        self.assertIsNone(enrollment.completed_at)
+        self.assertFalse(Certificate.objects.filter(person=self.person, course=self.course).exists())
+
+    def test_award_and_revoke_module_badge(self):
+        self.client.post(self._url("student-award-badge"), {"badge": self.badge.pk})
+        self.assertTrue(self.student.has_badge(self.badge))
+        self.client.post(self._url("student-revoke-badge"), {"badge": self.badge.pk})
+        self.assertFalse(self.student.has_badge(self.badge))
+
+    def test_award_any_badge(self):
+        self.client.post(self._url("student-award-badge"), {"badge": self.other_badge.pk})
+        self.assertTrue(StudentBadge.objects.filter(student=self.student, badge=self.other_badge).exists())
+
+    def test_certificate_links_shown_after_completion(self):
+        self.client.post(self._url("student-complete"))
+        cert = Certificate.objects.get(person=self.person, course=self.course)
+        resp = self.client.get(self._url("student-detail"))
+        self.assertContains(resp, reverse("academy:certificate-detail", kwargs={"uuid": cert.uuid}))
+        self.assertContains(resp, reverse("academy:certificate-sign", kwargs={"uuid": cert.uuid}))

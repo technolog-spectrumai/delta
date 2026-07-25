@@ -49,12 +49,16 @@
           <div class="min-w-0">
             <span class="font-semibold">{{ row.person.display_name }}</span>
             {% if row.person.email %}<span class="text-xs opacity-60"> · {{ row.person.email }}</span>{% endif %}
+            {% if row.completed %}<span class="ml-1 rounded-full border border-success-light/40 px-2 py-0.5 text-[10px] text-success-light"><i class="fa-solid fa-circle-check"></i> {% trans "completed" %}</span>{% endif %}
             {% for c in row.cohorts %}<span class="ml-1 rounded-full border px-2 py-0.5 text-[10px]">{{ c.title }}</span>{% endfor %}
           </div>
-          <form method="post" action="{% url 'backoffice_courses:unenrol-student' pk=course.pk %}">{% csrf_token %}
-            <input type="hidden" name="person" value="{{ row.person.pk }}">
-            <button type="submit" class="rounded-lg border border-warn-light/40 px-3 py-1.5 text-xs font-semibold text-warn-light hover:opacity-85">{% trans "Unenrol" %}</button>
-          </form>
+          <div class="flex items-center gap-2">
+            <a href="{% url 'backoffice_courses:student-detail' pk=course.pk student_pk=row.student.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-gear"></i> {% trans "Manage" %}</a>
+            <form method="post" action="{% url 'backoffice_courses:unenrol-student' pk=course.pk %}">{% csrf_token %}
+              <input type="hidden" name="person" value="{{ row.person.pk }}">
+              <button type="submit" class="rounded-lg border border-warn-light/40 px-3 py-1.5 text-xs font-semibold text-warn-light hover:opacity-85">{% trans "Unenrol" %}</button>
+            </form>
+          </div>
         </div>
       {% empty %}
         <p class="text-sm italic opacity-50">{% trans "No students enrolled yet." %}</p>

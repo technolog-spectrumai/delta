@@ -59,9 +59,14 @@ next so teachers can run everything from the panel:
   active) and manage each cohort's members (`backoffice_courses:roster` / `cohort-*`).
 - [x] **Enrolment** — teacher enrols students into a course (search People by name/email)
   or a cohort (which auto-enrols them in the course).
-- [ ] **Completion** — mark student module/course completion.
-- [ ] **Badge awards** — award `SkillBadge`s to students.
-- [ ] **Certificates** — issue certificates and link the teacher signing flow
-  (`academy:certificate-sign`, already teacher-gated).
+- [x] **Completion** — per-student page (`backoffice_courses:student-detail`): course
+  completion toggle (sets `CourseEnrollment.completed_at`) and per-module completion
+  (award the module's badge).
+- [x] **Badge awards** — award/revoke the course's module badges (checklist) and any
+  other `SkillBadge` on the per-student page.
+- [x] **Certificates** — auto-issued on completion; the per-student page shows View +
+  Sign links (signing reuses `academy:certificate-sign`, teacher-gated).
+- [ ] **Cohort batch certificate awarding** — one action on a cohort that marks all
+  members complete / issues a certificate to every member at once (deferred).
 - [ ] Math (KaTeX) in lesson/script content; drag-and-drop reorder (baseline is
   up/down); promote a Person to Teacher from the panel.

@@ -40,10 +40,13 @@
         {% for m in members %}
           <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="flex items-center justify-between gap-3 rounded-lg border p-2 text-sm">
             <span>{{ m.student.person.display_name }}{% if m.student.person.email %} <span class="opacity-60">· {{ m.student.person.email }}</span>{% endif %}</span>
-            <form method="post" action="{% url 'backoffice_courses:cohort-remove-member' pk=cohort.pk %}">{% csrf_token %}
-              <input type="hidden" name="person" value="{{ m.student.person.pk }}">
-              <button type="submit" class="rounded border border-warn-light/40 px-2 py-1 text-xs text-warn-light hover:opacity-85">{% trans "Remove" %}</button>
-            </form>
+            <div class="flex items-center gap-2">
+              <a href="{% url 'backoffice_courses:student-detail' pk=cohort.course.pk student_pk=m.student.pk %}" class="rounded border px-2 py-1 text-xs font-semibold hover:opacity-85">{% trans "Manage" %}</a>
+              <form method="post" action="{% url 'backoffice_courses:cohort-remove-member' pk=cohort.pk %}">{% csrf_token %}
+                <input type="hidden" name="person" value="{{ m.student.person.pk }}">
+                <button type="submit" class="rounded border border-warn-light/40 px-2 py-1 text-xs text-warn-light hover:opacity-85">{% trans "Remove" %}</button>
+              </form>
+            </div>
           </div>
         {% empty %}
           <p class="text-sm italic opacity-50">{% trans "No members yet." %}</p>

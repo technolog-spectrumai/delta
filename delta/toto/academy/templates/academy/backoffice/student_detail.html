@@ -1,0 +1,113 @@
+{% extends "backoffice/base.html" %}
+{% load i18n %}
+
+{% block backoffice_content %}
+<div class="max-w-3xl space-y-6">
+  <div class="flex flex-wrap items-center gap-3">
+    <a href="{% url 'backoffice_courses:roster' pk=course.pk %}" class="text-sm underline hover:opacity-80"><i class="fa-solid fa-arrow-left"></i> {{ course.title }}</a>
+    <h2 class="text-lg font-bold"><i class="fa-solid fa-user-graduate"></i> {{ person.display_name }}</h2>
+    {% if person.email %}<span class="text-sm opacity-60">{{ person.email }}</span>{% endif %}
+  </div>
+
+  <!-- Completion -->
+  <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="flex items-center justify-between gap-3 rounded-2xl border p-5 shadow-sm">
+    <div>
+      <h3 class="font-bold"><i class="fa-solid fa-flag-checkered"></i> {% trans "Course completion" %}</h3>
+      {% if enrollment and enrollment.completed_at %}
+        <p class="mt-1 text-sm text-success-light"><i class="fa-solid fa-circle-check"></i> {% trans "Completed on" %} {{ enrollment.completed_at|date:"Y-m-d" }}</p>
+      {% else %}
+        <p class="mt-1 text-sm opacity-70">{% trans "In progress" %}</p>
+      {% endif %}
+    </div>
+    {% if enrollment and enrollment.completed_at %}
+      <form method="post" action="{% url 'backoffice_courses:student-uncomplete' pk=course.pk student_pk=student.pk %}">{% csrf_token %}
+        <button type="submit" class="rounded-lg border px-4 py-2 text-sm font-semibold hover:opacity-85">{% trans "Mark as in progress" %}</button>
+      </form>
+    {% else %}
+      <form method="post" action="{% url 'backoffice_courses:student-complete' pk=course.pk student_pk=student.pk %}">{% csrf_token %}
+        <button type="submit" :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'" class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm hover:opacity-90"><i class="fa-solid fa-check"></i> {% trans "Mark complete" %}</button>
+      </form>
+    {% endif %}
+  </section>
+
+  <!-- Module completion (badges) -->
+  <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="space-y-3 rounded-2xl border p-5 shadow-sm">
+    <h3 class="font-bold"><i class="fa-solid fa-list-check"></i> {% trans "Module completion" %}</h3>
+    <p class="text-xs opacity-60">{% trans "Completing a module awards its skill badge." %}</p>
+    <div class="space-y-2">
+      {% for row in module_rows %}
+        <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="flex items-center justify-between gap-3 rounded-lg border p-3">
+          <div class="min-w-0">
+            <span class="font-semibold">{{ forloop.counter }}. {{ row.module.title }}</span>
+            <span class="ml-2 text-xs opacity-60"><i class="{{ row.badge.icon }}"></i> {{ row.badge.title }}</span>
+          </div>
+          {% if row.earned %}
+            <form method="post" action="{% url 'backoffice_courses:student-revoke-badge' pk=course.pk student_pk=student.pk %}">{% csrf_token %}
+              <input type="hidden" name="badge" value="{{ row.badge.pk }}">
+              <button type="submit" class="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-semibold text-success-light hover:opacity-85"><i class="fa-solid fa-circle-check"></i> {% trans "Completed" %} · {% trans "revoke" %}</button>
+            </form>
+          {% else %}
+            <form method="post" action="{% url 'backoffice_courses:student-award-badge' pk=course.pk student_pk=student.pk %}">{% csrf_token %}
+              <input type="hidden" name="badge" value="{{ row.badge.pk }}">
+              <button type="submit" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-plus"></i> {% trans "Mark complete" %}</button>
+            </form>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p class="text-sm italic opacity-50">{% trans "This course has no modules yet." %}</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Badges -->
+  <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="space-y-3 rounded-2xl border p-5 shadow-sm">
+    <h3 class="font-bold"><i class="fa-solid fa-award"></i> {% trans "Badges" %}</h3>
+    <div class="flex flex-wrap gap-2">
+      {% for badge in earned_badges %}
+        <form method="post" action="{% url 'backoffice_courses:student-revoke-badge' pk=course.pk student_pk=student.pk %}">{% csrf_token %}
+          <input type="hidden" name="badge" value="{{ badge.pk }}">
+          <button type="submit" class="inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold hover:opacity-85" title="{% trans 'Revoke' %}">
+            <i class="{{ badge.icon }}"></i> {{ badge.title }} <i class="fa-solid fa-xmark opacity-60"></i>
+          </button>
+        </form>
+      {% empty %}
+        <p class="text-sm italic opacity-50">{% trans "No badges earned yet." %}</p>
+      {% endfor %}
+    </div>
+    <form method="post" action="{% url 'backoffice_courses:student-award-badge' pk=course.pk student_pk=student.pk %}" class="flex flex-wrap items-center gap-2 pt-1">
+      {% csrf_token %}
+      <select name="badge" class="rounded-lg border px-3 py-2 text-sm text-black">
+        <option value="">{% trans "— award any badge —" %}</option>
+        {% for badge in other_badges %}<option value="{{ badge.pk }}">{{ badge.group.title }} / {{ badge.title }}</option>{% endfor %}
+      </select>
+      <button type="submit" class="rounded-lg border px-3 py-2 text-sm font-semibold hover:opacity-85"><i class="fa-solid fa-plus"></i> {% trans "Award" %}</button>
+    </form>
+  </section>
+
+  <!-- Certificate -->
+  <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="space-y-2 rounded-2xl border p-5 shadow-sm">
+    <h3 class="font-bold"><i class="fa-solid fa-certificate"></i> {% trans "Certificate" %}</h3>
+    {% if certificate %}
+      <p class="text-sm">
+        {% if certificate.cryptographic_signature %}
+          <span class="text-success-light"><i class="fa-solid fa-shield-halved"></i> {% trans "Signed" %}</span>
+        {% else %}
+          <span class="opacity-70"><i class="fa-regular fa-circle"></i> {% trans "Issued (not yet signed)" %}</span>
+        {% endif %}
+      </p>
+      <div class="flex flex-wrap gap-2">
+        <a href="{% url 'academy:certificate-detail' certificate.uuid %}" target="_blank" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-eye"></i> {% trans "View certificate" %}</a>
+        {% if not certificate.cryptographic_signature %}
+          <a href="{% url 'academy:certificate-sign' certificate.uuid %}" target="_blank" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-signature"></i> {% trans "Sign" %}</a>
+        {% endif %}
+      </div>
+    {% else %}
+      <p class="text-sm opacity-60">{% trans "Mark the course complete to issue a certificate." %}</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}
