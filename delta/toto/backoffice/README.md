@@ -50,11 +50,11 @@ shell.
 Content authoring is done; these operational/roster and richer-media features are
 next so teachers can run everything from the panel:
 
-- [ ] **In-panel PDF & video upload** — a Vault uploader so lesson video/notes and
-  library `vault_file` can be attached without leaving the panel (today: external
-  URL via `CourseModule.lecture_video_url`; files are admin/Vault-only).
-- [ ] **Watch video via a custom VOD app** — a dedicated video-on-demand playback
-  app/player for lesson videos, replacing raw `lecture_video_url` embeds.
+- [x] **In-panel PDF & video upload** — done for lessons (video + PDF notes → Vault via
+  `toto.backoffice.vault_upload.create_vault_file`). Library `vault_file` upload still TODO.
+- [x] **Watch video via a custom VOD app** — `toto.vod` copied into delta (native player +
+  vault "Play" plugins) plus an enrollment-gated, Range-seekable inline `<video>` player on
+  the course page (`academy:lesson-video` / `lesson-notes`).
 - [ ] **Cohort management** — create cohorts (rosters, capacity, start/end dates).
 - [ ] **Enrolment** — teacher enrols students into a course / cohort.
 - [ ] **Completion** — mark student module/course completion.

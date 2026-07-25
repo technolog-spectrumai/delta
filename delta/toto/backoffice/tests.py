@@ -6,7 +6,13 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
-from toto.academy.models import Course, CourseModule
+from toto.academy.models import (
+    Course,
+    CourseEnrollment,
+    CourseModule,
+    Lesson,
+    Student,
+)
 from toto.competence.models import SkillBadge, SkillBadgePrerequisite, SkillGroup
 from toto.core.models import Platform
 from toto.library.models import Book, LibraryCollection
@@ -342,3 +348,92 @@ class LessonUploadTests(TestCase):
              "attached_quizzes": [], "remove_video": "on"})
         lesson.refresh_from_db()
         self.assertIsNone(lesson.video_file)
+
+
+# ---------------------------------------------------------------------------
+# Enrollment-gated lesson playback (video streaming + Range)
+# ---------------------------------------------------------------------------
+
+_PLAYBACK_MEDIA = tempfile.mkdtemp(prefix="delta-playback-test-")
+
+
+@override_settings(MEDIA_ROOT=_PLAYBACK_MEDIA)
+class LessonPlaybackTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.user_field = _person_user_field()
+        User = get_user_model()
+        cls.staff = User.objects.create_user("pb-staff", password="x", is_staff=True)
+
+        group = SkillGroup.objects.create(title="G", slug="pg")
+        badge = SkillBadge.objects.create(group=group, title="B", slug="pb")
+        cls.course = Course.objects.create(title="PB", slug="pb-course", is_published=True)
+        module = CourseModule.objects.create(
+            course=cls.course, title="M", slug="pm", unlocks_badge=badge)
+        cls.lesson = Lesson.objects.create(module=module, title="L", slug="pl")
+
+        from django.core.files.base import ContentFile
+        from toto.vault.models import Bucket, VaultFile
+        bucket = Bucket.objects.create(name="pb", slug="pb-bucket", owner=cls.staff)
+        vf = VaultFile(owner=cls.staff, title="v.mp4", bucket=bucket,
+                       file_type="video", is_public=False, is_encrypted=False)
+        vf.file.save("v.mp4", ContentFile(b"0123456789"), save=False)
+        vf.file_size_bytes = 10
+        vf.save()
+        cls.lesson.video_file = vf
+        cls.lesson.save(update_fields=["video_file"])
+
+        if cls.user_field is None:
+            return
+        cls.enrolled_user = User.objects.create_user("pb-enrolled", password="x")
+        cls.other_user = User.objects.create_user("pb-other", password="x")
+        enrolled_person = Person.objects.create(display_name="Enrolled")
+        setattr(enrolled_person, cls.user_field, cls.enrolled_user)
+        enrolled_person.save(update_fields=[cls.user_field])
+        other_person = Person.objects.create(display_name="Other")
+        setattr(other_person, cls.user_field, cls.other_user)
+        other_person.save(update_fields=[cls.user_field])
+        student = Student.objects.create(person=enrolled_person)
+        CourseEnrollment.objects.create(student=student, course=cls.course)
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        shutil.rmtree(_PLAYBACK_MEDIA, ignore_errors=True)
+
+    def _video_url(self):
+        return reverse("academy:lesson-video", kwargs={"pk": self.lesson.pk})
+
+    def test_anonymous_redirected_to_login(self):
+        resp = self.client.get(self._video_url())
+        self.assertEqual(resp.status_code, 302)
+        self.assertIn("/login", resp["Location"])
+
+    def test_staff_can_watch(self):
+        self.client.force_login(self.staff)
+        self.assertEqual(self.client.get(self._video_url()).status_code, 200)
+
+    def test_non_enrolled_forbidden(self):
+        if self.user_field is None:
+            self.skipTest("no Person->user link")
+        self.client.force_login(self.other_user)
+        self.assertEqual(self.client.get(self._video_url()).status_code, 403)
+
+    def test_enrolled_can_watch(self):
+        if self.user_field is None:
+            self.skipTest("no Person->user link")
+        self.client.force_login(self.enrolled_user)
+        self.assertEqual(self.client.get(self._video_url()).status_code, 200)
+
+    def test_range_request_returns_206(self):
+        self.client.force_login(self.staff)
+        resp = self.client.get(self._video_url(), HTTP_RANGE="bytes=0-3")
+        self.assertEqual(resp.status_code, 206)
+        self.assertEqual(resp["Content-Range"], "bytes 0-3/10")
+        self.assertEqual(b"".join(resp.streaming_content), b"0123")
+
+    def test_notes_404_when_absent(self):
+        self.client.force_login(self.staff)
+        resp = self.client.get(reverse("academy:lesson-notes", kwargs={"pk": self.lesson.pk}))
+        self.assertEqual(resp.status_code, 404)

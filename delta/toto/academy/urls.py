@@ -2,6 +2,7 @@ from django.conf import settings
 from django.urls import path
 from django.views.generic.base import RedirectView
 
+from . import media_views
 from . import views as academy_views
 from .views import (
     CourseDetailView,
@@ -56,6 +57,18 @@ urlpatterns = [
         "scripts/<int:pk>/",
         ScriptDetailView.as_view(),
         name="script-detail",
+    ),
+
+    # Lesson media (enrollment-gated; video streams with Range for seeking)
+    path(
+        "lessons/<int:pk>/video/",
+        media_views.lesson_video,
+        name="lesson-video",
+    ),
+    path(
+        "lessons/<int:pk>/notes/",
+        media_views.lesson_notes,
+        name="lesson-notes",
     ),
 
     # Course metrics

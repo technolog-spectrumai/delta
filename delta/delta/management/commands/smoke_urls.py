@@ -216,6 +216,9 @@ PARAM_SOURCES = {
     "academy:personal-path-task-add": (True, lambda: _kw(_student_path(), pk="pk")),
     "academy:personal-path-step-toggle": (True, lambda: _kw2_step()),
     "academy:personal-path-step-delete": (True, lambda: _kw2_step()),
+    # lesson media (enrollment-gated; unseeded -> skip)
+    "academy:lesson-video": (False, lambda: _kw(_first("academy.Lesson", video_file__isnull=False), pk="pk")),
+    "academy:lesson-notes": (False, lambda: _kw(_first("academy.Lesson", notes_file__isnull=False), pk="pk")),
     # quizzes — ingress_quizzes / ingress_academy
     "quizzes:quiz-detail": (True, lambda: _kw(_first("quizzes.Quiz", is_published=True), pk="pk")),
     "quizzes:quiz-practice": (True, lambda: _kw(_first("quizzes.Quiz", is_published=True), pk="pk")),

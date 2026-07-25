@@ -165,33 +165,37 @@
             {% if module.lessons.all %}
               {% for lesson in module.lessons.all %}
                 <div :class="darkMode ? 'bg-primary-bg-dark border-accent-1' : 'bg-primary-bg-light border-accent-2'"
-                     class="border rounded p-4 flex items-start justify-between gap-4">
-                  <div>
-                    <div class="font-semibold">{{ lesson.order }}. {{ lesson.title }}</div>
-                    <p class="text-sm opacity-70">{{ lesson.summary }}</p>
-                    {% if lesson.owner %}
-                      <a href="{{ lesson.owner.get_absolute_url }}"
-                         class="mt-2 inline-flex items-center gap-2 text-xs underline hover:opacity-80">
-                        <i class="fa-solid fa-chalkboard-user"></i> {{ lesson.owner.display_name }}
-                      </a>
-                    {% endif %}
-                  </div>
-                  <div class="flex shrink-0 gap-2">
-                    {% if lesson.video_file %}
-                    <a href="{{ lesson.video_file.file.url }}"
-                       :class="darkMode ? 'border-accent-1 text-text-main-dark' : 'border-accent-2 text-text-main-light'"
-                       class="px-3 py-1 rounded border text-xs font-semibold inline-flex items-center gap-1"
-                       target="_blank">
-                      <i class="fa-solid fa-play"></i>{% trans "Video" %}</a>
-                    {% endif %}
-                    {% if lesson.notes_file %}
-                    <a href="{{ lesson.notes_file.file.url }}"
+                     class="border rounded p-4 space-y-3">
+                  <div class="flex items-start justify-between gap-4">
+                    <div>
+                      <div class="font-semibold">{{ lesson.order }}. {{ lesson.title }}</div>
+                      <p class="text-sm opacity-70">{{ lesson.summary }}</p>
+                      {% if lesson.owner %}
+                        <a href="{{ lesson.owner.get_absolute_url }}"
+                           class="mt-2 inline-flex items-center gap-2 text-xs underline hover:opacity-80">
+                          <i class="fa-solid fa-chalkboard-user"></i> {{ lesson.owner.display_name }}
+                        </a>
+                      {% endif %}
+                    </div>
+                    {% if lesson.notes_file and can_watch %}
+                    <a href="{% url 'academy:lesson-notes' lesson.pk %}"
                        :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
                        class="shrink-0 px-3 py-1 rounded text-xs font-semibold inline-flex items-center gap-1"
                        target="_blank">
-                      <i class="fa-solid fa-file-pdf"></i>{% trans "Notes" %}</a>
+                      <i class="fa-solid fa-file-pdf"></i>{% trans "Notes (PDF)" %}</a>
                     {% endif %}
                   </div>
+                  {% if lesson.video_file %}
+                    {% if can_watch %}
+                      <div class="overflow-hidden rounded bg-black aspect-video">
+                        <video controls playsinline preload="metadata" class="h-full w-full"
+                               src="{% url 'academy:lesson-video' lesson.pk %}"></video>
+                      </div>
+                    {% else %}
+                      <p class="inline-flex items-center gap-2 text-xs opacity-60">
+                        <i class="fa-solid fa-lock"></i>{% trans "Enrol to watch this lesson." %}</p>
+                    {% endif %}
+                  {% endif %}
                 </div>
               {% endfor %}
             {% else %}
@@ -278,19 +282,22 @@
             {% endif %}
           </div>
           <div class="flex shrink-0 gap-2">
-            {% if lesson.video_file %}
-            <a href="{{ lesson.video_file.file.url }}"
+            {% if lesson.video_file and can_watch %}
+            <a href="{% url 'academy:lesson-video' lesson.pk %}"
                :class="darkMode ? 'border-accent-1 text-text-main-dark' : 'border-accent-2 text-text-main-light'"
                class="px-3 py-1 rounded border text-xs font-semibold inline-flex items-center gap-1"
                target="_blank">
               <i class="fa-solid fa-play"></i>{% trans "Video" %}</a>
             {% endif %}
-            {% if lesson.notes_file %}
-            <a href="{{ lesson.notes_file.file.url }}"
+            {% if lesson.notes_file and can_watch %}
+            <a href="{% url 'academy:lesson-notes' lesson.pk %}"
                :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
                class="px-3 py-1 rounded text-xs font-semibold inline-flex items-center gap-1"
                target="_blank">
               <i class="fa-solid fa-file-pdf"></i>{% trans "Notes" %}</a>
+            {% endif %}
+            {% if lesson.video_file and not can_watch %}
+            <span class="inline-flex items-center gap-1 text-xs opacity-60"><i class="fa-solid fa-lock"></i>{% trans "Enrol" %}</span>
             {% endif %}
           </div>
         </div>

@@ -421,6 +421,9 @@ class CourseDetailView(AcademyContextMixin, DetailView):
         context["badge_count"] = badges.count()
         context["lesson_count"] = len(lessons)
 
+        from .media_views import can_watch
+        context["can_watch"] = can_watch(self.request.user, course)
+
         return context
 
 
