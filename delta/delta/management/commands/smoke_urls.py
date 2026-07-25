@@ -320,6 +320,9 @@ PARAM_SOURCES = {
     # sso / gervazy
     "sso:admin_test_login": (False, lambda: _kw(_first("sso_master.RelyingParty"), pk="pk")),
     "gervazy:initialize_strongbox": (True, lambda: _kw(_first("gervazy.UserStrongbox"), pk="pk")),
+    # vod — native player page for a Vault video/audio file (public sample if any)
+    "vod:vault_file_play": (False, lambda: _kw(
+        _first("vault.VaultFile", is_encrypted=False, is_public=True), file_pk="pk")),
 }
 
 

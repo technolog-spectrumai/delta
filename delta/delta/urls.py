@@ -40,6 +40,10 @@ for app_label, prefix, module, namespace in _education:
     if apps.is_installed(app_label):
         urlpatterns.append(path(prefix, include(module, namespace=namespace)))
 
+# Video-on-demand player (native HTML5 player for Vault video/audio files).
+if apps.is_installed("toto.vod"):
+    urlpatterns.append(path("vod/", include("toto.vod.urls")))
+
 # Teacher back office (Panel autorski) — a shell app plus one URL module per
 # authoring module. Mounted only when the shell is installed; each module's
 # routes are added only when its owning app is present.

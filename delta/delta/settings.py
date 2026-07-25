@@ -136,6 +136,7 @@ INSTALLED_APPS = [
     "toto.subscriptions",  # course gating + plans (academy soft-dep for enrollment)
     "toto.academy",      # LMS core: Course -> CourseModule -> Lesson
     "toto.backoffice",   # teacher back office (Panel autorski): shell + module registry
+    "toto.vod",          # video-on-demand: native player for Vault video/audio files
 
     # The host project package itself — carries host-only tooling like the
     # smoke_urls management command (no models, no templates).
