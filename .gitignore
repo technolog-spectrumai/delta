@@ -96,3 +96,7 @@ tailscale.txt
 # generated local-dev SSO bundles (contain secrets)
 run/sso_*.json
 addr.txt
+
+# CDN assets download_vendor.py bakes into the vendored toto tree (the
+# vendored .gitignore's own pattern is anchored to the dead pre-split layout)
+/vendor/toto_libs/packages/toto-base/src/toto/core/static/vendor/

@@ -27,3 +27,7 @@ env/
 .pytest_cache/
 .coverage
 htmlcov/
+
+# vendored toto_libs — the wheel is staged into dist/ on the host; the image
+# never needs the source tree
+vendor/
