@@ -1036,3 +1036,44 @@ class SoftDemoteRevokesTeacherPowersTests(TestCase):
         self.assertContains(self.client.get(course_url), metrics_url)  # active: link shown
         self._deactivate()
         self.assertNotContains(self.client.get(course_url), metrics_url)
+
+
+# ---------------------------------------------------------------------------
+# Welcome-page copy editor (backoffice_welcome)
+# ---------------------------------------------------------------------------
+
+class WelcomeEditTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.staff = _staff("bo-welcome")
+
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def test_staff_can_open_editor(self):
+        self.assertEqual(
+            self.client.get(reverse("backoffice_welcome:welcome-edit")).status_code, 200)
+
+    def test_post_updates_copy(self):
+        from toto.academy.models import WelcomeCopy
+        resp = self.client.post(reverse("backoffice_welcome:welcome-edit"), {
+            "headline_pl": "", "headline_en": "New headline",
+            "subtitle_pl": "", "subtitle_en": "",
+            "invitation_pl": "", "invitation_en": "",
+            "student_cta_pl": "", "student_cta_en": "",
+            "teacher_cta_pl": "", "teacher_cta_en": "",
+        })
+        self.assertRedirects(resp, reverse("backoffice_welcome:welcome-edit"))
+        self.assertEqual(WelcomeCopy.current().headline_en, "New headline")
+
+    def test_student_is_gated(self):
+        user = get_user_model().objects.create_user("plain-welcome", password="x")
+        self.client.force_login(user)
+        self.assertEqual(
+            self.client.get(reverse("backoffice_welcome:welcome-edit")).status_code, 404)
+
+    def test_dashboard_shows_welcome_card(self):
+        self.assertContains(
+            self.client.get(reverse("backoffice:dashboard")),
+            reverse("backoffice_welcome:welcome-edit"))

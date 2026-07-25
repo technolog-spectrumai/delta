@@ -68,6 +68,15 @@ _MODULES = [
         "app": "toto.academy",
         "blurb": _("Promote people to teachers so they can use the panel."),
     },
+    {
+        "key": "welcome",
+        "label": _("Welcome page"),
+        "icon": "fa-solid fa-door-open",
+        "url_name": "backoffice_welcome:welcome-edit",
+        "live": True,
+        "app": "toto.academy",
+        "blurb": _("Edit the invitation text students and teachers see on the home page."),
+    },
 ]
 
 

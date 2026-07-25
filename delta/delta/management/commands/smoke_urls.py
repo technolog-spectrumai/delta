@@ -97,6 +97,8 @@ STAFF_ONLY = {
     # people / teachers
     "backoffice_people:people-list", "backoffice_people:promote-teacher",
     "backoffice_people:demote-teacher",
+    # welcome-page editor
+    "backoffice_welcome:welcome-edit",
 }
 
 # (key) -> extra allowed statuses for authenticated personas (anon is already

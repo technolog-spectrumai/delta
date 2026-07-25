@@ -14,7 +14,7 @@ from toto.palimpsest.models import Page
 from toto.quizzes.models import Quiz
 from toto.verbena.forms import apply_oya_checkbox_styles, apply_oya_field_styles
 
-from .models import Cohort, Course, CourseModule, Lesson, Script, ScriptSection
+from .models import Cohort, Course, CourseModule, Lesson, Script, ScriptSection, WelcomeCopy
 
 
 class CourseForm(forms.ModelForm):
@@ -249,3 +249,34 @@ class CohortForm(forms.ModelForm):
         if commit:
             obj.save()
         return obj
+
+
+class WelcomeCopyForm(forms.ModelForm):
+    """Bilingual (PL/EN) editor for the public welcome-page copy."""
+
+    class Meta:
+        model = WelcomeCopy
+        fields = [
+            "headline_pl", "headline_en",
+            "subtitle_pl", "subtitle_en",
+            "invitation_pl", "invitation_en",
+            "student_cta_pl", "student_cta_en",
+            "teacher_cta_pl", "teacher_cta_en",
+        ]
+        labels = {
+            "headline_pl": _("Headline (PL)"), "headline_en": _("Headline (EN)"),
+            "subtitle_pl": _("Subtitle (PL)"), "subtitle_en": _("Subtitle (EN)"),
+            "invitation_pl": _("Invitation text (PL)"), "invitation_en": _("Invitation text (EN)"),
+            "student_cta_pl": _("Student button (PL)"), "student_cta_en": _("Student button (EN)"),
+            "teacher_cta_pl": _("Teacher button (PL)"), "teacher_cta_en": _("Teacher button (EN)"),
+        }
+        widgets = {
+            "invitation_pl": forms.Textarea(attrs={"rows": 3}),
+            "invitation_en": forms.Textarea(attrs={"rows": 3}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = False
+        apply_oya_field_styles(self.fields)

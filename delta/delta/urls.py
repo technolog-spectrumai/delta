@@ -64,6 +64,9 @@ if apps.is_installed("toto.backoffice"):
         urlpatterns.append(
             path("panel/osoby/", include("toto.academy.people_backoffice_urls"))
         )
+        urlpatterns.append(
+            path("panel/strona-powitalna/", include("toto.academy.welcome_backoffice_urls"))
+        )
     if apps.is_installed("toto.palimpsest"):
         urlpatterns.append(
             path("panel/notatki/", include("toto.palimpsest.backoffice_urls"))

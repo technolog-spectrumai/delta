@@ -23,6 +23,7 @@ from .backoffice_forms import (
     ModuleForm,
     ScriptForm,
     ScriptSectionFormSet,
+    WelcomeCopyForm,
 )
 from toto.competence.models import SkillBadge, SkillGroup
 
@@ -38,6 +39,7 @@ from .models import (
     Student,
     StudentBadge,
     Teacher,
+    WelcomeCopy,
 )
 
 ACTIVE = "courses"
@@ -654,6 +656,23 @@ def promote_teacher(request, pk):
     else:
         messages.success(request, _("%(name)s is now a teacher.") % {"name": person.display_name})
     return redirect("backoffice_people:people-list")
+
+
+ACTIVE_WELCOME = "welcome"
+
+
+@teacher_required
+def welcome_edit(request):
+    copy = WelcomeCopy.current()
+    form = WelcomeCopyForm(request.POST or None, instance=copy)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, _("Welcome page updated."))
+        return redirect("backoffice_welcome:welcome-edit")
+    return backoffice_render(request, "backoffice/_generic_form.html", {
+        "form": form, "title": _("Welcome page"), "submit_label": _("Save"),
+        "icon": "fa-solid fa-door-open", "cancel_url": reverse("backoffice:dashboard"),
+    }, active=ACTIVE_WELCOME)
 
 
 @teacher_required
