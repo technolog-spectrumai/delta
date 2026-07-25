@@ -180,7 +180,9 @@ if _db_engine == "spatialite":
         "default": {
             "ENGINE": "django.contrib.gis.db.backends.spatialite" if HAS_GIS else "django.db.backends.sqlite3",
             # Distinct sqlite file so local delta dev never clobbers a sibling host's db.
-            "NAME": BASE_DIR.parent / "db.delta.sqlite3",
+            # DB_NAME (same var the postgres branch uses) overrides the path so
+            # harnesses (scripts/ui_test.sh, the gate) can use a scratch file.
+            "NAME": Path(os.environ["DB_NAME"]) if os.environ.get("DB_NAME") else BASE_DIR.parent / "db.delta.sqlite3",
             "OPTIONS": {"timeout": 20},
         }
     }
