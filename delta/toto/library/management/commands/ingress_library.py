@@ -1,7 +1,6 @@
 from django.utils.text import slugify
 
 from toto.ingress import IngressCommand
-from toto.people.models import Person
 from toto.palimpsest.models import Tag
 
 from toto.library.models import Article, Book
@@ -31,16 +30,12 @@ class Command(IngressCommand):
             tags[name] = tag
 
         # ----------------------------------------------------
-        # Authors (use existing persons if available)
-        # ----------------------------------------------------
-        persons = list(Person.objects.all()[:3])
-
-        # ----------------------------------------------------
         # Books
         # ----------------------------------------------------
         book_data = [
             {
                 "title": "Two Scoops of Django",
+                "authors": "Greenfeld, D. R. and Greenfeld, A. R.",
                 "year": 2022,
                 "publisher": "Two Scoops Press",
                 "edition": "3rd",
@@ -50,6 +45,7 @@ class Command(IngressCommand):
             },
             {
                 "title": "Clean Code",
+                "authors": "Martin, R. C.",
                 "year": 2008,
                 "publisher": "Prentice Hall",
                 "edition": "1st",
@@ -59,6 +55,7 @@ class Command(IngressCommand):
             },
             {
                 "title": "Designing Data-Intensive Applications",
+                "authors": "Kleppmann, M.",
                 "year": 2017,
                 "publisher": "O'Reilly Media",
                 "edition": "1st",
@@ -68,6 +65,7 @@ class Command(IngressCommand):
             },
             {
                 "title": "Fluent Python",
+                "authors": "Ramalho, L.",
                 "year": 2022,
                 "publisher": "O'Reilly Media",
                 "edition": "2nd",
@@ -83,6 +81,7 @@ class Command(IngressCommand):
                 slug=slug,
                 defaults={
                     "title": spec["title"],
+                    "authors": spec["authors"],
                     "year": spec["year"],
                     "publisher": spec["publisher"],
                     "edition": spec["edition"],
@@ -91,8 +90,6 @@ class Command(IngressCommand):
                 },
             )
             book.tags.set([tags[t] for t in spec["tags"]])
-            if persons:
-                book.authors.set(persons[:1])
             self.stdout.write(f"  book: {book.title}")
 
         # ----------------------------------------------------
@@ -101,6 +98,7 @@ class Command(IngressCommand):
         article_data = [
             {
                 "title": "Attention Is All You Need",
+                "authors": "Vaswani, A. et al.",
                 "year": 2017,
                 "journal": "NeurIPS",
                 "volume": "30",
@@ -112,6 +110,7 @@ class Command(IngressCommand):
             },
             {
                 "title": "Django: The Web Framework for Perfectionists with Deadlines",
+                "authors": "Holovaty, A. and Kaplan-Moss, J.",
                 "year": 2021,
                 "journal": "Software: Practice and Experience",
                 "volume": "51",
@@ -123,6 +122,7 @@ class Command(IngressCommand):
             },
             {
                 "title": "MapReduce: Simplified Data Processing on Large Clusters",
+                "authors": "Dean, J. and Ghemawat, S.",
                 "year": 2004,
                 "journal": "OSDI",
                 "volume": "6",
@@ -134,6 +134,7 @@ class Command(IngressCommand):
             },
             {
                 "title": "Continuous Delivery: Reliable Software Releases through Build, Test, and Deployment Automation",
+                "authors": "Humble, J. and Farley, D.",
                 "year": 2010,
                 "journal": "IEEE Software",
                 "volume": "27",
@@ -151,6 +152,7 @@ class Command(IngressCommand):
                 slug=slug,
                 defaults={
                     "title": spec["title"],
+                    "authors": spec["authors"],
                     "year": spec["year"],
                     "journal": spec["journal"],
                     "volume": spec["volume"],
@@ -161,8 +163,6 @@ class Command(IngressCommand):
                 },
             )
             article.tags.set([tags[t] for t in spec["tags"]])
-            if persons:
-                article.authors.set(persons[:2])
             self.stdout.write(f"  article: {article.title}")
 
         self.stdout.write(self.style.SUCCESS("[Ingress] Library demo data created successfully."))
