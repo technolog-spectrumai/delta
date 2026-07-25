@@ -3,6 +3,7 @@ from django.core.cache import cache
 from django.db import IntegrityError, transaction
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import translation
 
 from toto.competence.models import SkillBadge, SkillBadgePrerequisite, SkillGroup
 from toto.core.models import Platform
@@ -16,7 +17,9 @@ from .models import (
     RecommendationConfig,
     Student,
     StudentBadge,
+    WelcomeCopy,
 )
+from .context_processors import welcome_copy as welcome_copy_cp
 from .paths import compute_gap_badges, generate_steps, regenerate_path, sync_path
 from .recommendations import (
     SIMILARITY_MATRIX_KEY,
@@ -783,3 +786,40 @@ class PersonalPathViewTests(PathFixtureMixin, TestCase):
             response, reverse("academy:personal-path-list"))
         path.refresh_from_db()
         self.assertEqual(path.status, PersonalPath.Status.ARCHIVED)
+
+
+class WelcomeCopyTests(TestCase):
+    def test_current_is_an_idempotent_singleton(self):
+        a = WelcomeCopy.current()
+        b = WelcomeCopy.current()
+        self.assertEqual(a.pk, 1)
+        self.assertEqual(a.pk, b.pk)
+        self.assertEqual(WelcomeCopy.objects.count(), 1)
+
+    def test_save_forces_singleton_pk(self):
+        copy = WelcomeCopy(headline_en="Hi")
+        copy.save()
+        self.assertEqual(copy.pk, 1)
+
+    def test_localized_picks_language_with_fallback(self):
+        copy = WelcomeCopy.current()
+        copy.headline_pl = "Witaj w Delcie"
+        copy.headline_en = "Welcome to Delta"
+        copy.subtitle_en = "Only English here"
+        copy.save()
+        with translation.override("pl"):
+            self.assertEqual(copy.headline, "Witaj w Delcie")
+            self.assertEqual(copy.subtitle, "Only English here")  # falls back to en
+        with translation.override("en"):
+            self.assertEqual(copy.headline, "Welcome to Delta")
+
+    def test_empty_row_yields_nonempty_defaults(self):
+        copy = WelcomeCopy()  # unsaved, all blank
+        for value in (copy.headline, copy.subtitle, copy.invitation,
+                      copy.student_cta, copy.teacher_cta):
+            self.assertTrue(str(value).strip())
+
+    def test_context_processor_exposes_copy(self):
+        ctx = welcome_copy_cp(None)
+        self.assertIn("welcome_copy", ctx)
+        self.assertTrue(str(ctx["welcome_copy"].headline).strip())

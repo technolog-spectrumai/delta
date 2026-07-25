@@ -249,6 +249,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "toto.core.context_processors.last_visited",
                 "toto.backoffice.context_processors.backoffice_access",
+                "toto.academy.context_processors.welcome_copy",
             ]
         },
     }

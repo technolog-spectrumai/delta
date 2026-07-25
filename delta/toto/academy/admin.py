@@ -25,6 +25,7 @@ from .models import (
     Student,
     StudentBadge,
     Teacher,
+    WelcomeCopy,
 )
 from .recommendations import SIMILARITY_MATRIX_KEY, refresh_similarity_matrix
 from .tasks import recompute_similarity_matrix
@@ -652,3 +653,9 @@ class CohortMembershipAdmin(admin.ModelAdmin):
     search_fields = ("student__person__display_name", "cohort__title", "cohort__course__title")
     autocomplete_fields = ("cohort", "student")
     readonly_fields = ("joined_at",)
+
+
+@admin.register(WelcomeCopy)
+class WelcomeCopyAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "updated_at")
+    readonly_fields = ("updated_at",)

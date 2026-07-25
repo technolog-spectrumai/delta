@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import get_language, gettext_lazy
 from django.urls import reverse
 
 from toto.competence.models import SkillBadge, SkillGroup
@@ -724,3 +725,82 @@ class ScriptSection(AbstractSection):
 
     def __str__(self):
         return f"{self.page.title} – {self.title or 'Section'}"
+
+
+# ────────────────────────────────────────────────
+# WELCOME COPY  (editable, bilingual landing-page text — singleton)
+# ────────────────────────────────────────────────
+
+class WelcomeCopy(models.Model):
+    """Editable, bilingual copy for the public welcome/landing page.
+
+    Singleton by convention (pk forced to 1); use ``WelcomeCopy.current()``. Each
+    field has a ``_pl`` and ``_en`` variant; the localized properties pick by the
+    active language and fall back gracefully, so an empty row still renders
+    sensible defaults (mirrors the RecommendationConfig singleton pattern).
+    """
+
+    headline_pl = models.CharField(max_length=200, blank=True)
+    headline_en = models.CharField(max_length=200, blank=True)
+    subtitle_pl = models.CharField(max_length=300, blank=True)
+    subtitle_en = models.CharField(max_length=300, blank=True)
+    invitation_pl = models.TextField(blank=True)
+    invitation_en = models.TextField(blank=True)
+    student_cta_pl = models.CharField(max_length=80, blank=True)
+    student_cta_en = models.CharField(max_length=80, blank=True)
+    teacher_cta_pl = models.CharField(max_length=80, blank=True)
+    teacher_cta_en = models.CharField(max_length=80, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    _DEFAULTS = {
+        "headline": gettext_lazy("Learn mathematics with Delta"),
+        "subtitle": gettext_lazy("Guided courses, hands-on tasks and real feedback."),
+        "invitation": gettext_lazy(
+            "Delta is a maths e-learning platform. Explore courses, earn skill "
+            "badges and track your progress — or sign in as a teacher to author "
+            "lessons."),
+        "student_cta": gettext_lazy("I’m a student"),
+        "teacher_cta": gettext_lazy("I’m a teacher"),
+    }
+
+    class Meta:
+        verbose_name = "Welcome page copy"
+        verbose_name_plural = "Welcome page copy"
+
+    def __str__(self):
+        return "Welcome page copy"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def current(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+    def _localized(self, base):
+        lang = (get_language() or "en")[:2]
+        primary = getattr(self, f"{base}_pl" if lang == "pl" else f"{base}_en")
+        fallback = getattr(self, f"{base}_en") or getattr(self, f"{base}_pl")
+        return primary or fallback or self._DEFAULTS[base]
+
+    @property
+    def headline(self):
+        return self._localized("headline")
+
+    @property
+    def subtitle(self):
+        return self._localized("subtitle")
+
+    @property
+    def invitation(self):
+        return self._localized("invitation")
+
+    @property
+    def student_cta(self):
+        return self._localized("student_cta")
+
+    @property
+    def teacher_cta(self):
+        return self._localized("teacher_cta")
