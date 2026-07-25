@@ -48,17 +48,18 @@ def _teacher(request):
 
 
 def _renumber_sections(formset):
-    """Assign section order by form position (the section form has no order field)."""
-    i = 1
-    for form in formset.forms:
-        if not hasattr(form, "cleaned_data") or form.cleaned_data.get("DELETE"):
-            continue
+    """Assign section order 1..n, respecting the submitted (drag-set) order."""
+    live = [
+        form for form in formset.forms
+        if hasattr(form, "cleaned_data") and not form.cleaned_data.get("DELETE")
+        and form.instance.pk
+    ]
+    live.sort(key=lambda form: form.cleaned_data.get("order") or 0)
+    for i, form in enumerate(live, start=1):
         obj = form.instance
-        if obj.pk:
-            if obj.order != i:
-                obj.order = i
-                obj.save(update_fields=["order"])
-            i += 1
+        if obj.order != i:
+            obj.order = i
+            obj.save(update_fields=["order"])
 
 
 # --- courses ---------------------------------------------------------------

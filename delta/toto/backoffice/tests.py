@@ -201,9 +201,9 @@ class CoursesBackofficeTests(TestCase):
             "title": "S1", "description": "",
             "sections-TOTAL_FORMS": "3", "sections-INITIAL_FORMS": "0",
             "sections-MIN_NUM_FORMS": "0", "sections-MAX_NUM_FORMS": "1000",
-            "sections-0-title": "Intro", "sections-0-content": "<div>Body</div>",
-            "sections-1-title": "", "sections-1-content": "",
-            "sections-2-title": "", "sections-2-content": "",
+            "sections-0-title": "Intro", "sections-0-content": "<div>Body</div>", "sections-0-order": "0",
+            "sections-1-title": "", "sections-1-content": "", "sections-1-order": "0",
+            "sections-2-title": "", "sections-2-content": "", "sections-2-order": "0",
         })
         self.assertEqual(module.scripts.count(), 1)
         self.assertEqual(module.scripts.first().sections.count(), 1)
@@ -752,3 +752,46 @@ class ReorderDragDropTests(TestCase):
         self.assertContains(r, "Sortable.min.js")
         self.assertContains(r, "reorder.js")
         self.assertContains(r, "data-reorder-id")
+
+
+# ---------------------------------------------------------------------------
+# Script section reorder (Part 2 — formset field mode)
+# ---------------------------------------------------------------------------
+
+class ScriptSectionReorderTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.staff = _staff("bo-secreorder")
+        group = SkillGroup.objects.create(title="G", slug="srg")
+        badge = SkillBadge.objects.create(group=group, title="B", slug="srb")
+        course = Course.objects.create(title="C", slug="src")
+        module = CourseModule.objects.create(course=course, title="M", slug="srm", unlocks_badge=badge)
+        from toto.academy.models import Script, ScriptSection
+        cls.script = Script.objects.create(module=module, title="S", slug="srs")
+        cls.s1 = ScriptSection.objects.create(page=cls.script, title="A", content="a", order=1)
+        cls.s2 = ScriptSection.objects.create(page=cls.script, title="B", content="b", order=2)
+
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def test_saving_reordered_sections_persists_order(self):
+        data = {
+            "title": "S", "description": "",
+            "sections-TOTAL_FORMS": "2", "sections-INITIAL_FORMS": "2",
+            "sections-MIN_NUM_FORMS": "0", "sections-MAX_NUM_FORMS": "1000",
+            "sections-0-id": str(self.s1.pk), "sections-0-title": "A",
+            "sections-0-content": "a", "sections-0-order": "2",
+            "sections-1-id": str(self.s2.pk), "sections-1-title": "B",
+            "sections-1-content": "b", "sections-1-order": "1",
+        }
+        r = self.client.post(reverse("backoffice_courses:script-edit", kwargs={"pk": self.script.pk}), data)
+        self.assertEqual(r.status_code, 302)
+        self.s1.refresh_from_db(); self.s2.refresh_from_db()
+        self.assertEqual(self.s2.order, 1)  # dragged to first
+        self.assertEqual(self.s1.order, 2)
+
+    def test_script_editor_loads_reorder_assets(self):
+        r = self.client.get(reverse("backoffice_courses:script-edit", kwargs={"pk": self.script.pk}))
+        self.assertContains(r, "data-reorder-fields")
+        self.assertContains(r, "Sortable.min.js")

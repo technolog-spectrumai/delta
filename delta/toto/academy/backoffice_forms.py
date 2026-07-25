@@ -198,14 +198,19 @@ class ScriptSectionForm(forms.ModelForm):
 
     class Meta:
         model = ScriptSection
-        fields = ["title", "content"]
+        fields = ["title", "content", "order"]
         widgets = {
             "title": forms.TextInput(attrs={"placeholder": _("Section heading (optional)")}),
+            "order": forms.HiddenInput(attrs={"data-order-input": "1"}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        apply_oya_field_styles(self.fields, skip={"content"})
+        self.fields["order"].required = False
+        apply_oya_field_styles(self.fields, skip={"content", "order"})
+
+    def clean_order(self):
+        return self.cleaned_data.get("order") or 0
 
 
 ScriptSectionFormSet = inlineformset_factory(

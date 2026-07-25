@@ -38,6 +38,7 @@
   });
 })();
 </script>
+{% include "backoffice/_reorder_assets.html" %}
 {% endblock %}
 
 {% block backoffice_content %}
@@ -68,9 +69,14 @@
     <p class="text-xs opacity-60">{% trans "Fill in as many sections as you need; blank ones are ignored. Add more by saving and editing again." %}</p>
     {{ formset.management_form }}
     {% if formset.non_form_errors %}<div class="rounded-xl border border-warn-light/40 bg-warn-light/10 p-3 text-sm">{{ formset.non_form_errors }}</div>{% endif %}
+    <div data-reorder-fields class="space-y-2">
     {% for sform in formset %}
-      <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="space-y-2 rounded-xl border p-3">
-        {{ sform.id }}
+      <div data-order-row :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="space-y-2 rounded-xl border p-3">
+        {{ sform.id }}{{ sform.order }}
+        <div class="flex items-center gap-2 text-xs opacity-60">
+          <span class="js-drag cursor-grab opacity-60 hover:opacity-100" title="{% trans 'Drag to reorder' %}"><i class="fa-solid fa-grip-vertical"></i></span>
+          {% trans "Section" %}
+        </div>
         <div class="space-y-1">
           <label for="{{ sform.title.id_for_label }}" class="block text-xs font-semibold opacity-70">{% trans "Section heading" %}</label>
           {{ sform.title }}
@@ -85,6 +91,7 @@
         {% endif %}
       </div>
     {% endfor %}
+    </div>
   </div>
 
   <div class="flex flex-wrap items-center justify-end gap-3 pt-2">
