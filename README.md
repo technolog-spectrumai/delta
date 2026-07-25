@@ -105,6 +105,9 @@ To prove a clean environment end to end (fresh venv, wheel built from the
 vendored tree, validate/config, unit tests, check, migrate, collectstatic,
 boot smoke): `scripts/clean_env_test.sh`.
 
+To smoke-test a running stack after `./deploy_local.sh` (container health,
+front-door routes, static pipeline): `scripts/smoke_test.sh`.
+
 Seed the demo maths course tree + subscription plans:
 
 ```bash
