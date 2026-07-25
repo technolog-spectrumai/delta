@@ -1,0 +1,128 @@
+{% extends "claims/base.html" %}
+{% load i18n %}
+
+{% block claims_title %}{% trans "Entitlements" %}{% endblock %}
+
+{% block claims_content %}
+<div class="space-y-6">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <h2 class="text-xl font-bold">{% trans "Entitlements" %} <span class="text-sm font-normal opacity-50">({{ total }})</span></h2>
+    <form method="get" class="flex flex-wrap gap-2">
+      <input type="text" name="q" value="{{ q }}"
+        placeholder="{% trans 'Search…' %}"
+        :class="darkMode ? 'bg-bubble-bg-dark border-accent-1 text-text-main-dark' : 'bg-bubble-bg-light border-accent-2 text-text-main-light'"
+        class="rounded-lg border px-3 py-2 text-sm focus:outline-none w-44">
+      <select name="status"
+        :class="darkMode ? 'bg-bubble-bg-dark border-accent-1 text-text-main-dark' : 'bg-bubble-bg-light border-accent-2 text-text-main-light'"
+        class="rounded-lg border px-3 py-2 text-sm focus:outline-none">
+        <option value="">{% trans "All statuses" %}</option>
+        {% for val, label in status_choices %}<option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+      <select name="kind"
+        :class="darkMode ? 'bg-bubble-bg-dark border-accent-1 text-text-main-dark' : 'bg-bubble-bg-light border-accent-2 text-text-main-light'"
+        class="rounded-lg border px-3 py-2 text-sm focus:outline-none">
+        <option value="">{% trans "All kinds" %}</option>
+        {% for val, label in kind_choices %}<option value="{{ val }}" {% if kind_filter == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+      <button type="submit"
+        :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+        class="rounded-lg px-4 py-2 text-sm font-semibold transition hover:opacity-85">
+        {% trans "Filter" %}
+      </button>
+      {% if q or status_filter or kind_filter %}
+      <a href="{% url 'claims:entitlement_list' %}" class="rounded-lg border px-4 py-2 text-sm opacity-60 hover:opacity-90 transition"
+        :class="darkMode ? 'border-accent-1' : 'border-accent-2'">{% trans "Clear" %}</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+       class="rounded-lg border shadow-sm overflow-hidden">
+    {% if entitlements %}
+    <table class="w-full text-sm">
+      <thead>
+        <tr :class="darkMode ? 'border-accent-1' : 'border-accent-2'" class="border-b text-xs uppercase tracking-wide opacity-60">
+          <th class="px-4 py-3 text-left">{% trans "Resource" %}</th>
+          <th class="px-4 py-3 text-left">{% trans "Kind" %}</th>
+          <th class="px-4 py-3 text-left">{% trans "Status" %}</th>
+          <th class="px-4 py-3 text-left">{% trans "Holder" %}</th>
+          <th class="px-4 py-3 text-left">{% trans "Source" %}</th>
+          <th class="px-4 py-3 text-left">{% trans "Created" %}</th>
+          <th class="px-4 py-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in entitlements %}
+        <tr :class="darkMode ? 'border-accent-1 hover:bg-black/10' : 'border-accent-2 hover:bg-black/5'"
+            class="border-b transition cursor-pointer"
+            onclick="window.location='{% url 'claims:entitlement_detail' e.uuid %}'">
+          <td class="px-4 py-3 font-semibold">{{ e.resource_label }}</td>
+          <td class="px-4 py-3 opacity-70">{{ e.get_kind_display }}</td>
+          <td class="px-4 py-3">
+            <span class="inline-block rounded px-2 py-0.5 text-xs font-semibold"
+              :class="darkMode ? '{% if e.status == 'active' %}bg-success-dark/20 text-success-dark{% elif e.status == 'revoked' %}bg-caution-dark/20 text-caution-dark{% elif e.status == 'expired' %}opacity-50{% else %}bg-warn-dark/20 text-warn-dark{% endif %}' : '{% if e.status == 'active' %}bg-success-light/10 text-success-light{% elif e.status == 'revoked' %}bg-caution-light/10 text-caution-light{% elif e.status == 'expired' %}opacity-50{% else %}bg-warn-light/10 text-warn-light{% endif %}'">
+              {{ e.get_status_display }}
+            </span>
+          </td>
+          <td class="px-4 py-3 font-mono text-xs opacity-70">{{ e.holder_account.code }}</td>
+          <td class="px-4 py-3 text-xs opacity-60">{{ e.source_type }}/{{ e.source_id }}</td>
+          <td class="px-4 py-3 opacity-60">{{ e.created_at|date:"Y-m-d H:i" }}</td>
+          <td class="px-4 py-3 text-right" onclick="event.stopPropagation()">
+            {% if e.status == 'active' %}
+            <div class="flex items-center gap-1 justify-end">
+              <form method="post" action="{% url 'claims:entitlement_transition' e.uuid %}"
+                    onsubmit="return confirm('{% trans 'Suspend this entitlement?' %}')">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="suspend">
+                <button type="submit"
+                  :class="darkMode ? 'bg-warn-dark/20 text-warn-dark hover:bg-warn-dark/30' : 'bg-warn-light/10 text-warn-light hover:bg-warn-light/20'"
+                  class="rounded px-2 py-1 text-xs font-semibold transition whitespace-nowrap">
+                  <i class="fa-solid fa-pause text-xs"></i>
+                </button>
+              </form>
+              <form method="post" action="{% url 'claims:entitlement_transition' e.uuid %}"
+                    onsubmit="return confirm('{% trans 'Revoke this entitlement?' %}')">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="revoke">
+                <button type="submit"
+                  :class="darkMode ? 'bg-caution-dark/20 text-caution-dark hover:bg-caution-dark/30' : 'bg-caution-light/10 text-caution-light hover:bg-caution-light/20'"
+                  class="rounded px-2 py-1 text-xs font-semibold transition whitespace-nowrap">
+                  <i class="fa-solid fa-ban text-xs"></i>
+                </button>
+              </form>
+            </div>
+            {% elif e.status == 'suspended' %}
+            <div class="flex items-center gap-1 justify-end">
+              <form method="post" action="{% url 'claims:entitlement_transition' e.uuid %}"
+                    onsubmit="return confirm('{% trans 'Reactivate this entitlement?' %}')">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="reactivate">
+                <button type="submit"
+                  :class="darkMode ? 'bg-success-dark/20 text-success-dark hover:bg-success-dark/30' : 'bg-success-light/10 text-success-light hover:bg-success-light/20'"
+                  class="rounded px-2 py-1 text-xs font-semibold transition whitespace-nowrap">
+                  <i class="fa-solid fa-play text-xs"></i>
+                </button>
+              </form>
+              <form method="post" action="{% url 'claims:entitlement_transition' e.uuid %}"
+                    onsubmit="return confirm('{% trans 'Revoke this entitlement?' %}')">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="revoke">
+                <button type="submit"
+                  :class="darkMode ? 'bg-caution-dark/20 text-caution-dark hover:bg-caution-dark/30' : 'bg-caution-light/10 text-caution-light hover:bg-caution-light/20'"
+                  class="rounded px-2 py-1 text-xs font-semibold transition whitespace-nowrap">
+                  <i class="fa-solid fa-ban text-xs"></i>
+                </button>
+              </form>
+            </div>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="px-4 py-8 text-center text-sm opacity-50">{% trans "No entitlements found." %}</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

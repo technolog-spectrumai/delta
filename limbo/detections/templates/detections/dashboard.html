@@ -1,0 +1,87 @@
+{% extends "detections/base.html" %}
+{% load static %}
+{% load i18n %}
+{% block detections_title %}Dashboard{% endblock %}
+{% block detections_heading %}Detections Dashboard{% endblock %}
+{% block detections_subtitle %}<p class="mt-2 max-w-2xl text-sm opacity-70">{% trans "Detection health, mitigation coverage, and task assignment signals." %}</p>{% endblock %}
+{% block detections_start_script %}<script src="{% static 'vendor/chartjs/chart.umd.min.js' %}"></script>{% endblock %}
+{% block detections_content %}
+
+<div class="grid gap-4 sm:grid-cols-3">
+  <article :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="rounded-2xl border p-5 shadow-sm"><p class="text-xs font-semibold uppercase tracking-wide opacity-60">{% trans "Active detections" %}</p><p class="mt-2 text-3xl font-bold">{{ active_count }}</p></article>
+  <article :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="rounded-2xl border p-5 shadow-sm"><p class="text-xs font-semibold uppercase tracking-wide opacity-60">{% trans "Kanban tasks" %}</p><p class="mt-2 text-3xl font-bold">{{ task_count }}</p></article>
+  <article :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="rounded-2xl border p-5 shadow-sm"><p class="text-xs font-semibold uppercase tracking-wide opacity-60">{% trans "Need task" %}</p><p class="mt-2 text-3xl font-bold">{{ unassigned_count }}</p></article>
+</div>
+
+{{ status_chart_data|json_script:"status-chart-data" }}
+{{ severity_chart_data|json_script:"severity-chart-data" }}
+
+<section class="grid gap-4 lg:grid-cols-2">
+  <article :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="rounded-2xl border p-5 shadow-sm">
+    <h2 class="text-lg font-bold"><i class="fa-solid fa-chart-pie opacity-70"></i>{% trans "Status" %}</h2>
+    <div class="mt-4 h-72"><canvas id="statusChart"></canvas></div>
+  </article>
+  <article :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="rounded-2xl border p-5 shadow-sm">
+    <h2 class="text-lg font-bold"><i class="fa-solid fa-chart-column opacity-70"></i>{% trans "Severity" %}</h2>
+    <div class="mt-4 h-72"><canvas id="severityChart"></canvas></div>
+  </article>
+</section>
+
+{% if recent_detections %}
+<section class="space-y-3">
+  <h2 class="text-xl font-bold">{% trans "Active Detections" %}</h2>
+  {% for detection in recent_detections %}
+    <a href="{% url 'detections:detection-detail' detection.pk %}" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark hover:bg-sunken-dark' : 'border-accent-2 bg-bubble-bg-light hover:bg-sunken-light'" class="flex items-center gap-3 rounded-xl border p-3 shadow-sm transition hover:opacity-90">
+      <span
+        :class="darkMode ? '{% if detection.severity == 'critical' %}bg-warn-dark/20 text-warn-dark{% elif detection.severity == 'high' %}bg-warn-dark/10 text-warn-dark{% elif detection.severity == 'medium' %}bg-caution-dark/20 text-caution-dark{% else %}bg-success-dark/20 text-success-dark{% endif %}' : '{% if detection.severity == 'critical' %}bg-warn-light/20 text-warn-light{% elif detection.severity == 'high' %}bg-warn-light/10 text-warn-light{% elif detection.severity == 'medium' %}bg-caution-light/20 text-caution-light{% else %}bg-success-light/20 text-success-light{% endif %}'"
+        class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold"><i class="fa-solid fa-triangle-exclamation"></i></span>
+      <div class="min-w-0 flex-1">
+        <p class="truncate font-semibold text-sm">{{ detection.title }}</p>
+        <p class="text-xs opacity-55">
+          {{ detection.get_severity_display }} - {{ detection.get_status_display }}
+          {% if detection.mitigation_task %} - {{ detection.mitigation_task.column.name }}{% endif %}
+        </p>
+      </div>
+      <span class="text-xs opacity-50">{{ detection.start_time|date:"d M" }}</span>
+    </a>
+  {% endfor %}
+</section>
+{% endif %}
+
+<script>
+(function() {
+  const themeColors = {{ theme.theme.colors|safe }};
+  const isDark = localStorage.getItem("darkMode") === "true";
+  const textColor = isDark ? themeColors["text-main-dark"] : themeColors["text-main-light"];
+  const gridColor = isDark ? themeColors["accent-1"] : themeColors["accent-2"];
+  const palette = [
+    isDark ? themeColors["accent-dark"] : themeColors["accent-light"],
+    isDark ? themeColors["caution-dark"] : themeColors["caution-light"],
+    isDark ? themeColors["warn-dark"] : themeColors["warn-light"],
+    isDark ? themeColors["success-dark"] : themeColors["success-light"]
+  ];
+  const statusData = JSON.parse(document.getElementById("status-chart-data").textContent);
+  const severityData = JSON.parse(document.getElementById("severity-chart-data").textContent);
+
+  new Chart(document.getElementById("statusChart"), {
+    type: "doughnut",
+    data: { labels: statusData.labels, datasets: [{ data: statusData.data, backgroundColor: palette }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: textColor } } } }
+  });
+  new Chart(document.getElementById("severityChart"), {
+    type: "bar",
+    data: { labels: severityData.labels, datasets: [{ label: "Detections", data: severityData.data, backgroundColor: palette }] },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: textColor } } },
+      scales: {
+        x: { ticks: { color: textColor }, grid: { color: gridColor } },
+        y: { beginAtZero: true, ticks: { color: textColor }, grid: { color: gridColor } }
+      }
+    }
+  });
+})();
+</script>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "treasury/base.html" %}
+{% load i18n %}
+
+{% block treasury_title %}{% block subscriptions_title %}Subscriptions{% endblock %}{% endblock %}
+{% block tab_subscriptions %}border-b-2 border-current -mb-px{% endblock %}
+
+{% block treasury_content %}
+
+  <!-- Subscriptions sub-nav -->
+  <nav class="flex flex-wrap gap-1 -mt-2 mb-4">
+    <a href="{% url 'subscriptions:plan_list' %}"
+       :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+       class="inline-flex items-center gap-1.5 rounded border px-3 py-1.5 text-xs font-semibold transition hover:opacity-80">
+      <i class="fa-solid fa-layer-group"></i>{% trans "Plans" %}
+    </a>
+    <a href="{% url 'subscriptions:subscription_list' %}"
+       :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+       class="inline-flex items-center gap-1.5 rounded border px-3 py-1.5 text-xs font-semibold transition hover:opacity-80">
+      <i class="fa-solid fa-id-card"></i>{% trans "Subscriptions" %}
+    </a>
+    <a href="{% url 'subscriptions:customer_list' %}"
+       :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+       class="inline-flex items-center gap-1.5 rounded border px-3 py-1.5 text-xs font-semibold transition hover:opacity-80">
+      <i class="fa-solid fa-users"></i>{% trans "Customers" %}
+    </a>
+    <a href="{% url 'subscriptions:invoice_list' %}"
+       :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+       class="inline-flex items-center gap-1.5 rounded border px-3 py-1.5 text-xs font-semibold transition hover:opacity-80">
+      <i class="fa-solid fa-file-invoice"></i>{% trans "Invoices" %}
+    </a>
+    <a href="{% url 'subscriptions:usage_list' %}"
+       :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+       class="inline-flex items-center gap-1.5 rounded border px-3 py-1.5 text-xs font-semibold transition hover:opacity-80">
+      <i class="fa-solid fa-gauge"></i>{% trans "Usage" %}
+    </a>
+    <a href="{% url 'subscriptions:metrics' %}"
+       :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+       class="inline-flex items-center gap-1.5 rounded border px-3 py-1.5 text-xs font-semibold transition hover:opacity-80">
+      <i class="fa-solid fa-chart-line"></i>{% trans "Metrics" %}
+    </a>
+  </nav>
+
+  {% block subscriptions_content %}{% endblock %}
+
+{% endblock %}

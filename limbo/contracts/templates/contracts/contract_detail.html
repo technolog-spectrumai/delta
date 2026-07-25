@@ -1,0 +1,305 @@
+{% extends "contracts/base.html" %}
+{% load i18n %}
+{% load i18n static %}
+
+{% block contracts_title %}{{ contract.name }}{% endblock %}
+
+{% block contracts_content %}
+<div class="space-y-6">
+  <a href="{% url 'contracts:contract_list' %}" class="inline-flex items-center gap-2 text-sm underline hover:opacity-80">
+    <i class="fa-solid fa-arrow-left"></i>
+    {% trans "Back to contracts" %}
+  </a>
+
+  <!-- Summary -->
+  <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+       class="rounded-lg border p-5 shadow-sm space-y-4">
+    <div class="flex items-start justify-between gap-4">
+      <div class="flex items-center gap-3 flex-wrap">
+        <h2 class="flex items-center gap-2 text-lg font-bold">
+          <i class="fa-solid fa-scroll" :class="darkMode ? 'text-accent-dark' : 'text-accent-light'"></i>
+          {{ contract.name }}
+        </h2>
+        {% if contract.status == 'executed' %}
+        <span class="inline-flex items-center gap-1 rounded-full bg-success-light/15 text-success-light px-2.5 py-0.5 text-xs font-semibold">
+          <i class="fa-solid fa-circle-check"></i> {% trans "Executed" %}
+        </span>
+        {% elif contract.status == 'pending' %}
+        <span class="inline-flex items-center gap-1 rounded-full bg-accent-light/15 text-accent-light px-2.5 py-0.5 text-xs font-semibold">
+          <i class="fa-solid fa-pen-nib"></i> {% trans "Pending Signatures" %}
+        </span>
+        {% else %}
+        <span class="inline-flex items-center gap-1 rounded-full bg-gray-100 text-gray-600 px-2.5 py-0.5 text-xs font-semibold">
+          <i class="fa-regular fa-file"></i> {% trans "Draft" %}
+        </span>
+        {% endif %}
+      </div>
+      <div class="flex gap-2 shrink-0">
+        {% if current_person_signatory and not current_person_signatory.has_signed and contract.status != 'executed' %}
+        <a href="{% url 'contracts:contract_sign' contract.uuid %}"
+           :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+           class="inline-flex items-center gap-1 rounded px-3 py-1 text-xs font-semibold transition hover:opacity-90">
+          <i class="fa-solid fa-pen-nib"></i> {% trans "Sign" %}
+        </a>
+        {% endif %}
+        <a href="{% url 'contracts:contract_update' contract.uuid %}"
+           :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="inline-flex items-center gap-1 rounded border px-3 py-1 text-xs font-semibold transition hover:opacity-80">
+          <i class="fa-solid fa-pen"></i> {% trans "Edit" %}
+        </a>
+      </div>
+    </div>
+
+    {% if contract.description %}
+    <p class="text-sm opacity-80 leading-relaxed">{{ contract.description }}</p>
+    {% endif %}
+
+    <dl class="space-y-2 text-sm">
+      <div class="grid grid-cols-[180px_1fr] gap-2 border-t py-2" :class="darkMode ? 'border-accent-1' : 'border-accent-2'">
+        <dt class="font-semibold opacity-60">{% trans "UUID" %}</dt>
+        <dd class="font-mono break-all text-xs">{{ contract.uuid }}</dd>
+      </div>
+      <div class="grid grid-cols-[180px_1fr] gap-2 border-t py-2" :class="darkMode ? 'border-accent-1' : 'border-accent-2'">
+        <dt class="font-semibold opacity-60">{% trans "Nodes" %}</dt>
+        <dd class="font-mono">{{ node_count }}</dd>
+      </div>
+      <div class="grid grid-cols-[180px_1fr] gap-2 border-t py-2" :class="darkMode ? 'border-accent-1' : 'border-accent-2'">
+        <dt class="font-semibold opacity-60">{% trans "Edges" %}</dt>
+        <dd class="font-mono">{{ edge_count }}</dd>
+      </div>
+      <div class="grid grid-cols-[180px_1fr] gap-2 border-t py-2" :class="darkMode ? 'border-accent-1' : 'border-accent-2'">
+        <dt class="font-semibold opacity-60">{% trans "Manual nodes" %}</dt>
+        <dd class="font-mono">{{ manual_count }}</dd>
+      </div>
+      {% if type_counts %}
+      <div class="grid grid-cols-[180px_1fr] gap-2 border-t py-2" :class="darkMode ? 'border-accent-1' : 'border-accent-2'">
+        <dt class="font-semibold opacity-60">{% trans "Primitives" %}</dt>
+        <dd class="flex flex-wrap gap-2">
+          {% for ntype, cnt in type_counts.items %}
+          <span class="inline-block rounded px-2 py-0.5 text-xs font-semibold bg-gray-100 text-gray-700">
+            {{ ntype }}: {{ cnt }}
+          </span>
+          {% endfor %}
+        </dd>
+      </div>
+      {% endif %}
+      <div class="grid grid-cols-[180px_1fr] gap-2 border-t py-2" :class="darkMode ? 'border-accent-1' : 'border-accent-2'">
+        <dt class="font-semibold opacity-60">{% trans "Created" %}</dt>
+        <dd>{{ contract.created_at|date:"Y-m-d H:i" }}</dd>
+      </div>
+      {% if contract.executed_at %}
+      <div class="grid grid-cols-[180px_1fr] gap-2 border-t py-2" :class="darkMode ? 'border-accent-1' : 'border-accent-2'">
+        <dt class="font-semibold opacity-60">{% trans "Executed" %}</dt>
+        <dd>{{ contract.executed_at|date:"Y-m-d H:i" }}</dd>
+      </div>
+      {% endif %}
+    </dl>
+  </div>
+
+  <!-- Body -->
+  {% if contract.body %}
+  <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+       class="rounded-lg border p-5 shadow-sm space-y-2">
+    <h3 class="text-xs font-semibold uppercase tracking-wide opacity-60">{% trans "Contract Body" %}</h3>
+    <div class="text-sm leading-relaxed whitespace-pre-wrap">{{ contract.body }}</div>
+  </div>
+  {% endif %}
+
+  <!-- Vault PDF -->
+  <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+       class="rounded-lg border p-5 shadow-sm space-y-3">
+    <h3 class="text-xs font-semibold uppercase tracking-wide opacity-60">
+      <i class="fa-solid fa-file-pdf mr-1"></i>{% trans "Vault PDF" %}
+    </h3>
+    {% if contract.vault_pdf %}
+    <div class="flex items-center gap-3 flex-wrap">
+      <span class="text-sm opacity-70">
+        <i class="fa-solid fa-lock text-xs"></i>
+        {% trans "EncryptedFile" %} #{{ contract.vault_pdf.pk }}
+        ({{ contract.vault_pdf.strongbox.name }}, {{ contract.vault_pdf.plaintext_size|filesizeformat }})
+      </span>
+      <a href="{% url 'contracts:contract_download_pdf' contract.uuid %}"
+         :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+         class="inline-flex items-center gap-1.5 rounded border px-3 py-1 text-xs font-semibold transition hover:opacity-80">
+        <i class="fa-solid fa-download"></i> {% trans "Download" %}
+      </a>
+      <form method="post" action="{% url 'contracts:contract_attach_pdf' contract.uuid %}" class="inline">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="detach">
+        <button type="submit"
+          class="inline-flex items-center gap-1 rounded border border-warn-light px-3 py-1 text-xs font-semibold text-warn-light transition hover:bg-warn-light/10">
+          <i class="fa-solid fa-unlink"></i> {% trans "Detach" %}
+        </button>
+      </form>
+    </div>
+    {% else %}
+    <p class="text-sm opacity-50">{% trans "No PDF attached." %}</p>
+    {% if user_encrypted_files %}
+    <form method="post" action="{% url 'contracts:contract_attach_pdf' contract.uuid %}" class="flex items-center gap-2 flex-wrap">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="attach">
+      <select name="encrypted_file_id"
+        :class="darkMode ? 'bg-bubble-bg-dark border-accent-1 text-text-main-dark' : 'bg-bubble-bg-light border-accent-2 text-text-main-light'"
+        class="rounded border px-3 py-1.5 text-sm focus:outline-none">
+        <option value="">— {% trans "select file" %} —</option>
+        {% for ef in user_encrypted_files %}
+        <option value="{{ ef.pk }}">#{{ ef.pk }} — {{ ef.strongbox.name }} ({{ ef.plaintext_size|filesizeformat }}, {{ ef.uploaded_at|date:"Y-m-d" }})</option>
+        {% endfor %}
+      </select>
+      <button type="submit"
+        :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+        class="rounded px-3 py-1.5 text-xs font-semibold transition hover:opacity-90">
+        {% trans "Attach" %}
+      </button>
+    </form>
+    {% else %}
+    <p class="text-xs opacity-40 mt-1">{% trans "Upload an encrypted file in Gervazy to attach it here." %}</p>
+    {% endif %}
+    {% endif %}
+  </div>
+
+  <!-- Lease (shown when a Lease is linked to this contract) -->
+  {% with lease=contract.lease %}
+  {% if lease %}
+  <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+       class="rounded-lg border p-5 shadow-sm space-y-3">
+    <div class="flex items-center justify-between gap-4">
+      <h3 class="text-xs font-semibold uppercase tracking-wide opacity-60">
+        <i class="fa-solid fa-key mr-1"></i>{% trans "Lease" %}
+      </h3>
+      <a href="{% url 'contracts:lease_detail' contract.uuid %}"
+         :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+         class="inline-flex items-center gap-1 rounded border px-3 py-1 text-xs font-semibold transition hover:opacity-80">
+        {% trans "Full lease detail" %} →
+      </a>
+    </div>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 text-sm">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide opacity-50">{% trans "Leased object" %}</p>
+        <p class="font-semibold mt-0.5">{{ lease.leased_object }}</p>
+      </div>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide opacity-50">{% trans "Lessor" %}</p>
+        <p class="font-semibold mt-0.5">{{ lease.lessor }}</p>
+      </div>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide opacity-50">{% trans "Lessee" %}</p>
+        <p class="font-semibold mt-0.5">{{ lease.lessee }}</p>
+      </div>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide opacity-50">{% trans "Status" %}</p>
+        <span class="inline-flex items-center rounded px-2 py-0.5 text-xs font-semibold mt-0.5"
+          {% if lease.status == 'active' %}:class="darkMode ? 'bg-success-dark/15 text-success-dark' : 'bg-success-light/15 text-success-light'"
+          {% elif lease.status == 'cancelled' %}:class="darkMode ? 'bg-warn-dark/15 text-warn-dark' : 'bg-warn-light/15 text-warn-light'"
+          {% else %}:class="darkMode ? 'bg-primary-bg-dark text-text-main-dark/60' : 'bg-gray-100 text-gray-500'"
+          {% endif %}>
+          {{ lease.get_status_display }}
+        </span>
+      </div>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide opacity-50">{% trans "Billing" %}</p>
+        <p class="font-semibold mt-0.5">{{ lease.get_billing_period_display }} · {{ lease.fixed_fee_base_units }} {% trans "base units" %}</p>
+      </div>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide opacity-50">{% trans "Period" %}</p>
+        <p class="font-semibold mt-0.5">{{ lease.starts_at|date:"M d, Y" }}{% if lease.ends_at %} → {{ lease.ends_at|date:"M d, Y" }}{% endif %}</p>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% endwith %}
+
+  <!-- Claims Health -->
+  <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+       class="rounded-lg border p-5 shadow-sm space-y-4">
+    <div class="flex items-center justify-between gap-4">
+      <h3 class="text-xs font-semibold uppercase tracking-wide opacity-60">
+        <i class="fa-solid fa-heart-pulse mr-1"></i>{% trans "Claims Health" %}
+      </h3>
+      <form method="post" action="{% url 'contracts:contract_evaluate_health' contract.uuid %}">
+        {% csrf_token %}
+        <button type="submit"
+          :class="darkMode ? 'border-accent-1 text-text-main-dark hover:bg-black/10' : 'border-accent-2 text-text-main-light hover:bg-black/5'"
+          class="inline-flex items-center gap-1.5 rounded border px-3 py-1 text-xs font-semibold transition">
+          <i class="fa-solid fa-rotate text-xs"></i> {% trans "Evaluate" %}
+        </button>
+      </form>
+    </div>
+
+    {% with health=contract.metadata.claims_health %}
+    {% if health %}
+    <div class="flex items-center gap-3 flex-wrap">
+      <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold"
+        :class="darkMode ? '{% if health.overall == 'healthy' %}bg-success-dark/20 text-success-dark{% elif health.overall == 'warning' %}bg-warn-dark/20 text-warn-dark{% elif health.overall == 'critical' %}bg-caution-dark/20 text-caution-dark{% else %}opacity-50{% endif %}' : '{% if health.overall == 'healthy' %}bg-success-light/10 text-success-light{% elif health.overall == 'warning' %}bg-warn-light/10 text-warn-light{% elif health.overall == 'critical' %}bg-caution-light/10 text-caution-light{% else %}opacity-50{% endif %}'">
+        {% if health.overall == 'healthy' %}<i class="fa-solid fa-circle-check"></i>
+        {% elif health.overall == 'warning' %}<i class="fa-solid fa-triangle-exclamation"></i>
+        {% elif health.overall == 'critical' %}<i class="fa-solid fa-circle-xmark"></i>
+        {% else %}<i class="fa-solid fa-circle-question"></i>{% endif %}
+        {{ health.overall|capfirst }}
+      </span>
+      <span class="text-xs opacity-50">{% trans "Evaluated" %} {{ health.evaluated_at|slice:":19"|default:"—" }}</span>
+      <div class="flex gap-3 text-xs">
+        {% if health.counts.healthy %}<span :class="darkMode ? 'text-success-dark' : 'text-success-light'">{{ health.counts.healthy }} {% trans "healthy" %}</span>{% endif %}
+        {% if health.counts.warning %}<span :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ health.counts.warning }} {% trans "warning" %}</span>{% endif %}
+        {% if health.counts.critical %}<span :class="darkMode ? 'text-caution-dark' : 'text-caution-light'">{{ health.counts.critical }} {% trans "critical" %}</span>{% endif %}
+        {% if health.counts.unresolvable %}<span class="opacity-50">{{ health.counts.unresolvable }} {% trans "unresolvable" %}</span>{% endif %}
+      </div>
+    </div>
+
+    {% if health.details %}
+    <div :class="darkMode ? 'border-accent-1' : 'border-accent-2'" class="rounded-lg border overflow-hidden">
+      <table class="w-full text-xs">
+        <thead>
+          <tr :class="darkMode ? 'border-accent-1' : 'border-accent-2'" class="border-b text-xs uppercase tracking-wide opacity-60">
+            <th class="px-3 py-2 text-left">{% trans "Node" %}</th>
+            <th class="px-3 py-2 text-left">{% trans "Type" %}</th>
+            <th class="px-3 py-2 text-left">{% trans "Object" %}</th>
+            <th class="px-3 py-2 text-left">{% trans "Status" %}</th>
+            <th class="px-3 py-2 text-left">{% trans "Health" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in health.details %}
+          <tr :class="darkMode ? 'border-accent-1' : 'border-accent-2'" class="border-b last:border-0">
+            <td class="px-3 py-2 font-mono opacity-60">{{ d.node_key }}</td>
+            <td class="px-3 py-2 opacity-60">{{ d.node_type }}</td>
+            <td class="px-3 py-2 font-semibold">{{ d.object_label }}</td>
+            <td class="px-3 py-2 font-mono opacity-80">{{ d.status }}</td>
+            <td class="px-3 py-2">
+              <span class="inline-block rounded px-1.5 py-0.5 font-semibold"
+                :class="darkMode ? '{% if d.health == 'healthy' %}bg-success-dark/20 text-success-dark{% elif d.health == 'warning' %}bg-warn-dark/20 text-warn-dark{% elif d.health == 'critical' %}bg-caution-dark/20 text-caution-dark{% else %}opacity-50{% endif %}' : '{% if d.health == 'healthy' %}bg-success-light/10 text-success-light{% elif d.health == 'warning' %}bg-warn-light/10 text-warn-light{% elif d.health == 'critical' %}bg-caution-light/10 text-caution-light{% else %}opacity-50{% endif %}'">
+                {{ d.health }}
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <p class="text-xs opacity-50">{% trans "No evaluation run yet. Click Evaluate to check the live state of all claims objects linked to this contract's nodes." %}</p>
+    {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Signatories -->
+  {% include "contracts/_signatories_card.html" %}
+
+  <!-- Claims Mesh / Contract Graph -->
+  {% include "contracts/_graph_card.html" %}
+
+  <!-- Nodes table -->
+  {% include "contracts/_node_table.html" %}
+
+  <!-- Edges table -->
+  {% include "contracts/_edge_table.html" %}
+
+  <!-- Metadata -->
+  {% with metadata_dict=contract.metadata %}
+  {% include "contracts/_metadata_card.html" %}
+  {% endwith %}
+
+</div>
+{% endblock %}

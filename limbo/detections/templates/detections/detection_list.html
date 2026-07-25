@@ -1,0 +1,135 @@
+{% extends "detections/base.html" %}
+{% load static %}
+{% load i18n %}
+{% block detections_title %}Detections{% endblock %}
+{% block detections_heading %}Detections{% endblock %}
+{% block detections_subtitle %}<p class="mt-2 max-w-2xl text-sm opacity-70">{% trans "Field incidents, observations, hazards, and anomalies. Detections can trigger Kanban help tasks." %}</p>{% endblock %}
+{% block detections_content %}
+
+<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}">
+<script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
+{{ detection_features|json_script:"detection-features" }}
+
+<section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="overflow-hidden rounded-2xl border shadow-sm">
+  <div class="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+    <div>
+      <h2 class="text-lg font-bold">{% trans "Detection Map" %}</h2>
+      <p class="text-xs opacity-60">{% trans "Current filtered detections with saved geometry." %}</p>
+    </div>
+    {% if request.user.is_authenticated %}
+      <a href="{% url 'detections:detection-create' %}" :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'" class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm"><i class="fa-solid fa-location-crosshairs"></i>{% trans "Add on map" %}</a>
+    {% endif %}
+  </div>
+  <div id="detections-map" class="h-[28rem] w-full"></div>
+</section>
+
+<form method="get" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="grid gap-3 rounded-2xl border p-4 shadow-sm md:grid-cols-[minmax(0,1fr)_160px_160px_160px_auto]">
+  <input name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Search detections…' %}" :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'" class="rounded-lg border px-3 py-2 text-sm outline-none">
+  <select name="type" :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'" class="rounded-lg border px-3 py-2 text-sm">
+    <option value="">{% trans "All types" %}</option>
+    {% for val, label in type_choices %}<option value="{{ val }}" {% if request.GET.type == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select>
+  <select name="severity" :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'" class="rounded-lg border px-3 py-2 text-sm">
+    <option value="">{% trans "All severities" %}</option>
+    {% for val, label in severity_choices %}<option value="{{ val }}" {% if request.GET.severity == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select>
+  <select name="status" :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'" class="rounded-lg border px-3 py-2 text-sm">
+    <option value="">{% trans "All statuses" %}</option>
+    {% for val, label in status_choices %}<option value="{{ val }}" {% if request.GET.status == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select>
+  <button :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'" class="rounded-lg px-4 py-2 text-sm font-semibold shadow-sm"><i class="fa-solid fa-filter"></i>{% trans "Filter" %}</button>
+</form>
+
+<div class="space-y-3">
+  {% for detection in detections %}
+    {% with sev=detection.severity %}
+    <a href="{% url 'detections:detection-detail' detection.pk %}"
+       :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark hover:bg-sunken-dark' : 'border-accent-2 bg-bubble-bg-light hover:bg-sunken-light'"
+       class="group flex items-start gap-4 rounded-2xl border p-4 shadow-sm transition hover:-translate-y-px hover:shadow-md">
+      <span
+        :class="darkMode ? '{% if sev == 'critical' %}bg-warn-dark/20 text-warn-dark{% elif sev == 'high' %}bg-warn-dark/10 text-warn-dark{% elif sev == 'medium' %}bg-caution-dark/20 text-caution-dark{% else %}bg-success-dark/20 text-success-dark{% endif %}' : '{% if sev == 'critical' %}bg-warn-light/20 text-warn-light{% elif sev == 'high' %}bg-warn-light/10 text-warn-light{% elif sev == 'medium' %}bg-caution-light/20 text-caution-light{% else %}bg-success-light/20 text-success-light{% endif %}'"
+        class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </span>
+      <div class="min-w-0 flex-1">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-bold group-hover:underline">{{ detection.title }}</span>
+          <span :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="rounded-full border px-2 py-0.5 text-[11px] font-semibold">{{ detection.get_detection_type_display }}</span>
+          <span
+            :class="darkMode ? '{% if sev == 'critical' %}bg-warn-dark/20 text-warn-dark{% elif sev == 'high' %}bg-warn-dark/10 text-warn-dark{% elif sev == 'medium' %}bg-caution-dark/20 text-caution-dark{% else %}bg-success-dark/20 text-success-dark{% endif %}' : '{% if sev == 'critical' %}bg-warn-light/20 text-warn-light{% elif sev == 'high' %}bg-warn-light/10 text-warn-light{% elif sev == 'medium' %}bg-caution-light/20 text-caution-light{% else %}bg-success-light/20 text-success-light{% endif %}'"
+            class="rounded-full px-2 py-0.5 text-[11px] font-semibold">
+            {{ detection.get_severity_display }}
+          </span>
+          <span :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="rounded-full border px-2 py-0.5 text-[11px]">{{ detection.get_status_display }}</span>
+        </div>
+        <div class="mt-1 flex flex-wrap gap-3 text-xs opacity-55">
+          {% if detection.location_label %}<span><i class="fa-solid fa-location-dot"></i> {{ detection.location_label }}</span>{% endif %}
+          {% if detection.category %}<span><i class="fa-solid fa-tag"></i> {{ detection.category.name }}</span>{% endif %}
+          {% if detection.reported_by %}<span><i class="fa-solid fa-user"></i> {{ detection.reported_by }}</span>{% endif %}
+          <span><i class="fa-regular fa-clock"></i> {{ detection.start_time|date:"d M Y H:i" }}</span>
+        </div>
+      </div>
+    </a>
+    {% endwith %}
+  {% empty %}
+    <div class="py-16 text-center opacity-50">
+      <i class="fa-solid fa-bullseye text-4xl"></i>
+      <p class="mt-3 font-semibold">{% trans "No detections match your filters." %}</p>
+    </div>
+  {% endfor %}
+</div>
+
+{% if is_paginated %}
+  <nav class="flex justify-center gap-2">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="rounded-lg border px-4 py-2 text-sm font-semibold">{% trans "Previous" %}</a>{% endif %}
+    <span class="px-4 py-2 text-sm opacity-60">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="rounded-lg border px-4 py-2 text-sm font-semibold">{% trans "Next" %}</a>{% endif %}
+  </nav>
+{% endif %}
+
+<script>
+(() => {
+  const el = document.getElementById("detections-map");
+  if (!el || typeof L === "undefined") return;
+  const features = JSON.parse(document.getElementById("detection-features").textContent || "[]");
+  const map = L.map(el).setView([52.1, 19.4], 6);
+  const isDark = localStorage.getItem("darkMode") === "true";
+  const themeColors = {{ theme.theme.colors|safe }};
+  const tiles = isDark
+    ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+    : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+  L.tileLayer(tiles, { maxZoom: 19 }).addTo(map);
+
+  const severityColor = {
+    critical: isDark ? themeColors["warn-dark"] : themeColors["warn-light"],
+    high: isDark ? themeColors["warn-dark"] : themeColors["warn-light"],
+    medium: isDark ? themeColors["caution-dark"] : themeColors["caution-light"],
+    low: isDark ? themeColors["success-dark"] : themeColors["success-light"],
+  };
+  const fallbackColor = isDark ? themeColors["accent-dark"] : themeColors["accent-light"];
+  const markerStrokeColor = isDark ? themeColors["text-main-dark"] : themeColors["text-main-light"];
+  const layers = [];
+  features.forEach((item) => {
+    if (!item.geometry) return;
+    const layer = L.geoJSON(item.geometry, {
+      style: { color: severityColor[item.severity] || fallbackColor, weight: 3 },
+      pointToLayer: (_feature, latlng) => L.circleMarker(latlng, {
+        radius: 8,
+        color: markerStrokeColor,
+        weight: 1,
+        fillColor: severityColor[item.severity] || fallbackColor,
+        fillOpacity: 0.9,
+      }),
+    });
+    const title = item.url ? `<a href="${item.url}"><strong>${item.title}</strong></a>` : `<strong>${item.title}</strong>`;
+    layer.bindPopup(`${title}<br>${item.type} · ${item.status}${item.location ? `<br>${item.location}` : ""}`);
+    layer.addTo(map);
+    layers.push(layer);
+  });
+  if (layers.length) {
+    const bounds = L.featureGroup(layers).getBounds();
+    if (bounds.isValid()) map.fitBounds(bounds, { padding: [24, 24] });
+  }
+})();
+</script>
+{% endblock %}

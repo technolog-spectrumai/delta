@@ -1,0 +1,200 @@
+{% extends "logistics/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block logistics_title %}{% trans "Track" %} {{ package.tracking_number }}{% endblock %}
+{% block tab_packages %}border-b-2 border-current -mb-px{% endblock %}
+
+{% block logistics_start_script %}
+<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}" />
+<script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
+{% endblock %}
+
+{% block logistics_content %}
+<script>
+  window.packagePayload = JSON.parse(`{{ payload_json|escapejs }}`);
+</script>
+
+<div class="space-y-6">
+
+  <!-- Back to list -->
+  <a href="{% url 'logistics:package-list' %}"
+     class="inline-flex items-center gap-2 text-sm underline hover:opacity-80">
+    <i class="fa-solid fa-arrow-left"></i> {% trans "All packages" %}
+  </a>
+
+  <!-- Header card -->
+  <header :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+          class="rounded-2xl border p-5 shadow-sm">
+    <p :class="darkMode ? 'text-accent-dark' : 'text-accent-light'"
+       class="text-xs font-semibold uppercase tracking-wide">{% trans "Package" %}</p>
+    <h2 class="mt-2 text-3xl font-bold font-mono">{{ package.tracking_number }}</h2>
+    <div class="mt-2 flex flex-wrap items-center gap-3 text-sm">
+      {% if package.carrier %}
+      <span class="opacity-70"><i class="fa-solid fa-truck mr-1"></i>{{ package.carrier }}</span>
+      {% endif %}
+      <span :class="darkMode ? 'bg-primary-bg-dark' : 'bg-primary-bg-light'"
+            class="rounded-full px-3 py-1 font-semibold text-xs">
+        {{ package.get_status_display }}
+      </span>
+      {% if package.estimated_delivery %}
+      <span class="opacity-60 text-xs">{% trans "Est. delivery" %}: {{ package.estimated_delivery|date:"M d, Y" }}</span>
+      {% endif %}
+    </div>
+  </header>
+
+  <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
+
+    <!-- Map + timeline -->
+    <div class="space-y-5">
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="overflow-hidden rounded-2xl border shadow-sm">
+        <div id="package-map" class="h-[420px] w-full"></div>
+      </div>
+
+      {% if events %}
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="rounded-2xl border p-5 shadow-sm space-y-4">
+        <h2 class="font-bold text-lg">{% trans "Timeline" %}</h2>
+        <ol class="relative border-l border-current/20 space-y-5 pl-5">
+          {% for event in events %}
+          <li class="relative">
+            <div class="absolute -left-[21px] mt-1 h-3 w-3 rounded-full border-2 border-current
+              {% if forloop.last %}bg-current{% else %}bg-transparent{% endif %}"></div>
+            <div class="space-y-0.5">
+              <p class="text-xs opacity-50">{{ event.occurred_at|date:"M d, Y H:i" }}</p>
+              <p class="font-semibold text-sm">{{ event.get_status_display }}</p>
+              {% if event.location %}<p class="text-xs opacity-70"><i class="fa-solid fa-location-dot mr-1"></i>{{ event.location }}</p>{% endif %}
+              {% if event.transport %}<p class="text-xs opacity-60"><i class="fa-solid fa-truck mr-1"></i>{{ event.transport }}</p>{% endif %}
+              {% if event.note %}<p class="text-xs opacity-60 italic">{{ event.note }}</p>{% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ol>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="space-y-4">
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="rounded-2xl border p-5 shadow-sm space-y-3 text-sm">
+        <h2 class="font-bold">{% trans "Route" %}</h2>
+        {% if package.origin %}
+        <div class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full" :class="darkMode ? 'bg-accent-dark' : 'bg-accent-light'"></span>
+          <div>
+            <p class="text-xs opacity-50 uppercase tracking-wide">{% trans "Origin" %}</p>
+            <p class="font-semibold">{{ package.origin }}</p>
+          </div>
+        </div>
+        {% endif %}
+        {% if package.destination %}
+        <div class="flex items-start gap-2">
+          <span class="mt-1 h-2 w-2 shrink-0 rounded-full" :class="darkMode ? 'bg-success-dark' : 'bg-success-light'"></span>
+          <div>
+            <p class="text-xs opacity-50 uppercase tracking-wide">{% trans "Destination" %}</p>
+            <p class="font-semibold">{{ package.destination }}</p>
+          </div>
+        </div>
+        {% endif %}
+        {% if not package.origin and not package.destination %}
+        <p class="opacity-50">{% trans "No route data." %}</p>
+        {% endif %}
+      </div>
+
+      {% if package.transport %}
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="rounded-2xl border p-5 shadow-sm text-sm space-y-1">
+        <h2 class="font-bold mb-2">{% trans "Transport" %}</h2>
+        <p class="font-semibold">{{ package.transport.name }}</p>
+        <p class="opacity-60">{{ package.transport.get_mode_display }}{% if package.transport.identifier %} · {{ package.transport.identifier }}{% endif %}</p>
+        {% if package.transport.current_location %}
+        <p class="text-xs opacity-50"><i class="fa-solid fa-location-dot mr-1"></i>{{ package.transport.current_location }}</p>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% if package.shipment %}
+      <a href="{% url 'bazaar:order-detail' order_number=package.shipment.order.order_number %}"
+         :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark hover:bg-primary-bg-dark' : 'border-accent-2 bg-bubble-bg-light hover:bg-primary-bg-light'"
+         class="flex items-center gap-2 rounded-2xl border p-4 text-sm font-semibold shadow-sm transition">
+        <i class="fa-solid fa-store opacity-60"></i>
+        {% trans "View order" %} {{ package.shipment.order.order_number }}
+        <i class="fa-solid fa-arrow-right ml-auto opacity-40"></i>
+      </a>
+      {% endif %}
+    </aside>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block logistics_end_script %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const p = window.packagePayload;
+  const isDark = localStorage.getItem("darkMode") === "true";
+
+  const map = L.map("package-map", { zoomControl: false }).setView([52, 19], 5);
+  L.control.zoom({ position: "bottomright" }).addTo(map);
+
+  L.tileLayer(
+    isDark
+      ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+      : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    { maxZoom: 19, attribution: "© OpenStreetMap" + (isDark ? " © CARTO" : "") }
+  ).addTo(map);
+
+  const css = getComputedStyle(document.documentElement);
+  const clrAccent  = css.getPropertyValue(isDark ? "--color-accent-dark"  : "--color-accent-light").trim();
+  const clrSuccess = css.getPropertyValue(isDark ? "--color-success-dark" : "--color-success-light").trim();
+  const clrWarn    = css.getPropertyValue(isDark ? "--color-warn-dark"    : "--color-warn-light").trim();
+
+  function dotIcon(color, size = 13) {
+    return L.divIcon({
+      className: "",
+      html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${color};border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)"></div>`,
+      iconSize: [size, size], iconAnchor: [size / 2, size / 2],
+    });
+  }
+
+  const allPoints = [];
+
+  if (p.origin?.geometry) {
+    const [lng, lat] = p.origin.geometry.coordinates;
+    L.marker([lat, lng], { icon: dotIcon(clrAccent, 14) })
+      .bindPopup(`<strong>{% trans "Origin" %}</strong><br>${p.origin.label}`).addTo(map);
+    allPoints.push([lat, lng]);
+  }
+  if (p.destination?.geometry) {
+    const [lng, lat] = p.destination.geometry.coordinates;
+    L.marker([lat, lng], { icon: dotIcon(clrSuccess, 14) })
+      .bindPopup(`<strong>{% trans "Destination" %}</strong><br>${p.destination.label}`).addTo(map);
+    allPoints.push([lat, lng]);
+  }
+
+  p.events.forEach((ev, i) => {
+    if (!ev.location?.geometry) return;
+    const [lng, lat] = ev.location.geometry.coordinates;
+    const isLast = i === p.events.length - 1;
+    L.marker([lat, lng], { icon: dotIcon(isLast ? clrWarn : clrAccent, 10) })
+      .bindPopup(`<strong>${ev.status_display}</strong><br>${ev.location.label}<br><small>${ev.occurred_at.slice(0, 16).replace("T", " ")}</small>`)
+      .addTo(map);
+    allPoints.push([lat, lng]);
+  });
+
+  if (allPoints.length > 1) {
+    L.polyline(allPoints, {
+      color: clrAccent,
+      weight: 3,
+      dashArray: "8 6",
+      opacity: 0.75,
+    }).addTo(map);
+    map.fitBounds(L.latLngBounds(allPoints), { padding: [40, 40], maxZoom: 14 });
+  } else if (allPoints.length === 1) {
+    map.setView(allPoints[0], 12);
+  }
+});
+</script>
+{% endblock %}

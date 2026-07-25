@@ -1,0 +1,140 @@
+{% extends "instruments/base.html" %}
+{% load i18n %}
+
+{% block instruments_title %}{% trans "New Vesting Contract" %}{% endblock %}
+
+{% block instruments_content %}
+<div class="space-y-6 max-w-5xl">
+
+  <div>
+    <a href="{% url 'instruments:instrument_list' %}" class="inline-flex items-center gap-2 text-sm underline hover:opacity-80">
+      <i class="fa-solid fa-arrow-left"></i> {% trans "All instruments" %}
+    </a>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <div class="flex h-10 w-10 items-center justify-center rounded-xl"
+         :class="darkMode ? 'bg-caution-dark/10' : 'bg-caution-light/10'">
+      <i class="fa-solid fa-hourglass-half" :class="darkMode ? 'text-caution-dark' : 'text-caution-light'"></i>
+    </div>
+    <div>
+      <h2 class="text-2xl font-bold">{% trans "New Vesting Contract" %}</h2>
+      <p class="text-sm opacity-60">{% trans "Releases tokens to a beneficiary gradually over a defined schedule." %}</p>
+    </div>
+  </div>
+
+  <form method="post" class="space-y-5">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="rounded-lg border px-4 py-3 text-sm font-semibold"
+         :class="darkMode ? 'border-warn-dark/40 bg-warn-dark/10 text-warn-dark' : 'border-warn-light/40 bg-warn-light/10 text-warn-light'">
+      {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+
+    <!-- Name -->
+    <fieldset class="rounded-xl border p-5 space-y-4" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'">
+      <legend class="px-2 text-xs font-bold uppercase tracking-widest opacity-50">{% trans "Name" %}</legend>
+      <div class="space-y-2">
+        <label for="{{ form.name.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">{{ form.name.label }} <span class="text-warn-light">*</span></label>
+        {{ form.name }}
+        <p class="text-xs opacity-50">{{ form.name.help_text }}</p>
+        {% for e in form.name.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+      </div>
+    </fieldset>
+
+    <!-- Parties -->
+    <fieldset class="rounded-xl border p-5 space-y-4" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'">
+      <legend class="px-2 text-xs font-bold uppercase tracking-widest opacity-50">{% trans "Parties" %}</legend>
+      <div class="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+        <div class="space-y-2">
+          <label for="{{ form.grantor_account.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">
+            <i class="fa-solid fa-building mr-1" :class="darkMode ? 'text-accent-dark' : 'text-accent-light'"></i>
+            {{ form.grantor_account.label }} <span class="text-warn-light">*</span>
+          </label>
+          {{ form.grantor_account }}
+          <p class="text-xs opacity-50">{% trans "Holds the tokens being vested." %}</p>
+          {% for e in form.grantor_account.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="space-y-2">
+          <label for="{{ form.beneficiary_account.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">
+            <i class="fa-solid fa-user-check mr-1" :class="darkMode ? 'text-success-dark' : 'text-success-light'"></i>
+            {{ form.beneficiary_account.label }} <span class="text-warn-light">*</span>
+          </label>
+          {{ form.beneficiary_account }}
+          <p class="text-xs opacity-50">{% trans "Receives tokens as they vest." %}</p>
+          {% for e in form.beneficiary_account.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Asset & Amounts -->
+    <fieldset class="rounded-xl border p-5 space-y-4" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'">
+      <legend class="px-2 text-xs font-bold uppercase tracking-widest opacity-50">{% trans "Asset & Amounts" %}</legend>
+      <div class="grid gap-x-8 gap-y-4 sm:grid-cols-3">
+        <div class="space-y-2">
+          <label for="{{ form.asset.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">{{ form.asset.label }} <span class="text-warn-light">*</span></label>
+          {{ form.asset }}
+          {% for e in form.asset.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="space-y-2">
+          <label for="{{ form.total_amount_base_units.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">{{ form.total_amount_base_units.label }} <span class="text-warn-light">*</span></label>
+          {{ form.total_amount_base_units }}
+          <p class="text-xs opacity-50">{% trans "Full grant in base units." %}</p>
+          {% for e in form.total_amount_base_units.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="space-y-2">
+          <label for="{{ form.released_amount_base_units.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">{{ form.released_amount_base_units.label }}</label>
+          {{ form.released_amount_base_units }}
+          <p class="text-xs opacity-50">{% trans "Already released (usually 0 at creation)." %}</p>
+          {% for e in form.released_amount_base_units.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Schedule -->
+    <fieldset class="rounded-xl border p-5 space-y-4" :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'">
+      <legend class="px-2 text-xs font-bold uppercase tracking-widest opacity-50">{% trans "Vesting Schedule" %}</legend>
+      <div class="rounded-lg p-3 text-xs opacity-60" :class="darkMode ? 'bg-primary-bg-dark' : 'bg-primary-bg-light'">
+        <i class="fa-solid fa-circle-info mr-1"></i>
+        {% trans "Cliff is optional. No tokens are released before the cliff date, then vesting resumes from the start date." %}
+      </div>
+      <div class="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+        <div class="space-y-2">
+          <label for="{{ form.start_at.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">{{ form.start_at.label }} <span class="text-warn-light">*</span></label>
+          {{ form.start_at }}
+          {% for e in form.start_at.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="space-y-2">
+          <label for="{{ form.end_at.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">{{ form.end_at.label }} <span class="text-warn-light">*</span></label>
+          {{ form.end_at }}
+          {% for e in form.end_at.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="space-y-2">
+          <label for="{{ form.cliff_at.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">{{ form.cliff_at.label }}</label>
+          {{ form.cliff_at }}
+          <p class="text-xs opacity-50">{% trans "Leave blank for no cliff." %}</p>
+          {% for e in form.cliff_at.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="space-y-2">
+          <label for="{{ form.release_frequency.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide opacity-60">{{ form.release_frequency.label }}</label>
+          {{ form.release_frequency }}
+          <p class="text-xs opacity-50">{% trans "e.g. monthly, weekly, daily" %}</p>
+          {% for e in form.release_frequency.errors %}<p class="mt-1 text-xs font-semibold" :class="darkMode ? 'text-warn-dark' : 'text-warn-light'">{{ e }}</p>{% endfor %}
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="flex flex-wrap items-center gap-3">
+      <button type="submit" class="rounded-lg px-5 py-2.5 text-sm font-bold shadow-sm transition hover:opacity-90"
+              :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'">
+        <i class="fa-solid fa-hourglass-half mr-1"></i> {% trans "Create vesting contract" %}
+      </button>
+      <a href="{% url 'instruments:instrument_list' %}" class="rounded-lg border px-5 py-2.5 text-sm font-semibold transition hover:opacity-80"
+         :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'">
+        {% trans "Cancel" %}
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

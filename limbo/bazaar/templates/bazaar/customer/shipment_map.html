@@ -1,0 +1,168 @@
+{% extends "bazaar/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block bazaar_title %}{% trans "Track shipment" %} — {{ order.order_number }}{% endblock %}
+{% block bazaar_heading %}{% trans "Shipment tracking" %}{% endblock %}
+{% block bazaar_subtitle %}<p class="mt-2 max-w-2xl text-sm opacity-70">{{ order.order_number }}</p>{% endblock %}
+
+{% block start_script %}
+<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}" />
+<script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
+{% endblock %}
+
+{% block bazaar_content %}
+<script>
+  window.shipmentPayload = JSON.parse(`{{ payload_json|escapejs }}`);
+</script>
+
+<div class="mx-auto max-w-5xl space-y-5">
+
+  <div class="flex items-center gap-4 text-sm">
+    <a href="{% url 'bazaar:order-detail' order_number=order.order_number %}"
+       class="inline-flex items-center gap-2 underline hover:opacity-80">
+      <i class="fa-solid fa-arrow-left"></i> {% trans "Back to order" %}
+    </a>
+    <a href="{% url 'bazaar:order-tracking' order_number=order.order_number %}"
+       class="inline-flex items-center gap-2 underline hover:opacity-80">
+      <i class="fa-solid fa-list"></i> {% trans "Tracking details" %}
+    </a>
+  </div>
+
+  <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
+
+    <!-- Map -->
+    <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+         class="overflow-hidden rounded-2xl border shadow-sm">
+      <div id="shipment-map" class="h-[460px] w-full"></div>
+    </div>
+
+    <!-- Shipment list -->
+    <aside class="space-y-3">
+      {% for s in shipments %}
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="rounded-2xl border p-4 shadow-sm space-y-2 text-sm"
+           id="shipment-card-{{ s.pk }}">
+
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <p class="text-[10px] font-semibold uppercase tracking-wide opacity-60">
+              {% trans "Shipment" %} #{{ forloop.counter }}
+            </p>
+            {% if s.carrier %}
+            <p class="font-bold mt-0.5">{{ s.carrier }}</p>
+            {% endif %}
+          </div>
+          <span :class="darkMode ? 'bg-primary-bg-dark' : 'bg-primary-bg-light'"
+                class="rounded-full px-2.5 py-1 text-xs font-semibold shrink-0">
+            {{ s.get_status_display }}
+          </span>
+        </div>
+
+        {% if s.tracking_number %}
+        <p class="font-mono text-xs opacity-60">{{ s.tracking_number }}</p>
+        {% endif %}
+
+        {% if s.origin_address %}
+        <div class="flex items-start gap-2 text-xs">
+          <span class="mt-0.5 h-2 w-2 shrink-0 rounded-full" :class="darkMode ? 'bg-accent-dark' : 'bg-accent-light'"></span>
+          <span class="opacity-70">{{ s.origin_address }}</span>
+        </div>
+        {% endif %}
+
+        {% if s.destination_address %}
+        <div class="flex items-start gap-2 text-xs">
+          <span class="mt-0.5 h-2 w-2 shrink-0 rounded-full" :class="darkMode ? 'bg-success-dark' : 'bg-success-light'"></span>
+          <span class="opacity-70">{{ s.destination_address }}</span>
+        </div>
+        {% endif %}
+
+        {% if s.shipped_at %}
+        <p class="text-xs opacity-50">{% trans "Shipped" %}: {{ s.shipped_at|date:"M d, Y H:i" }}</p>
+        {% endif %}
+        {% if s.delivered_at %}
+        <p class="text-xs opacity-50">{% trans "Delivered" %}: {{ s.delivered_at|date:"M d, Y H:i" }}</p>
+        {% endif %}
+      </div>
+      {% empty %}
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="rounded-2xl border p-8 text-center shadow-sm">
+        <i class="fa-solid fa-truck-fast text-3xl opacity-20 mb-3"></i>
+        <p class="text-sm opacity-60">{% trans "No shipments yet." %}</p>
+      </div>
+      {% endfor %}
+    </aside>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const payload = window.shipmentPayload;
+  if (!payload?.shipments?.length) return;
+
+  const isDark = localStorage.getItem("darkMode") === "true";
+
+  const map = L.map("shipment-map", { zoomControl: false }).setView([52.0, 19.0], 6);
+  L.control.zoom({ position: "bottomright" }).addTo(map);
+
+  const lightTiles = L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" }
+  );
+  const darkTiles = L.tileLayer(
+    "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+    { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors &copy; CARTO" }
+  );
+  (isDark ? darkTiles : lightTiles).addTo(map);
+
+  function dotIcon(color) {
+    return L.divIcon({
+      className: "",
+      html: `<div style="width:13px;height:13px;border-radius:50%;background:${color};border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)"></div>`,
+      iconSize: [13, 13],
+      iconAnchor: [6, 6],
+    });
+  }
+
+  const allPoints = [];
+
+  payload.shipments.forEach((s, i) => {
+    const num = i + 1;
+
+    if (s.origin?.geometry) {
+      const [lng, lat] = s.origin.geometry.coordinates;
+      const m = L.marker([lat, lng], { icon: dotIcon("#60a5fa") })
+        .bindPopup(`<strong>Origin #${num}</strong><br>${s.origin.label}`);
+      m.addTo(map);
+      allPoints.push([lat, lng]);
+    }
+
+    if (s.destination?.geometry) {
+      const [lng, lat] = s.destination.geometry.coordinates;
+      const m = L.marker([lat, lng], { icon: dotIcon("#4ade80") })
+        .bindPopup(`<strong>Destination #${num}</strong><br>${s.destination.label}`);
+      m.addTo(map);
+      allPoints.push([lat, lng]);
+    }
+
+    if (s.origin?.geometry && s.destination?.geometry) {
+      const [oLng, oLat] = s.origin.geometry.coordinates;
+      const [dLng, dLat] = s.destination.geometry.coordinates;
+      L.polyline([[oLat, oLng], [dLat, dLng]], {
+        color: isDark ? "#818cf8" : "#4f46e5",
+        weight: 3,
+        dashArray: "8 6",
+        opacity: 0.75,
+      }).addTo(map);
+    }
+  });
+
+  if (allPoints.length === 1) {
+    map.setView(allPoints[0], 12);
+  } else if (allPoints.length > 1) {
+    map.fitBounds(L.latLngBounds(allPoints), { padding: [40, 40], maxZoom: 14 });
+  }
+});
+</script>
+{% endblock %}
