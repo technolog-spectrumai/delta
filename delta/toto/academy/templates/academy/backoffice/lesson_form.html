@@ -1,0 +1,75 @@
+{% extends "backoffice/base.html" %}
+{% load i18n %}
+
+{% block backoffice_content %}
+<form method="post" enctype="multipart/form-data"
+      :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+      class="max-w-3xl space-y-5 rounded-2xl border p-6 shadow-sm">
+  {% csrf_token %}
+
+  <div class="flex flex-wrap items-center gap-3">
+    <a href="{% url 'backoffice_courses:module-edit' pk=module.pk %}" class="text-sm underline hover:opacity-80"><i class="fa-solid fa-arrow-left"></i> {{ module.title }}</a>
+    <h2 class="flex items-center gap-2 text-xl font-bold"><i class="{{ icon }}"></i> {{ title }}</h2>
+  </div>
+
+  {% if form.non_field_errors %}<div class="rounded-xl border border-warn-light/40 bg-warn-light/10 p-3 text-sm">{{ form.non_field_errors }}</div>{% endif %}
+
+  <div class="space-y-1">
+    <label for="{{ form.title.id_for_label }}" class="block text-sm font-semibold">{{ form.title.label }}</label>
+    {{ form.title }}
+    {% if form.title.errors %}<p class="text-sm text-warn-light">{{ form.title.errors }}</p>{% endif %}
+  </div>
+  <div class="space-y-1">
+    <label for="{{ form.summary.id_for_label }}" class="block text-sm font-semibold">{{ form.summary.label }}</label>
+    {{ form.summary }}
+  </div>
+
+  <!-- Video upload -->
+  <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="space-y-2 rounded-xl border p-4">
+    <label for="{{ form.video_upload.id_for_label }}" class="block text-sm font-semibold"><i class="fa-solid fa-circle-play"></i> {{ form.video_upload.label }}</label>
+    {% if lesson and lesson.video_file %}
+      <p class="text-xs opacity-70">{% trans "Current" %}: {{ lesson.video_file.title }}</p>
+    {% endif %}
+    {{ form.video_upload }}
+    <p class="text-xs opacity-60">{{ form.video_upload.help_text }}</p>
+    {% if form.video_upload.errors %}<p class="text-sm text-warn-light">{{ form.video_upload.errors }}</p>{% endif %}
+    {% if lesson and lesson.video_file %}
+      <label class="inline-flex items-center gap-2 text-xs text-warn-light">{{ form.remove_video }} {{ form.remove_video.label }}</label>
+    {% endif %}
+  </div>
+
+  <!-- Notes upload -->
+  <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="space-y-2 rounded-xl border p-4">
+    <label for="{{ form.notes_upload.id_for_label }}" class="block text-sm font-semibold"><i class="fa-solid fa-file-pdf"></i> {{ form.notes_upload.label }}</label>
+    {% if lesson and lesson.notes_file %}
+      <p class="text-xs opacity-70">{% trans "Current" %}: {{ lesson.notes_file.title }}</p>
+    {% endif %}
+    {{ form.notes_upload }}
+    <p class="text-xs opacity-60">{{ form.notes_upload.help_text }}</p>
+    {% if form.notes_upload.errors %}<p class="text-sm text-warn-light">{{ form.notes_upload.errors }}</p>{% endif %}
+    {% if lesson and lesson.notes_file %}
+      <label class="inline-flex items-center gap-2 text-xs text-warn-light">{{ form.remove_notes }} {{ form.remove_notes.label }}</label>
+    {% endif %}
+  </div>
+
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="space-y-1">
+      <label for="{{ form.order.id_for_label }}" class="block text-sm font-semibold">{{ form.order.label }}</label>
+      {{ form.order }}
+    </div>
+    <div class="space-y-1">
+      <label for="{{ form.attached_quizzes.id_for_label }}" class="block text-sm font-semibold">{{ form.attached_quizzes.label }}</label>
+      {{ form.attached_quizzes }}
+    </div>
+  </div>
+
+  <div class="flex flex-wrap items-center justify-end gap-3 pt-2">
+    <a href="{% url 'backoffice_courses:module-edit' pk=module.pk %}"
+       :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'"
+       class="rounded-lg border px-4 py-2 text-sm font-semibold hover:opacity-85">{% trans "Cancel" %}</a>
+    <button type="submit"
+            :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+            class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90"><i class="{{ icon }}"></i> {{ submit_label }}</button>
+  </div>
+</form>
+{% endblock %}

@@ -97,6 +97,23 @@ class ModuleForm(forms.ModelForm):
 
 
 class LessonForm(forms.ModelForm):
+    # Non-model upload fields; the views turn these into VaultFiles and set the
+    # video_file / notes_file FKs. Kept out of Meta so ModelForm ignores them.
+    _UPLOAD_FIELDS = ("video_upload", "notes_upload", "remove_video", "remove_notes")
+
+    video_upload = forms.FileField(
+        required=False, label=_("Lesson video"),
+        help_text=_("Voice-narrated MP4/WebM. Leave blank to keep the current file."),
+        widget=forms.ClearableFileInput(attrs={"accept": "video/*", "class": "block w-full text-sm"}),
+    )
+    notes_upload = forms.FileField(
+        required=False, label=_("Lesson notes (PDF)"),
+        help_text=_("Downloadable / printable PDF notes."),
+        widget=forms.ClearableFileInput(attrs={"accept": "application/pdf,.pdf", "class": "block w-full text-sm"}),
+    )
+    remove_video = forms.BooleanField(required=False, label=_("Remove current video"))
+    remove_notes = forms.BooleanField(required=False, label=_("Remove current notes"))
+
     class Meta:
         model = Lesson
         fields = ["title", "summary", "order", "attached_quizzes"]
@@ -112,7 +129,29 @@ class LessonForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.module = module or (self.instance.module if self.instance.pk else None)
         self.fields["attached_quizzes"].queryset = Quiz.objects.order_by("title")
-        apply_oya_field_styles(self.fields, skip={"attached_quizzes"})
+        apply_oya_field_styles(
+            self.fields, skip={"attached_quizzes", *self._UPLOAD_FIELDS})
+        apply_oya_checkbox_styles(self.fields["remove_video"])
+        apply_oya_checkbox_styles(self.fields["remove_notes"])
+
+    @staticmethod
+    def _detect(uploaded):
+        import mimetypes
+        from toto.vault.models import VaultFile
+        mime, _ = mimetypes.guess_type(uploaded.name)
+        return VaultFile.detect_type(mime or "", uploaded.name)
+
+    def clean_video_upload(self):
+        uploaded = self.cleaned_data.get("video_upload")
+        if uploaded and self._detect(uploaded) != "video":
+            raise forms.ValidationError(_("Please upload a video file (MP4, WebM, …)."))
+        return uploaded
+
+    def clean_notes_upload(self):
+        uploaded = self.cleaned_data.get("notes_upload")
+        if uploaded and self._detect(uploaded) != "pdf":
+            raise forms.ValidationError(_("Please upload a PDF file."))
+        return uploaded
 
     def save(self, commit=True):
         obj = super().save(commit=False)

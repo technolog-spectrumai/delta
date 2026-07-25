@@ -9,6 +9,7 @@ from django.views.decorators.http import require_POST
 
 from toto.backoffice.access import teacher_required
 from toto.backoffice.shell import backoffice_render
+from toto.backoffice.vault_upload import create_vault_file
 
 from .backoffice_forms import (
     CourseForm,
@@ -190,38 +191,64 @@ def module_reorder(request, pk):
 
 # --- lessons ---------------------------------------------------------------
 
+def _apply_lesson_files(request, form, lesson):
+    """Turn the lesson form's uploads into VaultFiles (or honour removals)."""
+    changed = []
+    video = form.cleaned_data.get("video_upload")
+    if video:
+        lesson.video_file = create_vault_file(
+            request.user, video, is_public=False, file_type="video")
+        changed.append("video_file")
+    elif form.cleaned_data.get("remove_video"):
+        lesson.video_file = None
+        changed.append("video_file")
+
+    notes = form.cleaned_data.get("notes_upload")
+    if notes:
+        lesson.notes_file = create_vault_file(
+            request.user, notes, is_public=False, file_type="pdf")
+        changed.append("notes_file")
+    elif form.cleaned_data.get("remove_notes"):
+        lesson.notes_file = None
+        changed.append("notes_file")
+
+    if changed:
+        lesson.save(update_fields=changed)
+
+
 @teacher_required
 def lesson_create(request, pk):
     module = get_object_or_404(CourseModule, pk=pk)
-    form = LessonForm(request.POST or None, module=module)
+    form = LessonForm(request.POST or None, request.FILES or None, module=module)
     if request.method == "POST" and form.is_valid():
         lesson = form.save(commit=False)
         lesson.owner = _teacher(request)
         lesson.save()
         form.save_m2m()
+        _apply_lesson_files(request, form, lesson)
         messages.success(request, _("Lesson added."))
         return redirect("backoffice_courses:module-edit", pk=module.pk)
-    return backoffice_render(request, "backoffice/_generic_form.html", {
-        "form": form, "title": _("New lesson"), "submit_label": _("Add lesson"),
+    return backoffice_render(request, "academy/backoffice/lesson_form.html", {
+        "form": form, "module": module,
+        "title": _("New lesson"), "submit_label": _("Add lesson"),
         "icon": "fa-solid fa-plus",
-        "back_url": reverse("backoffice_courses:module-edit", kwargs={"pk": module.pk}),
-        "back_label": module.title,
-        "cancel_url": reverse("backoffice_courses:module-edit", kwargs={"pk": module.pk}),
     }, active=ACTIVE)
 
 
 @teacher_required
 def lesson_edit(request, pk):
     lesson = get_object_or_404(Lesson.objects.select_related("module"), pk=pk)
-    form = LessonForm(request.POST or None, instance=lesson, module=lesson.module)
+    form = LessonForm(request.POST or None, request.FILES or None,
+                      instance=lesson, module=lesson.module)
     if request.method == "POST" and form.is_valid():
         form.save()
+        _apply_lesson_files(request, form, lesson)
         messages.success(request, _("Lesson saved."))
         return redirect("backoffice_courses:module-edit", pk=lesson.module.pk)
-    return backoffice_render(request, "backoffice/_generic_form.html", {
-        "form": form, "title": _("Edit lesson"), "submit_label": _("Save lesson"),
+    return backoffice_render(request, "academy/backoffice/lesson_form.html", {
+        "form": form, "module": lesson.module, "lesson": lesson,
+        "title": _("Edit lesson"), "submit_label": _("Save lesson"),
         "icon": "fa-solid fa-pen-to-square",
-        "cancel_url": reverse("backoffice_courses:module-edit", kwargs={"pk": lesson.module.pk}),
     }, active=ACTIVE)
 
 

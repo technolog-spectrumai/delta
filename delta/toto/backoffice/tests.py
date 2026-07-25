@@ -1,5 +1,9 @@
+import shutil
+import tempfile
+
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from toto.academy.models import Course, CourseModule
@@ -267,3 +271,74 @@ class LibraryBackofficeTests(TestCase):
 
     def test_unknown_reference_kind_404(self):
         self.assertEqual(self.client.get("/panel/biblioteka/widget/new/").status_code, 404)
+
+
+# ---------------------------------------------------------------------------
+# Lesson in-panel upload (video + PDF -> VaultFile)
+# ---------------------------------------------------------------------------
+
+_UPLOAD_MEDIA = tempfile.mkdtemp(prefix="delta-upload-test-")
+
+
+@override_settings(MEDIA_ROOT=_UPLOAD_MEDIA)
+class LessonUploadTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.staff = _staff("bo-upload")
+        cls.group = SkillGroup.objects.create(title="G", slug="gu")
+        cls.badge = SkillBadge.objects.create(group=cls.group, title="B", slug="bu")
+        cls.course = Course.objects.create(title="C", slug="cu")
+        cls.module = CourseModule.objects.create(
+            course=cls.course, title="M", slug="mu", unlocks_badge=cls.badge)
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        shutil.rmtree(_UPLOAD_MEDIA, ignore_errors=True)
+
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def _create(self, **extra):
+        data = {"title": "L1", "summary": "", "order": "0", "attached_quizzes": []}
+        data.update(extra)
+        return self.client.post(
+            reverse("backoffice_courses:lesson-create", kwargs={"pk": self.module.pk}), data)
+
+    def test_upload_video_creates_and_links_vaultfile(self):
+        video = SimpleUploadedFile("lesson.mp4", b"\x00\x00fakevideo", content_type="video/mp4")
+        resp = self._create(video_upload=video)
+        self.assertRedirects(
+            resp, reverse("backoffice_courses:module-edit", kwargs={"pk": self.module.pk}))
+        lesson = self.module.lessons.get()
+        self.assertIsNotNone(lesson.video_file)
+        vf = lesson.video_file
+        self.assertEqual(vf.file_type, "video")
+        self.assertFalse(vf.is_encrypted)
+        self.assertEqual(vf.owner, self.staff)
+        self.assertTrue(vf.content_hash)
+
+    def test_upload_pdf_notes(self):
+        pdf = SimpleUploadedFile("notes.pdf", b"%PDF-1.4 fake", content_type="application/pdf")
+        self._create(notes_upload=pdf)
+        lesson = self.module.lessons.get()
+        self.assertIsNotNone(lesson.notes_file)
+        self.assertEqual(lesson.notes_file.file_type, "pdf")
+
+    def test_non_video_upload_rejected(self):
+        bad = SimpleUploadedFile("notes.pdf", b"%PDF fake", content_type="application/pdf")
+        resp = self._create(video_upload=bad)
+        self.assertEqual(resp.status_code, 200)  # re-rendered with a field error
+        self.assertEqual(self.module.lessons.count(), 0)
+
+    def test_remove_video_clears_fk(self):
+        self._create(video_upload=SimpleUploadedFile("lesson.mp4", b"fake", content_type="video/mp4"))
+        lesson = self.module.lessons.get()
+        self.assertIsNotNone(lesson.video_file)
+        self.client.post(
+            reverse("backoffice_courses:lesson-edit", kwargs={"pk": lesson.pk}),
+            {"title": lesson.title, "summary": "", "order": "0",
+             "attached_quizzes": [], "remove_video": "on"})
+        lesson.refresh_from_db()
+        self.assertIsNone(lesson.video_file)
