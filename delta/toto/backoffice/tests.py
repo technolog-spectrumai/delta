@@ -857,3 +857,61 @@ class SkillReorderTests(TestCase):
         self.assertContains(r, "Sortable.min.js")
         self.assertContains(r, "data-reorder-id")
         self.assertContains(r, reverse("backoffice_skills:group-reorder"))
+
+
+# ---------------------------------------------------------------------------
+# Cohort batch certificate awarding
+# ---------------------------------------------------------------------------
+
+class CohortBatchCertTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.staff = _staff("bo-batchcert")
+        cls.course = Course.objects.create(title="BC", slug="bc")
+        cls.cohort = Cohort.objects.create(course=cls.course, title="Group A", slug="ga")
+        cls.p1 = Person.objects.create(display_name="Jan Kowalski", email="jan@example.com")
+        cls.p2 = Person.objects.create(display_name="Anna Nowak", email="anna@example.com")
+        cls.s1 = Student.objects.create(person=cls.p1)
+        cls.s2 = Student.objects.create(person=cls.p2)
+        for s in (cls.s1, cls.s2):
+            CourseEnrollment.objects.create(student=s, course=cls.course)
+            CohortMembership.objects.create(cohort=cls.cohort, student=s)
+
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def _url(self, name, pk):
+        return reverse(f"backoffice_courses:{name}", kwargs={"pk": pk})
+
+    def test_batch_gated_to_staff(self):
+        user = get_user_model().objects.create_user("plain-batchcert", password="x")
+        self.client.force_login(user)
+        self.assertEqual(
+            self.client.post(self._url("cohort-award-certificates", self.cohort.pk)).status_code, 404)
+
+    def test_batch_award_completes_and_issues_certs(self):
+        resp = self.client.post(self._url("cohort-award-certificates", self.cohort.pk))
+        self.assertRedirects(resp, self._url("cohort-edit", self.cohort.pk))
+        for person, student in ((self.p1, self.s1), (self.p2, self.s2)):
+            enrollment = CourseEnrollment.objects.get(student=student, course=self.course)
+            self.assertIsNotNone(enrollment.completed_at)
+            self.assertTrue(Certificate.objects.filter(person=person, course=self.course).exists())
+
+    def test_batch_is_idempotent_and_preserves_completion_date(self):
+        from datetime import timedelta
+
+        from django.utils import timezone
+        earlier = timezone.now() - timedelta(days=3)
+        e1 = CourseEnrollment.objects.get(student=self.s1, course=self.course)
+        e1.completed_at = earlier
+        e1.save()  # issues p1's certificate now
+        self.client.post(self._url("cohort-award-certificates", self.cohort.pk))
+        e1.refresh_from_db()
+        self.assertEqual(e1.completed_at, earlier)  # already-complete member untouched
+        self.assertEqual(Certificate.objects.filter(course=self.course).count(), 2)  # no duplicates
+
+    def test_award_button_rendered_on_editor_and_roster(self):
+        award = self._url("cohort-award-certificates", self.cohort.pk)
+        self.assertContains(self.client.get(self._url("cohort-edit", self.cohort.pk)), award)
+        self.assertContains(self.client.get(self._url("roster", self.course.pk)), award)

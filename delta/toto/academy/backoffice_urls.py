@@ -31,6 +31,7 @@ urlpatterns = [
     path("cohorts/<int:pk>/delete/", views.cohort_delete, name="cohort-delete"),
     path("cohorts/<int:pk>/members/add/", views.cohort_add_member, name="cohort-add-member"),
     path("cohorts/<int:pk>/members/remove/", views.cohort_remove_member, name="cohort-remove-member"),
+    path("cohorts/<int:pk>/award-certificates/", views.cohort_award_certificates, name="cohort-award-certificates"),
     # per-student: completion, badges, certificate
     path("<int:pk>/students/<int:student_pk>/", views.student_detail, name="student-detail"),
     path("<int:pk>/students/<int:student_pk>/complete/", views.student_complete, name="student-complete"),

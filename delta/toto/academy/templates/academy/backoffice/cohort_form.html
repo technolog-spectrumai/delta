@@ -35,7 +35,15 @@
   {% if cohort %}
     <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
              class="max-w-3xl space-y-3 rounded-2xl border p-5 shadow-sm">
-      <h3 class="font-bold"><i class="fa-solid fa-users"></i> {% trans "Members" %} ({{ members|length }}{% if cohort.capacity %}/{{ cohort.capacity }}{% endif %})</h3>
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <h3 class="font-bold"><i class="fa-solid fa-users"></i> {% trans "Members" %} ({{ members|length }}{% if cohort.capacity %}/{{ cohort.capacity }}{% endif %})</h3>
+        {% if members %}
+          <form method="post" action="{% url 'backoffice_courses:cohort-award-certificates' pk=cohort.pk %}"
+                onsubmit="return confirm('{% trans "Mark all members complete and issue a certificate to each?" %}')">{% csrf_token %}
+            <button type="submit" class="inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-certificate"></i> {% trans "Award certificates" %}</button>
+          </form>
+        {% endif %}
+      </div>
       <div class="space-y-2">
         {% for m in members %}
           <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="flex items-center justify-between gap-3 rounded-lg border p-2 text-sm">

@@ -80,6 +80,7 @@ STAFF_ONLY = {
     "backoffice_courses:unenrol-student", "backoffice_courses:cohort-create",
     "backoffice_courses:cohort-edit", "backoffice_courses:cohort-delete",
     "backoffice_courses:cohort-add-member", "backoffice_courses:cohort-remove-member",
+    "backoffice_courses:cohort-award-certificates",
     "backoffice_courses:student-detail", "backoffice_courses:student-complete",
     "backoffice_courses:student-uncomplete", "backoffice_courses:student-award-badge",
     "backoffice_courses:student-revoke-badge",
@@ -270,6 +271,7 @@ PARAM_SOURCES = {
     "backoffice_courses:cohort-delete": (False, lambda: _kw(_first("academy.Cohort"), pk="pk")),
     "backoffice_courses:cohort-add-member": (False, lambda: _kw(_first("academy.Cohort"), pk="pk")),
     "backoffice_courses:cohort-remove-member": (False, lambda: _kw(_first("academy.Cohort"), pk="pk")),
+    "backoffice_courses:cohort-award-certificates": (False, lambda: _kw(_first("academy.Cohort"), pk="pk")),
     # per-student pages (course pk + student pk)
     "backoffice_courses:student-detail": (False, lambda: _kw_course_student()),
     "backoffice_courses:student-complete": (False, lambda: _kw_course_student()),

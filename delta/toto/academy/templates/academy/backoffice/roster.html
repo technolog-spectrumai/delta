@@ -82,6 +82,12 @@
             {% if not cohort.is_active %}<span class="ml-1 rounded-full border px-2 py-0.5 text-[10px] opacity-60">{% trans "inactive" %}</span>{% endif %}
           </div>
           <div class="flex items-center gap-2">
+            {% if cohort.member_count %}
+              <form method="post" action="{% url 'backoffice_courses:cohort-award-certificates' pk=cohort.pk %}"
+                    onsubmit="return confirm('{% trans "Mark all members complete and issue a certificate to each?" %}')">{% csrf_token %}
+                <button type="submit" class="rounded border px-2 py-1 text-xs hover:opacity-85" title="{% trans 'Award certificates to all members' %}"><i class="fa-solid fa-certificate"></i></button>
+              </form>
+            {% endif %}
             <a href="{% url 'backoffice_courses:cohort-edit' pk=cohort.pk %}" class="rounded border px-2 py-1 text-xs hover:opacity-85"><i class="fa-solid fa-pen"></i></a>
             <a href="{% url 'backoffice_courses:cohort-delete' pk=cohort.pk %}" class="rounded border border-warn-light/40 px-2 py-1 text-xs text-warn-light hover:opacity-85"><i class="fa-solid fa-trash"></i></a>
           </div>

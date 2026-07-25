@@ -1,6 +1,7 @@
 """Teacher back-office: author courses (Course -> Module -> Lesson / Script)."""
 
 from django.contrib import messages
+from django.db import transaction
 from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -491,6 +492,36 @@ def cohort_remove_member(request, pk):
     CohortMembership.objects.filter(
         cohort=cohort, student__person_id=request.POST.get("person")).delete()
     messages.success(request, _("Removed from the cohort."))
+    return redirect("backoffice_courses:cohort-edit", pk=cohort.pk)
+
+
+@teacher_required
+@require_POST
+def cohort_award_certificates(request, pk):
+    """Mark every cohort member's course complete and issue each a certificate.
+
+    Reuses the single-student mechanic (set completed_at + save() -> the
+    CourseEnrollment.save() override auto-issues an idempotent Certificate).
+    Already-complete members keep their original completion date.
+    """
+    cohort = get_object_or_404(Cohort.objects.select_related("course"), pk=pk)
+    issued = already = 0
+    with transaction.atomic():
+        for membership in cohort.memberships.select_related("student__person"):
+            enrollment, _created = CourseEnrollment.objects.get_or_create(
+                student=membership.student, course=cohort.course)
+            if enrollment.completed_at:
+                already += 1
+                continue
+            enrollment.completed_at = timezone.now()
+            enrollment.save()  # save() auto-issues the Certificate
+            issued += 1
+    if issued or already:
+        messages.success(request, _(
+            "Issued %(n)d certificate(s); %(m)d member(s) were already complete."
+        ) % {"n": issued, "m": already})
+    else:
+        messages.info(request, _("This cohort has no members yet."))
     return redirect("backoffice_courses:cohort-edit", pk=cohort.pk)
 
 
