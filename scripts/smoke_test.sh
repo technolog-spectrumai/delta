@@ -46,12 +46,12 @@ fi
 
 echo "==> HTTP probes against $BASE"
 probe /                                   # dashboard (may redirect to login)
-probe /sso/login/                         # login page
+probe /sso/login/ 200                     # login page must render
 probe /static/admin/css/base.css 200      # collectstatic manifest asset
 probe /nauka/                             # academy
 probe /zadania/                           # quizzes
 probe /notatki/                           # palimpsest
-probe /biblioteka/                        # library
+probe /biblioteka/books/                  # library (its mount root has no view)
 probe /subskrypcje/                       # subscriptions
 
 if [ "$FAIL" -ne 0 ]; then
