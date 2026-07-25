@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from toto.competence.models import SkillBadge, SkillBadgePrerequisite, SkillGroup
+from toto.core.models import Platform
 from toto.people.models import Person
 
 from .models import (
@@ -96,6 +97,10 @@ class PathFixtureMixin:
 
     @classmethod
     def setUpTestData(cls):
+        # PageProcessor 404s every decorated view without an active platform row
+        # (seeded by init_platform in real deployments).
+        Platform.objects.create(
+            site_name="Test", author="tests", publication_year=2026)
         cls.group = SkillGroup.objects.create(
             title="Maths", slug="maths", order=1)
         cls.badge_a = SkillBadge.objects.create(

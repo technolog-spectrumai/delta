@@ -7,6 +7,7 @@ from django.utils import timezone
 
 from trix_editor.fields import TrixEditorField
 
+from toto.core.models import Platform
 from toto.people.models import Person
 
 from .models import (
@@ -40,6 +41,10 @@ class QuizSolutionFixtureMixin:
 
     @classmethod
     def setUpTestData(cls):
+        # PageProcessor 404s every decorated view without an active platform row
+        # (seeded by init_platform in real deployments).
+        Platform.objects.create(
+            site_name="Test", author="tests", publication_year=2026)
         cls.quiz = Quiz.objects.create(
             title="Solutions quiz", slug="solutions-quiz", is_published=True)
 
