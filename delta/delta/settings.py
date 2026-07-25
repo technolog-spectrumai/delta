@@ -127,6 +127,7 @@ INSTALLED_APPS = [
     "toto.quota",
     "toto.sso_core",
     "toto.sso_master",
+    "toto.social_login",
     # --- delta education portion (revived from toto_libs/limbo, carried here) ---
     "toto.competence",   # skill badges / DAG — academy CourseModule.unlocks_badge
     "toto.quizzes",      # tasks: A–D + open answers, practice pool (delta additions)
