@@ -132,6 +132,10 @@ INSTALLED_APPS = [
     "toto.library",      # bibliography / reference manager
     "toto.subscriptions",  # course gating + plans (academy soft-dep for enrollment)
     "toto.academy",      # LMS core: Course -> CourseModule -> Lesson
+
+    # The host project package itself — carries host-only tooling like the
+    # smoke_urls management command (no models, no templates).
+    "delta",
 ]
 
 if not HAS_GIS:
