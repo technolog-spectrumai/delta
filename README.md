@@ -83,15 +83,27 @@ loads geometry-less). The local profile ships `BUILD_GEO=0` for a lean image.
 ```bash
 python3 -m venv venv && . venv/bin/activate
 pip install -r requirements.txt
-../toto_libs/scripts/install_toto.sh          # editable install of the pinned toto suite
-# or run against an uninstalled checkout:  export TOTO_SRC=../toto_libs
-
-python delta/manage.py migrate
+python delta/manage.py migrate                # toto resolves from vendor/toto_libs
 python delta/manage.py runserver
 ```
 
+Getting toto onto the path, in order of preference:
+
+1. **Automatic (default):** the vendored subtree at `vendor/toto_libs` —
+   manage.py and deploy.py put its packages on sys.path when `TOTO_SRC` is
+   unset (see `full_secession.md`).
+2. **Another checkout:** `TOTO_SRC=/path/to/toto_suite` overrides the vendor
+   tree; pointing it at a missing dir disables source resolution entirely.
+3. **Editable:** `vendor/toto_libs/scripts/install_toto.sh`.
+4. **Pinned wheel:** `python vendor/toto_libs/scripts/build_wheels.py --out dist`
+   then `pip install --no-index --find-links dist -r requirements.toto.txt`.
+
 `delta/manage.py` delegates to the Django project in `delta/delta/`; it honours
 `TOTO_SRC` and a repo-root `.env.local`.
+
+To prove a clean environment end to end (fresh venv, wheel built from the
+vendored tree, validate/config, unit tests, check, migrate, collectstatic,
+boot smoke): `scripts/clean_env_test.sh`.
 
 Seed the demo maths course tree + subscription plans:
 
@@ -132,11 +144,18 @@ then:
 
 ### toto version gate
 
-Docker installs toto from a **wheel** `deploy.py` stages into `dist/`, built from a
-local `../toto_libs` checkout (auto-detected, or `TOTO_SRC` / `toto_src:`). The
-build is rejected unless the wheel is exactly the pinned `toto-base` version. To
-upgrade: bump the version in `requirements.toto.txt`, check out the matching tag in
-`../toto_libs`, and redeploy.
+Docker installs toto from a **wheel** `deploy.py` stages into `dist/`, built from
+the in-repo vendored tree at `vendor/toto_libs` (or `TOTO_SRC` / `toto_src:`). The
+build is rejected unless the wheel is exactly the pinned `toto-base` version,
+which must equal `vendor/toto_libs/VERSION`. To upgrade:
+
+```bash
+git subtree pull --prefix=vendor/toto_libs ../toto_libs delta --squash
+$EDITOR requirements.toto.txt        # bump the pin to vendor/toto_libs/VERSION
+./deploy_local.sh
+```
+
+See `full_secession.md` for the full subtree workflow.
 
 ---
 
