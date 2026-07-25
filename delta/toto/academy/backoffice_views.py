@@ -2,6 +2,7 @@
 
 from django.contrib import messages
 from django.db.models import Count, Q
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
@@ -10,7 +11,7 @@ from django.views.decorators.http import require_POST
 
 from toto.backoffice.access import teacher_required
 from toto.backoffice.shell import backoffice_render
-from toto.backoffice.utils import unique_slug
+from toto.backoffice.utils import apply_reorder, unique_slug
 from toto.backoffice.vault_upload import create_vault_file
 from toto.people.models import Person
 
@@ -44,23 +45,6 @@ ACTIVE = "courses"
 def _teacher(request):
     person = getattr(request.user, "community_profile", None)
     return Teacher.objects.filter(person=person).first() if person else None
-
-
-def _apply_reorder(items, item_id, direction):
-    """Swap one item up/down and normalise every ``order`` to 1..n."""
-    ids = [i.id for i in items]
-    try:
-        idx = ids.index(int(item_id))
-    except (TypeError, ValueError):
-        idx = None
-    if idx is not None:
-        swap = idx - 1 if direction == "up" else idx + 1
-        if 0 <= swap < len(items):
-            items[idx], items[swap] = items[swap], items[idx]
-    for i, obj in enumerate(items, start=1):
-        if obj.order != i:
-            obj.order = i
-            obj.save(update_fields=["order"])
 
 
 def _renumber_sections(formset):
@@ -200,8 +184,8 @@ def module_delete(request, pk):
 @require_POST
 def module_reorder(request, pk):
     course = get_object_or_404(Course, pk=pk)
-    _apply_reorder(list(course.modules.order_by("order", "id")),
-                   request.POST.get("item"), request.POST.get("direction"))
+    if apply_reorder(course.modules.order_by("order", "id"), request):
+        return HttpResponse(status=204)
     return redirect("backoffice_courses:module-list", pk=course.pk)
 
 
@@ -286,8 +270,8 @@ def lesson_delete(request, pk):
 @require_POST
 def lesson_reorder(request, pk):
     module = get_object_or_404(CourseModule, pk=pk)
-    _apply_reorder(list(module.lessons.order_by("order", "id")),
-                   request.POST.get("item"), request.POST.get("direction"))
+    if apply_reorder(module.lessons.order_by("order", "id"), request):
+        return HttpResponse(status=204)
     return redirect("backoffice_courses:module-edit", pk=module.pk)
 
 

@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block backoffice_start_script %}{% include "quizzes/_katex.html" %}<style>[x-cloak]{display:none!important;}</style>{% endblock %}
-{% block backoffice_end_script %}<script defer src="{% static 'quizzes/js/mathpreview.js' %}"></script>{% endblock %}
+{% block backoffice_end_script %}{% include "backoffice/_reorder_assets.html" %}<script defer src="{% static 'quizzes/js/mathpreview.js' %}"></script>{% endblock %}
 
 {% block backoffice_content %}
 <div class="space-y-6">
@@ -96,9 +96,11 @@
         <h3 class="font-bold"><i class="fa-solid fa-list-ol"></i> {% trans "Lessons" %}</h3>
         <a href="{% url 'backoffice_courses:lesson-create' pk=module.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-plus"></i> {% trans "Add lesson" %}</a>
       </div>
+      <div class="space-y-2" data-reorder-url="{% url 'backoffice_courses:lesson-reorder' pk=module.pk %}">
       {% for lesson in lessons %}
-        <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="flex items-center gap-3 rounded-xl border p-3">
-          <div class="flex flex-col">
+        <div data-reorder-id="{{ lesson.pk }}" :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="flex items-center gap-3 rounded-xl border p-3">
+          <div class="flex flex-col items-center">
+            <span class="js-drag cursor-grab opacity-40 hover:opacity-100" title="{% trans 'Drag to reorder' %}"><i class="fa-solid fa-grip-vertical"></i></span>
             <form method="post" action="{% url 'backoffice_courses:lesson-reorder' pk=module.pk %}">{% csrf_token %}<input type="hidden" name="item" value="{{ lesson.pk }}"><input type="hidden" name="direction" value="up"><button class="opacity-50 hover:opacity-100" aria-label="{% trans 'Move up' %}"><i class="fa-solid fa-chevron-up"></i></button></form>
             <form method="post" action="{% url 'backoffice_courses:lesson-reorder' pk=module.pk %}">{% csrf_token %}<input type="hidden" name="item" value="{{ lesson.pk }}"><input type="hidden" name="direction" value="down"><button class="opacity-50 hover:opacity-100" aria-label="{% trans 'Move down' %}"><i class="fa-solid fa-chevron-down"></i></button></form>
           </div>
@@ -109,6 +111,7 @@
       {% empty %}
         <p class="text-sm italic opacity-50">{% trans "No lessons yet." %}</p>
       {% endfor %}
+      </div>
     </section>
 
     <!-- Scripts -->

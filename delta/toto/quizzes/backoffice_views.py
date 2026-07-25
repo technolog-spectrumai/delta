@@ -7,12 +7,14 @@ inside the back-office shell (nav + platform chrome).
 
 from django.contrib import messages
 from django.db.models import Count
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 from toto.backoffice.access import teacher_required
 from toto.backoffice.shell import backoffice_render
+from toto.backoffice.utils import apply_reorder
 
 from .forms import QuestionForm, QuizForm, build_answer_formset
 from .models import Quiz, QuizQuestion, QuizTrait
@@ -210,19 +212,8 @@ def question_delete(request, pk):
 @teacher_required
 @require_POST
 def question_reorder(request, pk):
-    """Move one question up/down; normalise all orders to 1..n."""
+    """Reorder questions — drag-drop (order list) or up/down (question+direction)."""
     quiz = get_object_or_404(Quiz, pk=pk)
-    questions = list(quiz.questions.order_by("order", "id"))
-    ids = [q.id for q in questions]
-    try:
-        idx = ids.index(int(request.POST.get("question")))
-    except (TypeError, ValueError):
-        return redirect("backoffice_quizzes:question-list", pk=quiz.pk)
-    swap = idx - 1 if request.POST.get("direction") == "up" else idx + 1
-    if 0 <= swap < len(questions):
-        questions[idx], questions[swap] = questions[swap], questions[idx]
-    for i, question in enumerate(questions, start=1):
-        if question.order != i:
-            question.order = i
-            question.save(update_fields=["order"])
+    if apply_reorder(quiz.questions.order_by("order", "id"), request, id_param="question"):
+        return HttpResponse(status=204)
     return redirect("backoffice_quizzes:question-list", pk=quiz.pk)

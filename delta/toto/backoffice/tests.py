@@ -687,3 +687,68 @@ class MathPreviewEditorTests(TestCase):
     def test_quiz_form_tags_description(self):
         r = self.client.get(reverse("backoffice_quizzes:quiz-create"))
         self.assertContains(r, "js-mathsource")
+
+
+# ---------------------------------------------------------------------------
+# Drag-and-drop reorder — modules / lessons / questions (Part 1)
+# ---------------------------------------------------------------------------
+
+class ReorderDragDropTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.staff = _staff("bo-reorder")
+        group = SkillGroup.objects.create(title="G", slug="rog")
+        b1 = SkillBadge.objects.create(group=group, title="B1", slug="rob1")
+        b2 = SkillBadge.objects.create(group=group, title="B2", slug="rob2")
+        b3 = SkillBadge.objects.create(group=group, title="B3", slug="rob3")
+        cls.course = Course.objects.create(title="C", slug="roc")
+        cls.m1 = CourseModule.objects.create(course=cls.course, title="M1", slug="rom1", unlocks_badge=b1, order=1)
+        cls.m2 = CourseModule.objects.create(course=cls.course, title="M2", slug="rom2", unlocks_badge=b2, order=2)
+        cls.m3 = CourseModule.objects.create(course=cls.course, title="M3", slug="rom3", unlocks_badge=b3, order=3)
+
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def test_module_reorder_bulk_order_list(self):
+        url = reverse("backoffice_courses:module-reorder", kwargs={"pk": self.course.pk})
+        r = self.client.post(url, {"order": [self.m3.pk, self.m1.pk, self.m2.pk]})
+        self.assertEqual(r.status_code, 204)
+        self.m1.refresh_from_db(); self.m2.refresh_from_db(); self.m3.refresh_from_db()
+        self.assertEqual((self.m3.order, self.m1.order, self.m2.order), (1, 2, 3))
+
+    def test_module_reorder_up_down_fallback(self):
+        url = reverse("backoffice_courses:module-reorder", kwargs={"pk": self.course.pk})
+        r = self.client.post(url, {"item": self.m1.pk, "direction": "down"})
+        self.assertEqual(r.status_code, 302)  # form fallback redirects
+        self.m1.refresh_from_db(); self.m2.refresh_from_db()
+        self.assertEqual(self.m1.order, 2)
+        self.assertEqual(self.m2.order, 1)
+
+    def test_lesson_reorder_bulk(self):
+        l1 = Lesson.objects.create(module=self.m1, title="L1", slug="rol1", order=1)
+        l2 = Lesson.objects.create(module=self.m1, title="L2", slug="rol2", order=2)
+        url = reverse("backoffice_courses:lesson-reorder", kwargs={"pk": self.m1.pk})
+        r = self.client.post(url, {"order": [l2.pk, l1.pk]})
+        self.assertEqual(r.status_code, 204)
+        l1.refresh_from_db(); l2.refresh_from_db()
+        self.assertEqual(l2.order, 1)
+        self.assertEqual(l1.order, 2)
+
+    def test_question_reorder_bulk(self):
+        from toto.quizzes.models import Quiz, QuizQuestion
+        quiz = Quiz.objects.create(title="Q", slug="roq")
+        q1 = QuizQuestion.objects.create(quiz=quiz, text="q1", order=1)
+        q2 = QuizQuestion.objects.create(quiz=quiz, text="q2", order=2)
+        url = reverse("backoffice_quizzes:question-reorder", kwargs={"pk": quiz.pk})
+        r = self.client.post(url, {"order": [q2.pk, q1.pk]})
+        self.assertEqual(r.status_code, 204)
+        q1.refresh_from_db(); q2.refresh_from_db()
+        self.assertEqual(q2.order, 1)
+        self.assertEqual(q1.order, 2)
+
+    def test_module_list_loads_dnd_assets(self):
+        r = self.client.get(reverse("backoffice_courses:module-list", kwargs={"pk": self.course.pk}))
+        self.assertContains(r, "Sortable.min.js")
+        self.assertContains(r, "reorder.js")
+        self.assertContains(r, "data-reorder-id")
