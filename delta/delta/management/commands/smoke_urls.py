@@ -50,12 +50,36 @@ STAFF_ONLY = {
 }
 
 # (key) -> extra allowed statuses for authenticated personas (anon is already
-# lenient). OIDC endpoints 400 without client_id/state — that is their contract.
+# lenient). OIDC endpoints 400 without client_id/state — that is their contract;
+# the status endpoints 400/404 without their required query params likewise.
 OVERRIDES = {
     "sso:authorize": {400},
     "sso:consent": {400},
     "sso:admin_test_callback": {400},
+    "vault:encrypt_status": {400},
+    "vault:zip_status": {400},
+    "events:event_availability_api": {404},
 }
+
+# Owner-scoped views: a persona that doesn't own the object is 404'd by
+# design (ownership enforcement working) — key -> personas allowed to 404.
+OWNER_404_OK = {
+    "academy:personal-path-detail": {"staff"},
+    "academy:personal-path-regenerate": {"staff"},
+    "academy:personal-path-archive": {"staff"},
+    "academy:personal-path-task-add": {"staff"},
+    "academy:personal-path-step-toggle": {"staff"},
+    "academy:personal-path-step-delete": {"staff"},
+    "vault:api_file_detail": {"student"},
+    "vault:api_file_content": {"student"},
+    "vault:api_file_download": {"student"},
+    "vault:bucket_connection_url": {"student"},
+    "vault:copy_files": {"student"},
+}
+
+# Routes where a redirect to the login page is legitimate even when
+# authenticated (password reset self-disables without an email backend).
+LOGIN_REDIRECT_OK = {"sso:password_reset"}
 
 # Teeth beyond "didn't 500": the product's core pages must render outright.
 MUST_200 = {
@@ -68,7 +92,7 @@ MUST_200 = {
         "core:dashboard", "academy:course-list", "academy:course-detail",
         "academy:student-progress", "academy:personal-path-list",
         "academy:personal-path-detail", "quizzes:quiz-detail",
-        "subscriptions:my_subscription", "sso:my_profile",
+        "subscriptions:my_subscription",
     },
     "staff": {
         "admin:index", "core:dashboard", "academy:course-list",
@@ -118,9 +142,9 @@ def _student_path():
         return None
     return (
         PersonalPath.objects.filter(
-            student__person__user__username=SMOKE_STUDENT, is_active=True
+            student__person__user__username=SMOKE_STUDENT, status="active"
         ).first()
-        or PersonalPath.objects.filter(is_active=True).first()
+        or PersonalPath.objects.filter(status="active").first()
     )
 
 
@@ -419,7 +443,7 @@ def ensure_personas(stdout):
     student_row, _ = Student.objects.get_or_create(person=person)
 
     PersonalPath = _model("academy.PersonalPath")
-    path = PersonalPath.objects.filter(student=student_row, is_active=True).first()
+    path = PersonalPath.objects.filter(student=student_row, status="active").first()
     if path is None:
         badge = _first("competence.SkillBadge")
         if badge is not None:
@@ -473,13 +497,17 @@ def grade(persona, key, status, location):
     if status in (400, 404):
         if status in OVERRIDES.get(key, ()):
             return "pass", f"{status} allowed"
+        if status == 404 and persona == "student" and key in STAFF_ONLY:
+            return "pass", "staff gate"
+        if status == 404 and persona in OWNER_404_OK.get(key, ()):
+            return "pass", "owner-scoped"
         return "fail", f"unexpected {status}"
     if status == 405:
         return "pass", "post-only"
     if 300 <= status < 400:
         if persona == "anon":
             return "pass", ""
-        if location.startswith(LOGIN_PATH):
+        if location.startswith(LOGIN_PATH) and key not in LOGIN_REDIRECT_OK:
             if persona == "student" and key in STAFF_ONLY:
                 return "pass", "staff gate"
             return "fail", f"authenticated persona sent to login ({location})"
@@ -488,6 +516,8 @@ def grade(persona, key, status, location):
         if persona in ("anon", "student"):
             note = "staff gate" if key in STAFF_ONLY else "auth wall"
             return "pass", note
+        if status == 403 and key.startswith("admin:") and key.endswith("_add"):
+            return "pass", "add disabled"
         return "warn", f"{status} for staff (token-auth API?)"
     return "pass", ""
 

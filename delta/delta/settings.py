@@ -382,7 +382,7 @@ INGRESS_ALLOWED_APPS = [
     "toto.sso_master",
     # delta education content
     "toto.competence", "toto.quizzes", "toto.palimpsest",
-    "toto.subscriptions", "toto.academy",
+    "toto.subscriptions", "toto.academy", "toto.library",
 ]
 
 APPS_TO_SYNC = [
