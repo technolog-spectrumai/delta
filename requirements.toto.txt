@@ -1,12 +1,14 @@
 # The toto version this host deploys — the single place delta declares it.
 #
 # Exact pins only, all at the same version (the toto suite releases lockstep).
-# No URLs: check out the matching tag in your toto_libs clone yourself. deploy.py
-# rejects the build if the checkout, or the wheels it produces, are not exactly
-# these versions.
+# The source is the vendored subtree at vendor/toto_libs (see
+# full_secession.md); these pins must equal vendor/toto_libs/VERSION.
+# deploy.py rejects the build if the vendored tree, or the wheel it produces,
+# is not exactly these versions.
 #
-# To upgrade: edit the version here, then
-#   git -C ../toto_libs checkout v<version>
+# To upgrade: pull the new toto_libs delta-branch state into the subtree,
+# then bump every pin here in the same commit:
+#   git subtree pull --prefix=vendor/toto_libs ../toto_libs delta --squash
 #   ./deploy_local.sh            (or deploy.py <config> push)
 #
 # delta is a small e-learning host: it needs only toto-base (core / people /
@@ -17,6 +19,6 @@
 # Not listed here because delta owns them outright: toto.academy, toto.quizzes,
 # toto.competence, toto.palimpsest, toto.library and toto.subscriptions live in
 # this repo under delta/toto/ as a namespace portion (revived from
-# toto_libs/limbo/ — see toto_libs/README.md "Future-host outlook"). They need no
-# pin — they version with delta.
+# toto_libs limbo/ — see vendor/toto_libs/README.md "Future-host outlook").
+# They need no pin — they version with delta.
 toto-base==1.7

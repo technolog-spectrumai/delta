@@ -40,8 +40,8 @@ COPY requirements.txt ./
 RUN pip install --upgrade pip && pip install -r requirements.txt
 RUN pip install build setuptools wheel
 
-# toto is installed from the wheel deploy.py stages into dist/ (built from a local
-# toto_libs checkout, or from the `toto_requirement:` git pin).
+# toto is installed from the wheel deploy.py stages into dist/ (built from
+# the in-repo vendor/toto_libs tree, or from the `toto_requirement:` pins).
 COPY dist/ /tmp/toto_dist/
 COPY requirements.toto.txt /tmp/toto_dist/requirements.toto.txt
 RUN pip install --no-cache-dir --no-index --find-links /tmp/toto_dist \
