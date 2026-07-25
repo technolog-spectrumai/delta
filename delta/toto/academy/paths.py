@@ -22,10 +22,8 @@ def _badge_sort_key(badge):
     return (badge.group.order, badge.order, badge.title)
 
 
-def compute_gap_badges(student, goal_badge=None, goal_group=None):
-    """Return the student's unearned badges for the goal, in learning order."""
-    earned = set(student.badges.values_list("id", flat=True))
-
+def load_prerequisite_graph():
+    """Return (prereqs, dependents) adjacency dicts over SkillBadgePrerequisite."""
     prereqs = defaultdict(set)
     dependents = defaultdict(set)
     for badge_id, prerequisite_id in SkillBadgePrerequisite.objects.values_list(
@@ -33,22 +31,37 @@ def compute_gap_badges(student, goal_badge=None, goal_group=None):
     ):
         prereqs[badge_id].add(prerequisite_id)
         dependents[prerequisite_id].add(badge_id)
+    return prereqs, dependents
+
+
+def transitive_closure(seed_ids, adjacency):
+    """All ids reachable from seed_ids via adjacency, including the seeds.
+
+    Visited-set traversal, so cycles in admin data cannot loop forever.
+    """
+    closure = set()
+    stack = list(seed_ids)
+    while stack:
+        node = stack.pop()
+        if node in closure:
+            continue
+        closure.add(node)
+        stack.extend(adjacency[node] - closure)
+    return closure
+
+
+def compute_gap_badges(student, goal_badge=None, goal_group=None):
+    """Return the student's unearned badges for the goal, in learning order."""
+    earned = set(student.badges.values_list("id", flat=True))
+
+    prereqs, dependents = load_prerequisite_graph()
 
     if goal_badge is not None:
         frontier = [goal_badge.pk]
     else:
         frontier = list(goal_group.badges.values_list("id", flat=True))
 
-    closure = set()
-    stack = list(frontier)
-    while stack:
-        badge_id = stack.pop()
-        if badge_id in closure:
-            continue
-        closure.add(badge_id)
-        stack.extend(prereqs[badge_id] - closure)
-
-    pending = closure - earned
+    pending = transitive_closure(frontier, prereqs) - earned
     badges = {
         badge.pk: badge
         for badge in SkillBadge.objects.filter(pk__in=pending).select_related("group")
