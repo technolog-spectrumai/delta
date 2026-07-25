@@ -84,6 +84,12 @@ export TOTO_SRC="$REPO_ROOT/.no-such-toto-src"
 
 echo "==> deploy.py validate + config for every profile"
 for c in delta/deploy/configs/*.yaml; do
+    # delta_server.yaml ships as an unedited template until a real server
+    # exists; validate it once the placeholder host is filled in.
+    if grep -q 'your-server.example.com' "$c"; then
+        echo "    $(basename "$c") skipped (unedited server template)"
+        continue
+    fi
     "$PY" delta/scripts/deploy.py "$c" validate >/dev/null
     "$PY" delta/scripts/deploy.py "$c" config >/dev/null
     echo "    $(basename "$c") OK"
