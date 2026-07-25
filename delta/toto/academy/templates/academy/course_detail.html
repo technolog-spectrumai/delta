@@ -9,6 +9,24 @@
 {% block academy_header_action %}
 <div class="flex flex-wrap gap-2 self-start md:self-end">
   {% if user.is_authenticated %}
+    {% if is_enrolled %}
+      <span class="inline-flex items-center gap-2 rounded-lg border border-success-light/40 px-3 py-2 text-sm font-semibold text-success-light">
+        <i class="fa-solid fa-circle-check"></i>{% trans "Enrolled" %}</span>
+    {% else %}
+      <form method="post" action="{% url 'academy:course-enroll' slug=course.slug %}">{% csrf_token %}
+        <button type="submit"
+                :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+                class="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90">
+          <i class="fa-solid fa-user-plus"></i>{% trans "Enrol" %}</button>
+      </form>
+    {% endif %}
+  {% else %}
+    <a href="{% url 'sso:login' %}?next={{ request.path|urlencode }}"
+       :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+       class="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90">
+      <i class="fa-solid fa-right-to-bracket"></i>{% trans "Sign in to enrol" %}</a>
+  {% endif %}
+  {% if user.is_authenticated %}
     <a href="{% url 'academy:student-progress' %}"
        :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
        class="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold shadow-sm transition hover:opacity-85">

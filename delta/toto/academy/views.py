@@ -476,6 +476,10 @@ class CourseDetailView(AcademyContextMixin, DetailView):
         from .media_views import can_watch
         context["can_watch"] = can_watch(self.request.user, course)
 
+        person = getattr(self.request.user, "community_profile", None)
+        context["is_enrolled"] = bool(person) and CourseEnrollment.objects.filter(
+            student__person=person, course=course).exists()
+
         return context
 
 

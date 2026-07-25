@@ -865,3 +865,46 @@ class StudentHomeViewTests(TestCase):
         resp = self.client.get(reverse("academy:student-home"))
         self.assertContains(resp, "Algebra")  # enrolled course title
         self.assertContains(resp, reverse("academy:course-detail", kwargs={"slug": self.course.slug}))
+
+
+class SelfEnrolButtonTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Platform.objects.create(site_name="Test", author="tests", publication_year=2026)
+        cls.user_field = _person_user_field()
+        cls.course = Course.objects.create(
+            title="Enrol Me", slug="enrol-me", is_published=True, order=1)
+        cls.person = Person.objects.create(display_name="Enrollee")
+        cls.user = get_user_model().objects.create_user("enrollee", password="x")
+        if cls.user_field:
+            setattr(cls.person, cls.user_field, cls.user)
+            cls.person.save(update_fields=[cls.user_field])
+
+    def _detail(self):
+        return self.client.get(reverse("academy:course-detail", kwargs={"slug": self.course.slug}))
+
+    @property
+    def _enroll_url(self):
+        return reverse("academy:course-enroll", kwargs={"slug": self.course.slug})
+
+    def test_anonymous_sees_sign_in_to_enrol(self):
+        resp = self._detail()
+        self.assertContains(resp, reverse("sso:login"))
+        self.assertNotContains(resp, self._enroll_url)
+
+    def test_authenticated_non_enrolled_sees_enrol_button(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.user)
+        self.assertContains(self._detail(), self._enroll_url)
+
+    def test_enroll_creates_enrollment_then_marks_enrolled(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.user)
+        resp = self.client.post(self._enroll_url)
+        self.assertRedirects(resp, reverse("academy:course-detail", kwargs={"slug": self.course.slug}))
+        from .models import CourseEnrollment
+        self.assertTrue(CourseEnrollment.objects.filter(
+            student__person=self.person, course=self.course).exists())
+        self.assertNotContains(self._detail(), self._enroll_url)  # button gone once enrolled
