@@ -6,6 +6,8 @@ app_name = "backoffice_skills"
 
 urlpatterns = [
     path("", views.skill_overview, name="skill-overview"),
+    path("groups/reorder/", views.group_reorder, name="group-reorder"),
+    path("groups/<int:pk>/badges/reorder/", views.badge_reorder, name="badge-reorder"),
     path("groups/new/", views.group_create, name="group-create"),
     path("groups/<int:pk>/edit/", views.group_edit, name="group-edit"),
     path("groups/<int:pk>/delete/", views.group_delete, name="group-delete"),

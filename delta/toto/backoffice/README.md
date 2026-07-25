@@ -70,5 +70,6 @@ next so teachers can run everything from the panel:
   members complete / issues a certificate to every member at once (deferred).
 - [x] **Math (KaTeX)** in lesson/script content, descriptions & answers; script sections
   now use a Markdown editor (markdownx) with a live math preview.
-- [ ] **Drag-and-drop reorder** (baseline is up/down).
+- [x] **Drag-and-drop reorder** (SortableJS) for modules, lessons, quiz questions,
+  script sections and skill groups/badges; up/down buttons kept as a no-JS fallback.
 - [ ] Promote a Person to Teacher from the panel.

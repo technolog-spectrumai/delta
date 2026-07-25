@@ -64,6 +64,7 @@ STAFF_ONLY = {
     # skills & badges
     "backoffice_skills:skill-overview", "backoffice_skills:group-create",
     "backoffice_skills:group-edit", "backoffice_skills:group-delete",
+    "backoffice_skills:group-reorder", "backoffice_skills:badge-reorder",
     "backoffice_skills:badge-create", "backoffice_skills:badge-edit",
     "backoffice_skills:badge-delete", "backoffice_skills:badge-quick-create",
     # courses
@@ -241,6 +242,7 @@ PARAM_SOURCES = {
     # back office — skills & badges (competence)
     "backoffice_skills:group-edit": (True, lambda: _kw(_first("competence.SkillGroup"), pk="pk")),
     "backoffice_skills:group-delete": (True, lambda: _kw(_first("competence.SkillGroup"), pk="pk")),
+    "backoffice_skills:badge-reorder": (True, lambda: _kw(_first("competence.SkillGroup"), pk="pk")),
     "backoffice_skills:badge-edit": (False, lambda: _kw(_first("competence.SkillBadge"), pk="pk")),
     "backoffice_skills:badge-delete": (False, lambda: _kw(_first("competence.SkillBadge"), pk="pk")),
     # back office — courses (academy)

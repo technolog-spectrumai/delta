@@ -795,3 +795,65 @@ class ScriptSectionReorderTests(TestCase):
         r = self.client.get(reverse("backoffice_courses:script-edit", kwargs={"pk": self.script.pk}))
         self.assertContains(r, "data-reorder-fields")
         self.assertContains(r, "Sortable.min.js")
+
+
+# ---------------------------------------------------------------------------
+# Skill group / badge reorder (Part 3)
+# ---------------------------------------------------------------------------
+
+class SkillReorderTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.staff = _staff("bo-skreorder")
+        cls.g1 = SkillGroup.objects.create(title="G1", slug="skg1", order=1)
+        cls.g2 = SkillGroup.objects.create(title="G2", slug="skg2", order=2)
+        cls.g3 = SkillGroup.objects.create(title="G3", slug="skg3", order=3)
+        cls.b1 = SkillBadge.objects.create(group=cls.g1, title="B1", slug="skb1", order=1)
+        cls.b2 = SkillBadge.objects.create(group=cls.g1, title="B2", slug="skb2", order=2)
+        cls.b3 = SkillBadge.objects.create(group=cls.g1, title="B3", slug="skb3", order=3)
+        # a badge in another group must stay untouched by g1's badge reorder
+        cls.other = SkillBadge.objects.create(group=cls.g2, title="X", slug="skbx", order=1)
+
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def test_group_reorder_bulk_order_list(self):
+        url = reverse("backoffice_skills:group-reorder")
+        r = self.client.post(url, {"order": [self.g3.pk, self.g1.pk, self.g2.pk]})
+        self.assertEqual(r.status_code, 204)
+        self.g1.refresh_from_db(); self.g2.refresh_from_db(); self.g3.refresh_from_db()
+        self.assertEqual((self.g3.order, self.g1.order, self.g2.order), (1, 2, 3))
+
+    def test_group_reorder_up_down_fallback(self):
+        url = reverse("backoffice_skills:group-reorder")
+        r = self.client.post(url, {"item": self.g1.pk, "direction": "down"})
+        self.assertEqual(r.status_code, 302)  # form fallback redirects
+        self.g1.refresh_from_db(); self.g2.refresh_from_db()
+        self.assertEqual(self.g1.order, 2)
+        self.assertEqual(self.g2.order, 1)
+
+    def test_badge_reorder_bulk_scoped_to_group(self):
+        url = reverse("backoffice_skills:badge-reorder", kwargs={"pk": self.g1.pk})
+        r = self.client.post(url, {"order": [self.b3.pk, self.b1.pk, self.b2.pk]})
+        self.assertEqual(r.status_code, 204)
+        self.b1.refresh_from_db(); self.b2.refresh_from_db(); self.b3.refresh_from_db()
+        self.assertEqual((self.b3.order, self.b1.order, self.b2.order), (1, 2, 3))
+        self.other.refresh_from_db()
+        self.assertEqual(self.other.order, 1)  # other group left untouched
+
+    def test_get_is_405(self):
+        self.assertEqual(
+            self.client.get(reverse("backoffice_skills:group-reorder")).status_code, 405)
+
+    def test_student_is_gated(self):
+        user = get_user_model().objects.create_user("plain-skreorder", password="x")
+        self.client.force_login(user)
+        r = self.client.post(reverse("backoffice_skills:group-reorder"), {"order": [self.g1.pk]})
+        self.assertEqual(r.status_code, 404)
+
+    def test_overview_loads_reorder_assets(self):
+        r = self.client.get(reverse("backoffice_skills:skill-overview"))
+        self.assertContains(r, "Sortable.min.js")
+        self.assertContains(r, "data-reorder-id")
+        self.assertContains(r, reverse("backoffice_skills:group-reorder"))

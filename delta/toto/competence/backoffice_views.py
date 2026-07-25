@@ -11,7 +11,7 @@ from django.views.decorators.http import require_POST
 
 from toto.backoffice.access import teacher_required
 from toto.backoffice.shell import backoffice_render
-from toto.backoffice.utils import unique_slug
+from toto.backoffice.utils import apply_reorder, unique_slug
 
 from .forms import SkillBadgeForm, SkillGroupForm
 from .models import SkillBadge, SkillGroup
@@ -31,6 +31,25 @@ def skill_overview(request):
     return backoffice_render(request, "competence/backoffice/overview.html", {
         "groups": groups,
     }, active=ACTIVE)
+
+
+# --- reorder ---------------------------------------------------------------
+
+@teacher_required
+@require_POST
+def group_reorder(request):
+    if apply_reorder(SkillGroup.objects.order_by("order", "title"), request):
+        return HttpResponse(status=204)
+    return redirect(OVERVIEW)
+
+
+@teacher_required
+@require_POST
+def badge_reorder(request, pk):
+    group = get_object_or_404(SkillGroup, pk=pk)
+    if apply_reorder(group.badges.order_by("order", "title"), request):
+        return HttpResponse(status=204)
+    return redirect(OVERVIEW)
 
 
 # --- groups ----------------------------------------------------------------

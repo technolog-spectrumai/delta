@@ -11,22 +11,31 @@
 {% endblock %}
 
 {% block backoffice_content %}
-<div class="space-y-5">
+<div class="space-y-5" data-reorder-url="{% url 'backoffice_skills:group-reorder' %}">
   {% for group in groups %}
-    <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+    <section data-reorder-id="{{ group.pk }}"
+             :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
              class="rounded-2xl border p-5 shadow-sm">
       <div class="flex items-center justify-between gap-3">
-        <h2 class="text-lg font-bold">{{ group.title }}</h2>
+        <div class="flex min-w-0 items-center gap-2">
+          <span class="js-drag cursor-grab opacity-40 hover:opacity-100" title="{% trans 'Drag to reorder' %}"><i class="fa-solid fa-grip-vertical"></i></span>
+          <h2 class="truncate text-lg font-bold">{{ group.title }}</h2>
+        </div>
         <div class="flex items-center gap-2 text-xs">
+          <form method="post" action="{% url 'backoffice_skills:group-reorder' %}">{% csrf_token %}<input type="hidden" name="item" value="{{ group.pk }}"><input type="hidden" name="direction" value="up"><button class="rounded border px-2 py-1 opacity-60 hover:opacity-100" aria-label="{% trans 'Move group up' %}"><i class="fa-solid fa-chevron-up"></i></button></form>
+          <form method="post" action="{% url 'backoffice_skills:group-reorder' %}">{% csrf_token %}<input type="hidden" name="item" value="{{ group.pk }}"><input type="hidden" name="direction" value="down"><button class="rounded border px-2 py-1 opacity-60 hover:opacity-100" aria-label="{% trans 'Move group down' %}"><i class="fa-solid fa-chevron-down"></i></button></form>
           <a href="{% url 'backoffice_skills:group-edit' group.pk %}" class="rounded border px-2 py-1 hover:opacity-85" aria-label="{% trans 'Edit group' %}"><i class="fa-solid fa-pen"></i></a>
           <a href="{% url 'backoffice_skills:group-delete' group.pk %}" class="rounded border border-warn-light/40 px-2 py-1 text-warn-light hover:opacity-85" aria-label="{% trans 'Delete group' %}"><i class="fa-solid fa-trash"></i></a>
         </div>
       </div>
       {% if group.description %}<p class="mt-1 text-sm opacity-70">{{ group.description }}</p>{% endif %}
-      <div class="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3"
+           data-reorder-url="{% url 'backoffice_skills:badge-reorder' group.pk %}">
         {% for badge in group.badges.all %}
-          <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'"
+          <div data-reorder-id="{{ badge.pk }}"
+               :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'"
                class="flex items-start gap-3 rounded-xl border p-3">
+            <span class="js-drag mt-1 cursor-grab opacity-40 hover:opacity-100" title="{% trans 'Drag to reorder' %}"><i class="fa-solid fa-grip-vertical"></i></span>
             <i class="{{ badge.icon }} mt-1 text-lg"></i>
             <div class="min-w-0 flex-1">
               <p class="font-semibold leading-snug">{{ badge.title }}</p>
@@ -39,6 +48,8 @@
               {% endwith %}
             </div>
             <div class="flex flex-col gap-1 text-xs">
+              <form method="post" action="{% url 'backoffice_skills:badge-reorder' group.pk %}">{% csrf_token %}<input type="hidden" name="item" value="{{ badge.pk }}"><input type="hidden" name="direction" value="up"><button class="opacity-50 hover:opacity-100" aria-label="{% trans 'Move badge up' %}"><i class="fa-solid fa-chevron-up"></i></button></form>
+              <form method="post" action="{% url 'backoffice_skills:badge-reorder' group.pk %}">{% csrf_token %}<input type="hidden" name="item" value="{{ badge.pk }}"><input type="hidden" name="direction" value="down"><button class="opacity-50 hover:opacity-100" aria-label="{% trans 'Move badge down' %}"><i class="fa-solid fa-chevron-down"></i></button></form>
               <a href="{% url 'backoffice_skills:badge-edit' badge.pk %}" class="opacity-60 hover:opacity-100" aria-label="{% trans 'Edit badge' %}"><i class="fa-solid fa-pen"></i></a>
               <a href="{% url 'backoffice_skills:badge-delete' badge.pk %}" class="text-warn-light opacity-70 hover:opacity-100" aria-label="{% trans 'Delete badge' %}"><i class="fa-solid fa-trash"></i></a>
             </div>
@@ -55,3 +66,5 @@
   {% endfor %}
 </div>
 {% endblock %}
+
+{% block backoffice_end_script %}{% include "backoffice/_reorder_assets.html" %}{% endblock %}

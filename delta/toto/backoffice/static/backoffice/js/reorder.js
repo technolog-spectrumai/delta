@@ -22,8 +22,10 @@
       draggable: "[data-reorder-id]",
       animation: 150,
       onEnd: function () {
+        // Direct children only — nested [data-reorder-url] lists (e.g. badges
+        // inside a group) carry their own [data-reorder-id]s.
         var ids = Array.prototype.map.call(
-          list.querySelectorAll("[data-reorder-id]"),
+          list.querySelectorAll(":scope > [data-reorder-id]"),
           function (el) { return el.getAttribute("data-reorder-id"); });
         fetch(list.getAttribute("data-reorder-url"), {
           method: "POST",
