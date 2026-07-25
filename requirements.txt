@@ -21,7 +21,7 @@ django-markdownx==4.0.9
 django-prometheus==2.4.1
 django-redis==6.0.0
 django-reversion==6.1.0
-django-trix-editor
+django-trix-editor==0.4.1
 djangorestframework==3.16.0
 Faker==40.4.0
 gunicorn==23.0.0

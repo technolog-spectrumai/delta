@@ -3,6 +3,8 @@
 
 {% block quizzes_title %}{{ quiz.title }} — {% trans "Practice" %}{% endblock %}
 
+{% block quizzes_start_script %}{% include "quizzes/_solution_prose_style.html" %}{% endblock %}
+
 {% block quizzes_content %}
 <section
   :class="darkMode ? 'bg-primary-bg-dark text-text-main-dark' : 'bg-primary-bg-light text-text-main-light'"
@@ -45,12 +47,14 @@
                  {% if ans.explanation %}<span class="opacity-80"> — {{ ans.explanation }}</span>{% endif %}
               </p>
             {% endfor %}
-            {% if feedback.question.explanation %}
+            {% if not feedback.question.solution and feedback.question.explanation %}
               <p class="opacity-90">{{ feedback.question.explanation }}</p>
             {% endif %}
           </div>
         </div>
       {% endif %}
+      {# Rich worked solution — shown after any submission, correct or wrong. #}
+      {% include "quizzes/_solution_card.html" with question=feedback.question %}
       <a href="{% url 'quizzes:quiz-practice' quiz.pk %}?after={{ after_id }}"
          class="block w-full rounded-md bg-indigo-600 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-indigo-500">
         {% trans "Continue" %} <i class="fa-solid fa-arrow-right"></i>

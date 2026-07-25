@@ -23,13 +23,18 @@ from toto.quizzes.models import Quiz, QuizAnswer, QuizQuestion
 
 
 # ── demo content ────────────────────────────────────────────────────────────
-# A task is (text, type, [(answer, is_correct, explanation), ...]).
+# A task is (text, type, [(answer, is_correct, explanation), ...]) with an
+# optional 4th element: rich solution HTML (trix) shown as the worked solution.
 _ALG_TASKS = [
     ("Uprość wyrażenie: 2x + 3x", "choice",
         [("5x", True, "2x + 3x = (2 + 3)x = 5x"), ("6x", False, ""), ("5", False, ""), ("x", False, "")]),
     ("Rozwiń wzór skróconego mnożenia: (x + 2)²", "choice",
         [("x² + 4x + 4", True, "(a + b)² = a² + 2ab + b²"), ("x² + 4", False, ""),
-         ("x² + 2x + 4", False, ""), ("x² + 4x + 2", False, "")]),
+         ("x² + 2x + 4", False, ""), ("x² + 4x + 2", False, "")],
+        "<h2>Rozwiązanie krok po kroku</h2>"
+        "<p>Korzystamy ze wzoru skróconego mnożenia: <strong>(a + b)² = a² + 2ab + b²</strong>.</p>"
+        "<p>Dla a = x oraz b = 2 mamy: x² + 2·x·2 + 2² = <strong>x² + 4x + 4</strong>.</p>"
+        "<blockquote>Wzory skróconego mnożenia warto znać na pamięć — wracają na maturze.</blockquote>"),
     ("Oblicz wartość wyrażenia: 3 · (2 + 4)", "open",
         [("18", True, "3 · 6 = 18")]),
     ("Dla jakiego x zachodzi równość x + 5 = 12? Podaj samo x.", "open",
@@ -40,7 +45,11 @@ _MATURA_TASKS = [
     ("Zadanie zamknięte. Liczba 2^10 jest równa:", "choice",
         [("1024", True, "2^10 = 1024"), ("512", False, ""), ("2048", False, ""), ("100", False, "")]),
     ("Zadanie otwarte. Rozwiąż równanie 2x − 4 = 10. Podaj x.", "open",
-        [("7", True, "2x = 14, więc x = 7")]),
+        [("7", True, "2x = 14, więc x = 7")],
+        "<h2>Rozwiązanie</h2>"
+        "<p>Przenosimy wyraz wolny na prawą stronę: <strong>2x = 10 + 4 = 14</strong>.</p>"
+        "<p>Dzielimy obie strony przez 2: <strong>x = 7</strong>.</p>"
+        "<p>Sprawdzenie: 2·7 − 4 = 10 ✓</p>"),
     ("Zadanie otwarte. Podaj największą liczbę całkowitą mniejszą od 3,5.", "open",
         [("3", True, "Największa liczba całkowita < 3,5 to 3")]),
 ]
@@ -191,9 +200,12 @@ class Command(IngressCommand):
             },
         )
         if created:
-            for qi, (text, qtype, answers) in enumerate(mspec["tasks"], start=1):
+            for qi, task in enumerate(mspec["tasks"], start=1):
+                text, qtype, answers = task[0], task[1], task[2]
+                solution = task[3] if len(task) > 3 else ""
                 question = QuizQuestion.objects.create(
-                    quiz=quiz, text=text, question_type=qtype, order=qi)
+                    quiz=quiz, text=text, question_type=qtype, order=qi,
+                    solution=solution)
                 for ai, (atext, correct, expl) in enumerate(answers, start=1):
                     QuizAnswer.objects.create(
                         question=question, text=atext, is_correct=correct,
