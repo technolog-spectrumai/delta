@@ -968,3 +968,61 @@ class LessonPresentationModelTests(TestCase):
         self.lesson.delete()
         self.assertFalse(LessonPresentation.objects.filter(pk=pres.pk).exists())
         self.assertEqual(PresentationSlide.objects.count(), 0)
+
+
+class LessonPresentationPlayerTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Platform.objects.create(site_name="Test", author="tests", publication_year=2026)
+        cls.user_field = _person_user_field()
+        group = SkillGroup.objects.create(title="G", slug="pp-g", order=1)
+        badge = SkillBadge.objects.create(group=group, title="B", slug="pp-b", order=1)
+        cls.course = Course.objects.create(title="C", slug="pp-c", is_published=True)
+        module = CourseModule.objects.create(
+            course=cls.course, unlocks_badge=badge, title="M", slug="pp-m", order=1)
+        cls.lesson = Lesson.objects.create(module=module, title="L", slug="pp-l", order=1)
+        pres = LessonPresentation.objects.create(lesson=cls.lesson, title="Deck")
+        PresentationSlide.objects.create(
+            presentation=pres, order=1, title="Slide 1", body="$x^2$", subtitle="cap")
+        cls.person = Person.objects.create(display_name="Learner")
+        cls.user = get_user_model().objects.create_user("pp-learner", password="x")
+        if cls.user_field:
+            setattr(cls.person, cls.user_field, cls.user)
+            cls.person.save(update_fields=[cls.user_field])
+
+    def _enrol(self):
+        from .models import CourseEnrollment
+        student = Student.objects.get_or_create(person=self.person)[0]
+        CourseEnrollment.objects.get_or_create(student=student, course=self.course)
+
+    def _url(self):
+        return reverse("academy:lesson-presentation", kwargs={"pk": self.lesson.pk})
+
+    def test_anonymous_redirected(self):
+        self.assertEqual(self.client.get(self._url()).status_code, 302)
+
+    def test_non_enrolled_redirected_to_course(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.user)  # not enrolled
+        self.assertRedirects(
+            self.client.get(self._url()),
+            reverse("academy:course-detail", kwargs={"slug": self.course.slug}))
+
+    def test_enrolled_student_watches_deck(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.user)
+        self._enrol()
+        resp = self.client.get(self._url())
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "vendor/reveal")  # reveal.js player asset
+        self.assertContains(resp, "Slide 1")        # slide title rendered
+
+    def test_course_detail_shows_watch_button_when_enrolled(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.user)
+        self._enrol()
+        resp = self.client.get(reverse("academy:course-detail", kwargs={"slug": self.course.slug}))
+        self.assertContains(resp, self._url())

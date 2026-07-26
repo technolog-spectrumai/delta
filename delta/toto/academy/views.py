@@ -18,8 +18,8 @@ from toto.verbena.views import PageDetailMixin
 
 from .forms import PathTaskStepForm, PersonalPathGoalForm
 from .models import (
-    Certificate, Cohort, Course, CourseEnrollment, CourseModule, PersonalPath,
-    PersonalPathStep, Script, Student, StudentBadge, Teacher,
+    Certificate, Cohort, Course, CourseEnrollment, CourseModule, Lesson,
+    PersonalPath, PersonalPathStep, Script, Student, StudentBadge, Teacher,
 )
 from .paths import generate_steps, regenerate_path, sync_path
 from .recommendations import recommend_goals
@@ -572,6 +572,34 @@ class ScriptDetailView(PageDetailMixin, DetailView):
 
 def _render(request, template, context):
     return render(request, template, PageProcessor().decorate(context, request))
+
+
+@login_required
+def lesson_presentation(request, pk):
+    """Full-page reveal.js player for a lesson's optional slide-presentation lecture.
+
+    Enrollment-gated (mirrors the lesson video/notes gate). Slide bodies are
+    rendered from Markdown (via markdownx, which protects $LaTeX$); the template
+    then runs KaTeX in the browser.
+    """
+    from markdownx.utils import markdownify
+
+    from .media_views import can_watch
+    lesson = get_object_or_404(Lesson.objects.select_related("module__course"), pk=pk)
+    course = lesson.module.course
+    if not can_watch(request.user, course):
+        messages.info(request, "Enrol in this course to watch the presentation.")
+        return redirect("academy:course-detail", slug=course.slug)
+    presentation = getattr(lesson, "presentation", None)
+    slides = []
+    if presentation:
+        slides = [
+            {"title": s.title, "html": markdownify(s.body or ""), "subtitle": s.subtitle}
+            for s in presentation.slides.all()
+        ]
+    return _render(request, "academy/presentation_play.html", {
+        "lesson": lesson, "course": course, "presentation": presentation, "slides": slides,
+    })
 
 
 def certificate_detail(request, uuid):

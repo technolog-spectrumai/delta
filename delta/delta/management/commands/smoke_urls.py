@@ -234,6 +234,7 @@ PARAM_SOURCES = {
     # lesson media (enrollment-gated; unseeded -> skip)
     "academy:lesson-video": (False, lambda: _kw(_first("academy.Lesson", video_file__isnull=False), pk="pk")),
     "academy:lesson-notes": (False, lambda: _kw(_first("academy.Lesson", notes_file__isnull=False), pk="pk")),
+    "academy:lesson-presentation": (False, lambda: _kw(_first("academy.Lesson"), pk="pk")),
     # quizzes — ingress_quizzes / ingress_academy
     "quizzes:quiz-detail": (True, lambda: _kw(_first("quizzes.Quiz", is_published=True), pk="pk")),
     "quizzes:quiz-practice": (True, lambda: _kw(_first("quizzes.Quiz", is_published=True), pk="pk")),

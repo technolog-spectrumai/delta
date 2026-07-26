@@ -76,6 +76,11 @@ urlpatterns = [
         media_views.lesson_notes,
         name="lesson-notes",
     ),
+    path(
+        "lessons/<int:pk>/presentation/",
+        academy_views.lesson_presentation,
+        name="lesson-presentation",
+    ),
 
     # Course metrics
     path(
