@@ -20,7 +20,9 @@ from .backoffice_forms import (
     CohortForm,
     CourseForm,
     LessonForm,
+    LessonPresentationForm,
     ModuleForm,
+    PresentationSlideFormSet,
     ScriptForm,
     ScriptSectionFormSet,
     WelcomeCopyForm,
@@ -35,6 +37,7 @@ from .models import (
     CourseEnrollment,
     CourseModule,
     Lesson,
+    LessonPresentation,
     Script,
     Student,
     StudentBadge,
@@ -63,6 +66,10 @@ def _renumber_sections(formset):
         if obj.order != i:
             obj.order = i
             obj.save(update_fields=["order"])
+
+
+# Slides are renumbered identically to script sections (drag-set order → 1..n).
+_renumber_slides = _renumber_sections
 
 
 # --- courses ---------------------------------------------------------------
@@ -315,6 +322,25 @@ def script_edit(request, pk):
     return backoffice_render(request, "academy/backoffice/script_form.html", {
         "module": script.module, "script": script, "form": form, "formset": formset,
         "title": _("Edit script"), "submit_label": _("Save script"),
+    }, active=ACTIVE)
+
+
+@teacher_required
+def presentation_edit(request, pk):
+    """Edit a lesson's optional slide-presentation lecture (deck created on demand)."""
+    lesson = get_object_or_404(Lesson.objects.select_related("module"), pk=pk)
+    presentation, _created = LessonPresentation.objects.get_or_create(lesson=lesson)
+    form = LessonPresentationForm(request.POST or None, instance=presentation)
+    formset = PresentationSlideFormSet(request.POST or None, instance=presentation)
+    if request.method == "POST" and form.is_valid() and formset.is_valid():
+        form.save()
+        formset.save()
+        _renumber_slides(formset)
+        messages.success(request, _("Presentation saved."))
+        return redirect("backoffice_courses:lesson-edit", pk=lesson.pk)
+    return backoffice_render(request, "academy/backoffice/presentation_form.html", {
+        "lesson": lesson, "presentation": presentation, "form": form, "formset": formset,
+        "title": _("Presentation lecture"), "submit_label": _("Save presentation"),
     }, active=ACTIVE)
 
 

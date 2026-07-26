@@ -19,6 +19,7 @@ urlpatterns = [
     path("modules/<int:pk>/scripts/new/", views.script_create, name="script-create"),
     path("lessons/<int:pk>/edit/", views.lesson_edit, name="lesson-edit"),
     path("lessons/<int:pk>/delete/", views.lesson_delete, name="lesson-delete"),
+    path("lessons/<int:pk>/presentation/", views.presentation_edit, name="presentation-edit"),
     path("scripts/<int:pk>/edit/", views.script_edit, name="script-edit"),
     path("scripts/<int:pk>/delete/", views.script_delete, name="script-delete"),
     # roster & enrolment

@@ -1142,3 +1142,58 @@ class RoleAwareLandingTests(TestCase):
         session.pop("role_landing_pending", None)
         session.save()
         self.assertEqual(self.client.get(reverse("core:dashboard")).status_code, 200)
+
+
+# ---------------------------------------------------------------------------
+# Slide-presentation editor (backoffice_courses:presentation-edit)
+# ---------------------------------------------------------------------------
+
+class PresentationEditorTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.staff = _staff("bo-pres")
+        group = SkillGroup.objects.create(title="G", slug="pg", order=1)
+        badge = SkillBadge.objects.create(group=group, title="B", slug="pb", order=1)
+        course = Course.objects.create(title="C", slug="pc")
+        module = CourseModule.objects.create(
+            course=course, unlocks_badge=badge, title="M", slug="pm", order=1)
+        cls.lesson = Lesson.objects.create(module=module, title="L", slug="pl", order=1)
+
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def _url(self):
+        return reverse("backoffice_courses:presentation-edit", kwargs={"pk": self.lesson.pk})
+
+    def test_editor_renders_with_dnd(self):
+        r = self.client.get(self._url())
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, "data-reorder-fields")
+        self.assertContains(r, "Sortable.min.js")
+
+    def test_post_creates_and_renumbers_slides(self):
+        from toto.academy.models import LessonPresentation
+        data = {
+            "title": "Deck",
+            "slides-TOTAL_FORMS": "3", "slides-INITIAL_FORMS": "0",
+            "slides-MIN_NUM_FORMS": "0", "slides-MAX_NUM_FORMS": "1000",
+            "slides-0-title": "Intro", "slides-0-body": "$x^2$", "slides-0-subtitle": "hi", "slides-0-order": "2",
+            "slides-1-title": "Body", "slides-1-body": "text", "slides-1-subtitle": "", "slides-1-order": "1",
+            "slides-2-title": "", "slides-2-body": "", "slides-2-subtitle": "", "slides-2-order": "0",
+        }
+        r = self.client.post(self._url(), data)
+        self.assertRedirects(r, reverse("backoffice_courses:lesson-edit", kwargs={"pk": self.lesson.pk}))
+        pres = LessonPresentation.objects.get(lesson=self.lesson)
+        self.assertEqual(pres.title, "Deck")
+        self.assertEqual([s.title for s in pres.slides.all()], ["Body", "Intro"])  # order 1,2
+        self.assertEqual(pres.slides.count(), 2)  # blank row ignored
+
+    def test_student_is_gated(self):
+        user = get_user_model().objects.create_user("plain-pres", password="x")
+        self.client.force_login(user)
+        self.assertEqual(self.client.get(self._url()).status_code, 404)
+
+    def test_lesson_editor_shows_presentation_link(self):
+        r = self.client.get(reverse("backoffice_courses:lesson-edit", kwargs={"pk": self.lesson.pk}))
+        self.assertContains(r, self._url())

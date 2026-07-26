@@ -76,4 +76,20 @@
             class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90"><i class="{{ icon }}"></i> {{ submit_label }}</button>
   </div>
 </form>
+
+{% if lesson %}
+  <!-- Presentation lecture (optional slide deck) -->
+  <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+           class="mt-6 flex max-w-3xl flex-wrap items-center justify-between gap-3 rounded-2xl border p-5 shadow-sm">
+    <div class="min-w-0">
+      <h3 class="font-bold"><i class="fa-solid fa-person-chalkboard"></i> {% trans "Presentation lecture" %}</h3>
+      <p class="text-xs opacity-60">{% trans "Optional slide deck (formulas, SVG, images, captions) students can watch alongside the video." %}</p>
+    </div>
+    <a href="{% url 'backoffice_courses:presentation-edit' pk=lesson.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85">
+      {% with n=lesson.presentation.slides.count %}
+        {% if n %}<i class="fa-solid fa-pen"></i> {% blocktrans %}Edit slides ({{ n }}){% endblocktrans %}{% else %}<i class="fa-solid fa-plus"></i> {% trans "Add slides" %}{% endif %}
+      {% endwith %}
+    </a>
+  </section>
+{% endif %}
 {% endblock %}
