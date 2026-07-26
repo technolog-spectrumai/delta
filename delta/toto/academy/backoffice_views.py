@@ -62,10 +62,13 @@ def _renumber_sections(formset):
     ]
     live.sort(key=lambda form: form.cleaned_data.get("order") or 0)
     for i, form in enumerate(live, start=1):
+        # Always persist: an order-only reorder of an existing row is skipped by
+        # formset.save() (has_changed ignores `order`), so the DB order is only
+        # corrected here — and form.instance.order already holds the cleaned value,
+        # making an `if obj.order != i` guard compare the wrong thing.
         obj = form.instance
-        if obj.order != i:
-            obj.order = i
-            obj.save(update_fields=["order"])
+        obj.order = i
+        obj.save(update_fields=["order"])
 
 
 # Slides are renumbered identically to script sections (drag-set order → 1..n).

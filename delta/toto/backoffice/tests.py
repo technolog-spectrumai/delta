@@ -1189,6 +1189,22 @@ class PresentationEditorTests(TestCase):
         self.assertEqual([s.title for s in pres.slides.all()], ["Body", "Intro"])  # order 1,2
         self.assertEqual(pres.slides.count(), 2)  # blank row ignored
 
+    def test_drag_reorder_does_not_save_blank_slides(self):
+        # reorder.js stamps a 1-based order into EVERY hidden row (blank extras
+        # included); those must still be ignored, not saved as empty slides.
+        from toto.academy.models import LessonPresentation
+        data = {
+            "title": "Deck",
+            "slides-TOTAL_FORMS": "3", "slides-INITIAL_FORMS": "0",
+            "slides-MIN_NUM_FORMS": "0", "slides-MAX_NUM_FORMS": "1000",
+            "slides-0-title": "Real", "slides-0-body": "x", "slides-0-subtitle": "", "slides-0-order": "1",
+            "slides-1-title": "", "slides-1-body": "", "slides-1-subtitle": "", "slides-1-order": "2",
+            "slides-2-title": "", "slides-2-body": "", "slides-2-subtitle": "", "slides-2-order": "3",
+        }
+        self.client.post(self._url(), data)
+        pres = LessonPresentation.objects.get(lesson=self.lesson)
+        self.assertEqual(pres.slides.count(), 1)  # dragged blank rows ignored
+
     def test_student_is_gated(self):
         user = get_user_model().objects.create_user("plain-pres", password="x")
         self.client.force_login(user)

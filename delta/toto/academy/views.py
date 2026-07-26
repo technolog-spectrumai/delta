@@ -442,6 +442,8 @@ class CourseDetailView(AcademyContextMixin, DetailView):
                 "lessons",
                 "lessons__video_file",
                 "lessons__notes_file",
+                "lessons__presentation",
+                "lessons__presentation__slides",
                 "lessons__owner",
                 "lessons__owner__person",
                 "attached_quizzes",

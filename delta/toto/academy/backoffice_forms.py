@@ -215,6 +215,12 @@ class ScriptSectionForm(forms.ModelForm):
     def clean_order(self):
         return self.cleaned_data.get("order") or 0
 
+    def has_changed(self):
+        # The reorder JS stamps `order` into every hidden row (blank extras too),
+        # so a row is only really changed when a *content* field changed. Without
+        # this, dragging to reorder would save the blank extra rows as empty rows.
+        return bool(set(self.changed_data) - {"order"})
+
 
 ScriptSectionFormSet = inlineformset_factory(
     Script, ScriptSection, form=ScriptSectionForm, extra=3, can_delete=True)
@@ -256,6 +262,12 @@ class PresentationSlideForm(forms.ModelForm):
 
     def clean_order(self):
         return self.cleaned_data.get("order") or 0
+
+    def has_changed(self):
+        # The reorder JS stamps `order` into every hidden row (blank extras too),
+        # so a row is only really changed when a *content* field changed. Without
+        # this, dragging to reorder would save the blank extra rows as empty slides.
+        return bool(set(self.changed_data) - {"order"})
 
 
 PresentationSlideFormSet = inlineformset_factory(
