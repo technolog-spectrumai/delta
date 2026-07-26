@@ -804,3 +804,53 @@ class WelcomeCopy(models.Model):
     @property
     def teacher_cta(self):
         return self._localized("teacher_cta")
+
+
+# ────────────────────────────────────────────────
+# PRESENTATION  (optional slide-deck lecture per lesson)
+# ────────────────────────────────────────────────
+
+class LessonPresentation(models.Model):
+    """An optional slide-presentation lecture attached to a lesson.
+
+    Mirrors the Script/ScriptSection shape: this is the deck; ordered
+    PresentationSlide rows are its slides. Watched with a reveal.js player and
+    edited with the same formset + drag-reorder + KaTeX pattern as scripts.
+    """
+
+    lesson = models.OneToOneField(
+        Lesson,
+        on_delete=models.CASCADE,
+        related_name="presentation",
+    )
+    title = models.CharField(max_length=200, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Lesson presentation"
+        verbose_name_plural = "Lesson presentations"
+
+    def __str__(self):
+        return f"Presentation – {self.lesson.title}"
+
+
+class PresentationSlide(models.Model):
+    presentation = models.ForeignKey(
+        LessonPresentation,
+        on_delete=models.CASCADE,
+        related_name="slides",
+    )
+    order = models.PositiveIntegerField(default=0)
+    title = models.CharField(max_length=200, blank=True)
+    # Markdown + $LaTeX$ + inline SVG/HTML/images (rendered by markdownx + KaTeX).
+    body = models.TextField(blank=True)
+    # Per-slide caption shown under the slide during playback.
+    subtitle = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ["order"]
+        verbose_name = "Presentation slide"
+        verbose_name_plural = "Presentation slides"
+
+    def __str__(self):
+        return f"{self.presentation.lesson.title} – {self.title or 'Slide'}"

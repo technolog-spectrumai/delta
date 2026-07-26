@@ -12,8 +12,11 @@ from toto.people.models import Person
 from .models import (
     Course,
     CourseModule,
+    Lesson,
+    LessonPresentation,
     PersonalPath,
     PersonalPathStep,
+    PresentationSlide,
     RecommendationConfig,
     Student,
     StudentBadge,
@@ -940,3 +943,28 @@ class WelcomePageTests(TestCase):
         with translation.override("en"):
             self.assertContains(
                 self.client.get(reverse("core:welcome")), "Custom Delta Headline")
+
+
+class LessonPresentationModelTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        group = SkillGroup.objects.create(title="G", slug="lp-g", order=1)
+        badge = SkillBadge.objects.create(group=group, title="B", slug="lp-b", order=1)
+        course = Course.objects.create(title="C", slug="lp-c", is_published=True)
+        module = CourseModule.objects.create(
+            course=course, unlocks_badge=badge, title="M", slug="lp-m", order=1)
+        cls.lesson = Lesson.objects.create(module=module, title="L", slug="lp-l", order=1)
+
+    def test_presentation_and_ordered_slides(self):
+        pres = LessonPresentation.objects.create(lesson=self.lesson, title="Deck")
+        PresentationSlide.objects.create(presentation=pres, order=2, title="Two", body="b2")
+        PresentationSlide.objects.create(presentation=pres, order=1, title="One", body="$x^2$")
+        self.assertEqual([s.title for s in pres.slides.all()], ["One", "Two"])  # Meta ordering
+        self.assertEqual(self.lesson.presentation, pres)  # reverse OneToOne
+
+    def test_deleting_lesson_cascades_presentation_and_slides(self):
+        pres = LessonPresentation.objects.create(lesson=self.lesson)
+        PresentationSlide.objects.create(presentation=pres, order=1)
+        self.lesson.delete()
+        self.assertFalse(LessonPresentation.objects.filter(pk=pres.pk).exists())
+        self.assertEqual(PresentationSlide.objects.count(), 0)
