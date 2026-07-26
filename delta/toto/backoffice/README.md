@@ -76,3 +76,20 @@ next so teachers can run everything from the panel:
 - [x] **Promote a Person to Teacher from the panel** — dedicated *People* module: list
   teachers, search a login-linked person and promote; demote is a soft `is_active=False`
   (the gate now requires an active row) so ownership & signatures survive.
+- [x] **Slide-presentation lectures** — a lesson can optionally have a `LessonPresentation`
+  (ordered `PresentationSlide` rows: Markdown+LaTeX body, per-slide caption), edited with the
+  Script-editor pattern (markdownx + live KaTeX + drag-reorder) and watched full-screen with a
+  vendored **reveal.js** player (`academy:lesson-presentation`, enrollment-gated), additive to
+  the lesson video. Leverages the toto **memo** app's slide/reveal concept, re-homed onto delta
+  DB models.
+
+## TODO (presentation & drawing follow-ups)
+- [ ] **SVG editor (sketch app)** — bring in / build the host-owned `toto.sketch` collaborative
+  whiteboard (a `BUILD_SKETCH` `VaultEditorPlugin`, `sketch:svg_file_display`) so teachers can
+  *draw* slide graphics instead of pasting inline SVG.
+- [ ] **In-editor media insert for slides** — upload image/SVG → `create_vault_file` → insert
+  into a slide body (reuse memo's `media.py` `image_bytes_to_data_uri` / `clean_svg_markup`).
+- [ ] **.pml import/export** — reuse memo's `presentation_format.py` so decks interoperate with
+  the memo app.
+- [ ] **Timed captions / narration** — optional per-slide audio + auto-advance (the larger
+  "subtitles" interpretation).
