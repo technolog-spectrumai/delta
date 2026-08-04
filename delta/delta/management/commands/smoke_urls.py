@@ -43,6 +43,9 @@ SKIP = {
     # Social login 404s by design until a provider's OAuth credentials are set.
     "sso:social_login": "social provider redirect; needs configured credentials",
     "sso:social_callback": "social provider callback; needs configured credentials",
+    # cyprian's contract bridge guards on apps.is_installed("toto.notarius"),
+    # and delta has no contracts — the view 404s here by design.
+    "cyprian:from_contract": "needs toto.notarius (zenobia-owned); 404s here by design",
 }
 
 # Staff-gated pages: the student persona being turned away is correct behavior.
@@ -111,12 +114,29 @@ OVERRIDES = {
     "sso:admin_test_callback": {400},
     "vault:encrypt_status": {400},
     "vault:zip_status": {400},
+    # media embed endpoints 400 without their ?file_pk query param
+    "memo:media_embed": {400},
+    "cyprian:media_embed": {400},
     "events:event_availability_api": {404},
 }
 
 # Owner-scoped views: a persona that doesn't own the object is 404'd by
 # design (ownership enforcement working) — key -> personas allowed to 404.
 OWNER_404_OK = {
+    # the memo/cyprian editors and write endpoints are owner-only: the staff
+    # persona owns the smoke deck and document, so the student's 404 is the
+    # ownership check working.
+    "memo:edit": {"student"},
+    "memo:save": {"student"},
+    "memo:export_pdf": {"student"},
+    "memo:export_zip": {"student"},
+    "cyprian:edit": {"student"},
+    "cyprian:save": {"student"},
+    "cyprian:source": {"student"},
+    "cyprian:save_pdf": {"student"},
+    "cyprian:save_html": {"student"},
+    "cyprian:export_pdf": {"student"},
+    "cyprian:rendition": {"student"},
     "academy:personal-path-detail": {"staff"},
     "academy:personal-path-regenerate": {"staff"},
     "academy:personal-path-archive": {"staff"},
@@ -338,6 +358,20 @@ PARAM_SOURCES = {
     "socialhub:reference_accept": (False, lambda: _kw(_first("socialhub.Reference"), ref_id="pk")),
     "socialhub:reference_reject": (False, lambda: _kw(_first("socialhub.Reference"), ref_id="pk")),
     # vault — ingress_vault
+    # memo + cyprian — the smoke deck/document, created on first use
+    "memo:present": (True, lambda: _kw(_staff_authoring_file("deck"), file_pk="pk")),
+    "memo:edit": (True, lambda: _kw(_staff_authoring_file("deck"), file_pk="pk")),
+    "memo:save": (True, lambda: _kw(_staff_authoring_file("deck"), file_pk="pk")),
+    "memo:export_pdf": (True, lambda: _kw(_staff_authoring_file("deck"), file_pk="pk")),
+    "memo:export_zip": (True, lambda: _kw(_staff_authoring_file("deck"), file_pk="pk")),
+    "cyprian:read": (True, lambda: _kw(_staff_authoring_file("document"), file_pk="pk")),
+    "cyprian:edit": (True, lambda: _kw(_staff_authoring_file("document"), file_pk="pk")),
+    "cyprian:save": (True, lambda: _kw(_staff_authoring_file("document"), file_pk="pk")),
+    "cyprian:source": (True, lambda: _kw(_staff_authoring_file("document"), file_pk="pk")),
+    "cyprian:export_pdf": (True, lambda: _kw(_staff_authoring_file("document"), file_pk="pk")),
+    "cyprian:save_pdf": (True, lambda: _kw(_staff_authoring_file("document"), file_pk="pk")),
+    "cyprian:save_html": (True, lambda: _kw(_staff_authoring_file("document"), file_pk="pk")),
+    "cyprian:rendition": (True, lambda: _kw(_staff_authoring_file("rendition"), file_pk="pk")),
     "vault:public_file": (False, lambda: _kw_public_file()),
     "vault:bucket_metrics": (True, lambda: _kw(_first("vault.Bucket"), bucket_slug="slug")),
     "vault:copy_files": (True, lambda: _kw(_first("vault.Bucket"), source_slug="slug")),
@@ -365,6 +399,49 @@ PARAM_SOURCES = {
     "vod:vault_file_play": (False, lambda: _kw(
         _first("vault.VaultFile", is_encrypted=False, is_public=True), file_pk="pk")),
 }
+
+
+def _staff_authoring_file(kind):
+    """The smoke deck / document / rendition, created on first use.
+
+    Owned by the staff persona (the seeded superuser), PUBLIC so the read
+    surfaces (memo:present, cyprian:read) answer 200 for every persona, while
+    the owner-only edit/save routes exercise the ownership check — see
+    OWNER_404_OK. Idempotent by key, like everything ensure_personas makes.
+    """
+    from django.core.files.base import ContentFile
+
+    VaultFile = _model("vault.VaultFile")
+    Bucket = _model("vault.Bucket")
+    User = get_user_model()
+    staff = User.objects.filter(is_superuser=True).order_by("pk").first()
+    if None in (VaultFile, Bucket) or staff is None:
+        return None
+
+    key = f"ui-smoke-{kind}"
+    existing = VaultFile.objects.filter(key=key).first()
+    if existing:
+        return existing
+
+    bucket, _ = Bucket.objects.get_or_create(
+        slug="ui-smoke", defaults={"name": "ui smoke", "owner": staff,
+                                   "storage_backend": "local"})
+    if kind == "deck":
+        from toto.memo import presentation_format as pf
+        deck = pf.new_presentation(title="Smoke deck")
+        deck.slides[0].title = "Smoke slide"
+        payload, name, ftype = pf.dumps(deck).encode(), "smoke-deck.pml", "presentation"
+    elif kind == "document":
+        from toto.cyprian import document_format as df
+        doc = df.new_document(title="Smoke document")
+        payload, name, ftype = df.dumps(doc).encode(), "smoke-document.xml", "document"
+    else:                                   # an html rendition for cyprian:rendition
+        payload, name, ftype = b"<!doctype html><p>smoke</p>", "smoke-rendition.html", "html"
+
+    vf = VaultFile(owner=staff, title=name, key=key, file_type=ftype,
+                   bucket=bucket, is_public=True, is_encrypted=False)
+    vf.file.save(name, ContentFile(payload), save=True)
+    return vf
 
 
 def _kw(obj, **mapping):

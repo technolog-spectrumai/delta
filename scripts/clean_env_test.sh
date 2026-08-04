@@ -117,6 +117,18 @@ mkdir -p "$MEDIA_ROOT"
 "$PY" delta/manage.py migrate --noinput >/dev/null
 echo "    delta migrate OK"
 
+echo "==> app tests (academy + panel + the memo/cyprian editors)"
+# toto is a PEP 420 namespace, so the modules are named explicitly —
+# `manage.py test toto.academy` discovers nothing. memo's suite needs its own
+# settings module (it tests the app standalone); academy's includes the
+# 0005→0006 deck-conversion migration test.
+"$PY" delta/manage.py test --noinput \
+    toto.academy.tests toto.backoffice.tests \
+    toto.cyprian.tests.test_format toto.cyprian.tests.test_views \
+    toto.cyprian.tests.test_sanitize toto.cyprian.tests.test_tiptap 2>&1 | tail -2
+(cd /tmp && DJANGO_SETTINGS_MODULE=toto.memo.testing.settings \
+    "$PY" -m django test toto.memo.tests 2>&1 | tail -2)
+
 echo "==> seeded three-persona URL sweep"
 "$PY" delta/manage.py init_platform --password "$ADMIN_PASSWORD" >/dev/null
 INGRESS_OUT="$("$PY" delta/manage.py ingress_all)"
