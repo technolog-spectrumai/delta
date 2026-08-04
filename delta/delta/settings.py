@@ -457,6 +457,8 @@ DASHBOARD_ITEMS = [
     {"title": _("Skills"),       "icon": "fa-solid fa-diagram-project",     "description": _("The skill tree — badges you earn as you complete modules."),           "link": "academy:skill-forest",      "visibility": "public"},
     # --- materials ---
     {"title": _("Notatki"),      "icon": "fa-solid fa-pen-nib",             "description": _("Lesson notes and articles from your teachers."),                       "link": "palimpsest:page_list",      "visibility": "public"},
+    {"title": _("Dokumenty"),    "icon": "fa-solid fa-feather-pointed",     "description": _("Write documents with real pages and export them as a finished PDF."),  "link": "cyprian:index",             "visibility": "private"},
+    {"title": _("Prezentacje"),  "icon": "fa-solid fa-person-chalkboard",   "description": _("Build slide decks and present them full-screen."),                     "link": "memo:index",                "visibility": "private"},
     {"title": _("Books"),        "icon": "fa-solid fa-book",                "description": _("Recommended books and reference materials."),                          "link": "library:book_list",         "visibility": "private"},
     {"title": _("Articles"),     "icon": "fa-solid fa-newspaper",           "description": _("Curated articles and further reading."),                               "link": "library:article_list",      "visibility": "private"},
     {"title": _("Storage"),      "icon": "fa-solid fa-vault",               "description": _("Your files and downloadable PDF notes in encrypted storage."),         "link": "/vault/",                   "visibility": "private"},
@@ -468,7 +470,7 @@ DASHBOARD_ITEMS = [
 
 DASHBOARD_CATEGORIES = [
     {"title": _("Learning"),  "items": ["Nauka", "Zadania", "My progress", "My path", "Skills"]},
-    {"title": _("Materials"), "items": ["Notatki", "Books", "Articles", "Storage"]},
+    {"title": _("Materials"), "items": ["Notatki", "Dokumenty", "Prezentacje", "Books", "Articles", "Storage"]},
     {"title": _("Account"),   "items": ["Subscription", "SocialHub", "Events"]},
 ]
 
