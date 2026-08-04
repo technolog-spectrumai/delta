@@ -1,0 +1,11 @@
+# GUI dependencies for the delta builder. Deliberately NOT at the repo root:
+# deploy.py's build fingerprint globs the host's requirements*.txt, so a Qt pin
+# there would force a full image rebuild on every edit of it, forever — and the
+# Dockerfile would gain a ~60 MB wheel it never uses.
+#
+#   python3 -m venv tools/delta_builder/venv
+#   tools/delta_builder/venv/bin/pip install -r tools/delta_builder/requirements.txt
+#
+# Identical to the portal builders' pins, so one venv can serve all of them.
+PyQt6>=6.6
+PyYAML>=6.0
