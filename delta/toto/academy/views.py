@@ -1175,7 +1175,11 @@ def course_enroll(request, slug):
 
     course = get_object_or_404(Course, slug=slug, is_published=True)
 
-    # Subscription check — graceful: if subscriptions app absent or no gate, allow
+    # Subscription check — graceful: if subscriptions app absent or no gate, allow.
+    # The except is deliberately broad. Importing a model from an app that is not
+    # in INSTALLED_APPS raises RuntimeError ("doesn't declare an explicit
+    # app_label"), not ImportError, so an ImportError-only guard turned
+    # BUILD_SUBSCRIPTIONS=0 into a 500 on every enrolment.
     try:
         from toto.subscriptions.gates import is_subscribed, SubscriptionRequired
         # Check if any SubscriptionPlan with code "academy" exists and is active
@@ -1193,7 +1197,7 @@ def course_enroll(request, slug):
                 return redirect(_rev("subscriptions:plan_list"))
             except Exception:
                 return redirect("academy:course-detail", slug=slug)
-    except ImportError:
+    except (ImportError, RuntimeError, LookupError):
         pass  # subscriptions app not installed → open enrollment
 
     # Get or create student profile

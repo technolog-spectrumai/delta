@@ -37,6 +37,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
 from toto.auth_config import authentication_backends, login_url, resolve_auth
+from toto.features import flag
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -96,6 +97,17 @@ CORS_ALLOW_CREDENTIALS = True
 # toto.locations geometry-less (Address keeps plain lat/lon floats).
 HAS_GIS = os.environ.get("BUILD_GEO", "1") == "1"
 
+# The optional capabilities, all SUBTRACTIVE (default on) so a profile that names
+# none of them builds the host delta has always been. Each one is a whole
+# capability rather than a per-app switch: the point is that no combination
+# expressible here can produce a half-built deployment. See INSTALLED_APPS below
+# for what each installs and why the groupings are what they are.
+BUILD_AUTHORING = flag(os.environ.get, "BUILD_AUTHORING", True)
+BUILD_LIBRARY = flag(os.environ.get, "BUILD_LIBRARY", True)
+BUILD_SUBSCRIPTIONS = flag(os.environ.get, "BUILD_SUBSCRIPTIONS", True)
+BUILD_VOD = flag(os.environ.get, "BUILD_VOD", True)
+BUILD_SOCIAL_LOGIN = flag(os.environ.get, "BUILD_SOCIAL_LOGIN", True)
+
 INSTALLED_APPS = [
     "django_prometheus",
     "django.contrib.admin",
@@ -127,31 +139,50 @@ INSTALLED_APPS = [
     "toto.quota",
     "toto.sso_core",
     "toto.sso_master",
-    "toto.social_login",
-    # --- authoring tools (toto-works), shared verbatim with the portal hosts ---
-    # toto.editor is the vault's generic file editor; memo and cyprian both build
-    # their file-opening views on its BaseFileDisplayView, and it owns the "xml"
-    # editor plugin a deck falls back to before memo adopts it.
-    "toto.editor",
-    "toto.memo",         # slide decks: one .pml XML file in the vault, no rows
-    "toto.cyprian",      # documents: one XML file, paginated A4, exported to PDF
-    "toto.primula",      # sheets: Univer workbook JSON in the vault + SheetVersion
-                         # history. Teachers-only on delta: /primula/ mounts through
-                         # delta.primula_urls (teacher_required), entry in the panel.
     # --- delta education portion (revived from toto_libs/limbo, carried here) ---
+    # The LMS core is welded on: academy FKs quizzes, competence and palimpsest,
+    # so none of them can be a flag without breaking Django's checks.
     "toto.competence",   # skill badges / DAG — academy CourseModule.unlocks_badge
     "toto.quizzes",      # tasks: A–D + open answers, practice pool (delta additions)
     "toto.palimpsest",   # page/section notes — academy CourseModule.verbena_page
-    "toto.library",      # bibliography / reference manager
-    "toto.subscriptions",  # course gating + plans (academy soft-dep for enrollment)
     "toto.academy",      # LMS core: Course -> CourseModule -> Lesson
     "toto.backoffice",   # teacher back office (Panel autorski): shell + module registry
-    "toto.vod",          # video-on-demand: native player for Vault video/audio files
 
     # The host project package itself — carries host-only tooling like the
     # smoke_urls management command (no models, no templates).
     "delta",
 ]
+
+# --- optional capabilities -------------------------------------------------
+# Every flag below is SUBTRACTIVE: default on, so an existing profile that names
+# none of them builds exactly the host it always did. Each is also whole — a
+# capability installs everything it needs and nothing that would half-work — so
+# no combination the builder (or a hand-written config) can express produces a
+# broken deployment. What is NOT here is deliberate: the LMS core above, and
+# toto.quota, which toto-base's vault imports unguarded.
+if BUILD_AUTHORING:
+    # ONE flag for four apps, ganged on purpose. cyprian imports memo's
+    # sanitisers and raises cyprian.E001 at check time without it, and both
+    # build their file views on toto.editor's BaseFileDisplayView — so
+    # "documents without presentations" is a configuration that must not be
+    # expressible. primula rides along: same authoring surface, same vault.
+    INSTALLED_APPS += [
+        "toto.editor",   # the vault's generic file editor + its 8 file-type plugins
+        "toto.memo",     # slide decks: one .pml XML file in the vault, no rows
+        "toto.cyprian",  # documents: one XML file, paginated A4, exported to PDF
+        "toto.primula",  # sheets: Univer workbook JSON + SheetVersion history,
+                         # teachers-only via delta.primula_urls
+    ]
+if BUILD_LIBRARY:
+    INSTALLED_APPS += ["toto.library"]        # bibliography / reference manager
+if BUILD_SUBSCRIPTIONS:
+    INSTALLED_APPS += ["toto.subscriptions"]  # course gating + plans
+if BUILD_VOD:
+    INSTALLED_APPS += ["toto.vod"]            # native player for vault video/audio
+if BUILD_SOCIAL_LOGIN:
+    # Inert until a provider's OAuth credentials are configured; the flag exists
+    # so a host can keep the buttons out of its login page entirely.
+    INSTALLED_APPS += ["toto.social_login"]
 
 if not HAS_GIS:
     INSTALLED_APPS = [app for app in INSTALLED_APPS if app != "django.contrib.gis"]
@@ -263,6 +294,9 @@ TEMPLATES = [
                 "toto.core.context_processors.last_visited",
                 "toto.backoffice.context_processors.backoffice_access",
                 "toto.academy.context_processors.welcome_copy",
+                # delta's own capability flags — templates gate {% url %} links
+                # to optional apps on these (see delta/context_processors.py).
+                "delta.context_processors.build_flags",
             ]
         },
     }
@@ -414,22 +448,29 @@ INGRESS_ALLOWED_APPS = [
     "toto.core", "toto.gervazy",
     "toto.socialhub",
     "toto.vault",
-    # Seeds two sample sheets as `sheet` vault files (--full only) — after
-    # toto.vault, because they need a bucket.
-    "toto.primula",
     "toto.sso_master",
     # delta education content
     "toto.competence", "toto.quizzes", "toto.palimpsest",
-    "toto.subscriptions", "toto.academy", "toto.library",
+    "toto.academy",
 ]
+if BUILD_AUTHORING:
+    # Seeds two sample sheets as `sheet` vault files (--full only) — after
+    # toto.vault, because they need a bucket.
+    INGRESS_ALLOWED_APPS += ["toto.primula"]
+if BUILD_SUBSCRIPTIONS:
+    INGRESS_ALLOWED_APPS += ["toto.subscriptions"]
+if BUILD_LIBRARY:
+    INGRESS_ALLOWED_APPS += ["toto.library"]
 
 # Every label here must name an INSTALLED app: backup_engine.iter_models() calls
 # apps.get_app_config() on each one and a LookupError breaks every backup path.
 # primula: SheetVersion is plain snapshot JSON — safe to travel in a backup (the
 # sheet files themselves ride with the vault, like every other vault file).
 APPS_TO_SYNC = [
-    "locations", "events", "socialhub", "primula",
+    "locations", "events", "socialhub",
 ]
+if BUILD_AUTHORING:
+    APPS_TO_SYNC += ["primula"]
 
 # toto.locations is installed only as a model dependency (people/socialhub/events
 # FK into it) — delta mounts no locations URLs, so keep its UI (manual section,
@@ -467,16 +508,30 @@ DASHBOARD_ITEMS = [
     {"title": _("Skills"),       "icon": "fa-solid fa-diagram-project",     "description": _("The skill tree — badges you earn as you complete modules."),           "link": "academy:skill-forest",      "visibility": "public"},
     # --- materials ---
     {"title": _("Notatki"),      "icon": "fa-solid fa-pen-nib",             "description": _("Lesson notes and articles from your teachers."),                       "link": "palimpsest:page_list",      "visibility": "public"},
-    {"title": _("Dokumenty"),    "icon": "fa-solid fa-feather-pointed",     "description": _("Write documents with real pages and export them as a finished PDF."),  "link": "cyprian:index",             "visibility": "private"},
-    {"title": _("Prezentacje"),  "icon": "fa-solid fa-person-chalkboard",   "description": _("Build slide decks and present them full-screen."),                     "link": "memo:index",                "visibility": "private"},
-    {"title": _("Books"),        "icon": "fa-solid fa-book",                "description": _("Recommended books and reference materials."),                          "link": "library:book_list",         "visibility": "private"},
-    {"title": _("Articles"),     "icon": "fa-solid fa-newspaper",           "description": _("Curated articles and further reading."),                               "link": "library:article_list",      "visibility": "private"},
     {"title": _("Storage"),      "icon": "fa-solid fa-vault",               "description": _("Your files and downloadable PDF notes in encrypted storage."),         "link": "/vault/",                   "visibility": "private"},
     # --- account / community ---
-    {"title": _("Subscription"), "icon": "fa-solid fa-id-card",             "description": _("Your active course, its validity and your discount codes."),           "link": "subscriptions:plan_list",   "visibility": "private"},
     {"title": _("SocialHub"),    "icon": "fa-solid fa-users",               "description": _("Meet other students and stay connected."),                             "link": "socialhub:profile_list",    "visibility": "private"},
     {"title": _("Events"),       "icon": "fa-solid fa-calendar-days",       "description": _("Upcoming lessons, deadlines and events."),                             "link": "events:event_list",         "visibility": "public"},
 ]
+
+# The optional capabilities' tiles. A tile whose app is absent must not merely
+# be hidden — its `link` would not reverse — so they are appended, not filtered.
+# (A category may name a tile that does not exist; the reverse, a tile in no
+# category, is the trap: it renders nowhere.)
+if BUILD_AUTHORING:
+    DASHBOARD_ITEMS += [
+        {"title": _("Dokumenty"),    "icon": "fa-solid fa-feather-pointed",     "description": _("Write documents with real pages and export them as a finished PDF."),  "link": "cyprian:index",             "visibility": "private"},
+        {"title": _("Prezentacje"),  "icon": "fa-solid fa-person-chalkboard",   "description": _("Build slide decks and present them full-screen."),                     "link": "memo:index",                "visibility": "private"},
+    ]
+if BUILD_LIBRARY:
+    DASHBOARD_ITEMS += [
+        {"title": _("Books"),        "icon": "fa-solid fa-book",                "description": _("Recommended books and reference materials."),                          "link": "library:book_list",         "visibility": "private"},
+        {"title": _("Articles"),     "icon": "fa-solid fa-newspaper",           "description": _("Curated articles and further reading."),                               "link": "library:article_list",      "visibility": "private"},
+    ]
+if BUILD_SUBSCRIPTIONS:
+    DASHBOARD_ITEMS += [
+        {"title": _("Subscription"), "icon": "fa-solid fa-id-card",             "description": _("Your active course, its validity and your discount codes."),           "link": "subscriptions:plan_list",   "visibility": "private"},
+    ]
 
 DASHBOARD_CATEGORIES = [
     {"title": _("Learning"),  "items": ["Nauka", "Zadania", "My progress", "My path", "Skills"]},
