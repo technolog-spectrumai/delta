@@ -202,6 +202,18 @@ class Lesson(models.Model):
         related_name="academy_lesson_presentations",
         help_text="Optional slide-deck lecture for this lesson (a memo presentation from Vault).",
     )
+    # Authored lesson notes: a toto.cyprian document, written in the panel the
+    # same way the deck is. Distinct from ``notes_file`` above, which is an
+    # UPLOADED finished PDF — the two coexist, and the course page offers
+    # whichever a lesson has.
+    notes_document = models.ForeignKey(
+        "vault.VaultFile",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="academy_lesson_note_documents",
+        help_text="Optional authored lesson notes (a cyprian document from Vault).",
+    )
     attached_quizzes = models.ManyToManyField(
         "quizzes.Quiz",
         related_name="academy_lessons",

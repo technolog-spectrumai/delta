@@ -1151,6 +1151,13 @@ class PresentationMigrationTests(TransactionTestCase):
         executor = MigrationExecutor(connection)   # fresh graph state
         executor.migrate([("academy", "0006_presentation_becomes_a_memo_deck")])
 
+        # Forward to the leaves BEFORE touching the live model: later academy
+        # migrations (0007 notes_document, ...) add columns the current model
+        # class selects, and querying it against the 0006 schema explodes.
+        executor = MigrationExecutor(connection)
+        executor.loader.build_graph()
+        executor.migrate(executor.loader.graph.leaf_nodes())
+
         from toto.memo import presentation_format as pf
         from toto.vault.models import VaultFile
 
@@ -1175,7 +1182,118 @@ class PresentationMigrationTests(TransactionTestCase):
         self.assertNotIn("academy_lessonpresentation", tables)
         self.assertNotIn("academy_presentationslide", tables)
 
-        # Leave the schema where every other test expects it.
-        executor = MigrationExecutor(connection)
-        executor.loader.build_graph()
-        executor.migrate(executor.loader.graph.leaf_nodes())
+
+
+class LessonNotesDocumentTests(TestCase):
+    """Authored notes: a cyprian document behind academy's enrollment gate."""
+
+    @classmethod
+    def setUpTestData(cls):
+        Platform.objects.create(site_name="Test", author="tests", publication_year=2026)
+        cls.user_field = _person_user_field()
+        group = SkillGroup.objects.create(title="G", slug="nd-g", order=1)
+        badge = SkillBadge.objects.create(group=group, title="B", slug="nd-b", order=1)
+        cls.course = Course.objects.create(title="C", slug="nd-c", is_published=True)
+        module = CourseModule.objects.create(
+            course=cls.course, unlocks_badge=badge, title="M", slug="nd-m", order=1)
+        cls.lesson = Lesson.objects.create(module=module, title="L", slug="nd-l", order=1)
+
+        from django.core.files.base import ContentFile
+
+        from toto.cyprian import document_format as df
+        from toto.vault.models import Bucket, VaultFile
+
+        doc = df.new_document(title="Pochodne")
+        doc.content = "<h1>Pochodne</h1><p>wzory</p>"
+        cls.teacher_user = get_user_model().objects.create_user("nd-teacher", password="x")
+        bucket = Bucket.objects.create(slug="nd-bucket", name="nd",
+                                       owner=cls.teacher_user, storage_backend="local")
+        cls.doc_file = VaultFile(owner=cls.teacher_user, title="notatki.xml", key="nd-doc",
+                                 file_type="document", bucket=bucket, is_encrypted=False)
+        cls.doc_file.file.save("notatki.xml", ContentFile(df.dumps(doc).encode()), save=True)
+        cls.lesson.notes_document = cls.doc_file
+        cls.lesson.save(update_fields=["notes_document"])
+
+        cls.person = Person.objects.create(display_name="Learner")
+        cls.user = get_user_model().objects.create_user("nd-learner", password="x")
+        if cls.user_field:
+            setattr(cls.person, cls.user_field, cls.user)
+            cls.person.save(update_fields=[cls.user_field])
+
+    def _enrol(self):
+        from .models import CourseEnrollment
+        student = Student.objects.get_or_create(person=self.person)[0]
+        CourseEnrollment.objects.get_or_create(student=student, course=self.course)
+
+    def _url(self):
+        return reverse("academy:lesson-notes-document", kwargs={"pk": self.lesson.pk})
+
+    def test_anonymous_redirected(self):
+        self.assertEqual(self.client.get(self._url()).status_code, 302)
+
+    def test_non_enrolled_redirected_to_course(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.user)
+        self.assertRedirects(
+            self.client.get(self._url()),
+            reverse("academy:course-detail", kwargs={"slug": self.course.slug}))
+
+    def test_enrolled_student_reads_the_document(self):
+        # cyprian's OWN reader over the vault file — one reader for every
+        # document on the platform — with academy contributing only the gate.
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.user)
+        self._enrol()
+        resp = self.client.get(self._url())
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Pochodne")
+        # the PDF button is the GATED academy route, not cyprian's owner-only
+        # export the student would bounce off
+        self.assertContains(resp, reverse("academy:lesson-notes-pdf",
+                                          kwargs={"pk": self.lesson.pk}))
+        # enrollment is the gate, not vault visibility
+        self.assertNotEqual(self.doc_file.owner_id, self.user.pk)
+        self.assertFalse(self.doc_file.is_public)
+
+    def test_the_pdf_route_is_gated_and_answers_pdf(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.user)
+        url = reverse("academy:lesson-notes-pdf", kwargs={"pk": self.lesson.pk})
+        self.assertEqual(self.client.get(url).status_code, 302)   # not enrolled
+        self._enrol()
+        resp = self.client.get(url)
+        try:
+            import weasyprint                                     # noqa: F401
+        except Exception:                                         # noqa: BLE001
+            self.assertEqual(resp.status_code, 302)               # message + bounce
+        else:
+            self.assertEqual(resp.status_code, 200)
+            self.assertEqual(resp["Content-Type"], "application/pdf")
+            self.assertTrue(resp.content.startswith(b"%PDF"))
+
+    def test_a_lesson_without_notes_redirects_with_a_message(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.user)
+        self._enrol()
+        self.lesson.notes_document = None
+        self.lesson.save(update_fields=["notes_document"])
+        try:
+            self.assertRedirects(
+                self.client.get(self._url()),
+                reverse("academy:course-detail", kwargs={"slug": self.course.slug}))
+        finally:
+            self.lesson.notes_document = self.doc_file
+            self.lesson.save(update_fields=["notes_document"])
+
+    def test_course_detail_offers_the_notes_to_the_enrolled(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.user)
+        self._enrol()
+        resp = self.client.get(reverse("academy:course-detail",
+                                       kwargs={"slug": self.course.slug}))
+        self.assertContains(resp, self._url())

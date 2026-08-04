@@ -324,60 +324,91 @@ def script_edit(request, pk):
     }, active=ACTIVE)
 
 
-@teacher_required
-def presentation_edit(request, pk):
-    """Open the lesson's slide deck in memo's editor, creating it on demand.
+def _ensure_authoring_file(request, lesson, field, suffix, file_type, make_xml):
+    """The lesson's authored file (deck or notes document), created on demand.
 
-    A deck is a memo ``.pml`` vault file now, so the panel's job shrank to
-    plumbing: make sure the file exists, then hand over to the editor every
-    other deck on the platform uses. The file is created owned by the teacher
-    who first opened this page, in their personal bucket — and memo's editor is
-    owner-only, so another teacher gets sent back with a message naming the
-    owner rather than a bare 404 from a button that looks broken.
+    The panel's job is plumbing: make sure the vault file exists on ``field``,
+    then the caller hands over to the editor every other file of that kind uses.
+    Created owned by the teacher who first opened the page, in their personal
+    bucket. Returns the file, or None with a message when it belongs to another
+    teacher — the editors are owner-only, and a message naming the owner beats
+    a bare 404 from a button that looks broken.
     """
     from django.core.files.base import ContentFile
     from django.utils.text import slugify
 
-    from toto.memo import presentation_format
     from toto.vault.models import VaultFile
 
     from toto.backoffice.vault_upload import _default_bucket
 
-    lesson = get_object_or_404(Lesson.objects.select_related("module"), pk=pk)
-
-    if lesson.presentation_file is None:
-        deck = presentation_format.new_presentation(title=lesson.title)
-        xml = presentation_format.dumps(deck).encode("utf-8")
+    vault_file = getattr(lesson, field)
+    if vault_file is None:
+        xml = make_xml(lesson.title)
         base = slugify(lesson.title or "lesson") or "lesson"
-        name = f"{base}-deck.pml"
+        name = f"{base}-{suffix}"
         bucket = _default_bucket(request.user)
         vault_file = VaultFile(
             owner=request.user, title=name,
-            key=_unique_deck_key(base, bucket),
-            file_type="presentation", bucket=bucket,
+            key=_unique_authoring_key(f"{base}-{suffix.rsplit('.', 1)[0]}", bucket),
+            file_type=file_type, bucket=bucket,
             is_public=False, is_encrypted=False)
         vault_file.file.save(name, ContentFile(xml), save=True)
         vault_file.content_hash = vault_file.create_hash()
         vault_file.save(update_fields=["content_hash"])
-        lesson.presentation_file = vault_file
-        lesson.save(update_fields=["presentation_file"])
+        setattr(lesson, field, vault_file)
+        lesson.save(update_fields=[field])
 
-    if lesson.presentation_file.owner_id != request.user.id:
+    if vault_file.owner_id != request.user.id:
         messages.info(request, _(
-            "This deck belongs to %(owner)s — only its owner can edit it."
-        ) % {"owner": lesson.presentation_file.owner.username})
-        return redirect("backoffice_courses:lesson-edit", pk=lesson.pk)
+            "This file belongs to %(owner)s — only its owner can edit it."
+        ) % {"owner": vault_file.owner.username})
+        return None
+    return vault_file
 
-    return redirect("memo:edit", lesson.presentation_file.pk)
 
-
-def _unique_deck_key(base, bucket):
+def _unique_authoring_key(base, bucket):
     from toto.vault.models import VaultFile
-    key, n = f"{base}-deck", 1
+    key, n = base, 1
     while VaultFile.objects.filter(bucket=bucket, key=key).exists():
         n += 1
-        key = f"{base}-deck-{n}"
+        key = f"{base}-{n}"
     return key
+
+
+@teacher_required
+def presentation_edit(request, pk):
+    """Open the lesson's slide deck in memo's editor, creating it on demand."""
+    from toto.memo import presentation_format
+
+    lesson = get_object_or_404(Lesson.objects.select_related("module"), pk=pk)
+    vault_file = _ensure_authoring_file(
+        request, lesson, "presentation_file", "deck.pml", "presentation",
+        lambda title: presentation_format.dumps(
+            presentation_format.new_presentation(title=title)).encode("utf-8"))
+    if vault_file is None:
+        return redirect("backoffice_courses:lesson-edit", pk=lesson.pk)
+    return redirect("memo:edit", vault_file.pk)
+
+
+@teacher_required
+def notes_document_edit(request, pk):
+    """Open the lesson's authored notes in cyprian's writer, creating on demand.
+
+    The document parallel of the deck above: notes are a cyprian document, so
+    the teacher writes real pages with images and formulas, exports a PDF from
+    the same file, and students read it behind the enrollment gate — see
+    academy.views.lesson_notes_document.
+    """
+    from toto.cyprian import document_format
+
+    lesson = get_object_or_404(Lesson.objects.select_related("module"), pk=pk)
+    vault_file = _ensure_authoring_file(
+        request, lesson, "notes_document", "notatki.xml", "document",
+        lambda title: document_format.dumps(
+            document_format.new_document(title=title)).encode("utf-8"))
+    if vault_file is None:
+        return redirect("backoffice_courses:lesson-edit", pk=lesson.pk)
+    return redirect("cyprian:edit", vault_file.pk)
 
 
 @teacher_required

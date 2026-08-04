@@ -1211,3 +1211,67 @@ class PresentationEditorTests(TestCase):
     def test_lesson_editor_shows_presentation_link(self):
         r = self.client.get(reverse("backoffice_courses:lesson-edit", kwargs={"pk": self.lesson.pk}))
         self.assertContains(r, self._url())
+
+
+class NotesDocumentEditorTests(TestCase):
+    """The notes button: cyprian's writer over a file created on demand."""
+
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.staff = _staff("bo-notes")
+        group = SkillGroup.objects.create(title="G", slug="ng", order=1)
+        badge = SkillBadge.objects.create(group=group, title="B", slug="nb", order=1)
+        course = Course.objects.create(title="C", slug="nc")
+        module = CourseModule.objects.create(
+            course=course, unlocks_badge=badge, title="M", slug="nm", order=1)
+        cls.lesson = Lesson.objects.create(module=module, title="Granice", slug="nl", order=1)
+
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def _url(self):
+        return reverse("backoffice_courses:notes-document-edit", kwargs={"pk": self.lesson.pk})
+
+    def test_opening_creates_the_document_and_hands_over_to_cyprian(self):
+        from toto.academy.models import Lesson
+        from toto.cyprian import document_format as df
+
+        r = self.client.get(self._url())
+        lesson = Lesson.objects.get(pk=self.lesson.pk)
+        self.assertIsNotNone(lesson.notes_document)
+        vf = lesson.notes_document
+        self.assertEqual(vf.file_type, "document")
+        self.assertEqual(vf.owner, self.staff)
+        self.assertRedirects(r, reverse("cyprian:edit", args=[vf.pk]),
+                             fetch_redirect_response=False)
+        with vf.file.storage.open(vf.file.name, "rb") as fh:
+            doc = df.loads(fh.read().decode())
+        self.assertEqual(doc.title, "Granice")   # seeded with the lesson's title
+
+    def test_a_second_visit_reuses_the_same_document(self):
+        from toto.academy.models import Lesson
+        self.client.get(self._url())
+        first = Lesson.objects.get(pk=self.lesson.pk).notes_document_id
+        self.client.get(self._url())
+        self.assertEqual(
+            Lesson.objects.get(pk=self.lesson.pk).notes_document_id, first)
+
+    def test_another_teachers_document_is_not_editable_here(self):
+        self.client.get(self._url())                     # staff now owns it
+        other = _staff("bo-notes-2")
+        self.client.force_login(other)
+        r = self.client.get(self._url(), follow=True)
+        self.assertRedirects(r, reverse("backoffice_courses:lesson-edit",
+                                        kwargs={"pk": self.lesson.pk}))
+        self.assertContains(r, "bo-notes")               # the owner is named
+
+    def test_student_is_gated(self):
+        user = get_user_model().objects.create_user("plain-notes", password="x")
+        self.client.force_login(user)
+        self.assertEqual(self.client.get(self._url()).status_code, 404)
+
+    def test_lesson_editor_shows_the_notes_button(self):
+        r = self.client.get(reverse("backoffice_courses:lesson-edit",
+                                    kwargs={"pk": self.lesson.pk}))
+        self.assertContains(r, self._url())

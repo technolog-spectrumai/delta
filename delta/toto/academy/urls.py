@@ -81,6 +81,16 @@ urlpatterns = [
         academy_views.lesson_presentation,
         name="lesson-presentation",
     ),
+    path(
+        "lessons/<int:pk>/notatki/",
+        academy_views.lesson_notes_document,
+        name="lesson-notes-document",
+    ),
+    path(
+        "lessons/<int:pk>/notatki/pdf/",
+        academy_views.lesson_notes_pdf,
+        name="lesson-notes-pdf",
+    ),
 
     # Course metrics
     path(

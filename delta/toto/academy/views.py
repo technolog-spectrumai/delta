@@ -443,6 +443,7 @@ class CourseDetailView(AcademyContextMixin, DetailView):
                 "lessons__video_file",
                 "lessons__notes_file",
                 "lessons__presentation_file",
+                "lessons__notes_document",
                 "lessons__owner",
                 "lessons__owner__person",
                 "attached_quizzes",
@@ -616,6 +617,89 @@ def lesson_presentation(request, pk):
         "edit_url": reverse("memo:edit", args=[vault_file.pk]) if can_edit else "",
     }, request)
     return render(request, "memo/present.html", context)
+
+
+def _gated_lesson_document(request, pk):
+    """(lesson, course, document, vault_file) for the notes routes, or a
+    redirect. The gate is ENROLLMENT, exactly as for the deck: authored notes
+    are course material, not a shared vault file."""
+    from toto.cyprian import document_format
+
+    from .media_views import can_watch
+    lesson = get_object_or_404(
+        Lesson.objects.select_related("module__course", "notes_document"), pk=pk)
+    course = lesson.module.course
+    if not can_watch(request.user, course):
+        messages.info(request, "Enrol in this course to read the notes.")
+        return None, redirect("academy:course-detail", slug=course.slug)
+
+    vault_file = lesson.notes_document
+    if vault_file is None or vault_file.is_encrypted:
+        messages.info(request, "This lesson has no notes document.")
+        return None, redirect("academy:course-detail", slug=course.slug)
+
+    try:
+        with vault_file.file.storage.open(vault_file.file.name, "rb") as fh:
+            document = document_format.loads(fh.read().decode("utf-8"))
+    except Exception:                                      # noqa: BLE001
+        messages.info(request, "This lesson's notes cannot be read.")
+        return None, redirect("academy:course-detail", slug=course.slug)
+    return (lesson, course, document, vault_file), None
+
+
+@login_required
+def lesson_notes_document(request, pk):
+    """The lesson's authored notes, read through cyprian's own reader.
+
+    One reader for every document on the platform; academy contributes only the
+    enrollment gate. The PDF button goes through the gated route below rather
+    than cyprian's owner-only export, so an enrolled student can print the
+    handout the teacher wrote.
+    """
+    from toto.ui import PageProcessor
+
+    resolved, bounce = _gated_lesson_document(request, pk)
+    if bounce:
+        return bounce
+    lesson, course, document, vault_file = resolved
+
+    can_edit = request.user.is_authenticated and vault_file.owner_id == request.user.id
+    context = PageProcessor().decorate({
+        "vault_file": vault_file,
+        "document": document,
+        "edit_url": reverse("cyprian:edit", args=[vault_file.pk]) if can_edit else "",
+        "pdf_url": reverse("academy:lesson-notes-pdf", args=[lesson.pk]),
+    }, request)
+    return render(request, "cyprian/read.html", context)
+
+
+@login_required
+def lesson_notes_pdf(request, pk):
+    """The authored notes as a PDF, behind the same enrollment gate.
+
+    Rendered through cyprian's own renderer, so what the student downloads is
+    what the teacher's export produces. Degrades to a message when WeasyPrint
+    is not installed rather than a bare 503 — a student cannot fix a build flag.
+    """
+    from django.http import HttpResponse
+
+    from toto.cyprian import render_pdf
+
+    resolved, bounce = _gated_lesson_document(request, pk)
+    if bounce:
+        return bounce
+    lesson, course, document, vault_file = resolved
+
+    try:
+        raw = render_pdf.render(document)
+    except Exception:                                      # noqa: BLE001
+        messages.info(request, "The PDF cannot be produced on this server right now.")
+        return redirect("academy:lesson-notes-document", pk=lesson.pk)
+
+    response = HttpResponse(raw, content_type="application/pdf")
+    base = (vault_file.title or "notatki").rsplit(".", 1)[0]
+    response["Content-Disposition"] = f'inline; filename="{base}.pdf"'
+    return response
 
 
 def certificate_detail(request, uuid):

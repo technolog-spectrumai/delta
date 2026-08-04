@@ -91,5 +91,19 @@
       {% if lesson.presentation_file %}<i class="fa-solid fa-pen"></i> {% trans "Edit deck" %}{% else %}<i class="fa-solid fa-plus"></i> {% trans "Add a deck" %}{% endif %}
     </a>
   </section>
+
+  <!-- Authored lesson notes (cyprian document) -->
+  <section class="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-current/15 p-4">
+    <div class="min-w-0">
+      <h3 class="font-bold"><i class="fa-solid fa-feather-pointed"></i> {% trans "Lesson notes (document)" %}</h3>
+      <p class="text-xs opacity-60">{% trans "Written notes with real pages, formulas and images — students read them online or as a PDF. Separate from the uploaded PDF above." %}</p>
+    </div>
+    {% comment %} A cyprian document, created on demand and opened in the
+    writer — see notes_document_edit, the document twin of the deck button.
+    {% endcomment %}
+    <a href="{% url 'backoffice_courses:notes-document-edit' pk=lesson.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85">
+      {% if lesson.notes_document %}<i class="fa-solid fa-pen"></i> {% trans "Edit notes" %}{% else %}<i class="fa-solid fa-plus"></i> {% trans "Write notes" %}{% endif %}
+    </a>
+  </section>
 {% endif %}
 {% endblock %}

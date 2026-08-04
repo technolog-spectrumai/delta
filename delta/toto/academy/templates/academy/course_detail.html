@@ -210,6 +210,12 @@
                        class="shrink-0 px-3 py-1 rounded text-xs font-semibold inline-flex items-center gap-1">
                       <i class="fa-solid fa-person-chalkboard"></i>{% trans "Presentation" %}</a>
                     {% endif %}
+                    {% if lesson.notes_document and can_watch %}
+                    <a href="{% url 'academy:lesson-notes-document' lesson.pk %}"
+                       :class="darkMode ? 'border-accent-1' : 'border-accent-2'"
+                       class="shrink-0 px-3 py-1 rounded border text-xs font-semibold inline-flex items-center gap-1">
+                      <i class="fa-solid fa-feather-pointed"></i>{% trans "Notatki" %}</a>
+                    {% endif %}
                   </div>
                   {% if lesson.video_file %}
                     {% if can_watch %}

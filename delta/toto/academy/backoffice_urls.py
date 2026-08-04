@@ -20,6 +20,7 @@ urlpatterns = [
     path("lessons/<int:pk>/edit/", views.lesson_edit, name="lesson-edit"),
     path("lessons/<int:pk>/delete/", views.lesson_delete, name="lesson-delete"),
     path("lessons/<int:pk>/presentation/", views.presentation_edit, name="presentation-edit"),
+    path("lessons/<int:pk>/notes-document/", views.notes_document_edit, name="notes-document-edit"),
     path("scripts/<int:pk>/edit/", views.script_edit, name="script-edit"),
     path("scripts/<int:pk>/delete/", views.script_delete, name="script-delete"),
     # roster & enrolment
