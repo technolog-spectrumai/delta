@@ -144,11 +144,20 @@ class VaultFile(models.Model):
         ('video', 'Video'),
         ('python', 'Python'),
         ('neojson', 'NeoJSON'),
+        ('presentation', 'Presentation'),  # a slide deck (XML), edited in toto.memo
+        ('document', 'Document'),     # a written document (XML), edited in toto.cyprian
         ('zip', 'Archive'),
     ]
-    # Retired doc types (presentation/.pml, notebook/.tpy, contract/.contract) are
-    # ordinary 'xml' now, content-sniffed by memo/mandragora/notarius. Existing rows
-    # keep their old file_type string (choices aren't DB-enforced) and still open.
+    # `presentation` and `document` are back because delta installs memo and
+    # cyprian, and a vault plugin only fires when its `key` equals a file_type:
+    # left as generic 'xml' a deck gets no Play button and an Edit button that
+    # opens the raw XML editor. Both apps retype a row the first time they touch
+    # it (memo's `_adopt`, cyprian's `_adopt_document`), so old files repair
+    # themselves on open rather than needing a data migration.
+    #
+    # notebook/.tpy and contract/.contract stay retired — delta has neither
+    # mandragora nor notarius. Rows carrying those strings still open: choices
+    # are not DB-enforced.
 
     _EXT_MAP = {
         ".tex": "latex", ".sty": "latex", ".cls": "latex", ".dtx": "latex", ".ins": "latex",

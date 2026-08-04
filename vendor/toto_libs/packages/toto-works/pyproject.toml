@@ -1,0 +1,43 @@
+[build-system]
+# setuptools >= 62.3 is required for '**' patterns in package-data globs.
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# delta's trimmed toto-works: **memo and cyprian only**.
+#
+# Upstream this wheel also carries antaresia, kanban and primula. Delta installs
+# none of them, and antaresia is the app that FKs workflows.WorkflowRun — so
+# trimming it is what lets this package depend on toto-base alone and keeps
+# toto-flow out of delta entirely. The trim is the same policy full_secession.md
+# describes for whole packages, applied one level down; it is why this wheel's
+# contents differ from the same-named one in the portal monorepo, and why
+# delta's version series (1.x here) is its own.
+#
+# cyprian shares the wheel with memo because it imports memo's sanitisers and
+# media helpers — a plain intra-package import, not a distribution edge.
+name = "toto-works"
+version = "1.9"
+description = "toto vault-backed slide decks (memo) and documents (cyprian)"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+# Versions are lockstep across the whole toto suite and are rewritten only by
+# scripts/release.py — never edit them by hand.
+dependencies = [
+    "toto-base==1.9",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# Each package owns exactly the portions present under its own src/toto/.
+# scripts/check_package_graph.py enforces that the partition stays disjoint.
+include = ["toto*"]
+namespaces = true
+
+[tool.setuptools.package-data]
+# 'templates/**/*' (not '*.html'): sso_master ships a .txt email template.
+"*" = [
+    "templates/**/*",
+    "static/**/*",
+]
