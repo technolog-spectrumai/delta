@@ -44,6 +44,18 @@ for app_label, prefix, module, namespace in _education:
 if apps.is_installed("toto.vod"):
     urlpatterns.append(path("vod/", include("toto.vod.urls")))
 
+# Authoring tools (toto-works). Their prefixes stay English and match the other
+# hosts': these are the app namespaces the two apps reverse against internally
+# (`memo:edit`, `cyprian:index`), and a deck or document made here is meant to
+# open unchanged on any toto host. The Polish surface is the panel around them —
+# a teacher reaches the deck editor through the lesson, not through /memo/.
+for _label, _prefix, _module in (
+    ("toto.memo", "memo/", "toto.memo.urls"),
+    ("toto.cyprian", "cyprian/", "toto.cyprian.urls"),
+):
+    if apps.is_installed(_label):
+        urlpatterns.append(path(_prefix, include(_module)))
+
 # Teacher back office (Panel autorski) — a shell app plus one URL module per
 # authoring module. Mounted only when the shell is installed; each module's
 # routes are added only when its owning app is present.

@@ -128,6 +128,13 @@ INSTALLED_APPS = [
     "toto.sso_core",
     "toto.sso_master",
     "toto.social_login",
+    # --- authoring tools (toto-works), shared verbatim with the portal hosts ---
+    # toto.editor is the vault's generic file editor; memo and cyprian both build
+    # their file-opening views on its BaseFileDisplayView, and it owns the "xml"
+    # editor plugin a deck falls back to before memo adopts it.
+    "toto.editor",
+    "toto.memo",         # slide decks: one .pml XML file in the vault, no rows
+    "toto.cyprian",      # documents: one XML file, paginated A4, exported to PDF
     # --- delta education portion (revived from toto_libs/limbo, carried here) ---
     "toto.competence",   # skill badges / DAG — academy CourseModule.unlocks_badge
     "toto.quizzes",      # tasks: A–D + open answers, practice pool (delta additions)

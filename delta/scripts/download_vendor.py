@@ -100,6 +100,15 @@ DOWNLOADS: list[tuple[str, str]] = [
     ("https://cdnjs.cloudflare.com/ajax/libs/ace/1.36.4/theme-textmate.min.js","ace/theme-textmate.min.js"),
     ("https://cdnjs.cloudflare.com/ajax/libs/ace/1.36.4/theme-twilight.min.js","ace/theme-twilight.min.js"),
 
+    # KaTeX 0.16.11 — formulas in memo slides and cyprian documents. The CSS
+    # references its fonts relatively; those are pulled by _fetch_katex_fonts()
+    # below, the same way FontAwesome's webfonts are. (toto.quizzes carries its
+    # OWN katex copy under quizzes/vendor/ — that one ships in the wheel and is
+    # not this. Both matter: WeasyPrint renders formula markup for the PDF
+    # export, and without fonts on disk a formula is a row of empty boxes.)
+    ("https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css",       "katex/katex.min.css"),
+    ("https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js",        "katex/katex.min.js"),
+
     # QR Code
     ("https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js",
      "qrcodejs/qrcode.min.js"),
@@ -290,12 +299,32 @@ def _fetch_font_awesome_webfonts() -> None:
         )
 
 
+def _fetch_katex_fonts() -> None:
+    """Parse the downloaded KaTeX CSS and pull every font it references.
+
+    Same shape as the FontAwesome fetcher above.
+    """
+    css_path = VENDOR_DIR / "katex" / "katex.min.css"
+    if not css_path.exists():
+        print("  ⚠ KaTeX CSS not found, skipping fonts")
+        return
+    css = css_path.read_text(encoding="utf-8")
+    fonts = re.findall(r"url\(fonts/([^)'\"]+\.(?:woff2|woff|ttf))\)", css)
+    fonts = list(dict.fromkeys(fonts))
+    base_url = "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/fonts/"
+    for filename in fonts:
+        _fetch(base_url + filename,
+               VENDOR_DIR / "katex" / "fonts" / filename,
+               f"katex/fonts/{filename}")
+
+
 def download_all() -> None:
     print("\n📦 Downloading vendor assets...")
     VENDOR_DIR.mkdir(parents=True, exist_ok=True)
     for url, rel_path in DOWNLOADS:
         _fetch(url, VENDOR_DIR / rel_path, rel_path)
     _fetch_font_awesome_webfonts()
+    _fetch_katex_fonts()
     if _FAILED:
         print(f"\n❌ {len(_FAILED)} vendor asset(s) failed to download:")
         for label in _FAILED:

@@ -53,3 +53,6 @@ urllib3==2.6.3
 vine==5.1.0
 wcwidth==0.2.13
 whitenoise==6.9.0
+# HTML -> PDF for toto.cyprian documents and toto.memo deck export. Its native
+# libraries (cairo/pango/gdk-pixbuf) are already in the image's base apt layer.
+weasyprint==63.1
