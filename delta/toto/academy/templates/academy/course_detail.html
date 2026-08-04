@@ -204,7 +204,7 @@
                        target="_blank">
                       <i class="fa-solid fa-file-pdf"></i>{% trans "Notes (PDF)" %}</a>
                     {% endif %}
-                    {% if lesson.presentation.slides.all and can_watch %}
+                    {% if lesson.presentation_file and can_watch %}
                     <a href="{% url 'academy:lesson-presentation' lesson.pk %}"
                        :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
                        class="shrink-0 px-3 py-1 rounded text-xs font-semibold inline-flex items-center gap-1">
@@ -222,7 +222,7 @@
                         <i class="fa-solid fa-lock"></i>{% trans "Enrol to watch this lesson." %}</p>
                     {% endif %}
                   {% endif %}
-                  {% if lesson.presentation.slides.all and not can_watch and not lesson.video_file %}
+                  {% if lesson.presentation_file and not can_watch and not lesson.video_file %}
                     <p class="inline-flex items-center gap-2 text-xs opacity-60">
                       <i class="fa-solid fa-lock"></i>{% trans "Enrol to watch the presentation." %}</p>
                   {% endif %}

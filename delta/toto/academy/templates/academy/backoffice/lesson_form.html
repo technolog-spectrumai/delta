@@ -85,10 +85,10 @@
       <h3 class="font-bold"><i class="fa-solid fa-person-chalkboard"></i> {% trans "Presentation lecture" %}</h3>
       <p class="text-xs opacity-60">{% trans "Optional slide deck (formulas, SVG, images, captions) students can watch alongside the video." %}</p>
     </div>
+    {% comment %} The deck is a memo vault file; this button creates it on
+    demand and opens memo's editor — see presentation_edit. {% endcomment %}
     <a href="{% url 'backoffice_courses:presentation-edit' pk=lesson.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85">
-      {% with n=lesson.presentation.slides.count %}
-        {% if n %}<i class="fa-solid fa-pen"></i> {% blocktrans %}Edit slides ({{ n }}){% endblocktrans %}{% else %}<i class="fa-solid fa-plus"></i> {% trans "Add slides" %}{% endif %}
-      {% endwith %}
+      {% if lesson.presentation_file %}<i class="fa-solid fa-pen"></i> {% trans "Edit deck" %}{% else %}<i class="fa-solid fa-plus"></i> {% trans "Add a deck" %}{% endif %}
     </a>
   </section>
 {% endif %}

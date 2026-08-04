@@ -17,9 +17,7 @@ from .models import (
     LearningPath,
     LearningPathBadge,
     Lesson,
-    LessonPresentation,
     PersonalPath,
-    PresentationSlide,
     PersonalPathStep,
     RecommendationConfig,
     Script,
@@ -663,17 +661,5 @@ class WelcomeCopyAdmin(admin.ModelAdmin):
     readonly_fields = ("updated_at",)
 
 
-class PresentationSlideInline(admin.TabularInline):
-    model = PresentationSlide
-    extra = 1
-    fields = ("order", "title", "subtitle")
-    ordering = ("order",)
-
-
-@admin.register(LessonPresentation)
-class LessonPresentationAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "title", "updated_at")
-    search_fields = ("lesson__title", "title")
-    autocomplete_fields = ("lesson",)
-    readonly_fields = ("updated_at",)
-    inlines = (PresentationSlideInline,)
+# LessonPresentation/PresentationSlide admin left with the models: a deck is a
+# memo vault file now, administered where every other vault file is.

@@ -189,6 +189,19 @@ class Lesson(models.Model):
         related_name="academy_lesson_notes",
         help_text="Optional downloadable PDF notes for this lesson (from Vault).",
     )
+    # Optional slide-deck lecture: a toto.memo ``.pml`` file in the Vault,
+    # additive to the video. This replaced the old DB-backed
+    # LessonPresentation/PresentationSlide pair (migration 0006 converted every
+    # deck): the deck lives with the platform's other presentations, opens in
+    # memo's editor and player, and interoperates with any toto host.
+    presentation_file = models.ForeignKey(
+        "vault.VaultFile",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="academy_lesson_presentations",
+        help_text="Optional slide-deck lecture for this lesson (a memo presentation from Vault).",
+    )
     attached_quizzes = models.ManyToManyField(
         "quizzes.Quiz",
         related_name="academy_lessons",
@@ -806,51 +819,7 @@ class WelcomeCopy(models.Model):
         return self._localized("teacher_cta")
 
 
-# ────────────────────────────────────────────────
-# PRESENTATION  (optional slide-deck lecture per lesson)
-# ────────────────────────────────────────────────
-
-class LessonPresentation(models.Model):
-    """An optional slide-presentation lecture attached to a lesson.
-
-    Mirrors the Script/ScriptSection shape: this is the deck; ordered
-    PresentationSlide rows are its slides. Watched with a reveal.js player and
-    edited with the same formset + drag-reorder + KaTeX pattern as scripts.
-    """
-
-    lesson = models.OneToOneField(
-        Lesson,
-        on_delete=models.CASCADE,
-        related_name="presentation",
-    )
-    title = models.CharField(max_length=200, blank=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = "Lesson presentation"
-        verbose_name_plural = "Lesson presentations"
-
-    def __str__(self):
-        return f"Presentation – {self.lesson.title}"
-
-
-class PresentationSlide(models.Model):
-    presentation = models.ForeignKey(
-        LessonPresentation,
-        on_delete=models.CASCADE,
-        related_name="slides",
-    )
-    order = models.PositiveIntegerField(default=0)
-    title = models.CharField(max_length=200, blank=True)
-    # Markdown + $LaTeX$ + inline SVG/HTML/images (rendered by markdownx + KaTeX).
-    body = models.TextField(blank=True)
-    # Per-slide caption shown under the slide during playback.
-    subtitle = models.TextField(blank=True)
-
-    class Meta:
-        ordering = ["order"]
-        verbose_name = "Presentation slide"
-        verbose_name_plural = "Presentation slides"
-
-    def __str__(self):
-        return f"{self.presentation.lesson.title} – {self.title or 'Slide'}"
+# The old DB-backed presentation (LessonPresentation + PresentationSlide) is
+# gone: a lesson's deck is ``presentation_file`` above — one memo ``.pml`` file
+# in the vault. Migration 0006 converted every existing deck, markdown bodies
+# rendered to HTML blocks, before dropping the tables.

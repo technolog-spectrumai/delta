@@ -442,8 +442,7 @@ class CourseDetailView(AcademyContextMixin, DetailView):
                 "lessons",
                 "lessons__video_file",
                 "lessons__notes_file",
-                "lessons__presentation",
-                "lessons__presentation__slides",
+                "lessons__presentation_file",
                 "lessons__owner",
                 "lessons__owner__person",
                 "attached_quizzes",
@@ -578,30 +577,45 @@ def _render(request, template, context):
 
 @login_required
 def lesson_presentation(request, pk):
-    """Full-page reveal.js player for a lesson's optional slide-presentation lecture.
+    """The lesson's slide-deck lecture, played by memo's reveal.js player.
 
-    Enrollment-gated (mirrors the lesson video/notes gate). Slide bodies are
-    rendered from Markdown (via markdownx, which protects $LaTeX$); the template
-    then runs KaTeX in the browser.
+    The deck is a memo ``.pml`` vault file and this renders memo's OWN player
+    template over it — one player for every deck on the platform. What stays
+    academy's is the gate: ENROLLMENT decides who may watch, not the vault's
+    owner/public visibility, because a lesson deck is course material, not a
+    shared file. The memo edit link is offered only to the file's owner, which
+    is memo's own rule.
     """
-    from markdownx.utils import markdownify
+    from toto.memo import presentation_format
+    from toto.ui import PageProcessor
 
     from .media_views import can_watch
-    lesson = get_object_or_404(Lesson.objects.select_related("module__course"), pk=pk)
+    lesson = get_object_or_404(
+        Lesson.objects.select_related("module__course", "presentation_file"), pk=pk)
     course = lesson.module.course
     if not can_watch(request.user, course):
         messages.info(request, "Enrol in this course to watch the presentation.")
         return redirect("academy:course-detail", slug=course.slug)
-    presentation = getattr(lesson, "presentation", None)
-    slides = []
-    if presentation:
-        slides = [
-            {"title": s.title, "html": markdownify(s.body or ""), "subtitle": s.subtitle}
-            for s in presentation.slides.all()
-        ]
-    return _render(request, "academy/presentation_play.html", {
-        "lesson": lesson, "course": course, "presentation": presentation, "slides": slides,
-    })
+
+    vault_file = lesson.presentation_file
+    if vault_file is None or vault_file.is_encrypted:
+        messages.info(request, "This lesson has no presentation.")
+        return redirect("academy:course-detail", slug=course.slug)
+
+    try:
+        with vault_file.file.storage.open(vault_file.file.name, "rb") as fh:
+            presentation = presentation_format.loads(fh.read().decode("utf-8"))
+    except Exception:                                      # noqa: BLE001
+        messages.info(request, "This lesson's presentation cannot be read.")
+        return redirect("academy:course-detail", slug=course.slug)
+
+    can_edit = request.user.is_authenticated and vault_file.owner_id == request.user.id
+    context = PageProcessor().decorate({
+        "vault_file": vault_file,
+        "presentation": presentation,
+        "edit_url": reverse("memo:edit", args=[vault_file.pk]) if can_edit else "",
+    }, request)
+    return render(request, "memo/present.html", context)
 
 
 def certificate_detail(request, uuid):

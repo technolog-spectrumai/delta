@@ -20,9 +20,7 @@ from .backoffice_forms import (
     CohortForm,
     CourseForm,
     LessonForm,
-    LessonPresentationForm,
     ModuleForm,
-    PresentationSlideFormSet,
     ScriptForm,
     ScriptSectionFormSet,
     WelcomeCopyForm,
@@ -37,7 +35,6 @@ from .models import (
     CourseEnrollment,
     CourseModule,
     Lesson,
-    LessonPresentation,
     Script,
     Student,
     StudentBadge,
@@ -72,7 +69,6 @@ def _renumber_sections(formset):
 
 
 # Slides are renumbered identically to script sections (drag-set order → 1..n).
-_renumber_slides = _renumber_sections
 
 
 # --- courses ---------------------------------------------------------------
@@ -330,21 +326,58 @@ def script_edit(request, pk):
 
 @teacher_required
 def presentation_edit(request, pk):
-    """Edit a lesson's optional slide-presentation lecture (deck created on demand)."""
+    """Open the lesson's slide deck in memo's editor, creating it on demand.
+
+    A deck is a memo ``.pml`` vault file now, so the panel's job shrank to
+    plumbing: make sure the file exists, then hand over to the editor every
+    other deck on the platform uses. The file is created owned by the teacher
+    who first opened this page, in their personal bucket — and memo's editor is
+    owner-only, so another teacher gets sent back with a message naming the
+    owner rather than a bare 404 from a button that looks broken.
+    """
+    from django.core.files.base import ContentFile
+    from django.utils.text import slugify
+
+    from toto.memo import presentation_format
+    from toto.vault.models import VaultFile
+
+    from toto.backoffice.vault_upload import _default_bucket
+
     lesson = get_object_or_404(Lesson.objects.select_related("module"), pk=pk)
-    presentation, _created = LessonPresentation.objects.get_or_create(lesson=lesson)
-    form = LessonPresentationForm(request.POST or None, instance=presentation)
-    formset = PresentationSlideFormSet(request.POST or None, instance=presentation)
-    if request.method == "POST" and form.is_valid() and formset.is_valid():
-        form.save()
-        formset.save()
-        _renumber_slides(formset)
-        messages.success(request, _("Presentation saved."))
+
+    if lesson.presentation_file is None:
+        deck = presentation_format.new_presentation(title=lesson.title)
+        xml = presentation_format.dumps(deck).encode("utf-8")
+        base = slugify(lesson.title or "lesson") or "lesson"
+        name = f"{base}-deck.pml"
+        bucket = _default_bucket(request.user)
+        vault_file = VaultFile(
+            owner=request.user, title=name,
+            key=_unique_deck_key(base, bucket),
+            file_type="presentation", bucket=bucket,
+            is_public=False, is_encrypted=False)
+        vault_file.file.save(name, ContentFile(xml), save=True)
+        vault_file.content_hash = vault_file.create_hash()
+        vault_file.save(update_fields=["content_hash"])
+        lesson.presentation_file = vault_file
+        lesson.save(update_fields=["presentation_file"])
+
+    if lesson.presentation_file.owner_id != request.user.id:
+        messages.info(request, _(
+            "This deck belongs to %(owner)s — only its owner can edit it."
+        ) % {"owner": lesson.presentation_file.owner.username})
         return redirect("backoffice_courses:lesson-edit", pk=lesson.pk)
-    return backoffice_render(request, "academy/backoffice/presentation_form.html", {
-        "lesson": lesson, "presentation": presentation, "form": form, "formset": formset,
-        "title": _("Presentation lecture"), "submit_label": _("Save presentation"),
-    }, active=ACTIVE)
+
+    return redirect("memo:edit", lesson.presentation_file.pk)
+
+
+def _unique_deck_key(base, bucket):
+    from toto.vault.models import VaultFile
+    key, n = f"{base}-deck", 1
+    while VaultFile.objects.filter(bucket=bucket, key=key).exists():
+        n += 1
+        key = f"{base}-deck-{n}"
+    return key
 
 
 @teacher_required

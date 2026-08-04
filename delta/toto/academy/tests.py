@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.db import IntegrityError, transaction
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.urls import reverse
 from django.utils import translation
 
@@ -13,10 +13,8 @@ from .models import (
     Course,
     CourseModule,
     Lesson,
-    LessonPresentation,
     PersonalPath,
     PersonalPathStep,
-    PresentationSlide,
     RecommendationConfig,
     Student,
     StudentBadge,
@@ -955,19 +953,42 @@ class LessonPresentationModelTests(TestCase):
             course=course, unlocks_badge=badge, title="M", slug="lp-m", order=1)
         cls.lesson = Lesson.objects.create(module=module, title="L", slug="lp-l", order=1)
 
-    def test_presentation_and_ordered_slides(self):
-        pres = LessonPresentation.objects.create(lesson=self.lesson, title="Deck")
-        PresentationSlide.objects.create(presentation=pres, order=2, title="Two", body="b2")
-        PresentationSlide.objects.create(presentation=pres, order=1, title="One", body="$x^2$")
-        self.assertEqual([s.title for s in pres.slides.all()], ["One", "Two"])  # Meta ordering
-        self.assertEqual(self.lesson.presentation, pres)  # reverse OneToOne
+    def _deck_file(self, owner):
+        """A real memo .pml in the vault, as the panel's on-demand path makes it."""
+        from django.core.files.base import ContentFile
 
-    def test_deleting_lesson_cascades_presentation_and_slides(self):
-        pres = LessonPresentation.objects.create(lesson=self.lesson)
-        PresentationSlide.objects.create(presentation=pres, order=1)
-        self.lesson.delete()
-        self.assertFalse(LessonPresentation.objects.filter(pk=pres.pk).exists())
-        self.assertEqual(PresentationSlide.objects.count(), 0)
+        from toto.memo import presentation_format as pf
+        from toto.vault.models import Bucket, VaultFile
+
+        deck = pf.new_presentation(title="Deck")
+        deck.slides[0].title = "Slide 1"
+        deck.slides[0].blocks[0].payload = "<p>hello</p>"
+        xml = pf.dumps(deck).encode()
+        bucket, _ = Bucket.objects.get_or_create(
+            slug=f"personal-{owner.username}",
+            defaults={"name": "personal", "owner": owner, "storage_backend": "local"})
+        vf = VaultFile(owner=owner, title="deck.pml", key="deck",
+                       file_type="presentation", bucket=bucket, is_encrypted=False)
+        vf.file.save("deck.pml", ContentFile(xml), save=True)
+        return vf
+
+    def test_a_lesson_can_carry_a_deck_file(self):
+        owner = get_user_model().objects.create_user("deck-owner", password="x")
+        vf = self._deck_file(owner)
+        self.lesson.presentation_file = vf
+        self.lesson.save(update_fields=["presentation_file"])
+        self.lesson.refresh_from_db()
+        self.assertEqual(self.lesson.presentation_file, vf)
+
+    def test_deleting_the_file_does_not_delete_the_lesson(self):
+        # SET_NULL: the deck is additive material, never load-bearing.
+        owner = get_user_model().objects.create_user("deck-owner2", password="x")
+        vf = self._deck_file(owner)
+        self.lesson.presentation_file = vf
+        self.lesson.save(update_fields=["presentation_file"])
+        vf.delete()
+        self.lesson.refresh_from_db()
+        self.assertIsNone(self.lesson.presentation_file)
 
 
 class LessonPresentationPlayerTests(TestCase):
@@ -981,9 +1002,27 @@ class LessonPresentationPlayerTests(TestCase):
         module = CourseModule.objects.create(
             course=cls.course, unlocks_badge=badge, title="M", slug="pp-m", order=1)
         cls.lesson = Lesson.objects.create(module=module, title="L", slug="pp-l", order=1)
-        pres = LessonPresentation.objects.create(lesson=cls.lesson, title="Deck")
-        PresentationSlide.objects.create(
-            presentation=pres, order=1, title="Slide 1", body="$x^2$", subtitle="cap")
+
+        # The deck: a real memo .pml in the vault, as the panel creates it.
+        from django.core.files.base import ContentFile
+
+        from toto.memo import presentation_format as pf
+        from toto.vault.models import Bucket, VaultFile
+
+        deck = pf.new_presentation(title="Deck")
+        deck.slides[0].title = "Slide 1"
+        deck.slides[0].blocks[0].payload = "<p>maths</p>"
+        xml = pf.dumps(deck).encode()
+        cls.deck_owner = get_user_model().objects.create_user("pp-teacher", password="x")
+        bucket = Bucket.objects.create(slug="pp-bucket", name="pp",
+                                       owner=cls.deck_owner, storage_backend="local")
+        cls.deck_file = VaultFile(owner=cls.deck_owner, title="deck.pml", key="pp-deck",
+                                  file_type="presentation", bucket=bucket,
+                                  is_encrypted=False)
+        cls.deck_file.file.save("deck.pml", ContentFile(xml), save=True)
+        cls.lesson.presentation_file = cls.deck_file
+        cls.lesson.save(update_fields=["presentation_file"])
+
         cls.person = Person.objects.create(display_name="Learner")
         cls.user = get_user_model().objects.create_user("pp-learner", password="x")
         if cls.user_field:
@@ -1010,6 +1049,8 @@ class LessonPresentationPlayerTests(TestCase):
             reverse("academy:course-detail", kwargs={"slug": self.course.slug}))
 
     def test_enrolled_student_watches_deck(self):
+        # The page is memo's OWN player over the vault file — one player for
+        # every deck on the platform — with academy contributing only the gate.
         if not self.user_field:
             self.skipTest("Person model exposes no auth-user link")
         self.client.force_login(self.user)
@@ -1018,6 +1059,44 @@ class LessonPresentationPlayerTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, "vendor/reveal")  # reveal.js player asset
         self.assertContains(resp, "Slide 1")        # slide title rendered
+        # Enrollment is the gate, not vault visibility: the student neither
+        # owns the file (the teacher does) nor could see it in the vault.
+        self.assertNotEqual(self.deck_file.owner_id, self.user.pk)
+        self.assertFalse(self.deck_file.is_public)
+
+    def test_a_lesson_without_a_deck_redirects_with_a_message(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.user)
+        self._enrol()
+        self.lesson.presentation_file = None
+        self.lesson.save(update_fields=["presentation_file"])
+        try:
+            resp = self.client.get(self._url())
+            self.assertRedirects(
+                resp, reverse("academy:course-detail",
+                              kwargs={"slug": self.course.slug}))
+        finally:
+            self.lesson.presentation_file = self.deck_file
+            self.lesson.save(update_fields=["presentation_file"])
+
+    def test_the_owner_sees_an_edit_link_and_a_student_does_not(self):
+        if not self.user_field:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.user)
+        self._enrol()
+        self.assertNotContains(self.client.get(self._url()), "memo/edit")
+        # The owner is not enrolled, so give their person a user link and enrol.
+        owner_person = Person.objects.create(display_name="T")
+        setattr(owner_person, self.user_field, self.deck_owner)
+        owner_person.save(update_fields=[self.user_field])
+        from .models import CourseEnrollment
+        student = Student.objects.get_or_create(person=owner_person)[0]
+        CourseEnrollment.objects.get_or_create(student=student, course=self.course)
+        self.client.force_login(self.deck_owner)
+        self.assertContains(
+            self.client.get(self._url()),
+            reverse("memo:edit", args=[self.deck_file.pk]))
 
     def test_course_detail_shows_watch_button_when_enrolled(self):
         if not self.user_field:
@@ -1026,3 +1105,77 @@ class LessonPresentationPlayerTests(TestCase):
         self._enrol()
         resp = self.client.get(reverse("academy:course-detail", kwargs={"slug": self.course.slug}))
         self.assertContains(resp, self._url())
+
+
+class PresentationMigrationTests(TransactionTestCase):
+    """Migration 0006 converts every DB deck into a memo ``.pml`` vault file.
+
+    Run against the real migration graph with the executor, because this is the
+    one piece of the switch that runs exactly once per deployment and cannot be
+    fixed after the fact: the tables it reads are dropped by the same migration.
+    """
+
+    def test_a_db_deck_becomes_a_vault_pml(self):
+        from django.core.files.storage import default_storage
+        from django.db import connection
+        from django.db.migrations.executor import MigrationExecutor
+
+        executor = MigrationExecutor(connection)
+        executor.migrate([("academy", "0005_lessonpresentation_presentationslide")])
+        old_apps = executor.loader.project_state(
+            [("academy", "0005_lessonpresentation_presentationslide")]).apps
+
+        User = get_user_model()
+        staff = User.objects.create_user("mig-staff", password="x", is_staff=True)
+
+        Group = old_apps.get_model("competence", "SkillGroup")
+        Badge = old_apps.get_model("competence", "SkillBadge")
+        Course = old_apps.get_model("academy", "Course")
+        Module = old_apps.get_model("academy", "CourseModule")
+        Lesson = old_apps.get_model("academy", "Lesson")
+        Pres = old_apps.get_model("academy", "LessonPresentation")
+        Slide = old_apps.get_model("academy", "PresentationSlide")
+
+        group = Group.objects.create(title="G", slug="mg-g", order=1)
+        badge = Badge.objects.create(group=group, title="B", slug="mg-b", order=1)
+        course = Course.objects.create(title="C", slug="mg-c")
+        module = Module.objects.create(course=course, unlocks_badge=badge,
+                                       title="M", slug="mg-m", order=1)
+        lesson = Lesson.objects.create(module=module, title="Pochodne",
+                                       slug="mg-l", order=1)
+        pres = Pres.objects.create(lesson=lesson, title="Deck")
+        Slide.objects.create(presentation=pres, order=2, title="Two",
+                             body="**bold** i $x^2$", subtitle="cap")
+        Slide.objects.create(presentation=pres, order=1, title="One", body="first")
+
+        executor = MigrationExecutor(connection)   # fresh graph state
+        executor.migrate([("academy", "0006_presentation_becomes_a_memo_deck")])
+
+        from toto.memo import presentation_format as pf
+        from toto.vault.models import VaultFile
+
+        from .models import Lesson as NewLesson
+        converted = NewLesson.objects.get(pk=lesson.pk)
+        self.assertIsNotNone(converted.presentation_file)
+        vf = converted.presentation_file
+        self.assertEqual(vf.file_type, "presentation")
+        self.assertEqual(vf.owner_id, staff.pk)     # fallback: no course owner
+
+        with vf.file.storage.open(vf.file.name, "rb") as fh:
+            deck = pf.loads(fh.read().decode())
+        self.assertEqual(deck.title, "Deck")
+        self.assertEqual([sl.title for sl in deck.slides], ["One", "Two"])
+        body = deck.slides[1].blocks[0].payload
+        self.assertIn("<strong>bold</strong>", body)   # markdown was rendered
+        self.assertIn("cap", body)                     # the caption survived
+
+        # And the tables are gone.
+        with connection.cursor() as cursor:
+            tables = connection.introspection.table_names(cursor)
+        self.assertNotIn("academy_lessonpresentation", tables)
+        self.assertNotIn("academy_presentationslide", tables)
+
+        # Leave the schema where every other test expects it.
+        executor = MigrationExecutor(connection)
+        executor.loader.build_graph()
+        executor.migrate(executor.loader.graph.leaf_nodes())

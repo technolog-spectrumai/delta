@@ -15,7 +15,7 @@ from toto.quizzes.models import Quiz
 from toto.verbena.forms import apply_oya_checkbox_styles, apply_oya_field_styles
 
 from .models import (
-    Cohort, Course, CourseModule, Lesson, LessonPresentation, PresentationSlide,
+    Cohort, Course, CourseModule, Lesson,
     Script, ScriptSection, WelcomeCopy,
 )
 
@@ -226,52 +226,9 @@ ScriptSectionFormSet = inlineformset_factory(
     Script, ScriptSection, form=ScriptSectionForm, extra=3, can_delete=True)
 
 
-class LessonPresentationForm(forms.ModelForm):
-    class Meta:
-        model = LessonPresentation
-        fields = ["title"]
-        widgets = {
-            "title": forms.TextInput(attrs={"placeholder": _("Presentation title (optional)")}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["title"].required = False
-        apply_oya_field_styles(self.fields)
-
-
-class PresentationSlideForm(forms.ModelForm):
-    # Declared explicitly so the Markdown editor + live preview is used (same
-    # reason as ScriptSectionForm.content).
-    body = forms.CharField(required=False, label=_("Content"), widget=MarkdownxWidget())
-
-    class Meta:
-        model = PresentationSlide
-        fields = ["title", "body", "subtitle", "order"]
-        widgets = {
-            "title": forms.TextInput(attrs={"placeholder": _("Slide heading (optional)")}),
-            "subtitle": forms.Textarea(attrs={
-                "rows": 2, "placeholder": _("Caption shown under the slide (optional)")}),
-            "order": forms.HiddenInput(attrs={"data-order-input": "1"}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["order"].required = False
-        apply_oya_field_styles(self.fields, skip={"body", "order"})
-
-    def clean_order(self):
-        return self.cleaned_data.get("order") or 0
-
-    def has_changed(self):
-        # The reorder JS stamps `order` into every hidden row (blank extras too),
-        # so a row is only really changed when a *content* field changed. Without
-        # this, dragging to reorder would save the blank extra rows as empty slides.
-        return bool(set(self.changed_data) - {"order"})
-
-
-PresentationSlideFormSet = inlineformset_factory(
-    LessonPresentation, PresentationSlide, form=PresentationSlideForm, extra=3, can_delete=True)
+# The presentation forms are gone with the DB deck: a lesson's presentation is
+# a memo vault file now, edited in memo's own editor — see
+# backoffice_views.presentation_edit.
 
 
 class CohortForm(forms.ModelForm):

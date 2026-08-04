@@ -1166,44 +1166,42 @@ class PresentationEditorTests(TestCase):
     def _url(self):
         return reverse("backoffice_courses:presentation-edit", kwargs={"pk": self.lesson.pk})
 
-    def test_editor_renders_with_dnd(self):
+    def test_opening_creates_the_deck_and_hands_over_to_memo(self):
+        # The panel's job shrank to plumbing: make the .pml exist, then open
+        # memo's editor -- the same editor every other deck on the platform uses.
+        from toto.academy.models import Lesson
+        from toto.memo import presentation_format as pf
+
         r = self.client.get(self._url())
-        self.assertEqual(r.status_code, 200)
-        self.assertContains(r, "data-reorder-fields")
-        self.assertContains(r, "Sortable.min.js")
+        lesson = Lesson.objects.get(pk=self.lesson.pk)
+        self.assertIsNotNone(lesson.presentation_file)
+        vf = lesson.presentation_file
+        self.assertEqual(vf.file_type, "presentation")
+        self.assertEqual(vf.owner, self.staff)
+        self.assertRedirects(r, reverse("memo:edit", args=[vf.pk]),
+                             fetch_redirect_response=False)
+        with vf.file.storage.open(vf.file.name, "rb") as fh:
+            deck = pf.loads(fh.read().decode())
+        self.assertEqual(deck.title, "L")     # seeded with the lesson's title
 
-    def test_post_creates_and_renumbers_slides(self):
-        from toto.academy.models import LessonPresentation
-        data = {
-            "title": "Deck",
-            "slides-TOTAL_FORMS": "3", "slides-INITIAL_FORMS": "0",
-            "slides-MIN_NUM_FORMS": "0", "slides-MAX_NUM_FORMS": "1000",
-            "slides-0-title": "Intro", "slides-0-body": "$x^2$", "slides-0-subtitle": "hi", "slides-0-order": "2",
-            "slides-1-title": "Body", "slides-1-body": "text", "slides-1-subtitle": "", "slides-1-order": "1",
-            "slides-2-title": "", "slides-2-body": "", "slides-2-subtitle": "", "slides-2-order": "0",
-        }
-        r = self.client.post(self._url(), data)
-        self.assertRedirects(r, reverse("backoffice_courses:lesson-edit", kwargs={"pk": self.lesson.pk}))
-        pres = LessonPresentation.objects.get(lesson=self.lesson)
-        self.assertEqual(pres.title, "Deck")
-        self.assertEqual([s.title for s in pres.slides.all()], ["Body", "Intro"])  # order 1,2
-        self.assertEqual(pres.slides.count(), 2)  # blank row ignored
+    def test_a_second_visit_reuses_the_same_deck(self):
+        from toto.academy.models import Lesson
+        self.client.get(self._url())
+        first = Lesson.objects.get(pk=self.lesson.pk).presentation_file_id
+        self.client.get(self._url())
+        self.assertEqual(
+            Lesson.objects.get(pk=self.lesson.pk).presentation_file_id, first)
 
-    def test_drag_reorder_does_not_save_blank_slides(self):
-        # reorder.js stamps a 1-based order into EVERY hidden row (blank extras
-        # included); those must still be ignored, not saved as empty slides.
-        from toto.academy.models import LessonPresentation
-        data = {
-            "title": "Deck",
-            "slides-TOTAL_FORMS": "3", "slides-INITIAL_FORMS": "0",
-            "slides-MIN_NUM_FORMS": "0", "slides-MAX_NUM_FORMS": "1000",
-            "slides-0-title": "Real", "slides-0-body": "x", "slides-0-subtitle": "", "slides-0-order": "1",
-            "slides-1-title": "", "slides-1-body": "", "slides-1-subtitle": "", "slides-1-order": "2",
-            "slides-2-title": "", "slides-2-body": "", "slides-2-subtitle": "", "slides-2-order": "3",
-        }
-        self.client.post(self._url(), data)
-        pres = LessonPresentation.objects.get(lesson=self.lesson)
-        self.assertEqual(pres.slides.count(), 1)  # dragged blank rows ignored
+    def test_another_teachers_deck_is_not_editable_here(self):
+        # memo's editor is owner-only; the panel says who owns it instead of
+        # bouncing the second teacher off a 404 that looks like a broken button.
+        self.client.get(self._url())                     # staff now owns it
+        other = _staff("bo-pres-2")
+        self.client.force_login(other)
+        r = self.client.get(self._url(), follow=True)
+        self.assertRedirects(r, reverse("backoffice_courses:lesson-edit",
+                                        kwargs={"pk": self.lesson.pk}))
+        self.assertContains(r, "bo-pres")                # the owner is named
 
     def test_student_is_gated(self):
         user = get_user_model().objects.create_user("plain-pres", password="x")
