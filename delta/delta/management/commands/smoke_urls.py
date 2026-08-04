@@ -104,6 +104,11 @@ STAFF_ONLY = {
     "backoffice_people:demote-teacher",
     # welcome-page editor
     "backoffice_welcome:welcome-edit",
+    # sheets (primula) — the whole app is teachers-only on delta: every route
+    # is wrapped in teacher_required (delta/primula_urls.py), so the student's
+    # 404 IS the feature under test.
+    "primula:index", "primula:create", "primula:edit", "primula:save",
+    "primula:delete", "primula:versions", "primula:restore",
 }
 
 # (key) -> extra allowed statuses for authenticated personas (anon is already
@@ -118,6 +123,8 @@ OVERRIDES = {
     # media embed endpoints 400 without their ?file_pk query param
     "memo:media_embed": {400},
     "cyprian:media_embed": {400},
+    # primula's save answers 400 (not 405) to a GET by its own JSON contract
+    "primula:save": {400},
     "events:event_availability_api": {404},
 }
 
@@ -376,6 +383,14 @@ PARAM_SOURCES = {
     "cyprian:save_pdf": (True, lambda: _kw(_staff_authoring_file("document"), file_pk="pk")),
     "cyprian:save_html": (True, lambda: _kw(_staff_authoring_file("document"), file_pk="pk")),
     "cyprian:rendition": (True, lambda: _kw(_staff_authoring_file("rendition"), file_pk="pk")),
+    # primula — the smoke sheet, created on first use. Every route is
+    # teacher-gated (STAFF_ONLY): the staff persona exercises the real view,
+    # the student persona's 404 proves the gate.
+    "primula:edit": (True, lambda: _kw(_staff_authoring_file("sheet"), file_pk="pk")),
+    "primula:save": (True, lambda: _kw(_staff_authoring_file("sheet"), file_pk="pk")),
+    "primula:delete": (True, lambda: _kw(_staff_authoring_file("sheet"), file_pk="pk")),
+    "primula:versions": (True, lambda: _kw(_staff_authoring_file("sheet"), file_pk="pk")),
+    "primula:restore": (True, lambda: _kw_sheet_version()),
     "vault:public_file": (False, lambda: _kw_public_file()),
     "vault:bucket_metrics": (True, lambda: _kw(_first("vault.Bucket"), bucket_slug="slug")),
     "vault:copy_files": (True, lambda: _kw(_first("vault.Bucket"), source_slug="slug")),
@@ -439,6 +454,10 @@ def _staff_authoring_file(kind):
         from toto.cyprian import document_format as df
         doc = df.new_document(title="Smoke document")
         payload, name, ftype = df.dumps(doc).encode(), "smoke-document.xml", "document"
+    elif kind == "sheet":
+        from toto.primula import sheet_format as sf
+        text = sf.dumps(sf.new_workbook("Smoke sheet"))
+        payload, name, ftype = text.encode(), "smoke-sheet.json", "sheet"
     else:                                   # an html rendition for cyprian:rendition
         payload, name, ftype = b"<!doctype html><p>smoke</p>", "smoke-rendition.html", "html"
 
@@ -446,6 +465,28 @@ def _staff_authoring_file(kind):
                    bucket=bucket, is_public=True, is_encrypted=False)
     vf.file.save(name, ContentFile(payload), save=True)
     return vf
+
+
+def _kw_sheet_version():
+    """file_pk + version_pk for primula:restore, from the smoke sheet.
+
+    The smoke sheet is minted without going through the app's create view, so
+    its first SheetVersion row is minted here the same way — idempotent, like
+    everything else this command creates.
+    """
+    vf = _staff_authoring_file("sheet")
+    SheetVersion = _model("primula.SheetVersion")
+    if vf is None or SheetVersion is None:
+        return None
+    version = SheetVersion.objects.filter(sheet_file=vf).order_by("-pk").first()
+    if version is None:
+        from toto.primula import sheet_format as sf
+        version = SheetVersion.objects.create(
+            sheet_file=vf,
+            snapshot=sf.dumps(sf.new_workbook("Smoke sheet")),
+            note="smoke",
+        )
+    return {"file_pk": vf.pk, "version_pk": version.pk}
 
 
 def _kw(obj, **mapping):

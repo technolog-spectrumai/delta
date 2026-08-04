@@ -52,6 +52,10 @@ if apps.is_installed("toto.vod"):
 for _label, _prefix, _module in (
     ("toto.memo", "memo/", "toto.memo.urls"),
     ("toto.cyprian", "cyprian/", "toto.cyprian.urls"),
+    # Sheets are teachers-only on delta: the wrapper re-mounts every primula
+    # route behind teacher_required (namespace stays "primula" for the vault
+    # plugin's reverse). See delta/primula_urls.py.
+    ("toto.primula", "primula/", "delta.primula_urls"),
 ):
     if apps.is_installed(_label):
         urlpatterns.append(path(_prefix, include(_module)))

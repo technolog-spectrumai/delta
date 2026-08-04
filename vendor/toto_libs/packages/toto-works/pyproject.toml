@@ -4,28 +4,29 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-# delta's trimmed toto-works: **memo and cyprian only**.
+# delta's trimmed toto-works: **memo, cyprian and primula**.
 #
-# Upstream this wheel also carries antaresia, kanban and primula. Delta installs
-# none of them, and antaresia is the app that FKs workflows.WorkflowRun — so
-# trimming it is what lets this package depend on toto-base alone and keeps
-# toto-flow out of delta entirely. The trim is the same policy full_secession.md
-# describes for whole packages, applied one level down; it is why this wheel's
-# contents differ from the same-named one in the portal monorepo, and why
-# delta's version series (1.x here) is its own.
+# Upstream this wheel also carries kanban (and used to carry antaresia, the app
+# that FKed workflows.WorkflowRun — trimming it is what let this package depend
+# on toto-base alone and keeps toto-flow out of delta entirely; upstream retired
+# it in its 1.45). The trim is the same policy full_secession.md describes for
+# whole packages, applied one level down; it is why this wheel's contents differ
+# from the same-named one in the portal monorepo, and why delta's version series
+# (1.x here) is its own.
 #
 # cyprian shares the wheel with memo because it imports memo's sanitisers and
 # media helpers — a plain intra-package import, not a distribution edge.
+# primula (vendored in 1.10, teachers-only on delta) needs only toto-base too.
 name = "toto-works"
-version = "1.9"
-description = "toto vault-backed slide decks (memo) and documents (cyprian)"
+version = "1.10"
+description = "toto vault-backed slide decks (memo), documents (cyprian) and sheets (primula)"
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
 # Versions are lockstep across the whole toto suite and are rewritten only by
 # scripts/release.py — never edit them by hand.
 dependencies = [
-    "toto-base==1.9",
+    "toto-base==1.10",
 ]
 
 [tool.setuptools.packages.find]

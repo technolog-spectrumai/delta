@@ -117,17 +117,21 @@ mkdir -p "$MEDIA_ROOT"
 "$PY" delta/manage.py migrate --noinput >/dev/null
 echo "    delta migrate OK"
 
-echo "==> app tests (academy + panel + the memo/cyprian editors)"
+echo "==> app tests (academy + panel + the memo/cyprian/primula editors)"
 # toto is a PEP 420 namespace, so the modules are named explicitly —
-# `manage.py test toto.academy` discovers nothing. memo's suite needs its own
-# settings module (it tests the app standalone); academy's includes the
-# 0005→0006 deck-conversion migration test.
+# `manage.py test toto.academy` discovers nothing. memo's and primula's suites
+# need their own settings modules (each tests its app standalone); academy's
+# includes the 0005→0006 deck-conversion migration test. backoffice.tests also
+# carries SheetsGateTests — the teacher_required wrap on /primula/ is delta's,
+# so the standalone primula suite never sees it.
 "$PY" delta/manage.py test --noinput \
     toto.academy.tests toto.backoffice.tests \
     toto.cyprian.tests.test_format toto.cyprian.tests.test_views \
     toto.cyprian.tests.test_sanitize toto.cyprian.tests.test_tiptap 2>&1 | tail -2
 (cd /tmp && DJANGO_SETTINGS_MODULE=toto.memo.testing.settings \
     "$PY" -m django test toto.memo.tests 2>&1 | tail -2)
+(cd /tmp && DJANGO_SETTINGS_MODULE=toto.primula.testing.settings \
+    "$PY" -m django test toto.primula.tests 2>&1 | tail -2)
 
 echo "==> seeded three-persona URL sweep"
 "$PY" delta/manage.py init_platform --password "$ADMIN_PASSWORD" >/dev/null

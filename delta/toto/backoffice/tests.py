@@ -98,6 +98,58 @@ class BackofficeAccessTests(TestCase):
         self.assertContains(response, reverse("backoffice_notes:page-list"))
         self.assertContains(response, reverse("backoffice_library:reference-list"))
         self.assertContains(response, reverse("backoffice_people:people-list"))
+        self.assertContains(response, reverse("primula:index"))
+
+
+class SheetsGateTests(TestCase):
+    """/primula/ is teachers-only on delta (delta/primula_urls.py wraps every
+    route in teacher_required). The app's own suite runs it ungated, so the
+    gate itself is only tested here."""
+
+    @classmethod
+    def setUpTestData(cls):
+        _platform()
+        cls.user_field = _person_user_field()
+        User = get_user_model()
+        cls.staff = User.objects.create_user("sh-staff", password="x", is_staff=True)
+        cls.teacher_user = User.objects.create_user("sh-teacher", password="x")
+        cls.student_user = User.objects.create_user("sh-student", password="x")
+        if cls.user_field is None:
+            return
+        teacher_person = Person.objects.create(display_name="Sheet Teacher")
+        setattr(teacher_person, cls.user_field, cls.teacher_user)
+        teacher_person.save(update_fields=[cls.user_field])
+        from toto.academy.models import Teacher
+        Teacher.objects.create(person=teacher_person)
+        student_person = Person.objects.create(display_name="Sheet Student")
+        setattr(student_person, cls.user_field, cls.student_user)
+        student_person.save(update_fields=[cls.user_field])
+
+    def test_anonymous_is_bounced_to_login(self):
+        response = self.client.get(reverse("primula:index"))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/sso/login", response["Location"])
+
+    def test_student_is_404_on_every_route_shape(self):
+        if self.user_field is None:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.student_user)
+        # The index, an arg-taking read route and a write route — existence
+        # hidden regardless of whether the pk is real.
+        for url in (reverse("primula:index"),
+                    reverse("primula:versions", kwargs={"file_pk": 1}),
+                    reverse("primula:save", kwargs={"file_pk": 1})):
+            self.assertEqual(self.client.get(url).status_code, 404, url)
+
+    def test_teacher_reaches_the_index(self):
+        if self.user_field is None:
+            self.skipTest("Person model exposes no auth-user link")
+        self.client.force_login(self.teacher_user)
+        self.assertEqual(self.client.get(reverse("primula:index")).status_code, 200)
+
+    def test_staff_reaches_the_index(self):
+        self.client.force_login(self.staff)
+        self.assertEqual(self.client.get(reverse("primula:index")).status_code, 200)
 
 
 # ---------------------------------------------------------------------------

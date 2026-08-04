@@ -154,6 +154,25 @@ DOWNLOADS: list[tuple[str, str]] = [
     # Vega 5 + Vega-Lite 5
     ("https://cdn.jsdelivr.net/npm/vega@5/build/vega.min.js",               "vega/vega.min.js"),
     ("https://cdn.jsdelivr.net/npm/vega-lite@5/build/vega-lite.min.js",     "vega-lite/vega-lite.min.js"),
+
+    # Univer 0.25.1 (Apache-2.0) — the Primula spreadsheet grid (teachers-only
+    # on delta). The presets UMD reads react/react-dom/rxjs off the global
+    # object (the header of the bundle documents the React contract); echarts is
+    # not referenced by the sheets-core preset, so it is not vendored. Load
+    # order in primula/edit.html: react → react-dom → rxjs → presets →
+    # sheets-core → locale.
+    ("https://unpkg.com/react@18.3.1/umd/react.production.min.js",          "univer/react.production.min.js"),
+    ("https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js",  "univer/react-dom.production.min.js"),
+    ("https://unpkg.com/rxjs@7.8.1/dist/bundles/rxjs.umd.min.js",           "univer/rxjs.umd.min.js"),
+    ("https://unpkg.com/@univerjs/presets@0.25.1/lib/umd/index.js",         "univer/univer-presets.js"),
+    ("https://unpkg.com/@univerjs/preset-sheets-core@0.25.1/lib/umd/index.js",
+     "univer/preset-sheets-core.js"),
+    ("https://unpkg.com/@univerjs/preset-sheets-core@0.25.1/lib/umd/locales/en-US.js",
+     "univer/preset-sheets-core.en-US.js"),
+    ("https://unpkg.com/@univerjs/preset-sheets-core@0.25.1/lib/index.css",
+     "univer/preset-sheets-core.css"),
+    # Apache-2.0 attribution rides with the vendored bundle.
+    ("https://unpkg.com/@univerjs/presets@0.25.1/LICENSE",                  "univer/LICENSE"),
 ]
 
 

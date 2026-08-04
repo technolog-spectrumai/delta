@@ -135,6 +135,9 @@ INSTALLED_APPS = [
     "toto.editor",
     "toto.memo",         # slide decks: one .pml XML file in the vault, no rows
     "toto.cyprian",      # documents: one XML file, paginated A4, exported to PDF
+    "toto.primula",      # sheets: Univer workbook JSON in the vault + SheetVersion
+                         # history. Teachers-only on delta: /primula/ mounts through
+                         # delta.primula_urls (teacher_required), entry in the panel.
     # --- delta education portion (revived from toto_libs/limbo, carried here) ---
     "toto.competence",   # skill badges / DAG — academy CourseModule.unlocks_badge
     "toto.quizzes",      # tasks: A–D + open answers, practice pool (delta additions)
@@ -411,14 +414,21 @@ INGRESS_ALLOWED_APPS = [
     "toto.core", "toto.gervazy",
     "toto.socialhub",
     "toto.vault",
+    # Seeds two sample sheets as `sheet` vault files (--full only) — after
+    # toto.vault, because they need a bucket.
+    "toto.primula",
     "toto.sso_master",
     # delta education content
     "toto.competence", "toto.quizzes", "toto.palimpsest",
     "toto.subscriptions", "toto.academy", "toto.library",
 ]
 
+# Every label here must name an INSTALLED app: backup_engine.iter_models() calls
+# apps.get_app_config() on each one and a LookupError breaks every backup path.
+# primula: SheetVersion is plain snapshot JSON — safe to travel in a backup (the
+# sheet files themselves ride with the vault, like every other vault file).
 APPS_TO_SYNC = [
-    "locations", "events", "socialhub",
+    "locations", "events", "socialhub", "primula",
 ]
 
 # toto.locations is installed only as a model dependency (people/socialhub/events

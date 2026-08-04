@@ -60,6 +60,18 @@ _MODULES = [
         "blurb": _("Manage the bibliography and references."),
     },
     {
+        # Unlike its siblings this links out of the shell: primula is a whole
+        # vendored app, not a backoffice_* URL module. Its routes are wrapped in
+        # teacher_required (delta/primula_urls.py), so the audience is the same.
+        "key": "sheets",
+        "label": _("Sheets"),
+        "icon": "fa-solid fa-table-cells",
+        "url_name": "primula:index",
+        "live": True,
+        "app": "toto.primula",
+        "blurb": _("Build spreadsheets and edit them right in your browser."),
+    },
+    {
         "key": "people",
         "label": _("People"),
         "icon": "fa-solid fa-chalkboard-user",

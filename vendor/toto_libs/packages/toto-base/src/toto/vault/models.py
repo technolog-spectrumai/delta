@@ -146,6 +146,7 @@ class VaultFile(models.Model):
         ('neojson', 'NeoJSON'),
         ('presentation', 'Presentation'),  # a slide deck (XML), edited in toto.memo
         ('document', 'Document'),     # a written document (XML), edited in toto.cyprian
+        ('sheet', 'Primula Sheet'),   # a Univer workbook snapshot (JSON), edited in toto.primula
         ('zip', 'Archive'),
     ]
     # `presentation` and `document` are back because delta installs memo and
@@ -153,7 +154,8 @@ class VaultFile(models.Model):
     # left as generic 'xml' a deck gets no Play button and an Edit button that
     # opens the raw XML editor. Both apps retype a row the first time they touch
     # it (memo's `_adopt`, cyprian's `_adopt_document`), so old files repair
-    # themselves on open rather than needing a data migration.
+    # themselves on open rather than needing a data migration. `sheet` joined in
+    # 1.10 with toto.primula, on the same reasoning (primula retypes on open too).
     #
     # notebook/.tpy and contract/.contract stay retired — delta has neither
     # mandragora nor notarius. Rows carrying those strings still open: choices
