@@ -1730,7 +1730,9 @@ class DeletionTests(TestCase):
     def test_the_editor_offers_delete_through_the_vault(self):
         self.client.force_login(self.owner)
         body = self.client.get(reverse("memo:edit", args=[self.vf.pk])).content.decode()
-        self.assertIn("Delete presentation", body)
+        # Through gettext, not a literal — see the cyprian twin of this test.
+        from django.utils.translation import gettext as _translate
+        self.assertIn(_translate("Delete presentation"), body)
         self.assertIn(reverse("vault:delete_file"), body)
 
     def test_the_vault_endpoint_deletes_a_deck_for_its_owner_only(self):

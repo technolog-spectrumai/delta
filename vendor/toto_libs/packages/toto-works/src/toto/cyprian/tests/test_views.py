@@ -682,7 +682,11 @@ class DeletionTests(CyprianTestCase):
         self.client.force_login(self.owner)
         body = self.client.get(
             reverse("cyprian:edit", args=[self.vault_file.pk])).content.decode()
-        self.assertIn("Delete document", body)
+        # Through gettext, not a literal: the host may render in any language
+        # its catalogue carries (delta ships Polish), and the button exists in
+        # all of them.
+        from django.utils.translation import gettext as _translate
+        self.assertIn(_translate("Delete document"), body)
         self.assertIn(reverse("vault:delete_file"), body)
 
     def test_the_vault_endpoint_deletes_a_document_for_its_owner_only(self):
