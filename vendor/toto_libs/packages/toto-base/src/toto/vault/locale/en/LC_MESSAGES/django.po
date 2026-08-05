@@ -1,0 +1,1381 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-05 10:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/admin/decrypt_file.html:15 templates/admin/decrypt_pdf.html:15
+#: templates/admin/encrypt_file.html:15 templates/admin/encrypt_pdf.html:15
+#: templates/vault/generate_invoice.html:87
+#: templates/vault/partials/_file_table.html:19
+msgid "Title"
+msgstr ""
+
+#: templates/admin/decrypt_file.html:16 templates/admin/decrypt_pdf.html:16
+#: templates/admin/encrypt_file.html:16 templates/admin/encrypt_pdf.html:16
+#: templates/vault/bucket_metrics.html:54 templates/vault/metrics.html:154
+#: templates/vault/partials/_file_table.html:20
+msgid "Owner"
+msgstr ""
+
+#: templates/admin/decrypt_file.html:17 templates/admin/encrypt_file.html:17
+#: templates/vault/partials/_file_table.html:21
+#: templates/vault/public_file_list.html:1938
+msgid "Type"
+msgstr ""
+
+#: templates/admin/decrypt_file.html:18 templates/admin/decrypt_pdf.html:17
+#: templates/admin/encrypt_file.html:18 templates/admin/encrypt_pdf.html:17
+#: templates/vault/generate_invoice.html:105 templates/vault/metrics.html:153
+#: templates/vault/public_file_list.html:849
+msgid "Bucket"
+msgstr ""
+
+#: templates/admin/decrypt_file.html:38 templates/admin/decrypt_pdf.html:36
+msgid "Decryption settings"
+msgstr ""
+
+#: templates/admin/decrypt_file.html:57 templates/admin/decrypt_pdf.html:55
+#: templates/admin/encrypt_file.html:57 templates/admin/encrypt_pdf.html:58
+#: templates/vault/bucket_metrics.html:536 templates/vault/copy_files.html:407
+#: templates/vault/generate_invoice.html:119
+#: templates/vault/public_file_list.html:1426
+#: templates/vault/public_file_list.html:1525
+#: templates/vault/public_file_list.html:1632
+#: templates/vault/public_file_list.html:1750
+#: templates/vault/public_file_list.html:1811
+#: templates/vault/public_file_list.html:1916
+#: templates/vault/public_file_list.html:1981
+#: templates/vault/public_file_list.html:2069
+#: templates/vault/public_file_list.html:2122
+#: templates/vault/public_file_list.html:2183
+msgid "Cancel"
+msgstr ""
+
+#: templates/admin/encrypt_file.html:38
+msgid "Encryption settings"
+msgstr ""
+
+#: templates/admin/encrypt_pdf.html:36
+msgid "PDF encryption settings"
+msgstr ""
+
+#: templates/admin/encrypt_pdf.html:37
+msgid "Set a"
+msgstr ""
+
+#: templates/vault/_file_tree.html:16
+msgid "Search files… (use * for wildcards)"
+msgstr ""
+
+#: templates/vault/_file_tree.html:49
+msgid "No matching files you can access."
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:5
+#: templates/vault/generate_invoice.html:18 templates/vault/metrics.html:38
+#: templates/vault/public_file_list.html:894
+#: templates/vault/public_file_list.html:901
+msgid "Metrics"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:42
+msgid "All Buckets"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:47
+msgid "Bucket Metrics"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:70
+#: templates/vault/bucket_metrics.html:240 templates/vault/metrics.html:207
+msgid "Browse"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:76
+#: templates/vault/public_file_list.html:911
+msgid "Copy files"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:107
+msgid "Quota Usage"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:127
+msgid "of quota used"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:142 templates/vault/metrics.html:64
+msgid "Files by Type"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:152
+msgid "Files by Directory"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:162 templates/vault/metrics.html:84
+msgid "Uploads (30 days)"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:173
+msgid "Directory Breakdown"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:183
+msgid "Path"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:184
+#: templates/vault/bucket_metrics.html:271
+#: templates/vault/bucket_metrics.html:336 templates/vault/metrics.html:155
+#: templates/vault/public_file_list.html:2027
+msgid "Files"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:185 templates/vault/metrics.html:157
+msgid "Public"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:186 templates/vault/metrics.html:158
+#: templates/vault/partials/_file_table.html:24
+#: templates/vault/partials/_file_table.html:114
+msgid "Encrypted"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:187
+msgid "Access"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:227
+msgid "Restricted"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:231
+msgid "Open"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:255
+msgid "Storage per User"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:257
+msgid "quota"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:259
+msgid "(no quota set)"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:270
+msgid "User"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:272
+msgid "Storage"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:273
+msgid "Quota usage"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:346 templates/vault/copy_files.html:395
+msgid "Copy"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:363
+msgid "Select all"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:368
+msgid "of"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:370
+msgid "selected"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:374
+msgid "Filter files…"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:404
+msgid "No files owned by you in this bucket."
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:408
+#: templates/vault/public_file_list.html:962
+msgid "No files match your search."
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:436
+#: templates/vault/bucket_metrics.html:527
+msgid "Copy selected files"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:453
+msgid "Original files will remain unchanged."
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:457
+msgid ""
+"Files with existing keys in the destination bucket will be renamed "
+"automatically."
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:464
+msgid "file(s) selected for copying."
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:470
+msgid "Destination bucket"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:479
+msgid "select destination"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:487
+msgid "No other buckets available. Create another bucket first."
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:494
+msgid "Copying files…"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:515
+msgid "Redirecting…"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:550
+msgid "Service usage"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:559
+msgid "Total runs"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:562
+msgid "Succeeded"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:566
+msgid "Failed"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:570
+msgid "Files created"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:582 templates/vault/metrics.html:227
+msgid "Recent Uploads"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:607 templates/vault/gateway.html:135
+msgid "Root"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:622 templates/vault/metrics.html:269
+msgid "No files yet."
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:631
+msgid "Invoices"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:634
+msgid "pending"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:643
+#: templates/vault/generate_invoice.html:4
+#: templates/vault/generate_invoice.html:25
+msgid "Generate Invoice"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:649
+msgid "All Invoices"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:664
+msgid "Pending"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:666
+msgid "Paid"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:668
+msgid "Overdue"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:671
+msgid "Cancelled"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:682
+msgid "Due"
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:697
+msgid "No invoices for this bucket yet."
+msgstr ""
+
+#: templates/vault/bucket_metrics.html:701
+msgid "Generate one."
+msgstr ""
+
+#: templates/vault/buy_tokens.html:5 templates/vault/buy_tokens.html:26
+msgid "Buy Storage Tokens"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:19
+msgid "Back to Storage Account"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:24 templates/vault/copy_files.html:127
+#: templates/vault/storage_account.html:24
+msgid "Vault"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:27
+msgid "Top up your storage credits to upload files."
+msgstr ""
+
+#: templates/vault/buy_tokens.html:42
+msgid "No storage account connected."
+msgstr ""
+
+#: templates/vault/buy_tokens.html:46
+msgid "Connect account"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:54
+msgid "Storage tokens are not available right now."
+msgstr ""
+
+#: templates/vault/buy_tokens.html:55
+msgid "Ask an administrator to configure the storage token reserve."
+msgstr ""
+
+#: templates/vault/buy_tokens.html:65
+msgid "Your token balance"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:75
+msgid "Decimals"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:86
+msgid "Upload credits"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:93
+msgid "uploads to this bucket are charged in"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:93
+msgid "credits, not currency"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:99
+msgid "upload"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:111
+msgid "your balance"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:119
+msgid "Buy credits"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:134
+msgid "Purchase tokens"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:136
+msgid "Tokens are credited instantly. Exchange is immediate."
+msgstr ""
+
+#: templates/vault/buy_tokens.html:144
+msgid "Pay with"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:155
+msgid "Balance"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:167
+msgid "Exchange rate"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:175
+msgid "Your balance"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:179
+msgid "Max tokens you can buy"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:187
+msgid "Tokens to buy"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:212
+msgid "e.g. 100"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:221
+msgid "Order summary"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:223
+msgid "You receive"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:228
+msgid "You pay"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:235
+msgid "Insufficient balance."
+msgstr ""
+
+#: templates/vault/buy_tokens.html:248 templates/vault/storage_account.html:35
+msgid "Buy tokens"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:265
+msgid "Wallet PIN"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:266
+msgid "Enter your PIN to authorise this purchase."
+msgstr ""
+
+#: templates/vault/buy_tokens.html:271
+msgid "PIN"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:287
+msgid "Verifying…"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:287
+msgid "Confirm purchase"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:290
+msgid "Change PIN"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:300
+msgid "Token purchases are not available."
+msgstr ""
+
+#: templates/vault/buy_tokens.html:301
+msgid "No payment methods have been configured for this bucket."
+msgstr ""
+
+#: templates/vault/buy_tokens.html:307
+msgid "Configure pricing"
+msgstr ""
+
+#: templates/vault/buy_tokens.html:346
+msgid "Enter your PIN."
+msgstr ""
+
+#: templates/vault/buy_tokens.html:360
+msgid "Incorrect PIN."
+msgstr ""
+
+#: templates/vault/buy_tokens.html:363
+msgid "Network error. Try again."
+msgstr ""
+
+#: templates/vault/copy_files.html:5
+msgid "Copy Files"
+msgstr ""
+
+#: templates/vault/copy_files.html:131
+msgid "Copy files from"
+msgstr ""
+
+#: templates/vault/copy_files.html:167
+msgid "sel."
+msgstr ""
+
+#: templates/vault/copy_files.html:180
+#: templates/vault/public_file_list.html:2030
+msgid "All"
+msgstr ""
+
+#: templates/vault/copy_files.html:184
+msgid "Filter…"
+msgstr ""
+
+#: templates/vault/copy_files.html:199
+msgid "No files in this bucket."
+msgstr ""
+
+#: templates/vault/copy_files.html:262
+msgid "Destination"
+msgstr ""
+
+#: templates/vault/copy_files.html:268
+msgid "click to select"
+msgstr ""
+
+#: templates/vault/copy_files.html:278
+msgid "No other buckets available. Create one first."
+msgstr ""
+
+#: templates/vault/copy_files.html:304
+msgid "root"
+msgstr ""
+
+#: templates/vault/copy_files.html:343
+msgid "Copy policy"
+msgstr ""
+
+#: templates/vault/copy_files.html:350
+msgid "Add suffix"
+msgstr ""
+
+#: templates/vault/copy_files.html:351
+msgid "Rename on conflict — file → file-1, file-2 …"
+msgstr ""
+
+#: templates/vault/copy_files.html:358
+msgid "Replace"
+msgstr ""
+
+#: templates/vault/copy_files.html:359
+msgid "Overwrite any existing file with the same key."
+msgstr ""
+
+#: templates/vault/copy_files.html:366
+msgid "Fail on conflict"
+msgstr ""
+
+#: templates/vault/copy_files.html:367
+msgid "Abort the entire copy if any key already exists."
+msgstr ""
+
+#: templates/vault/encrypted_locked.html:4
+msgid "File is encrypted"
+msgstr ""
+
+#: templates/vault/encrypted_locked.html:9
+msgid "This file is encrypted"
+msgstr ""
+
+#: templates/vault/encrypted_locked.html:12
+#, python-format
+msgid ""
+"“%(name)s” is encrypted at rest and cannot be opened in an editor. Decrypt "
+"it first, then try again."
+msgstr ""
+
+#: templates/vault/encrypted_locked.html:14
+msgid ""
+"Encrypted files cannot be opened in an editor. Decrypt the file first, then "
+"try again."
+msgstr ""
+
+#: templates/vault/encrypted_locked.html:19
+msgid "Back to vault"
+msgstr ""
+
+#: templates/vault/gateway.html:5 templates/vault/public_file_list.html:1143
+msgid "Upload"
+msgstr ""
+
+#: templates/vault/gateway.html:63
+msgid "Upload failed"
+msgstr ""
+
+#: templates/vault/gateway.html:107
+msgid "Buckets"
+msgstr ""
+
+#: templates/vault/gateway.html:114
+msgid "File Gateway"
+msgstr ""
+
+#: templates/vault/gateway.html:132
+msgid "Upload destination"
+msgstr ""
+
+#: templates/vault/gateway.html:142 templates/vault/public_file_list.html:1873
+msgid "File type"
+msgstr ""
+
+#: templates/vault/gateway.html:147
+msgid "Auto-detect"
+msgstr ""
+
+#: templates/vault/gateway.html:148
+msgid "PDF"
+msgstr ""
+
+#: templates/vault/gateway.html:149
+msgid "Image"
+msgstr ""
+
+#: templates/vault/gateway.html:150
+msgid "HTML"
+msgstr ""
+
+#: templates/vault/gateway.html:151
+msgid "Text"
+msgstr ""
+
+#: templates/vault/gateway.html:152
+msgid "JSON"
+msgstr ""
+
+#: templates/vault/gateway.html:153
+msgid "YAML"
+msgstr ""
+
+#: templates/vault/gateway.html:154
+msgid "XML"
+msgstr ""
+
+#: templates/vault/gateway.html:155
+msgid "LaTeX (.tex)"
+msgstr ""
+
+#: templates/vault/gateway.html:156
+msgid "Bibliography (.bib)"
+msgstr ""
+
+#: templates/vault/gateway.html:157
+msgid "CSV"
+msgstr ""
+
+#: templates/vault/gateway.html:158
+msgid "SVG"
+msgstr ""
+
+#: templates/vault/gateway.html:159
+msgid "Audio"
+msgstr ""
+
+#: templates/vault/gateway.html:160
+msgid "Video"
+msgstr ""
+
+#: templates/vault/gateway.html:177
+msgid "Drop files here"
+msgstr ""
+
+#: templates/vault/gateway.html:178
+msgid "or click to select (multiple allowed)"
+msgstr ""
+
+#: templates/vault/gateway.html:184
+msgid "Max file size"
+msgstr ""
+
+#: templates/vault/gateway.html:193
+msgid "Uploading…"
+msgstr ""
+
+#: templates/vault/gateway.html:219
+msgid "file(s) uploaded"
+msgstr ""
+
+#: templates/vault/gateway.html:242
+msgid "Some files were skipped:"
+msgstr ""
+
+#: templates/vault/gateway.html:254 templates/vault/gateway.html:273
+msgid "View files in"
+msgstr ""
+
+#: templates/vault/gateway.html:261
+msgid "Upload more"
+msgstr ""
+
+#: templates/vault/gateway.html:281
+msgid "Recent uploads"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:22 templates/vault/metrics.html:34
+msgid "File Vault"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:35
+msgid "Tariff"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:42
+#: templates/vault/storage_account.html:66
+msgid "Active"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:49
+msgid "Metric"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:50
+msgid "Rate"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:51
+msgid "Unit"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:52
+msgid "Token"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:69
+msgid "Current storage"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:70
+msgid "Estimate is usage × rate × 730 h/month"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:81
+msgid "Invoice Preview"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:92
+msgid "Description"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:93
+msgid "Storage billing for"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:93
+msgid "used"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:98
+msgid "Amount"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:104
+msgid "Issued to"
+msgstr ""
+
+#: templates/vault/generate_invoice.html:125
+msgid "Confirm & Generate"
+msgstr ""
+
+#: templates/vault/metrics.html:5
+msgid "Vault Metrics"
+msgstr ""
+
+#: templates/vault/metrics.html:29 templates/vault/storage_account.html:19
+msgid "Back to Files"
+msgstr ""
+
+#: templates/vault/metrics.html:74
+msgid "Files per Bucket"
+msgstr ""
+
+#: templates/vault/metrics.html:94
+msgid "File Flow Between Buckets"
+msgstr ""
+
+#: templates/vault/metrics.html:102
+msgid ""
+"No copy operations recorded yet. Use the Copy Files feature to track flow "
+"between buckets."
+msgstr ""
+
+#: templates/vault/metrics.html:112
+msgid "Copy Flow Diagram"
+msgstr ""
+
+#: templates/vault/metrics.html:114
+msgid "Path width ∝ files copied. Hover for details."
+msgstr ""
+
+#: templates/vault/metrics.html:122
+msgid "Top Flows"
+msgstr ""
+
+#: templates/vault/metrics.html:133
+msgid "Files Copied (30 days)"
+msgstr ""
+
+#: templates/vault/metrics.html:143
+msgid "Bucket Breakdown"
+msgstr ""
+
+#: templates/vault/metrics.html:156
+msgid "Dirs"
+msgstr ""
+
+#: templates/vault/metrics.html:159
+msgid "Gateway"
+msgstr ""
+
+#: templates/vault/metrics.html:215
+msgid "No buckets yet."
+msgstr ""
+
+#: templates/vault/metrics.html:305
+msgid "FROM"
+msgstr ""
+
+#: templates/vault/metrics.html:306
+msgid "TO"
+msgstr ""
+
+#: templates/vault/partials/_file_table.html:22
+msgid "Directory"
+msgstr ""
+
+#: templates/vault/partials/_file_table.html:23
+#: templates/vault/public_file_list.html:986
+msgid "Uploaded"
+msgstr ""
+
+#: templates/vault/partials/_file_table.html:25
+msgid "Notes"
+msgstr ""
+
+#: templates/vault/partials/_file_table.html:26
+msgid "Action"
+msgstr ""
+
+#: templates/vault/partials/_file_table.html:64
+msgid "Yes"
+msgstr ""
+
+#: templates/vault/partials/_file_table.html:67
+msgid "No"
+msgstr ""
+
+#: templates/vault/partials/_file_table.html:78
+#: templates/vault/partials/_file_table.html:125
+#: templates/vault/public_file_list.html:1304
+msgid "Download"
+msgstr ""
+
+#: templates/vault/partials/_file_table.html:138
+#: templates/vault/public_file_list.html:1024
+msgid "No public files available."
+msgstr ""
+
+#: templates/vault/public_file_list.html:5
+#: templates/vault/public_file_list.html:838
+msgid "Public Files"
+msgstr ""
+
+#: templates/vault/public_file_list.html:829
+msgid "Dashboard"
+msgstr ""
+
+#: templates/vault/public_file_list.html:834
+msgid "File vault"
+msgstr ""
+
+#: templates/vault/public_file_list.html:858
+msgid "All buckets"
+msgstr ""
+
+#: templates/vault/public_file_list.html:875
+msgid "dirs"
+msgstr ""
+
+#: templates/vault/public_file_list.html:883
+msgid "files"
+msgstr ""
+
+#: templates/vault/public_file_list.html:941
+msgid "Search files… (use * or ? for wildcards, e.g. *.mp4)"
+msgstr ""
+
+#: templates/vault/public_file_list.html:958
+msgid "file(s) found"
+msgstr ""
+
+#: templates/vault/public_file_list.html:972
+msgid "Sort"
+msgstr ""
+
+#: templates/vault/public_file_list.html:977
+msgid "Name A–Z"
+msgstr ""
+
+#: templates/vault/public_file_list.html:978
+msgid "Name Z–A"
+msgstr ""
+
+#: templates/vault/public_file_list.html:979
+msgid "Date (newest)"
+msgstr ""
+
+#: templates/vault/public_file_list.html:980
+msgid "Date (oldest)"
+msgstr ""
+
+#: templates/vault/public_file_list.html:991
+msgid "Any time"
+msgstr ""
+
+#: templates/vault/public_file_list.html:992
+msgid "Today"
+msgstr ""
+
+#: templates/vault/public_file_list.html:993
+msgid "This week"
+msgstr ""
+
+#: templates/vault/public_file_list.html:994
+msgid "This month"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1006
+msgid "Tree"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1013
+msgid "Grid"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1076
+msgid "New"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1083
+#: templates/vault/public_file_list.html:1999
+msgid "Zip"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1105
+msgid "Git"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1114
+msgid "Initialize repository"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1120
+msgid "Commit…"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1123
+msgid "Push"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1126
+msgid "Pull"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1129
+msgid "History"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1133
+msgid "Repository…"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1190
+#, python-brace-format
+msgid "`Encrypt ${item.title}`"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1199
+#, python-brace-format
+msgid "`Download ${item.title}`"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1208
+#, python-brace-format
+msgid "`Remove encryption from ${item.title}`"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1217
+#, python-brace-format
+msgid "`Edit ${item.title}`"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1226
+#, python-brace-format
+msgid "`View ${item.title}`"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1235
+#, python-brace-format
+msgid "`Play ${item.title}`"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1243
+#, python-brace-format
+msgid "`Delete ${item.title}`"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1262
+msgid "No files match your filters."
+msgstr ""
+
+#: templates/vault/public_file_list.html:1311
+msgid "Download encrypted"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1318
+#: templates/vault/public_file_list.html:1626
+msgid "Encrypt"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1324
+#: templates/vault/public_file_list.html:1470
+#: templates/vault/public_file_list.html:1519
+msgid "Remove encryption"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1338
+msgid "View image"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1344
+msgid "Play"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1350
+msgid "Delete"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1385
+msgid "Download encrypted file"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1389
+#: templates/vault/public_file_list.html:1474
+#: templates/vault/public_file_list.html:1566
+#: templates/vault/public_file_list.html:1669
+msgid "File"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1397
+#: templates/vault/public_file_list.html:1576
+msgid "Password"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1420
+msgid "Download decrypted"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1434
+msgid "Or download the file as-is (still encrypted):"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1440
+msgid "Download raw"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1487
+msgid "Do you want to remove encryption?"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1490
+msgid ""
+"The file will be permanently decrypted and made public again. This cannot be "
+"undone."
+msgstr ""
+
+#: templates/vault/public_file_list.html:1496
+msgid "Enter password to confirm"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1561
+msgid "Encrypt file"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1561
+msgid "Decrypt file"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1575
+msgid "User password"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1593
+msgid "Owner password"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1594
+msgid "optional — defaults to user password"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1612
+msgid ""
+"The file will be removed from public access after encryption. You can "
+"decrypt it here later."
+msgstr ""
+
+#: templates/vault/public_file_list.html:1626
+msgid "Decrypt"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1664
+msgid "Move file"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1677
+msgid "Move to"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1690
+#: templates/vault/public_file_list.html:2016
+msgid "Bucket root"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1692
+#: templates/vault/public_file_list.html:1722
+msgid "current"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1744
+msgid "Move here"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1781
+msgid "Delete file"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1794
+msgid ""
+"This action is permanent and cannot be undone. The file and all its data "
+"will be deleted immediately."
+msgstr ""
+
+#: templates/vault/public_file_list.html:1805
+msgid "Delete permanently"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1843
+msgid "Rename file"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1848
+msgid "Current name"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1857
+msgid "New name"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1910
+#: templates/vault/public_file_list.html:2115
+msgid "Rename"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1933
+msgid "New File"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1956
+msgid "Filename"
+msgstr ""
+
+#: templates/vault/public_file_list.html:1975
+msgid "Create"
+msgstr ""
+
+#: templates/vault/public_file_list.html:2004
+msgid "Archive name"
+msgstr ""
+
+#: templates/vault/public_file_list.html:2012
+msgid "Save to"
+msgstr ""
+
+#: templates/vault/public_file_list.html:2031
+msgid "None"
+msgstr ""
+
+#: templates/vault/public_file_list.html:2044
+msgid "No files in this folder."
+msgstr ""
+
+#: templates/vault/public_file_list.html:2054
+msgid "Archiving in the background…"
+msgstr ""
+
+#: templates/vault/public_file_list.html:2055
+msgid "view run"
+msgstr ""
+
+#: templates/vault/public_file_list.html:2063
+msgid "Create zip"
+msgstr ""
+
+#: templates/vault/public_file_list.html:2096
+msgid "Open in editor"
+msgstr ""
+
+#: templates/vault/public_file_list.html:2103
+msgid "Open tool"
+msgstr ""
+
+#: templates/vault/public_file_list.html:2109
+msgid "Move"
+msgstr ""
+
+#: templates/vault/public_file_list.html:2137
+msgid "Run a service"
+msgstr ""
+
+#: templates/vault/public_file_list.html:2144
+msgid "No services available for this file."
+msgstr ""
+
+#: templates/vault/public_file_list.html:2149
+msgid "Service"
+msgstr ""
+
+#: templates/vault/public_file_list.html:2177
+msgid "Run"
+msgstr ""
+
+#: templates/vault/public_file_list.html:2203
+msgid "Open in new tab"
+msgstr ""
+
+#: templates/vault/public_file_list.html:2206
+msgid "Close"
+msgstr ""
+
+#: templates/vault/storage_account.html:5
+#: templates/vault/storage_account.html:26
+msgid "Storage Account"
+msgstr ""
+
+#: templates/vault/storage_account.html:28
+msgid "Connect a ledger account to enable upload billing credits."
+msgstr ""
+
+#: templates/vault/storage_account.html:58
+msgid "Connected Account"
+msgstr ""
+
+#: templates/vault/storage_account.html:66
+msgid "Inactive"
+msgstr ""
+
+#: templates/vault/storage_account.html:72
+msgid "Code"
+msgstr ""
+
+#: templates/vault/storage_account.html:76
+msgid "Account name"
+msgstr ""
+
+#: templates/vault/storage_account.html:81
+#: templates/vault/storage_account.html:231
+msgid "Label"
+msgstr ""
+
+#: templates/vault/storage_account.html:89
+msgid "Balances"
+msgstr ""
+
+#: templates/vault/storage_account.html:100
+msgid "No asset balances yet."
+msgstr ""
+
+#: templates/vault/storage_account.html:105
+msgid "Transaction authorization"
+msgstr ""
+
+#: templates/vault/storage_account.html:112
+msgid "Auto-authorized — no manual confirmation needed"
+msgstr ""
+
+#: templates/vault/storage_account.html:122
+msgid "Remove"
+msgstr ""
+
+#: templates/vault/storage_account.html:130
+msgid ""
+"No authorization set — you will be asked to confirm each upload manually."
+msgstr ""
+
+#: templates/vault/storage_account.html:146
+msgid "Enable auto-auth"
+msgstr ""
+
+#: templates/vault/storage_account.html:154
+msgid ""
+"No authorization set — each upload and token purchase will require manual "
+"confirmation (your click counts as consent)."
+msgstr ""
+
+#: templates/vault/storage_account.html:163
+msgid "Grant app authorization"
+msgstr ""
+
+#: templates/vault/storage_account.html:166
+msgid ""
+"Generates a secure keypair that lets the app sign billing transactions on "
+"your behalf. You can revoke it any time."
+msgstr ""
+
+#: templates/vault/storage_account.html:182
+msgid "Disconnect"
+msgstr ""
+
+#: templates/vault/storage_account.html:193
+msgid "Reconnect"
+msgstr ""
+
+#: templates/vault/storage_account.html:210
+msgid "Switch account"
+msgstr ""
+
+#: templates/vault/storage_account.html:210
+msgid "Connect an account"
+msgstr ""
+
+#: templates/vault/storage_account.html:213
+msgid "Select one of your ledger accounts to use for vault upload credits."
+msgstr ""
+
+#: templates/vault/storage_account.html:220
+msgid "Ledger account"
+msgstr ""
+
+#: templates/vault/storage_account.html:231
+msgid "optional"
+msgstr ""
+
+#: templates/vault/storage_account.html:233
+msgid "e.g. My Storage Credits"
+msgstr ""
+
+#: templates/vault/storage_account.html:241
+msgid "Connect"
+msgstr ""
+
+#: templates/vault/storage_account.html:250
+msgid "No ledger accounts available."
+msgstr ""
+
+#: templates/vault/storage_account.html:251
+msgid "Ask an administrator to create a user ledger account for you."
+msgstr ""
