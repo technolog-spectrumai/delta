@@ -13,6 +13,7 @@ that is a fragment, not a document.
 from __future__ import annotations
 
 from django import forms
+from django.apps import apps
 
 from toto.cyprian.sanitize_html import sanitize_content
 from toto.cyprian.widgets import CyprianRichTextWidget

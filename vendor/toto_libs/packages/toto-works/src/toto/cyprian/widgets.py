@@ -23,6 +23,7 @@ answers with a data URI, which is also the only image form the sanitiser keeps.
 from __future__ import annotations
 
 from django import forms
+from django.apps import apps
 from django.utils.safestring import mark_safe
 
 from toto.memo import tiptap
