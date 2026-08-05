@@ -1,0 +1,137 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-05 10:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/admin/secretkey_reveal.html:6
+msgid "Reveal Secret Key"
+msgstr ""
+
+#: templates/admin/secretkey_reveal.html:8
+msgid ""
+"You are about to reveal the selected secret(s). Enter the passphrase to "
+"continue."
+msgstr ""
+
+#: templates/admin/secretkey_reveal.html:13
+#: templates/admin/secretkey_rotate.html:14
+msgid "Passphrase:"
+msgstr ""
+
+#: templates/admin/secretkey_reveal.html:16
+msgid "Reveal"
+msgstr ""
+
+#: templates/admin/secretkey_reveal.html:17
+#: templates/admin/secretkey_rotate.html:19
+msgid "Cancel"
+msgstr ""
+
+#: templates/admin/secretkey_rotate.html:6
+msgid "Rotate Secret Key"
+msgstr ""
+
+#: templates/admin/secretkey_rotate.html:18
+msgid "Rotate"
+msgstr ""
+
+#: templates/gervazy/_provision_signing_key_form.html:6
+msgid ""
+"Strongbox password — used only to decrypt your private key in memory. Never "
+"stored."
+msgstr ""
+
+#: templates/gervazy/_provision_signing_key_form.html:10
+msgid "Strongbox"
+msgstr ""
+
+#: templates/gervazy/_provision_signing_key_form.html:22
+msgid "Password *"
+msgstr ""
+
+#: templates/gervazy/my_keys.html:20
+msgid "Gervazy"
+msgstr ""
+
+#: templates/gervazy/my_keys.html:22
+msgid "My Keys"
+msgstr ""
+
+#: templates/gervazy/my_keys.html:23
+msgid "Signing keys and strongboxes associated with your account."
+msgstr ""
+
+#: templates/gervazy/my_keys.html:29
+msgid "My Profile"
+msgstr ""
+
+#: templates/gervazy/my_keys.html:53
+msgid "Signing Keys"
+msgstr ""
+
+#: templates/gervazy/my_keys.html:54
+msgid "Ed25519 keys used to cryptographically sign documents."
+msgstr ""
+
+#: templates/gervazy/my_keys.html:65
+msgid "No Person profile linked to your account."
+msgstr ""
+
+#: templates/gervazy/my_keys.html:76
+msgid "Active"
+msgstr ""
+
+#: templates/gervazy/my_keys.html:79
+msgid "Retired"
+msgstr ""
+
+#: templates/gervazy/my_keys.html:109
+msgid "Rotate signing key"
+msgstr ""
+
+#: templates/gervazy/my_keys.html:118
+msgid "No signing keys yet. Provision one below."
+msgstr ""
+
+#: templates/gervazy/my_keys.html:122
+msgid "Set up a strongbox first."
+msgstr ""
+
+#: templates/gervazy/my_keys.html:134
+msgid "Strongboxes"
+msgstr ""
+
+#: templates/gervazy/my_keys.html:135
+msgid "Encrypted key stores belonging to your account."
+msgstr ""
+
+#: templates/gervazy/my_keys.html:174 templates/gervazy/my_keys.html:195
+msgid "Initialize"
+msgstr ""
+
+#: templates/gervazy/my_keys.html:181
+msgid "Enter your strongbox password to generate a master key and data key."
+msgstr ""
+
+#: templates/gervazy/my_keys.html:186
+msgid "Strongbox password"
+msgstr ""
+
+#: templates/gervazy/my_keys.html:205
+msgid "No strongboxes found. Ask an administrator to set one up for you."
+msgstr ""
