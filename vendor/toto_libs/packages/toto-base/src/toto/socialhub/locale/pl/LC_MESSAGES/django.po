@@ -1,0 +1,862 @@
+# pl catalogue for this toto app.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-05 10:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: forms.py:24
+msgid "Username"
+msgstr "Nazwa użytkownika"
+
+#: forms.py:31
+msgid "You'll use this to log in once your application is approved."
+msgstr "Użyjesz jej do logowania, gdy Twój wniosek zostanie zatwierdzony."
+
+#: forms.py:37
+msgid "This username is already taken."
+msgstr "Ta nazwa użytkownika jest już zajęta."
+
+#: forms.py:44 templates/socialhub/community_details.html:166
+#: templates/socialhub/profile_details.html:133
+msgid "Email"
+msgstr "E-mail"
+
+#: forms.py:45 templates/socialhub/administrata.html:89
+#: templates/socialhub/community_details.html:124
+#: templates/socialhub/constitution_sign.html:69
+msgid "Community"
+msgstr "Społeczność"
+
+#: forms.py:74
+msgid "Referrer"
+msgstr "Osoba polecająca"
+
+#: forms.py:80
+msgid "Select the community member endorsing this application"
+msgstr "Wybierz członka społeczności popierającego ten wniosek"
+
+#: forms.py:85
+msgid "Password"
+msgstr "Hasło"
+
+#: forms.py:90
+msgid ""
+"Optional — set a password now so you can log in as soon as your application "
+"is approved."
+msgstr "Opcjonalnie — ustaw hasło już teraz, aby móc zalogować się od razu po zatwierdzeniu Twojego wniosku."
+
+#: forms.py:104
+msgid "Message"
+msgstr "Wiadomość"
+
+#: templates/socialhub/administrata.html:33
+#: templates/socialhub/community_details.html:66
+msgid "Administrata"
+msgstr "Administrata"
+
+#: templates/socialhub/administrata.html:35
+msgid "Community Chain"
+msgstr "Łańcuch społeczności"
+
+#: templates/socialhub/administrata.html:36
+msgid "Full hierarchy of communities and their heads."
+msgstr "Pełna hierarchia społeczności i ich przewodniczących."
+
+#: templates/socialhub/administrata.html:49
+msgid "Community Hierarchy"
+msgstr "Hierarchia społeczności"
+
+#: templates/socialhub/administrata.html:54
+msgid "Fit"
+msgstr "Dopasuj"
+
+#: templates/socialhub/administrata.html:58
+msgid "Reload"
+msgstr "Wczytaj ponownie"
+
+#: templates/socialhub/administrata.html:79
+msgid "Open"
+msgstr "Otwórz"
+
+#: templates/socialhub/administrata.html:92
+msgid "Person (head)"
+msgstr "Osoba (przewodniczący)"
+
+#: templates/socialhub/administrata.html:95
+msgid "Parent → Child"
+msgstr "Nadrzędna → Podrzędna"
+
+#: templates/socialhub/administrata.html:98
+#: templates/socialhub/community_details.html:218
+#: templates/socialhub/community_list.html:41
+msgid "Head"
+msgstr "Przewodniczący"
+
+#: templates/socialhub/application_success.html:54
+msgid "Application received"
+msgstr "Wniosek otrzymany"
+
+#: templates/socialhub/application_success.html:56
+msgid "Thank you for applying."
+msgstr "Dziękujemy za złożenie wniosku."
+
+#: templates/socialhub/application_success.html:75
+#: templates/socialhub/membership_verification.html:75
+msgid "Read the code"
+msgstr "Odczytaj kod"
+
+#: templates/socialhub/application_success.html:76
+msgid "A code image is shown."
+msgstr "Wyświetlany jest obraz z kodem."
+
+#: templates/socialhub/application_success.html:87
+#: templates/socialhub/membership_application.html:97
+#: templates/socialhub/membership_verification.html:87
+msgid "Verify"
+msgstr "Zweryfikuj"
+
+#: templates/socialhub/application_success.html:88
+msgid "Submit your code."
+msgstr "Prześlij swój kod."
+
+#: templates/socialhub/application_success.html:99
+#: templates/socialhub/membership_verification.html:99
+msgid "Enter"
+msgstr "Wejdź"
+
+#: templates/socialhub/application_success.html:100
+msgid "Access member tools."
+msgstr "Uzyskaj dostęp do narzędzi członkowskich."
+
+#: templates/socialhub/application_success.html:111
+msgid "Next step"
+msgstr "Następny krok"
+
+#: templates/socialhub/application_success.html:138
+msgid "Ready to verify?"
+msgstr "Chcesz przejść do weryfikacji?"
+
+#: templates/socialhub/application_success.html:139
+msgid "Continue to read your code image and complete verification."
+msgstr "Kontynuuj, aby odczytać obraz z kodem i ukończyć weryfikację."
+
+#: templates/socialhub/application_success.html:148
+#: templates/socialhub/membership_application.html:213
+#: templates/socialhub/membership_verification.html:213
+msgid "Submit Code"
+msgstr "Prześlij kod"
+
+#: templates/socialhub/application_success.html:163
+msgid "Verification will be available soon."
+msgstr "Weryfikacja będzie wkrótce dostępna."
+
+#: templates/socialhub/application_success.html:165
+msgid "Once your application is ready, you'll be shown a code image to verify."
+msgstr "Gdy Twój wniosek będzie gotowy, zobaczysz obraz z kodem do weryfikacji."
+
+#: templates/socialhub/application_success.html:177
+msgid "Want to sign in instead?"
+msgstr "Chcesz się zamiast tego zalogować?"
+
+#: templates/socialhub/application_success.html:182
+#: templates/socialhub/membership_verification.html:226
+msgid "Back to Login"
+msgstr "Wróć do logowania"
+
+#: templates/socialhub/community_details.html:31
+#: templates/socialhub/profile_details.html:30
+#: templates/socialhub/profile_list.html:51
+msgid "Profiles"
+msgstr "Profile"
+
+#: templates/socialhub/community_details.html:36
+#: templates/socialhub/profile_details.html:35
+#: templates/socialhub/profile_list.html:35
+msgid "Social Hub"
+msgstr "Centrum społeczności"
+
+#: templates/socialhub/community_details.html:57
+#: templates/socialhub/community_details.html:340
+msgid "Org Chart"
+msgstr "Schemat organizacyjny"
+
+#: templates/socialhub/community_details.html:75
+#: templates/socialhub/profile_details.html:53
+msgid "All profiles"
+msgstr "Wszystkie profile"
+
+#: templates/socialhub/community_details.html:84
+#: templates/socialhub/constitution_sign.html:73
+msgid "Constitution"
+msgstr "Konstytucja"
+
+#: templates/socialhub/community_details.html:154
+#: templates/socialhub/community_list.html:40
+msgid "Established"
+msgstr "Założona"
+
+#: templates/socialhub/community_details.html:178
+msgid "Location"
+msgstr "Miejsce"
+
+#: templates/socialhub/community_details.html:194
+msgid "Autonomous"
+msgstr "Autonomiczna"
+
+#: templates/socialhub/community_details.html:206
+msgid "Foreign"
+msgstr "Zagraniczna"
+
+#: templates/socialhub/community_details.html:239
+msgid "Parent Community"
+msgstr "Społeczność nadrzędna"
+
+#: templates/socialhub/community_details.html:271
+msgid "Members"
+msgstr "Członkowie"
+
+#: templates/socialhub/community_details.html:273
+msgid "People connected to this community."
+msgstr "Osoby powiązane z tą społecznością."
+
+#: templates/socialhub/community_details.html:309
+#: templates/socialhub/profile_list.html:204
+#: templates/socialhub/profile_list.html:325
+msgid "No members found."
+msgstr "Nie znaleziono członków."
+
+#: templates/socialhub/community_list.html:23
+#: templates/socialhub/profile_details.html:222
+#: templates/socialhub/profile_list.html:100
+#: templates/socialhub/profile_list.html:291
+msgid "Communities"
+msgstr "Społeczności"
+
+#: templates/socialhub/community_list.html:24
+msgid "Browse all registered communities"
+msgstr "Przeglądaj wszystkie zarejestrowane społeczności"
+
+#: templates/socialhub/community_list.html:29
+msgid "Community Directory"
+msgstr "Katalog społeczności"
+
+#: templates/socialhub/community_list.html:37
+msgid "Logo"
+msgstr "Logo"
+
+#: templates/socialhub/community_list.html:38
+msgid "Name"
+msgstr "Nazwa"
+
+#: templates/socialhub/community_list.html:39
+msgid "Type"
+msgstr "Typ"
+
+#: templates/socialhub/community_list.html:42
+#: templates/socialhub/profile_list.html:101
+msgid "Action"
+msgstr "Akcja"
+
+#: templates/socialhub/community_list.html:68
+#: templates/socialhub/community_list.html:106
+msgid "View Community"
+msgstr "Zobacz społeczność"
+
+#: templates/socialhub/community_list.html:73
+#: templates/socialhub/community_list.html:111
+msgid "No communities found."
+msgstr "Nie znaleziono społeczności."
+
+#: templates/socialhub/community_list.html:102
+msgid "Established:"
+msgstr "Założona:"
+
+#: templates/socialhub/community_list.html:103
+msgid "Head:"
+msgstr "Przewodniczący:"
+
+#: templates/socialhub/community_list.html:122
+#: templates/socialhub/profile_list.html:339
+msgid "First"
+msgstr "Pierwsza"
+
+#: templates/socialhub/community_list.html:125
+#: templates/socialhub/profile_list.html:347
+msgid "Previous"
+msgstr "Poprzednia"
+
+#: templates/socialhub/community_list.html:136
+#: templates/socialhub/profile_list.html:364
+msgid "Next"
+msgstr "Następna"
+
+#: templates/socialhub/community_list.html:139
+#: templates/socialhub/profile_list.html:372
+msgid "Last"
+msgstr "Ostatnia"
+
+#: templates/socialhub/community_news_confirm_delete.html:21
+msgid "Delete community news"
+msgstr "Usuń aktualność społeczności"
+
+#: templates/socialhub/community_news_confirm_delete.html:27
+#: templates/socialhub/community_news_form.html:78
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: templates/socialhub/community_news_confirm_delete.html:30
+msgid "Delete"
+msgstr "Usuń"
+
+#: templates/socialhub/community_news_form.html:34
+#: templates/socialhub/community_plugins/news.html:11
+msgid "Community news"
+msgstr "Aktualności społeczności"
+
+#: templates/socialhub/community_news_form.html:39
+msgid "Publish a short update or pointer to a longer Palimpsest piece."
+msgstr "Opublikuj krótką aktualność lub odnośnik do dłuższego tekstu w serwisie Palimpsest."
+
+#: templates/socialhub/community_plugins/news.html:25
+msgid "New post"
+msgstr "Nowy wpis"
+
+#: templates/socialhub/community_plugins/news.html:75
+msgid "Edit post"
+msgstr "Edytuj wpis"
+
+#: templates/socialhub/community_plugins/news.html:80
+msgid "Delete post"
+msgstr "Usuń wpis"
+
+#: templates/socialhub/community_plugins/news.html:92
+msgid "No community news yet."
+msgstr "Nie ma jeszcze aktualności społeczności."
+
+#: templates/socialhub/constitution_detail.html:34
+msgid "Adopted"
+msgstr "Przyjęta"
+
+#: templates/socialhub/constitution_detail.html:49
+msgid "Log in with a Person profile to sign this constitution."
+msgstr "Zaloguj się profilem Osoby, aby podpisać tę konstytucję."
+
+#: templates/socialhub/constitution_detail.html:51
+#: templates/socialhub/constitution_sign.html:32
+msgid "Only community members may sign the constitution."
+msgstr "Tylko członkowie społeczności mogą podpisać konstytucję."
+
+#: templates/socialhub/constitution_detail.html:56
+msgid "You have signed this constitution"
+msgstr "Ta konstytucja została przez Ciebie podpisana"
+
+#: templates/socialhub/constitution_detail.html:62
+msgid "Cryptographically verified"
+msgstr "Zweryfikowano kryptograficznie"
+
+#: templates/socialhub/constitution_detail.html:68
+msgid "Your signature"
+msgstr "Twój podpis"
+
+#: templates/socialhub/constitution_detail.html:69
+#: templates/socialhub/constitution_sign.html:57
+msgid "Signature"
+msgstr "Podpis"
+
+#: templates/socialhub/constitution_detail.html:78
+msgid "Add your signature"
+msgstr "Dodaj swój podpis"
+
+#: templates/socialhub/constitution_detail.html:79
+msgid "Signing is cryptographically recorded and cannot be undone."
+msgstr "Podpis jest rejestrowany kryptograficznie i nie można go cofnąć."
+
+#: templates/socialhub/constitution_detail.html:84
+#: templates/socialhub/constitution_sign.html:22
+#: templates/socialhub/constitution_sign.html:159
+msgid "Sign Rules"
+msgstr "Podpisz regulamin"
+
+#: templates/socialhub/constitution_detail.html:96
+msgid "Signatories"
+msgstr "Sygnatariusze"
+
+#: templates/socialhub/constitution_sign.html:4
+msgid "Sign"
+msgstr "Podpisz"
+
+#: templates/socialhub/constitution_sign.html:27
+msgid "You need a Person profile linked to your account to sign."
+msgstr "Aby podpisać, potrzebujesz profilu Osoby powiązanego z Twoim kontem."
+
+#: templates/socialhub/constitution_sign.html:40
+msgid "Already signed"
+msgstr "Już podpisano"
+
+#: templates/socialhub/constitution_sign.html:41
+msgid "Signed on"
+msgstr "Podpisano dnia"
+
+#: templates/socialhub/constitution_sign.html:48
+msgid "Cryptographic signature"
+msgstr "Podpis kryptograficzny"
+
+#: templates/socialhub/constitution_sign.html:51
+msgid "Key"
+msgstr "Klucz"
+
+#: templates/socialhub/constitution_sign.html:56
+msgid "Decorative signature"
+msgstr "Podpis ozdobny"
+
+#: templates/socialhub/constitution_sign.html:77
+msgid "Signatory"
+msgstr "Sygnatariusz"
+
+#: templates/socialhub/constitution_sign.html:81
+msgid "Signing key"
+msgstr "Klucz podpisujący"
+
+#: templates/socialhub/constitution_sign.html:88
+msgid "None — will be provisioned on sign"
+msgstr "Brak — zostanie utworzony przy podpisywaniu"
+
+#: templates/socialhub/constitution_sign.html:98
+msgid "How signing works"
+msgstr "Jak działa podpisywanie"
+
+#: templates/socialhub/constitution_sign.html:101
+msgid ""
+"Your strongbox password decrypts your Ed25519 private key in memory. The key "
+"signs a canonical payload (constitution ID + your identity + timestamp). The "
+"signature is stored and verifiable without your password using only the "
+"public key."
+msgstr "Hasło do Twojego sejfu odszyfrowuje w pamięci Twój klucz prywatny Ed25519. Klucz podpisuje kanoniczne dane (ID konstytucji + Twoja tożsamość + znacznik czasu). Podpis jest przechowywany i można go zweryfikować bez Twojego hasła, wyłącznie przy użyciu klucza publicznego."
+
+#: templates/socialhub/constitution_sign.html:112
+msgid "Strongbox"
+msgstr "Sejf"
+
+#: templates/socialhub/constitution_sign.html:128
+msgid "Password for strongbox"
+msgstr "Hasło do sejfu"
+
+#: templates/socialhub/constitution_sign.html:130
+msgid "Strongbox password"
+msgstr "Hasło sejfu"
+
+#: templates/socialhub/constitution_sign.html:138
+msgid "Enter your strongbox password"
+msgstr "Wpisz hasło do swojego sejfu"
+
+#: templates/socialhub/constitution_sign.html:139
+msgid "Used only to decrypt your private key in memory. Never stored."
+msgstr "Używane wyłącznie do odszyfrowania Twojego klucza prywatnego w pamięci. Nigdy nie jest zapisywane."
+
+#: templates/socialhub/constitution_sign.html:146
+msgid "No strongbox found. Set up a Gervazy strongbox before signing."
+msgstr "Nie znaleziono sejfu. Skonfiguruj sejf Gervazy przed podpisaniem."
+
+#: templates/socialhub/constitution_sign.html:152
+msgid ""
+"By submitting, I confirm I have read and agree to the terms of this "
+"constitution, and that this submission constitutes my legal signature."
+msgstr "Przesyłając, potwierdzam, że zapoznałem(-am) się z postanowieniami tej konstytucji i je akceptuję oraz że niniejsze przesłanie stanowi mój prawnie wiążący podpis."
+
+#: templates/socialhub/membership_application.html:5
+msgid "Apply for Membership"
+msgstr "Złóż wniosek o członkostwo"
+
+#: templates/socialhub/membership_application.html:53
+#, python-format
+msgid "Join %(name)s"
+msgstr "Dołącz do %(name)s"
+
+#: templates/socialhub/membership_application.html:56
+msgid "Start with the right community."
+msgstr "Zacznij od właściwej społeczności."
+
+#: templates/socialhub/membership_application.html:59
+msgid ""
+"Send a membership request, choose the community you want to join, and "
+"continue once your application is ready for verification."
+msgstr "Wyślij prośbę o członkostwo, wybierz społeczność, do której chcesz dołączyć, i kontynuuj, gdy Twój wniosek będzie gotowy do weryfikacji."
+
+#: templates/socialhub/membership_application.html:73
+msgid "Apply"
+msgstr "Złóż wniosek"
+
+#: templates/socialhub/membership_application.html:74
+msgid "Submit your request."
+msgstr "Prześlij swoją prośbę."
+
+#: templates/socialhub/membership_application.html:85
+msgid "Connect"
+msgstr "Połącz się"
+
+#: templates/socialhub/membership_application.html:86
+msgid "Choose your community."
+msgstr "Wybierz swoją społeczność."
+
+#: templates/socialhub/membership_application.html:98
+msgid "Use your access code."
+msgstr "Użyj swojego kodu dostępu."
+
+#: templates/socialhub/membership_application.html:109
+msgid "Apply for membership"
+msgstr "Złóż wniosek o członkostwo"
+
+#: templates/socialhub/membership_application.html:111
+msgid "Tell us where you belong, and we’ll start your application."
+msgstr "Powiedz nam, gdzie przynależysz, a my rozpoczniemy Twój wniosek."
+
+#: templates/socialhub/membership_application.html:195
+msgid "Submit Application"
+msgstr "Prześlij wniosek"
+
+#: templates/socialhub/membership_application.html:203
+msgid "Already have access?"
+msgstr "Masz już dostęp?"
+
+#: templates/socialhub/membership_application.html:206
+msgid "Log in instead"
+msgstr "Zamiast tego zaloguj się"
+
+#: templates/socialhub/membership_application.html:210
+msgid "Already have a verification code?"
+msgstr "Masz już kod weryfikacyjny?"
+
+#: templates/socialhub/membership_application.html:216
+msgid "Verification becomes available after submitting your application."
+msgstr "Weryfikacja stanie się dostępna po przesłaniu wniosku."
+
+#: templates/socialhub/membership_verification.html:54
+msgid "Membership verification"
+msgstr "Weryfikacja członkostwa"
+
+#: templates/socialhub/membership_verification.html:56
+msgid "Confirm your access."
+msgstr "Potwierdź swój dostęp."
+
+#: templates/socialhub/membership_verification.html:76
+msgid "From the image."
+msgstr "Z obrazka."
+
+#: templates/socialhub/membership_verification.html:88
+msgid "Submit it here."
+msgstr "Prześlij go tutaj."
+
+#: templates/socialhub/membership_verification.html:100
+msgid "Start using tools."
+msgstr "Zacznij korzystać z narzędzi."
+
+#: templates/socialhub/membership_verification.html:111
+msgid "Submit verification code"
+msgstr "Wyślij kod weryfikacyjny"
+
+#: templates/socialhub/membership_verification.html:113
+msgid "Verifying application for"
+msgstr "Weryfikacja wniosku dla"
+
+#: templates/socialhub/membership_verification.html:141
+msgid "Try again in"
+msgstr "Spróbuj ponownie za"
+
+#: templates/socialhub/membership_verification.html:168
+msgid "Human check"
+msgstr "Weryfikacja człowieczeństwa"
+
+#: templates/socialhub/membership_verification.html:172
+msgid "Verification code image"
+msgstr "Obrazek z kodem weryfikacyjnym"
+
+#: templates/socialhub/membership_verification.html:175
+msgid "Type the digits shown above. Ignore the faint background letters."
+msgstr "Wpisz cyfry widoczne powyżej. Zignoruj blade litery w tle."
+
+#: templates/socialhub/membership_verification.html:221
+msgid "Already verified or want to try signing in?"
+msgstr "Już po weryfikacji lub chcesz spróbować się zalogować?"
+
+#: templates/socialhub/profile_details.html:42
+msgid "Member profile, communities, experiences, and reference activity."
+msgstr "Profil członka, społeczności, doświadczenia i aktywność dotycząca referencji."
+
+#: templates/socialhub/profile_details.html:61
+msgid "My Keys"
+msgstr "Moje klucze"
+
+#: templates/socialhub/profile_details.html:68
+msgid "User Manual"
+msgstr "Podręcznik użytkownika"
+
+#: templates/socialhub/profile_details.html:108
+msgid "Profile"
+msgstr "Profil"
+
+#: templates/socialhub/profile_details.html:119
+msgid "No bio provided."
+msgstr "Nie podano biogramu."
+
+#: templates/socialhub/profile_details.html:145
+msgid "Phone"
+msgstr "Telefon"
+
+#: templates/socialhub/profile_details.html:157
+msgid "Address"
+msgstr "Adres"
+
+#: templates/socialhub/profile_details.html:169
+msgid "Member since"
+msgstr "Członek od"
+
+#: templates/socialhub/profile_details.html:187
+msgid "Preferred Language"
+msgstr "Preferowany język"
+
+#: templates/socialhub/profile_details.html:224
+msgid "Communities connected to this profile."
+msgstr "Społeczności powiązane z tym profilem."
+
+#: templates/socialhub/profile_details.html:259
+msgid "No communities assigned."
+msgstr "Brak przypisanych społeczności."
+
+#: templates/socialhub/profile_details.html:280
+msgid "My Reference Requests"
+msgstr "Moje prośby o referencje"
+
+#: templates/socialhub/profile_details.html:282
+msgid "Review and respond to pending reference requests."
+msgstr "Przejrzyj oczekujące prośby o referencje i odpowiedz na nie."
+
+#: templates/socialhub/profile_details.html:342
+msgid "Accept"
+msgstr "Akceptuj"
+
+#: templates/socialhub/profile_details.html:353
+msgid "Reject"
+msgstr "Odrzuć"
+
+#: templates/socialhub/profile_details.html:364
+msgid "You haven't submitted any references yet."
+msgstr "Nie masz jeszcze żadnych przesłanych referencji."
+
+#: templates/socialhub/profile_list.html:30
+msgid "Dashboard"
+msgstr "Pulpit"
+
+#: templates/socialhub/profile_list.html:38
+msgid "Community Members"
+msgstr "Członkowie społeczności"
+
+#: templates/socialhub/profile_list.html:40
+msgid "Browse public profiles, communities, patrons, and member details."
+msgstr "Przeglądaj publiczne profile, społeczności, patronów i dane członków."
+
+#: templates/socialhub/profile_list.html:65
+msgid "Profile directory"
+msgstr "Katalog profili"
+
+#: templates/socialhub/profile_list.html:67
+msgid "View members, communities, join dates, and profile information."
+msgstr "Zobacz członków, społeczności, daty dołączenia i informacje o profilach."
+
+#: templates/socialhub/profile_list.html:96
+msgid "Member"
+msgstr "Członek"
+
+#: templates/socialhub/profile_list.html:97
+#: templates/socialhub/profile_list.html:260
+msgid "Bio"
+msgstr "Biogram"
+
+#: templates/socialhub/profile_list.html:98
+msgid "Joined"
+msgstr "Data dołączenia"
+
+#: templates/socialhub/profile_list.html:99
+#: templates/socialhub/profile_list.html:271
+msgid "Patron"
+msgstr "Patron"
+
+#: templates/socialhub/profile_list.html:198
+msgid "View"
+msgstr "Zobacz"
+
+#: templates/socialhub/profile_list.html:305
+msgid "None"
+msgstr "Brak"
+
+#: templates/socialhub/profile_list.html:317
+msgid "View Profile"
+msgstr "Zobacz profil"
+
+#: templates/socialhub/reference_next.html:54
+msgid "Request sent"
+msgstr "Prośba wysłana"
+
+#: templates/socialhub/reference_next.html:56
+msgid "Reference request sent."
+msgstr "Prośba o referencję wysłana."
+
+#: templates/socialhub/reference_next.html:58
+msgid "You successfully requested a reference for"
+msgstr "Pomyślnie wysłano prośbę o referencję dla"
+
+#: templates/socialhub/reference_next.html:58
+msgid ""
+"We'll notify the selected community member and keep the application moving "
+"once their endorsement is received."
+msgstr "Powiadomimy wybranego członka społeczności, a po otrzymaniu jego rekomendacji poprowadzimy wniosek dalej."
+
+#: templates/socialhub/reference_next.html:72
+msgid "Sent"
+msgstr "Wysłano"
+
+#: templates/socialhub/reference_next.html:73
+msgid "The request is out."
+msgstr "Prośba została wysłana."
+
+#: templates/socialhub/reference_next.html:84
+msgid "Review"
+msgstr "Przegląd"
+
+#: templates/socialhub/reference_next.html:85
+msgid "Member can respond."
+msgstr "Członek może odpowiedzieć."
+
+#: templates/socialhub/reference_next.html:96
+msgid "Update"
+msgstr "Aktualizacja"
+
+#: templates/socialhub/reference_next.html:97
+msgid "You’ll be notified."
+msgstr "Otrzymasz powiadomienie."
+
+#: templates/socialhub/reference_next.html:108
+msgid "What happens next?"
+msgstr "Co dalej?"
+
+#: templates/socialhub/reference_next.html:111
+msgid ""
+"The community member will review the request. Once they respond, the "
+"application can continue through the membership process."
+msgstr "Członek społeczności przejrzy prośbę. Gdy odpowie, wniosek będzie mógł przejść dalej przez proces członkostwa."
+
+#: templates/socialhub/reference_next.html:133
+msgid "Request completed successfully"
+msgstr "Prośba zakończona pomyślnie"
+
+#: templates/socialhub/reference_next.html:135
+msgid "The reference request for"
+msgstr "Prośba o referencję dla"
+
+#: templates/socialhub/reference_next.html:135
+msgid "has been recorded and sent for endorsement."
+msgstr "została zapisana i wysłana do rekomendacji."
+
+#: templates/socialhub/reference_next.html:147
+msgid "Return to Dashboard"
+msgstr "Wróć do pulpitu"
+
+#: templates/socialhub/reference_request.html:54
+msgid "Membership endorsement"
+msgstr "Rekomendacja członkostwa"
+
+#: templates/socialhub/reference_request.html:56
+msgid "Ask someone trusted to support this application."
+msgstr "Poproś zaufaną osobę o poparcie tego wniosku."
+
+#: templates/socialhub/reference_request.html:58
+msgid "Send an endorsement request for"
+msgstr "Wyślij prośbę o rekomendację dla"
+
+#: templates/socialhub/reference_request.html:58
+msgid ""
+"The referrer can review the request and help confirm that this applicant "
+"belongs in the selected community."
+msgstr "Osoba polecająca może przejrzeć prośbę i pomóc potwierdzić, że kandydat pasuje do wybranej społeczności."
+
+#: templates/socialhub/reference_request.html:72
+msgid "Choose referrer"
+msgstr "Wybierz osobę polecającą"
+
+#: templates/socialhub/reference_request.html:73
+msgid "Pick who can endorse."
+msgstr "Wskaż, kto może rekomendować."
+
+#: templates/socialhub/reference_request.html:84
+msgid "Add context"
+msgstr "Dodaj kontekst"
+
+#: templates/socialhub/reference_request.html:85
+msgid "Explain the request."
+msgstr "Wyjaśnij prośbę."
+
+#: templates/socialhub/reference_request.html:96
+msgid "Send request"
+msgstr "Wyślij prośbę"
+
+#: templates/socialhub/reference_request.html:97
+msgid "Forward for review."
+msgstr "Przekaż do przeglądu."
+
+#: templates/socialhub/reference_request.html:108
+msgid "Endorsement request"
+msgstr "Prośba o rekomendację"
+
+#: templates/socialhub/reference_request.html:110
+msgid "Select the application, choose a referrer, and include a short message."
+msgstr "Wybierz wniosek, wskaż osobę polecającą i dołącz krótką wiadomość."
+
+#: templates/socialhub/reference_request.html:208
+msgid "Submit Endorsement Request"
+msgstr "Wyślij prośbę o rekomendację"
+
+#: templates/socialhub/reference_request.html:215
+msgid ""
+"The selected referrer will be asked to accept or reject the endorsement "
+"request."
+msgstr "Wybrana osoba polecająca zostanie poproszona o akceptację lub odrzucenie prośby o rekomendację."
+
+#: templates/socialhub/verification_success.html:18
+msgid "You're verified!"
+msgstr "Weryfikacja zakończona!"
+
+#: templates/socialhub/verification_success.html:20
+msgid ""
+"Welcome aboard! Your membership is now active. You can log in anytime and "
+"start using platform features."
+msgstr "Witamy na pokładzie! Twoje członkostwo jest już aktywne. Możesz zalogować się w dowolnym momencie i zacząć korzystać z funkcji platformy."
+
+#: templates/socialhub/verification_success.html:25
+msgid "Go to Login"
+msgstr "Przejdź do logowania"
+
+#: views/profile.py:88
+msgid "Language preference saved."
+msgstr "Zapisano preferencję językową."
+
+#: views/profile.py:90
+msgid "Could not save language preference."
+msgstr "Nie udało się zapisać preferencji językowej."
+
+#: views/profile.py:92
+msgid "Invalid language selected."
+msgstr "Wybrano nieprawidłowy język."
