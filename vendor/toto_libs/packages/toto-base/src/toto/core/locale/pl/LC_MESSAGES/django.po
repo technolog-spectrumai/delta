@@ -1,0 +1,311 @@
+# pl catalogue for this toto app.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-05 10:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: templates/admin/dump_to_vault_form.html:13
+msgid "Dump"
+msgstr "Zrzuć"
+
+#: templates/admin/load_from_vault_form.html:4
+msgid "Load Data from Vault"
+msgstr "Wczytaj dane z magazynu"
+
+#: templates/admin/load_from_vault_form.html:7
+msgid "Load"
+msgstr "Wczytaj"
+
+#: templates/core/graph_export_button.html:4
+#, python-format
+msgid ""
+"Preview the %(graph_label)s node and its 1-hop neighbours, then write to the "
+"knowledge graph"
+msgstr "Podejrzyj węzeł %(graph_label)s i jego sąsiadów w odległości jednego przeskoku, a następnie zapisz do grafu wiedzy"
+
+#: templates/core/graph_export_button.html:8
+msgid "Export to graph"
+msgstr "Eksportuj do grafu"
+
+#: templates/oya/_dashboard_cards.html:34
+msgid "Open"
+msgstr "Otwórz"
+
+#: templates/oya/_login_form.html:22 templates/oya/login.html:140
+msgid "Sign in failed"
+msgstr "Logowanie nie powiodło się"
+
+#: templates/oya/_login_form.html:26
+msgid "Try again in"
+msgstr "Spróbuj ponownie za"
+
+#: templates/oya/_login_form.html:76
+msgid "Forgot password?"
+msgstr "Nie pamiętasz hasła?"
+
+#: templates/oya/base.html:107
+#, python-format
+msgid "%(author)s. All rights reserved."
+msgstr "%(author)s. Wszelkie prawa zastrzeżone."
+
+#: templates/oya/dashboard.html:27
+msgid "Welcome Page"
+msgstr "Strona powitalna"
+
+#: templates/oya/dashboard.html:33 templates/oya/manual.html:26
+msgid "Toto Platform"
+msgstr "Platforma Toto"
+
+#: templates/oya/dashboard.html:37 templates/oya/manual.html:20
+msgid "Dashboard"
+msgstr "Pulpit"
+
+#: templates/oya/dashboard.html:44
+#, python-format
+msgid "%(count)s modules"
+msgstr "%(count)s modułów"
+
+#: templates/oya/dashboard.html:53
+msgid "Collapse all"
+msgstr "Zwiń wszystko"
+
+#: templates/oya/dashboard.html:53
+msgid "Expand all"
+msgstr "Rozwiń wszystko"
+
+#: templates/oya/dashboard.html:123
+msgid "No dashboard items"
+msgstr "Brak elementów pulpitu"
+
+#: templates/oya/dashboard.html:124
+msgid "No elements are available right now."
+msgstr "Żadne elementy nie są teraz dostępne."
+
+#: templates/oya/header.html:32 templates/oya/header.html:96
+msgid "Logout"
+msgstr "Wyloguj się"
+
+#: templates/oya/header.html:39 templates/oya/header.html:103
+msgid "Login"
+msgstr "Zaloguj się"
+
+#: templates/oya/header.html:59 templates/oya/header.html:123
+msgid "Light Mode"
+msgstr "Tryb jasny"
+
+#: templates/oya/header.html:60 templates/oya/header.html:124
+msgid "Dark Mode"
+msgstr "Tryb ciemny"
+
+#: templates/oya/header.html:65 templates/oya/header.html:129
+msgid "Language"
+msgstr "Język"
+
+#: templates/oya/home.html:22
+msgid "Welcome"
+msgstr "Witaj"
+
+#: templates/oya/home.html:24
+msgid "Streamlined, ready, and built to explore."
+msgstr "Usprawniona, gotowa i stworzona do odkrywania."
+
+#: templates/oya/home.html:38 templates/oya/home.html:90
+msgid "Platform"
+msgstr "Platforma"
+
+#: templates/oya/home.html:61
+msgid "Enter Dashboard"
+msgstr "Przejdź do pulpitu"
+
+#: templates/oya/home.html:74
+msgid "Server Details"
+msgstr "Szczegóły serwera"
+
+#: templates/oya/home.html:94
+msgid "Domain"
+msgstr "Domena"
+
+#: templates/oya/home.html:99
+msgid "Owner"
+msgstr "Właściciel"
+
+#: templates/oya/home.html:110
+msgid "Scan to connect"
+msgstr "Zeskanuj, aby się połączyć"
+
+#: templates/oya/home.html:114
+msgid "Connect QR code"
+msgstr "Kod QR do połączenia"
+
+#: templates/oya/home.html:127
+msgid "Scan to connect (Tailscale)"
+msgstr "Zeskanuj, aby się połączyć (Tailscale)"
+
+#: templates/oya/home.html:131
+msgid "Tailscale connect QR code"
+msgstr "Kod QR do połączenia Tailscale"
+
+#: templates/oya/home.html:149
+msgid "Federation"
+msgstr "Federacja"
+
+#: templates/oya/login.html:66
+msgid "Come back to your workspace."
+msgstr "Wróć do swojej przestrzeni roboczej."
+
+#: templates/oya/login.html:70
+msgid ""
+"Sign in to continue with your projects, communities, missions, "
+"conversations, and the work that connects everything together."
+msgstr "Zaloguj się, aby kontynuować swoje projekty, społeczności, misje, rozmowy i pracę, która łączy wszystko w całość."
+
+#: templates/oya/login.html:84
+msgid "Projects"
+msgstr "Projekty"
+
+#: templates/oya/login.html:85
+msgid "Track ideas and delivery."
+msgstr "Śledź pomysły i realizację."
+
+#: templates/oya/login.html:96
+msgid "Community"
+msgstr "Społeczność"
+
+#: templates/oya/login.html:97
+msgid "Stay connected."
+msgstr "Pozostań w kontakcie."
+
+#: templates/oya/login.html:108
+msgid "Missions"
+msgstr "Misje"
+
+#: templates/oya/login.html:109
+msgid "Focus on what matters."
+msgstr "Skup się na tym, co ważne."
+
+#: templates/oya/login.html:121
+msgid "Sign in"
+msgstr "Zaloguj się"
+
+#: templates/oya/login.html:125
+msgid "Use your account details to enter."
+msgstr "Użyj danych swojego konta, aby wejść."
+
+#: templates/oya/login.html:149
+msgid "Log In"
+msgstr "Zaloguj się"
+
+#: templates/oya/login.html:158
+msgid "Don't have an account?"
+msgstr "Nie masz konta?"
+
+#: templates/oya/login.html:163
+msgid "Apply for membership"
+msgstr "Złóż wniosek o członkostwo"
+
+#: templates/oya/login.html:180
+msgid "My Profile"
+msgstr "Mój profil"
+
+#: templates/oya/maintenance.html:7
+msgid "Maintenance Mode"
+msgstr "Tryb konserwacji"
+
+#: templates/oya/maintenance.html:28
+msgid "Site Under Maintenance"
+msgstr "Strona w trakcie konserwacji"
+
+#: templates/oya/maintenance.html:32
+msgid ""
+"We’re currently performing scheduled maintenance to improve reliability and "
+"performance."
+msgstr "Obecnie przeprowadzamy zaplanowaną konserwację, aby poprawić niezawodność i wydajność."
+
+#: templates/oya/maintenance.html:33
+msgid "Please check back shortly once the system is available again."
+msgstr "Sprawdź ponownie wkrótce, gdy system będzie znów dostępny."
+
+#: templates/oya/maintenance.html:37
+msgid "Dashboard Unavailable"
+msgstr "Pulpit niedostępny"
+
+#: templates/oya/manual.html:5 templates/oya/manual.html:30
+msgid "User Manual"
+msgstr "Podręcznik użytkownika"
+
+#: templates/oya/manual.html:32
+msgid ""
+"How to use the platform. Only features installed on this server are "
+"described."
+msgstr "Jak korzystać z platformy. Opisane są tylko funkcje zainstalowane na tym serwerze."
+
+#: templates/oya/partials/map.html:27
+msgid "Locations"
+msgstr "Miejsca"
+
+#: templates/oya/partials/map.html:33
+msgid "Search..."
+msgstr "Szukaj..."
+
+#: templates/oya/partials/modal.html:21
+msgid "Data (YAML)"
+msgstr "Dane (YAML)"
+
+#: templates/oya/partials/page_size.html:12
+msgid "4 per page"
+msgstr "4 na stronę"
+
+#: templates/oya/partials/page_size.html:13
+msgid "8 per page"
+msgstr "8 na stronę"
+
+#: templates/oya/partials/page_size.html:14
+msgid "12 per page"
+msgstr "12 na stronę"
+
+#: templates/oya/partials/page_size.html:15
+msgid "20 per page"
+msgstr "20 na stronę"
+
+#: templates/oya/partials/page_size.html:16
+msgid "50 per page"
+msgstr "50 na stronę"
+
+#: templates/oya/partials/pagination.html:6
+msgid "Prev"
+msgstr "Poprzednia"
+
+#: templates/oya/partials/pagination.html:9
+msgid "Page"
+msgstr "Strona"
+
+#: templates/oya/partials/pagination.html:9
+msgid "of"
+msgstr "z"
+
+#: templates/oya/partials/pagination.html:13
+msgid "Next"
+msgstr "Następna"
+
+#: templates/oya/placeholder.html:15
+msgid "Not Implemented – Work in Progress"
+msgstr "Niezaimplementowane – prace w toku"
+
+#: templates/oya/placeholder.html:18
+msgid "This feature or page is not yet available. We're working on it!"
+msgstr "Ta funkcja lub strona nie jest jeszcze dostępna. Pracujemy nad tym!"
