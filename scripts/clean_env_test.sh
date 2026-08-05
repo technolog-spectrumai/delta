@@ -128,7 +128,8 @@ echo "==> app tests (academy + panel + the memo/cyprian/primula editors)"
     toto.academy.tests toto.backoffice.tests \
     toto.cyprian.tests.test_format toto.cyprian.tests.test_views \
     toto.cyprian.tests.test_sanitize toto.cyprian.tests.test_tiptap \
-    toto.cyprian.tests.test_widget toto.quizzes.tests toto.palimpsest.tests 2>&1 | tail -2
+    toto.cyprian.tests.test_widget toto.quizzes.tests toto.palimpsest.tests \
+    delta.tests 2>&1 | tail -2
 (cd /tmp && DJANGO_SETTINGS_MODULE=toto.memo.testing.settings \
     "$PY" -m django test toto.memo.tests 2>&1 | tail -2)
 (cd /tmp && DJANGO_SETTINGS_MODULE=toto.primula.testing.settings \

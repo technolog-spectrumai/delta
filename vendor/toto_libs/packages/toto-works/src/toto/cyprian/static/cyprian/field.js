@@ -90,19 +90,10 @@
         if (!href) return chain.unsetLink().run();
         return chain.extendMarkRange("link").setLink({ href: href }).run();
       }
-      case "formula": {
-        var latex = global.prompt("LaTeX (without the $ signs):", "");
-        if (!latex) return;
-        var rendered = "";
-        if (global.katex) {
-          try {
-            rendered = global.katex.renderToString(latex, {
-              displayMode: true, throwOnError: false, errorColor: "#ef4444"
-            });
-          } catch (e) { rendered = ""; }
-        }
-        return chain.setFormula({ latex: latex, rendered: rendered }).run();
-      }
+      case "formula":
+        // Prefilled when the caret sits on a formula, so the button edits the
+        // one you are looking at instead of always inserting a new one.
+        return openFormulaDialog(editor, editor.getAttributes("formula").latex || "");
       case "image":
         return pickImage(editor, field);
       default:
@@ -143,6 +134,201 @@
         .catch(function () { field.setStatus("Upload failed."); });
     });
     input.click();
+  }
+
+
+  /* ---- the formula dialog -------------------------------------------------
+   *
+   * A prompt() cannot show you what you are typing, and a formula you cannot
+   * see is a formula you get wrong. This renders the LaTeX as you type, keeps
+   * the error message where the result would be, and offers the snippets that
+   * cover most of what school maths needs.
+   */
+
+  var FALLBACK_SNIPPETS = [
+    { label: "Basics", entries: [
+      ["x^{2}", "power"], ["x_{i}", "index"], ["\\frac{a}{b}", "fraction"],
+      ["\\sqrt{x}", "root"], ["\\sqrt[3]{x}", "nth root"], ["|x|", "absolute"]
+    ]},
+    { label: "Greek", entries: [
+      ["\\alpha", "alpha"], ["\\beta", "beta"], ["\\pi", "pi"],
+      ["\\theta", "theta"], ["\\Delta", "Delta"], ["\\Omega", "Omega"]
+    ]},
+    { label: "Sums", entries: [
+      ["\\sum_{i=1}^{n} i", "sum"], ["\\prod_{i=1}^{n} i", "product"],
+      ["\\int_{a}^{b} f(x)\\,dx", "integral"], ["\\lim_{x \\to 0}", "limit"]
+    ]},
+    { label: "Relations", entries: [
+      ["\\leq", "≤"], ["\\geq", "≥"], ["\\neq", "≠"], ["\\approx", "≈"],
+      ["\\in", "∈"], ["\\Rightarrow", "⇒"]
+    ]},
+    { label: "Structures", entries: [
+      ["\\begin{cases} a & x>0 \\\\ b & x\\le 0 \\end{cases}", "cases"],
+      ["\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}", "matrix"],
+      ["\\overline{AB}", "overline"], ["\\vec{v}", "vector"]
+    ]}
+  ];
+
+  function snippetGroups() {
+    // Share memo's list where the page happens to load it, so the two editors
+    // teach the same notation; otherwise fall back to the set above.
+    var shared = (global.MemoModel || {}).FORMULA_HELP;
+    if (!shared || !shared.length) return FALLBACK_SNIPPETS;
+    return shared.map(function (g) {
+      return { label: g.label, entries: g.entries || [] };
+    });
+  }
+
+  function openFormulaDialog(editor, initial) {
+    var previouslyFocused = document.activeElement;
+
+    var backdrop = document.createElement("div");
+    backdrop.className = "cy-modal-backdrop";
+
+    var box = document.createElement("div");
+    box.className = "cy-modal";
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-modal", "true");
+    box.setAttribute("aria-label", "Formula");
+    backdrop.appendChild(box);
+
+    var title = document.createElement("p");
+    title.className = "cy-modal-title";
+    title.textContent = initial ? "Edit formula" : "Insert formula";
+    box.appendChild(title);
+
+    var preview = document.createElement("div");
+    preview.className = "cy-modal-preview";
+    box.appendChild(preview);
+
+    var error = document.createElement("p");
+    error.className = "cy-modal-error";
+    box.appendChild(error);
+
+    var input = document.createElement("textarea");
+    input.className = "cy-modal-input";
+    input.rows = 3;
+    input.spellcheck = false;
+    input.value = initial || "";
+    input.placeholder = "LaTeX — without the $ signs, e.g. \\frac{a}{b}";
+    box.appendChild(input);
+
+    var help = document.createElement("div");
+    help.className = "cy-modal-help";
+    snippetGroups().forEach(function (group) {
+      var row = document.createElement("div");
+      row.className = "cy-modal-help-row";
+      var label = document.createElement("span");
+      label.className = "cy-modal-help-label";
+      label.textContent = group.label;
+      row.appendChild(label);
+      group.entries.forEach(function (entry) {
+        var code = entry[0];
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "cy-modal-chip";
+        b.title = code;
+        b.textContent = entry[1] || code;
+        b.addEventListener("click", function () { insertSnippet(code); });
+        row.appendChild(b);
+      });
+      help.appendChild(row);
+    });
+    box.appendChild(help);
+
+    var actions = document.createElement("div");
+    actions.className = "cy-modal-actions";
+    var cancel = document.createElement("button");
+    cancel.type = "button";
+    cancel.className = "cy-field-btn cy-modal-cancel";
+    cancel.textContent = "Cancel";
+    var ok = document.createElement("button");
+    ok.type = "button";
+    ok.className = "cy-field-btn cy-modal-ok";
+    ok.textContent = initial ? "Update" : "Insert";
+    actions.appendChild(cancel);
+    actions.appendChild(ok);
+    box.appendChild(actions);
+
+    function insertSnippet(code) {
+      var start = input.selectionStart || 0;
+      var end = input.selectionEnd || 0;
+      input.value = input.value.slice(0, start) + code + input.value.slice(end);
+      input.focus();
+      input.selectionStart = input.selectionEnd = start + code.length;
+      render();
+    }
+
+    function render() {
+      var latex = input.value.trim();
+      if (!latex) {
+        preview.innerHTML = "";
+        preview.classList.add("is-empty");
+        error.textContent = "";
+        return;
+      }
+      preview.classList.remove("is-empty");
+      if (!global.katex) {
+        preview.textContent = latex;
+        return;
+      }
+      try {
+        // throwOnError so a mistake becomes a message rather than red source
+        // silently pasted into the document.
+        preview.innerHTML = global.katex.renderToString(latex, {
+          displayMode: true, throwOnError: true
+        });
+        error.textContent = "";
+        ok.disabled = false;
+      } catch (e) {
+        error.textContent = (e && e.message) || "That is not valid LaTeX.";
+        ok.disabled = true;
+      }
+    }
+
+    function close() {
+      backdrop.remove();
+      document.removeEventListener("keydown", onKey, true);
+      if (previouslyFocused && previouslyFocused.focus) previouslyFocused.focus();
+    }
+
+    function commit() {
+      var latex = input.value.trim();
+      if (!latex) return close();
+      var rendered = "";
+      if (global.katex) {
+        try {
+          rendered = global.katex.renderToString(latex, {
+            displayMode: true, throwOnError: false, errorColor: "#ef4444"
+          });
+        } catch (e) { rendered = ""; }
+      }
+      close();
+      editor.chain().focus().setFormula({ latex: latex, rendered: rendered }).run();
+    }
+
+    function onKey(event) {
+      if (event.key === "Escape") { event.stopPropagation(); close(); }
+      // Ctrl/Cmd+Enter commits: Enter alone belongs to the textarea, because a
+      // multi-line formula is normal.
+      if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        if (!ok.disabled) commit();
+      }
+    }
+
+    cancel.addEventListener("click", close);
+    ok.addEventListener("click", commit);
+    backdrop.addEventListener("mousedown", function (event) {
+      if (event.target === backdrop) close();
+    });
+    input.addEventListener("input", render);
+    document.addEventListener("keydown", onKey, true);
+
+    document.body.appendChild(backdrop);
+    input.focus();
+    input.selectionStart = input.selectionEnd = input.value.length;
+    render();
   }
 
   function buildToolbar(bar, editor, field) {
@@ -236,6 +422,19 @@
       // see a normal change.
       input.dispatchEvent(new Event("input", { bubbles: true }));
     }
+
+    // Double-clicking a formula edits it: an atom node has no caret inside, so
+    // without this the only way to change one is to delete and retype it.
+    host.addEventListener("dblclick", function (event) {
+      var node = event.target.closest && event.target.closest(".cy-formula");
+      if (!node || !host.contains(node)) return;
+      event.preventDefault();
+      try {
+        var pos = editor.view.posAtDOM(node, 0);
+        editor.commands.setNodeSelection(pos);
+      } catch (e) { /* fall through: it will insert a new one */ }
+      openFormulaDialog(editor, node.getAttribute("data-latex") || "");
+    });
 
     editor.on("update", function () { flush(); renderFormulas(host); syncActive(); });
     editor.on("selectionUpdate", syncActive);

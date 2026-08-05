@@ -1,9 +1,8 @@
-# SOME DESCRIPTIVE TITLE.
+# Polish (pl) catalogue for the delta e-learning platform.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -12,7 +11,7 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,642 +23,642 @@ msgstr ""
 #: toto/subscriptions/templates/subscriptions/my_subscription.html:14
 #: toto/subscriptions/templates/subscriptions/plan_list.html:14
 msgid "Dashboard"
-msgstr ""
+msgstr "Pulpit"
 
 #: delta/settings.py:499
 msgid "My Profile"
-msgstr ""
+msgstr "Mój profil"
 
 #: delta/settings.py:504
 msgid "Nauka"
-msgstr ""
+msgstr "Nauka"
 
 #: delta/settings.py:504
 msgid "Courses, lessons and practice tasks — high-school maths and matura."
-msgstr ""
+msgstr "Kursy, lekcje i zadania ćwiczeniowe — matematyka w szkole średniej i matura."
 
 #: delta/settings.py:505
 msgid "Zadania"
-msgstr ""
+msgstr "Zadania"
 
 #: delta/settings.py:505
 msgid "Practice task pools — solve until every task in a section is done."
-msgstr ""
+msgstr "Zestawy zadań do ćwiczeń — rozwiązuj, aż wykonasz każde zadanie w sekcji."
 
 #: delta/settings.py:506 toto/academy/templates/academy/student_home.html:78
 msgid "My progress"
-msgstr ""
+msgstr "Moje postępy"
 
 #: delta/settings.py:506
 msgid "See how many tasks you have solved in each section."
-msgstr ""
+msgstr "Zobacz, ile zadań udało Ci się rozwiązać w każdej sekcji."
 
 #: delta/settings.py:507 toto/academy/templates/academy/student_home.html:81
 msgid "My path"
-msgstr ""
+msgstr "Moja ścieżka"
 
 #: delta/settings.py:507
 msgid ""
 "Your personalized learning path — ordered steps to close your skill gaps."
-msgstr ""
+msgstr "Twoja spersonalizowana ścieżka nauki — uporządkowane kroki, które uzupełnią braki w Twoich umiejętnościach."
 
 #: delta/settings.py:508
 #: toto/academy/templates/academy/skill_tree_detail.html:61
 #: toto/academy/templates/academy/student_home.html:84
 msgid "Skills"
-msgstr ""
+msgstr "Umiejętności"
 
 #: delta/settings.py:508
 msgid "The skill tree — badges you earn as you complete modules."
-msgstr ""
+msgstr "Drzewo umiejętności — odznaki, które zdobywasz, kończąc kolejne moduły."
 
 #: delta/settings.py:510 toto/academy/templates/academy/course_detail.html:217
 msgid "Notatki"
-msgstr ""
+msgstr "Notatki"
 
 #: delta/settings.py:510
 msgid "Lesson notes and articles from your teachers."
-msgstr ""
+msgstr "Notatki z lekcji i artykuły od Twoich nauczycieli."
 
 #: delta/settings.py:511
 msgid "Storage"
-msgstr ""
+msgstr "Magazyn"
 
 #: delta/settings.py:511
 msgid "Your files and downloadable PDF notes in encrypted storage."
-msgstr ""
+msgstr "Twoje pliki i notatki PDF do pobrania w zaszyfrowanym magazynie."
 
 #: delta/settings.py:513
 msgid "SocialHub"
-msgstr ""
+msgstr "SocialHub"
 
 #: delta/settings.py:513
 msgid "Meet other students and stay connected."
-msgstr ""
+msgstr "Poznawaj innych uczniów i bądź z nimi w kontakcie."
 
 #: delta/settings.py:514
 msgid "Events"
-msgstr ""
+msgstr "Wydarzenia"
 
 #: delta/settings.py:514
 msgid "Upcoming lessons, deadlines and events."
-msgstr ""
+msgstr "Nadchodzące lekcje, terminy i wydarzenia."
 
 #: delta/settings.py:523
 msgid "Dokumenty"
-msgstr ""
+msgstr "Dokumenty"
 
 #: delta/settings.py:523
 msgid "Write documents with real pages and export them as a finished PDF."
-msgstr ""
+msgstr "Pisz dokumenty z prawdziwymi stronami i eksportuj je jako gotowy PDF."
 
 #: delta/settings.py:524
 msgid "Prezentacje"
-msgstr ""
+msgstr "Prezentacje"
 
 #: delta/settings.py:524
 msgid "Build slide decks and present them full-screen."
-msgstr ""
+msgstr "Twórz prezentacje ze slajdów i wyświetlaj je na pełnym ekranie."
 
 #: delta/settings.py:528 toto/library/templates/library/base.html:26
 #: toto/library/templates/library/book_list.html:4
 #: toto/library/templates/library/book_list.html:55
 #: toto/library/templates/library/book_list.html:64
 msgid "Books"
-msgstr ""
+msgstr "Książki"
 
 #: delta/settings.py:528
 msgid "Recommended books and reference materials."
-msgstr ""
+msgstr "Polecane książki i materiały źródłowe."
 
 #: delta/settings.py:529 toto/library/templates/library/article_list.html:4
 #: toto/library/templates/library/article_list.html:53
 #: toto/library/templates/library/article_list.html:62
 #: toto/library/templates/library/base.html:32
 msgid "Articles"
-msgstr ""
+msgstr "Artykuły"
 
 #: delta/settings.py:529
 msgid "Curated articles and further reading."
-msgstr ""
+msgstr "Wybrane artykuły i materiały do dalszej lektury."
 
 #: delta/settings.py:533
 msgid "Subscription"
-msgstr ""
+msgstr "Subskrypcja"
 
 #: delta/settings.py:533
 msgid "Your active course, its validity and your discount codes."
-msgstr ""
+msgstr "Twój aktywny kurs, okres jego ważności i Twoje kody rabatowe."
 
 #: delta/settings.py:537
 msgid "Learning"
-msgstr ""
+msgstr "Nauka"
 
 #: delta/settings.py:538
 msgid "Materials"
-msgstr ""
+msgstr "Materiały"
 
 #: delta/settings.py:539
 msgid "Account"
-msgstr ""
+msgstr "Konto"
 
 #: templates/oya/home.html:24
 msgid "Browse courses, learn and earn badges."
-msgstr ""
+msgstr "Przeglądaj kursy, ucz się i zdobywaj odznaki."
 
 #: templates/oya/home.html:34
 msgid "Open the authoring panel."
-msgstr ""
+msgstr "Otwórz panel autorski."
 
 #: templates/oya/home.html:42
 msgid "Sign in to author lessons."
-msgstr ""
+msgstr "Zaloguj się, aby tworzyć lekcje."
 
 #: toto/academy/backoffice_forms.py:28
 msgid "Published (visible to students)"
-msgstr ""
+msgstr "Opublikowane (widoczne dla uczniów)"
 
 #: toto/academy/backoffice_forms.py:29
 msgid "Virtual (curriculum item, hidden from the public list)"
-msgstr ""
+msgstr "Wirtualne (element programu nauczania, ukryte na liście publicznej)"
 
 #: toto/academy/backoffice_forms.py:59
 msgid "Unlocks badge"
-msgstr ""
+msgstr "Odblokowuje odznakę"
 
 #: toto/academy/backoffice_forms.py:60
 msgid "Notes / handout page"
-msgstr ""
+msgstr "Notatki / strona z materiałami"
 
 #: toto/academy/backoffice_forms.py:61
 msgid "Module exam (official quiz)"
-msgstr ""
+msgstr "Egzamin modułowy (oficjalny quiz)"
 
 #: toto/academy/backoffice_forms.py:62 toto/academy/backoffice_forms.py:125
 msgid "Attached quizzes"
-msgstr ""
+msgstr "Dołączone quizy"
 
 #: toto/academy/backoffice_forms.py:63
 msgid "Lecture video URL"
-msgstr ""
+msgstr "Adres URL wideo z wykładem"
 
 #: toto/academy/backoffice_forms.py:110
 msgid "Lesson video"
-msgstr ""
+msgstr "Wideo lekcji"
 
 #: toto/academy/backoffice_forms.py:111
 msgid "Voice-narrated MP4/WebM. Leave blank to keep the current file."
-msgstr ""
+msgstr "Plik MP4/WebM z narracją głosową. Zostaw puste, aby zachować obecny plik."
 
 #: toto/academy/backoffice_forms.py:115
 msgid "Lesson notes (PDF)"
-msgstr ""
+msgstr "Notatki z lekcji (PDF)"
 
 #: toto/academy/backoffice_forms.py:116
 msgid "Downloadable / printable PDF notes."
-msgstr ""
+msgstr "Notatki PDF do pobrania i wydruku."
 
 #: toto/academy/backoffice_forms.py:119
 msgid "Remove current video"
-msgstr ""
+msgstr "Usuń obecne wideo"
 
 #: toto/academy/backoffice_forms.py:120
 msgid "Remove current notes"
-msgstr ""
+msgstr "Usuń obecne notatki"
 
 #: toto/academy/backoffice_forms.py:153
 msgid "Please upload a video file (MP4, WebM, …)."
-msgstr ""
+msgstr "Wgraj plik wideo (MP4, WebM, …)."
 
 #: toto/academy/backoffice_forms.py:159
 msgid "Please upload a PDF file."
-msgstr ""
+msgstr "Wgraj plik PDF."
 
 #: toto/academy/backoffice_forms.py:200
 #: toto/academy/templates/academy/backoffice/script_form.html:85
 msgid "Content"
-msgstr ""
+msgstr "Treść"
 
 #: toto/academy/backoffice_forms.py:206
 msgid "Section heading (optional)"
-msgstr ""
+msgstr "Nagłówek sekcji (opcjonalnie)"
 
 #: toto/academy/backoffice_forms.py:238
 #: toto/academy/templates/academy/course_metrics.html:100
 #: toto/academy/templates/academy/personal_path_list.html:38
 msgid "Active"
-msgstr ""
+msgstr "Aktywne"
 
 #: toto/academy/backoffice_forms.py:241
 msgid "optional"
-msgstr ""
+msgstr "opcjonalnie"
 
 #: toto/academy/backoffice_forms.py:281
 msgid "Headline (PL)"
-msgstr ""
+msgstr "Nagłówek (PL)"
 
 #: toto/academy/backoffice_forms.py:281
 msgid "Headline (EN)"
-msgstr ""
+msgstr "Nagłówek (EN)"
 
 #: toto/academy/backoffice_forms.py:282
 msgid "Subtitle (PL)"
-msgstr ""
+msgstr "Podtytuł (PL)"
 
 #: toto/academy/backoffice_forms.py:282
 msgid "Subtitle (EN)"
-msgstr ""
+msgstr "Podtytuł (EN)"
 
 #: toto/academy/backoffice_forms.py:283
 msgid "Invitation text (PL)"
-msgstr ""
+msgstr "Tekst zaproszenia (PL)"
 
 #: toto/academy/backoffice_forms.py:283
 msgid "Invitation text (EN)"
-msgstr ""
+msgstr "Tekst zaproszenia (EN)"
 
 #: toto/academy/backoffice_forms.py:284
 msgid "Student button (PL)"
-msgstr ""
+msgstr "Przycisk ucznia (PL)"
 
 #: toto/academy/backoffice_forms.py:284
 msgid "Student button (EN)"
-msgstr ""
+msgstr "Przycisk ucznia (EN)"
 
 #: toto/academy/backoffice_forms.py:285
 msgid "Teacher button (PL)"
-msgstr ""
+msgstr "Przycisk nauczyciela (PL)"
 
 #: toto/academy/backoffice_forms.py:285
 msgid "Teacher button (EN)"
-msgstr ""
+msgstr "Przycisk nauczyciela (EN)"
 
 #: toto/academy/backoffice_views.py:92
 msgid "Course created. Now add its modules."
-msgstr ""
+msgstr "Kurs utworzony. Teraz dodaj jego moduły."
 
 #: toto/academy/backoffice_views.py:95
 #: toto/academy/templates/academy/backoffice/course_list.html:8
 msgid "New course"
-msgstr ""
+msgstr "Nowy kurs"
 
 #: toto/academy/backoffice_views.py:95
 msgid "Create course"
-msgstr ""
+msgstr "Utwórz kurs"
 
 #: toto/academy/backoffice_views.py:106
 msgid "Course saved."
-msgstr ""
+msgstr "Kurs zapisany."
 
 #: toto/academy/backoffice_views.py:109
 msgid "Edit course"
-msgstr ""
+msgstr "Edytuj kurs"
 
 #: toto/academy/backoffice_views.py:109
 msgid "Save course"
-msgstr ""
+msgstr "Zapisz kurs"
 
 #: toto/academy/backoffice_views.py:120
 msgid "Course deleted."
-msgstr ""
+msgstr "Kurs usunięty."
 
 #: toto/academy/backoffice_views.py:123
 msgid "Delete course"
-msgstr ""
+msgstr "Usuń kurs"
 
 #: toto/academy/backoffice_views.py:124
 msgid "This deletes the course with all its modules, lessons and scripts."
-msgstr ""
+msgstr "Spowoduje to usunięcie kursu wraz ze wszystkimi jego modułami, lekcjami i skryptami."
 
 #: toto/academy/backoffice_views.py:143
 msgid "Edit module"
-msgstr ""
+msgstr "Edytuj moduł"
 
 #: toto/academy/backoffice_views.py:143
 #: toto/academy/templates/academy/backoffice/module_list.html:10
 msgid "New module"
-msgstr ""
+msgstr "Nowy moduł"
 
 #: toto/academy/backoffice_views.py:144
 msgid "Save module"
-msgstr ""
+msgstr "Zapisz moduł"
 
 #: toto/academy/backoffice_views.py:144
 msgid "Create module"
-msgstr ""
+msgstr "Utwórz moduł"
 
 #: toto/academy/backoffice_views.py:162
 msgid "Module created."
-msgstr ""
+msgstr "Moduł utworzony."
 
 #: toto/academy/backoffice_views.py:173
 msgid "Module saved."
-msgstr ""
+msgstr "Moduł zapisany."
 
 #: toto/academy/backoffice_views.py:184
 msgid "Module deleted."
-msgstr ""
+msgstr "Moduł usunięty."
 
 #: toto/academy/backoffice_views.py:187
 msgid "Delete module"
-msgstr ""
+msgstr "Usuń moduł"
 
 #: toto/academy/backoffice_views.py:188
 msgid "This deletes the module with its lessons and scripts."
-msgstr ""
+msgstr "Spowoduje to usunięcie modułu wraz z jego lekcjami i skryptami."
 
 #: toto/academy/backoffice_views.py:239
 msgid "Lesson added."
-msgstr ""
+msgstr "Lekcja dodana."
 
 #: toto/academy/backoffice_views.py:243
 msgid "New lesson"
-msgstr ""
+msgstr "Nowa lekcja"
 
 #: toto/academy/backoffice_views.py:243
 #: toto/academy/templates/academy/backoffice/module_form.html:97
 msgid "Add lesson"
-msgstr ""
+msgstr "Dodaj lekcję"
 
 #: toto/academy/backoffice_views.py:256
 msgid "Lesson saved."
-msgstr ""
+msgstr "Lekcja zapisana."
 
 #: toto/academy/backoffice_views.py:260
 msgid "Edit lesson"
-msgstr ""
+msgstr "Edytuj lekcję"
 
 #: toto/academy/backoffice_views.py:260
 msgid "Save lesson"
-msgstr ""
+msgstr "Zapisz lekcję"
 
 #: toto/academy/backoffice_views.py:271
 msgid "Lesson deleted."
-msgstr ""
+msgstr "Lekcja usunięta."
 
 #: toto/academy/backoffice_views.py:274
 msgid "Delete lesson"
-msgstr ""
+msgstr "Usuń lekcję"
 
 #: toto/academy/backoffice_views.py:302
 msgid "Script added."
-msgstr ""
+msgstr "Skrypt dodany."
 
 #: toto/academy/backoffice_views.py:306
 msgid "New script"
-msgstr ""
+msgstr "Nowy skrypt"
 
 #: toto/academy/backoffice_views.py:306
 msgid "Create script"
-msgstr ""
+msgstr "Utwórz skrypt"
 
 #: toto/academy/backoffice_views.py:319
 msgid "Script saved."
-msgstr ""
+msgstr "Skrypt zapisany."
 
 #: toto/academy/backoffice_views.py:323
 msgid "Edit script"
-msgstr ""
+msgstr "Edytuj skrypt"
 
 #: toto/academy/backoffice_views.py:323
 msgid "Save script"
-msgstr ""
+msgstr "Zapisz skrypt"
 
 #: toto/academy/backoffice_views.py:363
 #, python-format
 msgid "This file belongs to %(owner)s — only its owner can edit it."
-msgstr ""
+msgstr "Ten plik należy do %(owner)s — może go edytować tylko właściciel."
 
 #: toto/academy/backoffice_views.py:420
 msgid "Script deleted."
-msgstr ""
+msgstr "Skrypt usunięty."
 
 #: toto/academy/backoffice_views.py:423
 msgid "Delete script"
-msgstr ""
+msgstr "Usuń skrypt"
 
 #: toto/academy/backoffice_views.py:485 toto/academy/backoffice_views.py:570
 msgid "Person not found."
-msgstr ""
+msgstr "Nie znaleziono osoby."
 
 #: toto/academy/backoffice_views.py:487
 #, python-format
 msgid "Enrolled %(name)s."
-msgstr ""
+msgstr "Zapisano %(name)s."
 
 #: toto/academy/backoffice_views.py:489
 #, python-format
 msgid "%(name)s is already enrolled."
-msgstr ""
+msgstr "%(name)s jest już zapisany."
 
 #: toto/academy/backoffice_views.py:499
 msgid "Student unenrolled."
-msgstr ""
+msgstr "Uczeń wypisany."
 
 #: toto/academy/backoffice_views.py:508
 msgid "Edit cohort"
-msgstr ""
+msgstr "Edytuj grupę"
 
 #: toto/academy/backoffice_views.py:508
 #: toto/academy/templates/academy/backoffice/roster.html:74
 msgid "New cohort"
-msgstr ""
+msgstr "Nowa grupa"
 
 #: toto/academy/backoffice_views.py:509
 msgid "Save cohort"
-msgstr ""
+msgstr "Zapisz grupę"
 
 #: toto/academy/backoffice_views.py:509
 msgid "Create cohort"
-msgstr ""
+msgstr "Utwórz grupę"
 
 #: toto/academy/backoffice_views.py:533
 msgid "Cohort created."
-msgstr ""
+msgstr "Grupa utworzona."
 
 #: toto/academy/backoffice_views.py:544
 msgid "Cohort saved."
-msgstr ""
+msgstr "Grupa zapisana."
 
 #: toto/academy/backoffice_views.py:555
 msgid "Cohort deleted."
-msgstr ""
+msgstr "Grupa usunięta."
 
 #: toto/academy/backoffice_views.py:558
 msgid "Delete cohort"
-msgstr ""
+msgstr "Usuń grupę"
 
 #: toto/academy/backoffice_views.py:559
 msgid "This removes the cohort and its membership list (enrolments are kept)."
-msgstr ""
+msgstr "To usuwa grupę i jej listę członków (zapisy zostają zachowane)."
 
 #: toto/academy/backoffice_views.py:575
 #, python-format
 msgid "Cohort is full (capacity %(n)s)."
-msgstr ""
+msgstr "Grupa jest pełna (pojemność %(n)s)."
 
 #: toto/academy/backoffice_views.py:579
 #, python-format
 msgid "Added %(name)s to the cohort."
-msgstr ""
+msgstr "Dodano %(name)s do grupy."
 
 #: toto/academy/backoffice_views.py:589
 msgid "Removed from the cohort."
-msgstr ""
+msgstr "Usunięto z grupy."
 
 #: toto/academy/backoffice_views.py:616
 #, python-format
 msgid "Issued %(n)d certificate(s); %(m)d member(s) were already complete."
-msgstr ""
+msgstr "Wystawiono certyfikaty: %(n)d; osoby, które już ukończyły: %(m)d."
 
 #: toto/academy/backoffice_views.py:619
 msgid "This cohort has no members yet."
-msgstr ""
+msgstr "Ta grupa nie ma jeszcze członków."
 
 #: toto/academy/backoffice_views.py:668
 msgid "Marked complete — a certificate was issued."
-msgstr ""
+msgstr "Oznaczono jako ukończone — wystawiono certyfikat."
 
 #: toto/academy/backoffice_views.py:683
 msgid "Marked as in progress."
-msgstr ""
+msgstr "Oznaczono jako w trakcie."
 
 #: toto/academy/backoffice_views.py:693
 msgid "Badge not found."
-msgstr ""
+msgstr "Nie znaleziono odznaki."
 
 #: toto/academy/backoffice_views.py:696
 #, python-format
 msgid "Awarded “%(b)s”."
-msgstr ""
+msgstr "Przyznano „%(b)s”."
 
 #: toto/academy/backoffice_views.py:705
 msgid "Badge revoked."
-msgstr ""
+msgstr "Odznaka odebrana."
 
 #: toto/academy/backoffice_views.py:747
 #, python-format
 msgid ""
 "%(name)s has no login account yet, so they cannot enter the panel until one "
 "is linked."
-msgstr ""
+msgstr "%(name)s nie ma jeszcze konta logowania, więc nie wejdzie do panelu autorskiego, dopóki konto nie zostanie powiązane."
 
 #: toto/academy/backoffice_views.py:750
 #, python-format
 msgid "%(name)s is now a teacher."
-msgstr ""
+msgstr "%(name)s jest teraz nauczycielem."
 
 #: toto/academy/backoffice_views.py:763
 msgid "Welcome page updated."
-msgstr ""
+msgstr "Zaktualizowano stronę powitalną."
 
 #: toto/academy/backoffice_views.py:766 toto/backoffice/nav.py:85
 msgid "Welcome page"
-msgstr ""
+msgstr "Strona powitalna"
 
 #: toto/academy/backoffice_views.py:766 toto/library/backoffice_views.py:78
 msgid "Save"
-msgstr ""
+msgstr "Zapisz"
 
 #: toto/academy/backoffice_views.py:776
 msgid "You cannot remove your own teacher access."
-msgstr ""
+msgstr "Nie możesz usunąć własnego dostępu nauczycielskiego."
 
 #: toto/academy/backoffice_views.py:783
 #, python-format
 msgid ""
 "%(name)s still has staff access; remove their staff status in the admin to "
 "fully revoke panel access."
-msgstr ""
+msgstr "%(name)s nadal ma dostęp personelu; odbierz status personelu w panelu administracyjnym, aby całkowicie cofnąć dostęp do panelu autorskiego."
 
 #: toto/academy/backoffice_views.py:786
 #, python-format
 msgid "%(name)s is no longer a teacher."
-msgstr ""
+msgstr "%(name)s nie jest już nauczycielem."
 
 #: toto/academy/forms.py:15
 msgid "Target skill"
-msgstr ""
+msgstr "Docelowa umiejętność"
 
 #: toto/academy/forms.py:16
 msgid "A single skill badge to work toward."
-msgstr ""
+msgstr "Pojedyncza odznaka umiejętności do zdobycia."
 
 #: toto/academy/forms.py:21
 msgid "Target skill tree"
-msgstr ""
+msgstr "Docelowe drzewo umiejętności"
 
 #: toto/academy/forms.py:22
 msgid "A whole skill tree to master."
-msgstr ""
+msgstr "Całe drzewo umiejętności do opanowania."
 
 #: toto/academy/forms.py:36
 msgid "Pick exactly one goal: a target skill or a whole skill tree."
-msgstr ""
+msgstr "Wybierz dokładnie jeden cel: docelową umiejętność albo całe drzewo umiejętności."
 
 #: toto/academy/forms.py:45
 msgid "You have already earned everything on this goal."
-msgstr ""
+msgstr "Masz już zdobyte wszystko w ramach tego celu."
 
 #: toto/academy/forms.py:52
 msgid "Task"
-msgstr ""
+msgstr "Zadanie"
 
 #: toto/academy/forms.py:56
 msgid "Note"
-msgstr ""
+msgstr "Notatka"
 
 #: toto/academy/models.py:781
 msgid "Learn mathematics with Delta"
-msgstr ""
+msgstr "Ucz się matematyki z Deltą"
 
 #: toto/academy/models.py:782
 msgid "Guided courses, hands-on tasks and real feedback."
-msgstr ""
+msgstr "Prowadzone kursy, praktyczne zadania i prawdziwa informacja zwrotna."
 
 #: toto/academy/models.py:784
 msgid ""
 "Delta is a maths e-learning platform. Explore courses, earn skill badges and "
 "track your progress — or sign in as a teacher to author lessons."
-msgstr ""
+msgstr "Delta to platforma e-learningowa do matematyki. Przeglądaj kursy, zdobywaj odznaki umiejętności i śledź swoje postępy — albo zaloguj się jako nauczyciel, aby tworzyć lekcje."
 
 #: toto/academy/models.py:787
 msgid "I’m a student"
-msgstr ""
+msgstr "Jestem uczniem"
 
 #: toto/academy/models.py:788
 msgid "I’m a teacher"
-msgstr ""
+msgstr "Jestem nauczycielem"
 
 #: toto/academy/templates/academy/_recommendation_cards.html:6
 msgid "Suggested goals"
-msgstr ""
+msgstr "Proponowane cele"
 
 #: toto/academy/templates/academy/_recommendation_cards.html:10
 msgid "Starting a new goal archives your current path."
-msgstr ""
+msgstr "Rozpoczęcie nowego celu archiwizuje Twoją obecną ścieżkę."
 
 #: toto/academy/templates/academy/_recommendation_cards.html:36
 msgid "Ready to start"
-msgstr ""
+msgstr "Gotowe do rozpoczęcia"
 
 #: toto/academy/templates/academy/_recommendation_cards.html:42
 #, python-format
 msgid "Unlocks %(count)s skills"
-msgstr ""
+msgstr "Odblokowuje %(count)s umiejętności"
 
 #: toto/academy/templates/academy/_recommendation_cards.html:48
 #, python-format
 msgid "Continues %(group)s"
-msgstr ""
+msgstr "Kontynuuje %(group)s"
 
 #: toto/academy/templates/academy/_recommendation_cards.html:54
 msgid "Popular with similar students"
-msgstr ""
+msgstr "Popularne wśród podobnych uczniów"
 
 #: toto/academy/templates/academy/_recommendation_cards.html:70
 msgid "Build path"
-msgstr ""
+msgstr "Zbuduj ścieżkę"
 
 #: toto/academy/templates/academy/backoffice/cohort_form.html:30
 #: toto/academy/templates/academy/backoffice/lesson_form.html:73
@@ -677,39 +676,39 @@ msgstr ""
 #: toto/quizzes/templates/quizzes/backoffice/quiz_confirm_delete.html:13
 #: toto/quizzes/templates/quizzes/backoffice/quiz_form.html:49
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 #: toto/academy/templates/academy/backoffice/cohort_form.html:39
 msgid "Members"
-msgstr ""
+msgstr "Członkowie"
 
 #: toto/academy/templates/academy/backoffice/cohort_form.html:41
 #: toto/academy/templates/academy/backoffice/roster.html:86
 msgid "Mark all members complete and issue a certificate to each?"
-msgstr ""
+msgstr "Oznaczyć wszystkim członkom kurs jako ukończony i wystawić każdemu certyfikat?"
 
 #: toto/academy/templates/academy/backoffice/cohort_form.html:44
 msgid "Award certificates"
-msgstr ""
+msgstr "Przyznaj certyfikaty"
 
 #: toto/academy/templates/academy/backoffice/cohort_form.html:53
 #: toto/academy/templates/academy/backoffice/roster.html:56
 msgid "Manage"
-msgstr ""
+msgstr "Zarządzaj"
 
 #: toto/academy/templates/academy/backoffice/cohort_form.html:56
 #: toto/academy/templates/academy/backoffice/people_list.html:34
 msgid "Remove"
-msgstr ""
+msgstr "Usuń"
 
 #: toto/academy/templates/academy/backoffice/cohort_form.html:61
 msgid "No members yet."
-msgstr ""
+msgstr "Nie ma jeszcze członków."
 
 #: toto/academy/templates/academy/backoffice/cohort_form.html:66
 #: toto/academy/templates/academy/backoffice/roster.html:16
 msgid "Search by name or email"
-msgstr ""
+msgstr "Szukaj po imieniu i nazwisku lub adresie e-mail"
 
 #: toto/academy/templates/academy/backoffice/cohort_form.html:68
 #: toto/academy/templates/academy/backoffice/people_list.html:57
@@ -717,31 +716,31 @@ msgstr ""
 #: toto/library/templates/library/article_list.html:15
 #: toto/library/templates/library/book_list.html:15
 msgid "Search"
-msgstr ""
+msgstr "Szukaj"
 
 #: toto/academy/templates/academy/backoffice/cohort_form.html:69
 #: toto/academy/templates/academy/backoffice/people_list.html:58
 #: toto/academy/templates/academy/backoffice/roster.html:19
 msgid "Clear"
-msgstr ""
+msgstr "Wyczyść"
 
 #: toto/academy/templates/academy/backoffice/cohort_form.html:77
 msgid "In cohort"
-msgstr ""
+msgstr "W grupie"
 
 #: toto/academy/templates/academy/backoffice/cohort_form.html:81
 msgid "Add"
-msgstr ""
+msgstr "Dodaj"
 
 #: toto/academy/templates/academy/backoffice/cohort_form.html:86
 #: toto/academy/templates/academy/backoffice/roster.html:36
 msgid "No people match."
-msgstr ""
+msgstr "Brak pasujących osób."
 
 #: toto/academy/templates/academy/backoffice/course_list.html:19
 #: toto/academy/templates/academy/certificate_detail.html:46
 msgid "Course"
-msgstr ""
+msgstr "Kurs"
 
 #: toto/academy/templates/academy/backoffice/course_list.html:20
 #: toto/academy/templates/academy/backoffice/course_list.html:42
@@ -749,35 +748,35 @@ msgstr ""
 #: toto/academy/templates/academy/course_metrics.html:51
 #: toto/academy/templates/academy/teacher_detail.html:118
 msgid "Modules"
-msgstr ""
+msgstr "Moduły"
 
 #: toto/academy/templates/academy/backoffice/course_list.html:21
 #: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:21
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: toto/academy/templates/academy/backoffice/course_list.html:22
 #: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:22
 msgid "Actions"
-msgstr ""
+msgstr "Akcje"
 
 #: toto/academy/templates/academy/backoffice/course_list.html:30
 msgid "Virtual"
-msgstr ""
+msgstr "Wirtualny"
 
 #: toto/academy/templates/academy/backoffice/course_list.html:35
 #: toto/academy/templates/academy/backoffice/module_list.html:20
 #: toto/quizzes/templates/quizzes/backoffice/question_list.html:19
 #: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:35
 msgid "Published"
-msgstr ""
+msgstr "Opublikowany"
 
 #: toto/academy/templates/academy/backoffice/course_list.html:37
 #: toto/academy/templates/academy/backoffice/module_list.html:22
 #: toto/quizzes/templates/quizzes/backoffice/question_list.html:21
 #: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:37
 msgid "Draft"
-msgstr ""
+msgstr "Szkic"
 
 #: toto/academy/templates/academy/backoffice/course_list.html:43
 #: toto/academy/templates/academy/backoffice/module_list.html:51
@@ -787,7 +786,7 @@ msgstr ""
 #: toto/quizzes/templates/quizzes/backoffice/question_list.html:60
 #: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:43
 msgid "Edit"
-msgstr ""
+msgstr "Edytuj"
 
 #: toto/academy/templates/academy/backoffice/course_list.html:44
 #: toto/academy/templates/academy/backoffice/module_list.html:52
@@ -801,81 +800,81 @@ msgstr ""
 #: toto/quizzes/templates/quizzes/backoffice/quiz_confirm_delete.html:14
 #: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:44
 msgid "Delete"
-msgstr ""
+msgstr "Usuń"
 
 #: toto/academy/templates/academy/backoffice/course_list.html:49
 msgid "No courses yet. Create your first course."
-msgstr ""
+msgstr "Nie ma jeszcze kursów. Utwórz swój pierwszy kurs."
 
 #: toto/academy/templates/academy/backoffice/lesson_form.html:35
 #: toto/academy/templates/academy/backoffice/lesson_form.html:49
 #: toto/academy/templates/academy/student_progress.html:37
 msgid "Current"
-msgstr ""
+msgstr "Bieżący"
 
 #: toto/academy/templates/academy/backoffice/lesson_form.html:85
 msgid "Presentation lecture"
-msgstr ""
+msgstr "Wykład w formie prezentacji"
 
 #: toto/academy/templates/academy/backoffice/lesson_form.html:86
 msgid ""
 "Optional slide deck (formulas, SVG, images, captions) students can watch "
 "alongside the video."
-msgstr ""
+msgstr "Opcjonalna prezentacja (wzory, SVG, obrazy, podpisy), którą uczniowie mogą oglądać razem z wideo."
 
 #: toto/academy/templates/academy/backoffice/lesson_form.html:92
 msgid "Edit deck"
-msgstr ""
+msgstr "Edytuj prezentację"
 
 #: toto/academy/templates/academy/backoffice/lesson_form.html:92
 msgid "Add a deck"
-msgstr ""
+msgstr "Dodaj prezentację"
 
 #: toto/academy/templates/academy/backoffice/lesson_form.html:99
 msgid "Lesson notes (document)"
-msgstr ""
+msgstr "Notatki z lekcji (dokument)"
 
 #: toto/academy/templates/academy/backoffice/lesson_form.html:100
 msgid ""
 "Written notes with real pages, formulas and images — students read them "
 "online or as a PDF. Separate from the uploaded PDF above."
-msgstr ""
+msgstr "Pisane notatki z prawdziwymi stronami, wzorami i obrazami — uczniowie czytają je online lub jako PDF. Niezależne od wgranego PDF-a powyżej."
 
 #: toto/academy/templates/academy/backoffice/lesson_form.html:107
 msgid "Edit notes"
-msgstr ""
+msgstr "Edytuj notatki"
 
 #: toto/academy/templates/academy/backoffice/lesson_form.html:107
 msgid "Write notes"
-msgstr ""
+msgstr "Napisz notatki"
 
 #: toto/academy/templates/academy/backoffice/module_form.html:36
 #: toto/competence/backoffice_views.py:112
 #: toto/competence/templates/competence/backoffice/overview.html:9
 msgid "New badge"
-msgstr ""
+msgstr "Nowa odznaka"
 
 #: toto/academy/templates/academy/backoffice/module_form.html:38
 msgid "Badge title"
-msgstr ""
+msgstr "Tytuł odznaki"
 
 #: toto/academy/templates/academy/backoffice/module_form.html:46
 msgid "Create & select"
-msgstr ""
+msgstr "Utwórz i wybierz"
 
 #: toto/academy/templates/academy/backoffice/module_form.html:49
 msgid "Each module unlocks a distinct badge on completion."
-msgstr ""
+msgstr "Każdy moduł odblokowuje po ukończeniu osobną odznakę."
 
 #: toto/academy/templates/academy/backoffice/module_form.html:67
 msgid "Hold Ctrl/Cmd to select several."
-msgstr ""
+msgstr "Przytrzymaj Ctrl/Cmd, aby wybrać kilka."
 
 #: toto/academy/templates/academy/backoffice/module_form.html:96
 #: toto/academy/templates/academy/course_detail.html:184
 #: toto/academy/templates/academy/teacher_detail.html:137
 msgid "Lessons"
-msgstr ""
+msgstr "Lekcje"
 
 #: toto/academy/templates/academy/backoffice/module_form.html:103
 #: toto/academy/templates/academy/backoffice/module_list.html:32
@@ -884,235 +883,235 @@ msgstr ""
 #: toto/competence/templates/competence/backoffice/overview.html:38
 #: toto/quizzes/templates/quizzes/backoffice/question_list.html:31
 msgid "Drag to reorder"
-msgstr ""
+msgstr "Przeciągnij, aby zmienić kolejność"
 
 #: toto/academy/templates/academy/backoffice/module_form.html:104
 #: toto/academy/templates/academy/backoffice/module_list.html:35
 #: toto/quizzes/templates/quizzes/backoffice/question_list.html:36
 msgid "Move up"
-msgstr ""
+msgstr "Przesuń w górę"
 
 #: toto/academy/templates/academy/backoffice/module_form.html:105
 #: toto/academy/templates/academy/backoffice/module_list.html:39
 #: toto/quizzes/templates/quizzes/backoffice/question_list.html:42
 msgid "Move down"
-msgstr ""
+msgstr "Przesuń w dół"
 
 #: toto/academy/templates/academy/backoffice/module_form.html:112
 #: toto/academy/templates/academy/course_detail.html:238
 msgid "No lessons yet."
-msgstr ""
+msgstr "Nie ma jeszcze lekcji."
 
 #: toto/academy/templates/academy/backoffice/module_form.html:121
 #: toto/academy/templates/academy/course_detail.html:268
 msgid "Scripts"
-msgstr ""
+msgstr "Skrypty"
 
 #: toto/academy/templates/academy/backoffice/module_form.html:122
 msgid "Add script"
-msgstr ""
+msgstr "Dodaj skrypt"
 
 #: toto/academy/templates/academy/backoffice/module_form.html:127
 #: toto/palimpsest/templates/palimpsest/backoffice/page_list.html:21
 msgid "sections"
-msgstr ""
+msgstr "sekcje"
 
 #: toto/academy/templates/academy/backoffice/module_form.html:132
 msgid "No scripts yet."
-msgstr ""
+msgstr "Nie ma jeszcze skryptów."
 
 #: toto/academy/templates/academy/backoffice/module_list.html:6
 msgid "Course settings"
-msgstr ""
+msgstr "Ustawienia kursu"
 
 #: toto/academy/templates/academy/backoffice/module_list.html:7
 #: toto/academy/templates/academy/backoffice/roster.html:8
 msgid "Students & cohorts"
-msgstr ""
+msgstr "Uczniowie i grupy"
 
 #: toto/academy/templates/academy/backoffice/module_list.html:17
 msgid "All courses"
-msgstr ""
+msgstr "Wszystkie kursy"
 
 #: toto/academy/templates/academy/backoffice/module_list.html:46
 msgid "lessons"
-msgstr ""
+msgstr "lekcje"
 
 #: toto/academy/templates/academy/backoffice/module_list.html:47
 msgid "exam"
-msgstr ""
+msgstr "egzamin"
 
 #: toto/academy/templates/academy/backoffice/module_list.html:57
 msgid "No modules yet. Add the first module."
-msgstr ""
+msgstr "Nie ma jeszcze modułów. Dodaj pierwszy moduł."
 
 #: toto/academy/templates/academy/backoffice/people_list.html:7
 #: toto/academy/templates/academy/backoffice/people_list.html:13
 msgid "Teachers"
-msgstr ""
+msgstr "Nauczyciele"
 
 #: toto/academy/templates/academy/backoffice/people_list.html:14
 msgid ""
 "Teachers can enter this panel. Removing a teacher keeps their course "
 "ownership and signatures — it only revokes access, and can be restored."
-msgstr ""
+msgstr "Nauczyciele mogą wejść do tego panelu autorskiego. Usunięcie nauczyciela zachowuje jego własność kursów i podpisy — cofa tylko dostęp i można go przywrócić."
 
 #: toto/academy/templates/academy/backoffice/people_list.html:23
 msgid "active"
-msgstr ""
+msgstr "aktywny"
 
 #: toto/academy/templates/academy/backoffice/people_list.html:25
 msgid "removed"
-msgstr ""
+msgstr "usunięty"
 
 #: toto/academy/templates/academy/backoffice/people_list.html:27
 msgid "no login"
-msgstr ""
+msgstr "brak konta logowania"
 
 #: toto/academy/templates/academy/backoffice/people_list.html:31
 msgid "Remove teacher access for this person?"
-msgstr ""
+msgstr "Usunąć dostęp nauczycielski tej osobie?"
 
 #: toto/academy/templates/academy/backoffice/people_list.html:38
 msgid "Restore"
-msgstr ""
+msgstr "Przywróć"
 
 #: toto/academy/templates/academy/backoffice/people_list.html:45
 msgid "No teachers yet."
-msgstr ""
+msgstr "Nie ma jeszcze nauczycieli."
 
 #: toto/academy/templates/academy/backoffice/people_list.html:53
 msgid "Add a teacher"
-msgstr ""
+msgstr "Dodaj nauczyciela"
 
 #: toto/academy/templates/academy/backoffice/people_list.html:55
 msgid "Search by name, email or username"
-msgstr ""
+msgstr "Szukaj po imieniu i nazwisku, adresie e-mail lub nazwie użytkownika"
 
 #: toto/academy/templates/academy/backoffice/people_list.html:66
 msgid "Promote"
-msgstr ""
+msgstr "Awansuj"
 
 #: toto/academy/templates/academy/backoffice/people_list.html:70
 msgid ""
 "No people with a login account match — only login-linked people can become "
 "teachers."
-msgstr ""
+msgstr "Brak pasujących osób z kontem logowania — nauczycielem może zostać tylko osoba powiązana z kontem logowania."
 
 #: toto/academy/templates/academy/backoffice/roster.html:14
 msgid "Enrol a student"
-msgstr ""
+msgstr "Zapisz ucznia"
 
 #: toto/academy/templates/academy/backoffice/roster.html:27
 #: toto/academy/templates/academy/course_detail.html:14
 #: toto/academy/templates/academy/course_metrics.html:39
 msgid "Enrolled"
-msgstr ""
+msgstr "Zapisany"
 
 #: toto/academy/templates/academy/backoffice/roster.html:31
 #: toto/academy/templates/academy/course_detail.html:20
 #: toto/academy/templates/academy/course_detail.html:336
 msgid "Enrol"
-msgstr ""
+msgstr "Zapisz się"
 
 #: toto/academy/templates/academy/backoffice/roster.html:45
 msgid "Enrolled students"
-msgstr ""
+msgstr "Zapisani uczniowie"
 
 #: toto/academy/templates/academy/backoffice/roster.html:52
 msgid "completed"
-msgstr ""
+msgstr "ukończony"
 
 #: toto/academy/templates/academy/backoffice/roster.html:59
 msgid "Unenrol"
-msgstr ""
+msgstr "Wypisz"
 
 #: toto/academy/templates/academy/backoffice/roster.html:64
 msgid "No students enrolled yet."
-msgstr ""
+msgstr "Nie ma jeszcze zapisanych uczniów."
 
 #: toto/academy/templates/academy/backoffice/roster.html:73
 #: toto/academy/templates/academy/course_detail.html:94
 #: toto/academy/templates/academy/course_metrics.html:57
 #: toto/academy/templates/academy/course_metrics.html:80
 msgid "Cohorts"
-msgstr ""
+msgstr "Grupy"
 
 #: toto/academy/templates/academy/backoffice/roster.html:81
 msgid "members"
-msgstr ""
+msgstr "członkowie"
 
 #: toto/academy/templates/academy/backoffice/roster.html:82
 msgid "inactive"
-msgstr ""
+msgstr "nieaktywna"
 
 #: toto/academy/templates/academy/backoffice/roster.html:89
 msgid "Award certificates to all members"
-msgstr ""
+msgstr "Przyznaj certyfikaty wszystkim członkom"
 
 #: toto/academy/templates/academy/backoffice/roster.html:97
 msgid "No cohorts yet."
-msgstr ""
+msgstr "Nie ma jeszcze grup."
 
 #: toto/academy/templates/academy/backoffice/script_form.html:68
 #: toto/palimpsest/templates/palimpsest/backoffice/page_form.html:41
 msgid "Sections"
-msgstr ""
+msgstr "Sekcje"
 
 #: toto/academy/templates/academy/backoffice/script_form.html:69
 msgid ""
 "Fill in as many sections as you need; blank ones are ignored. Add more by "
 "saving and editing again."
-msgstr ""
+msgstr "Wypełnij tyle sekcji, ile potrzebujesz; puste są pomijane. Aby dodać kolejne, zapisz i edytuj ponownie."
 
 #: toto/academy/templates/academy/backoffice/script_form.html:78
 #: toto/palimpsest/templates/palimpsest/page_detail.html:92
 msgid "Section"
-msgstr ""
+msgstr "Sekcja"
 
 #: toto/academy/templates/academy/backoffice/script_form.html:81
 msgid "Section heading"
-msgstr ""
+msgstr "Nagłówek sekcji"
 
 #: toto/academy/templates/academy/backoffice/script_form.html:87
 msgid ""
 "Markdown + LaTeX — $…$ for inline math, $$…$$ for display. The preview "
 "renders it live."
-msgstr ""
+msgstr "Markdown + LaTeX — $…$ dla wzorów w tekście, $$…$$ dla wzorów blokowych. Podgląd renderuje je na bieżąco."
 
 #: toto/academy/templates/academy/backoffice/script_form.html:90
 msgid "Delete this section"
-msgstr ""
+msgstr "Usuń tę sekcję"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:16
 #: toto/academy/templates/academy/course_metrics.html:117
 msgid "Course completion"
-msgstr ""
+msgstr "Ukończenie kursu"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:18
 msgid "Completed on"
-msgstr ""
+msgstr "Ukończono dnia"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:20
 msgid "In progress"
-msgstr ""
+msgstr "W trakcie"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:25
 msgid "Mark as in progress"
-msgstr ""
+msgstr "Oznacz jako w trakcie"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:29
 #: toto/academy/templates/academy/backoffice/student_detail.html:54
 msgid "Mark complete"
-msgstr ""
+msgstr "Oznacz jako ukończony"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:37
 msgid "Module completion"
-msgstr ""
+msgstr "Ukończenie modułu"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:38
 msgid "Completing a module awards its skill badge."
-msgstr ""
+msgstr "Ukończenie modułu przyznaje jego odznakę umiejętności."
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:49
 #: toto/academy/templates/academy/course_metrics.html:45
@@ -1120,70 +1119,70 @@ msgstr ""
 #: toto/academy/templates/academy/personal_path_list.html:72
 #: toto/quizzes/templates/quizzes/quiz_metrics.html:57
 msgid "Completed"
-msgstr ""
+msgstr "Ukończono"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:49
 msgid "revoke"
-msgstr ""
+msgstr "odbierz"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:59
 msgid "This course has no modules yet."
-msgstr ""
+msgstr "Ten kurs nie ma jeszcze modułów."
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:67
 msgid "Badges"
-msgstr ""
+msgstr "Odznaki"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:72
 msgid "Revoke"
-msgstr ""
+msgstr "Odbierz"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:77
 msgid "No badges earned yet."
-msgstr ""
+msgstr "Nie zdobyto jeszcze żadnych odznak."
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:83
 msgid "— award any badge —"
-msgstr ""
+msgstr "— przyznaj dowolną odznakę —"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:86
 msgid "Award"
-msgstr ""
+msgstr "Przyznaj"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:93
 #: toto/academy/templates/academy/certificate_sign.html:61
 msgid "Certificate"
-msgstr ""
+msgstr "Certyfikat"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:97
 msgid "Signed"
-msgstr ""
+msgstr "Podpisany"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:99
 msgid "Issued (not yet signed)"
-msgstr ""
+msgstr "Wystawiony (jeszcze niepodpisany)"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:103
 msgid "View certificate"
-msgstr ""
+msgstr "Zobacz certyfikat"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:105
 msgid "Sign"
-msgstr ""
+msgstr "Podpisz"
 
 #: toto/academy/templates/academy/backoffice/student_detail.html:109
 msgid "Mark the course complete to issue a certificate."
-msgstr ""
+msgstr "Oznacz kurs jako ukończony, aby wystawić certyfikat."
 
 #: toto/academy/templates/academy/base.html:30
 msgid "Knowledge & Learning"
-msgstr ""
+msgstr "Wiedza i nauka"
 
 #: toto/academy/templates/academy/base.html:34
 #: toto/palimpsest/templates/palimpsest/page_list.html:18
 #: toto/quizzes/templates/quizzes/quiz_list.html:18
 msgid "Academy"
-msgstr ""
+msgstr "Akademia"
 
 #: toto/academy/templates/academy/base.html:49
 #: toto/academy/templates/academy/skill_forest.html:20
@@ -1193,19 +1192,19 @@ msgstr ""
 #: toto/academy/templates/academy/teacher_detail.html:80
 #: toto/backoffice/nav.py:27
 msgid "Courses"
-msgstr ""
+msgstr "Kursy"
 
 #: toto/academy/templates/academy/base.html:56
 #: toto/academy/templates/academy/course_detail.html:244
 #: toto/quizzes/templates/quizzes/quiz_list.html:21
 #: toto/quizzes/templates/quizzes/quiz_list.html:23
 msgid "Quizzes"
-msgstr ""
+msgstr "Quizy"
 
 #: toto/academy/templates/academy/base.html:64 toto/backoffice/nav.py:55
 #: toto/library/templates/library/base.html:17
 msgid "Library"
-msgstr ""
+msgstr "Biblioteka"
 
 #: toto/academy/templates/academy/certificate_detail.html:18
 #: toto/academy/templates/academy/course_detail.html:33
@@ -1213,92 +1212,92 @@ msgstr ""
 #: toto/academy/templates/academy/personal_path_list.html:11
 #: toto/academy/templates/academy/student_progress.html:18
 msgid "My Progress"
-msgstr ""
+msgstr "Moje postępy"
 
 #: toto/academy/templates/academy/certificate_detail.html:31
 msgid "Granted"
-msgstr ""
+msgstr "Przyznano"
 
 #: toto/academy/templates/academy/certificate_detail.html:41
 #: toto/academy/templates/academy/certificate_sign.html:65
 msgid "Recipient"
-msgstr ""
+msgstr "Odbiorca"
 
 #: toto/academy/templates/academy/certificate_detail.html:56
 msgid "Exam"
-msgstr ""
+msgstr "Egzamin"
 
 #: toto/academy/templates/academy/certificate_detail.html:61
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #: toto/academy/templates/academy/certificate_detail.html:73
 #: toto/academy/templates/academy/student_progress.html:154
 msgid "Cryptographically signed"
-msgstr ""
+msgstr "Podpisany kryptograficznie"
 
 #: toto/academy/templates/academy/certificate_detail.html:78
 msgid "Signed by"
-msgstr ""
+msgstr "Podpisany przez"
 
 #: toto/academy/templates/academy/certificate_detail.html:88
 msgid "Key ID"
-msgstr ""
+msgstr "Identyfikator klucza"
 
 #: toto/academy/templates/academy/certificate_detail.html:98
 msgid "Signature"
-msgstr ""
+msgstr "Podpis"
 
 #: toto/academy/templates/academy/certificate_detail.html:105
 msgid "Signing payload"
-msgstr ""
+msgstr "Podpisywane dane"
 
 #: toto/academy/templates/academy/certificate_detail.html:115
 msgid "Not yet cryptographically signed by a professor."
-msgstr ""
+msgstr "Jeszcze niepodpisany kryptograficznie przez nauczyciela."
 
 #: toto/academy/templates/academy/certificate_detail.html:123
 #: toto/academy/templates/academy/certificate_sign.html:4
 #: toto/academy/templates/academy/certificate_sign.html:26
 #: toto/academy/templates/academy/certificate_sign.html:151
 msgid "Sign Certificate"
-msgstr ""
+msgstr "Podpisz certyfikat"
 
 #: toto/academy/templates/academy/certificate_sign.html:32
 msgid "Only teachers (professors) can cryptographically sign certificates."
-msgstr ""
+msgstr "Tylko nauczyciele mogą kryptograficznie podpisywać certyfikaty."
 
 #: toto/academy/templates/academy/certificate_sign.html:41
 msgid "Already signed"
-msgstr ""
+msgstr "Już podpisany"
 
 #: toto/academy/templates/academy/certificate_sign.html:43
 msgid "By"
-msgstr ""
+msgstr "Przez"
 
 #: toto/academy/templates/academy/certificate_sign.html:50
 msgid "Cryptographic signature"
-msgstr ""
+msgstr "Podpis kryptograficzny"
 
 #: toto/academy/templates/academy/certificate_sign.html:53
 msgid "Key"
-msgstr ""
+msgstr "Klucz"
 
 #: toto/academy/templates/academy/certificate_sign.html:69
 msgid "Signing as"
-msgstr ""
+msgstr "Podpisujesz jako"
 
 #: toto/academy/templates/academy/certificate_sign.html:73
 msgid "Signing key"
-msgstr ""
+msgstr "Klucz podpisujący"
 
 #: toto/academy/templates/academy/certificate_sign.html:80
 msgid "None — will be provisioned on sign"
-msgstr ""
+msgstr "Brak — zostanie utworzony przy podpisywaniu"
 
 #: toto/academy/templates/academy/certificate_sign.html:91
 msgid "How signing works"
-msgstr ""
+msgstr "Jak działa podpisywanie"
 
 #: toto/academy/templates/academy/certificate_sign.html:94
 msgid ""
@@ -1306,188 +1305,188 @@ msgid ""
 "memory. The key signs a canonical payload (certificate UUID + recipient "
 "identity + your teacher ID + timestamp). The signature is stored with the "
 "certificate — verifiable by anyone using only the public key."
-msgstr ""
+msgstr "Hasło do Twojego sejfu służy do odszyfrowania Twojego klucza prywatnego Ed25519 w pamięci. Klucz podpisuje kanoniczne dane (UUID certyfikatu + tożsamość odbiorcy + Twój identyfikator nauczyciela + znacznik czasu). Podpis jest przechowywany razem z certyfikatem — każdy może go zweryfikować, używając wyłącznie klucza publicznego."
 
 #: toto/academy/templates/academy/certificate_sign.html:105
 msgid "Strongbox"
-msgstr ""
+msgstr "Sejf"
 
 #: toto/academy/templates/academy/certificate_sign.html:121
 msgid "Password for strongbox"
-msgstr ""
+msgstr "Hasło do sejfu"
 
 #: toto/academy/templates/academy/certificate_sign.html:123
 msgid "Strongbox password"
-msgstr ""
+msgstr "Hasło do sejfu"
 
 #: toto/academy/templates/academy/certificate_sign.html:131
 msgid "Enter your strongbox password"
-msgstr ""
+msgstr "Wpisz hasło do swojego sejfu"
 
 #: toto/academy/templates/academy/certificate_sign.html:132
 msgid "Used only to decrypt your private key in memory. Never stored."
-msgstr ""
+msgstr "Służy wyłącznie do odszyfrowania Twojego klucza prywatnego w pamięci. Nigdy nie jest przechowywane."
 
 #: toto/academy/templates/academy/certificate_sign.html:138
 msgid ""
 "No strongbox found. You need to set up a Gervazy strongbox before you can "
 "sign."
-msgstr ""
+msgstr "Nie znaleziono sejfu. Zanim zaczniesz podpisywać, musisz skonfigurować sejf Gervazy."
 
 #: toto/academy/templates/academy/certificate_sign.html:144
 msgid ""
 "By submitting, I confirm I have reviewed this certificate and that my "
 "signature constitutes a valid academic attestation."
-msgstr ""
+msgstr "Wysyłając formularz, potwierdzam, że sprawdziłem ten certyfikat i że mój podpis stanowi ważne poświadczenie akademickie."
 
 #: toto/academy/templates/academy/course_detail.html:27
 msgid "Sign in to enrol"
-msgstr ""
+msgstr "Zaloguj się, aby się zapisać"
 
 #: toto/academy/templates/academy/course_detail.html:39
 #: toto/quizzes/templates/quizzes/quiz_detail.html:55
 msgid "Metrics"
-msgstr ""
+msgstr "Statystyki"
 
 #: toto/academy/templates/academy/course_detail.html:72
 msgid "Relevant Skill Trees"
-msgstr ""
+msgstr "Powiązane drzewa umiejętności"
 
 #: toto/academy/templates/academy/course_detail.html:95
 msgid "Active groups taking this course."
-msgstr ""
+msgstr "Aktywne grupy uczestniczące w tym kursie."
 
 #: toto/academy/templates/academy/course_detail.html:151
 msgid "Notes / article / handout"
-msgstr ""
+msgstr "Notatki / artykuł / materiały"
 
 #: toto/academy/templates/academy/course_detail.html:157
 msgid "Lecture video"
-msgstr ""
+msgstr "Nagranie wykładu"
 
 #: toto/academy/templates/academy/course_detail.html:173
 msgid "Prerequisites"
-msgstr ""
+msgstr "Wymagania wstępne"
 
 #: toto/academy/templates/academy/course_detail.html:205
 msgid "Notes (PDF)"
-msgstr ""
+msgstr "Notatki (PDF)"
 
 #: toto/academy/templates/academy/course_detail.html:211
 msgid "Presentation"
-msgstr ""
+msgstr "Prezentacja"
 
 #: toto/academy/templates/academy/course_detail.html:228
 msgid "Enrol to watch this lesson."
-msgstr ""
+msgstr "Zapisz się, aby obejrzeć tę lekcję."
 
 #: toto/academy/templates/academy/course_detail.html:233
 msgid "Enrol to watch the presentation."
-msgstr ""
+msgstr "Zapisz się, aby obejrzeć prezentację."
 
 #: toto/academy/templates/academy/course_detail.html:259
 msgid "Take quiz"
-msgstr ""
+msgstr "Rozwiąż quiz"
 
 #: toto/academy/templates/academy/course_detail.html:282
 #: toto/palimpsest/templates/palimpsest/page_list.html:114
 msgid "Read"
-msgstr ""
+msgstr "Czytaj"
 
 #: toto/academy/templates/academy/course_detail.html:291
 msgid "No modules yet."
-msgstr ""
+msgstr "Nie ma jeszcze modułów."
 
 #: toto/academy/templates/academy/course_detail.html:301
 msgid "All Lessons"
-msgstr ""
+msgstr "Wszystkie lekcje"
 
 #: toto/academy/templates/academy/course_detail.html:302
 msgid "Complete lesson overview for this course."
-msgstr ""
+msgstr "Pełny przegląd lekcji w tym kursie."
 
 #: toto/academy/templates/academy/course_detail.html:326
 #: toto/academy/templates/academy/teacher_detail.html:150
 #: toto/library/backoffice_views.py:28
 msgid "Video"
-msgstr ""
+msgstr "Wideo"
 
 #: toto/academy/templates/academy/course_detail.html:333
 #: toto/academy/templates/academy/teacher_detail.html:154
 #: toto/backoffice/nav.py:46
 msgid "Notes"
-msgstr ""
+msgstr "Notatki"
 
 #: toto/academy/templates/academy/course_detail.html:341
 msgid "No lessons available."
-msgstr ""
+msgstr "Brak dostępnych lekcji."
 
 #: toto/academy/templates/academy/course_detail.html:352
 msgid "Course Badges"
-msgstr ""
+msgstr "Odznaki kursu"
 
 #: toto/academy/templates/academy/course_detail.html:353
 msgid "Skills unlocked by completing modules in this course."
-msgstr ""
+msgstr "Umiejętności odblokowywane przez ukończenie modułów w tym kursie."
 
 #: toto/academy/templates/academy/course_detail.html:371
 msgid "No badges connected to this course."
-msgstr ""
+msgstr "Brak odznak powiązanych z tym kursem."
 
 #: toto/academy/templates/academy/course_list.html:18
 msgid "Explore available learning tracks and unlock skill badges."
-msgstr ""
+msgstr "Poznaj dostępne ścieżki nauki i odblokuj odznaki umiejętności."
 
 #: toto/academy/templates/academy/course_list.html:47
 msgid "Open Course"
-msgstr ""
+msgstr "Otwórz kurs"
 
 #: toto/academy/templates/academy/course_list.html:52
 msgid "No courses available yet."
-msgstr ""
+msgstr "Nie ma jeszcze dostępnych kursów."
 
 #: toto/academy/templates/academy/course_metrics.html:26
 msgid "Course Metrics"
-msgstr ""
+msgstr "Statystyki kursu"
 
 #: toto/academy/templates/academy/course_metrics.html:66
 msgid "Enrollment overview"
-msgstr ""
+msgstr "Przegląd zapisów"
 
 #: toto/academy/templates/academy/course_metrics.html:176
 #: toto/library/templates/library/item_detail.html:100
 msgid "Details"
-msgstr ""
+msgstr "Szczegóły"
 
 #: toto/academy/templates/academy/course_metrics.html:185
 msgid "No published quizzes in this course yet."
-msgstr ""
+msgstr "W tym kursie nie ma jeszcze opublikowanych quizów."
 
 #: toto/academy/templates/academy/personal_path_detail.html:11
 #: toto/academy/templates/academy/personal_path_form.html:10
 #: toto/academy/templates/academy/personal_path_list.html:15
 msgid "My Learning Paths"
-msgstr ""
+msgstr "Moje ścieżki nauki"
 
 #: toto/academy/templates/academy/personal_path_detail.html:20
 #: toto/academy/templates/academy/personal_path_list.html:61
 #, python-format
 msgid "%(done)s of %(total)s steps completed"
-msgstr ""
+msgstr "Ukończono %(done)s z %(total)s kroków"
 
 #: toto/academy/templates/academy/personal_path_detail.html:31
 msgid ""
 "Rebuild pending steps against your current skills. Completed steps and your "
 "tasks are kept."
-msgstr ""
+msgstr "Przebuduj oczekujące kroki na podstawie Twoich aktualnych umiejętności. Ukończone kroki i Twoje zadania zostaną zachowane."
 
 #: toto/academy/templates/academy/personal_path_detail.html:33
 msgid "Regenerate"
-msgstr ""
+msgstr "Wygeneruj ponownie"
 
 #: toto/academy/templates/academy/personal_path_detail.html:43
 msgid "Archive"
-msgstr ""
+msgstr "Zarchiwizuj"
 
 #: toto/academy/templates/academy/personal_path_detail.html:89
 #, python-format
@@ -1497,1356 +1496,1356 @@ msgstr ""
 
 #: toto/academy/templates/academy/personal_path_detail.html:107
 msgid "Completes automatically when you earn this skill."
-msgstr ""
+msgstr "Zakończy się automatycznie, gdy zdobędziesz tę umiejętność."
 
 #: toto/academy/templates/academy/personal_path_detail.html:109
 msgid "auto"
-msgstr ""
+msgstr "auto"
 
 #: toto/academy/templates/academy/personal_path_detail.html:118
 msgid "Undo"
-msgstr ""
+msgstr "Cofnij"
 
 #: toto/academy/templates/academy/personal_path_detail.html:118
 msgid "Mark done"
-msgstr ""
+msgstr "Oznacz jako zrobione"
 
 #: toto/academy/templates/academy/personal_path_detail.html:128
 msgid "Remove this task"
-msgstr ""
+msgstr "Usuń to zadanie"
 
 #: toto/academy/templates/academy/personal_path_detail.html:136
 msgid "This path has no steps. Regenerate it to rebuild them."
-msgstr ""
+msgstr "Ta ścieżka nie ma kroków. Wygeneruj ją ponownie, aby je odtworzyć."
 
 #: toto/academy/templates/academy/personal_path_detail.html:148
 msgid "Add your own task"
-msgstr ""
+msgstr "Dodaj własne zadanie"
 
 #: toto/academy/templates/academy/personal_path_detail.html:169
 msgid "Add task"
-msgstr ""
+msgstr "Dodaj zadanie"
 
 #: toto/academy/templates/academy/personal_path_form.html:4
 #: toto/academy/templates/academy/personal_path_form.html:13
 msgid "New Learning Path"
-msgstr ""
+msgstr "Nowa ścieżka nauki"
 
 #: toto/academy/templates/academy/personal_path_form.html:17
 msgid ""
 "Pick a goal — a single skill or a whole skill tree. Your path will contain "
 "every skill you still need, ordered so prerequisites always come first."
-msgstr ""
+msgstr "Wybierz cel — pojedynczą umiejętność albo całe drzewo umiejętności. Twoja ścieżka będzie zawierać każdą umiejętność, której jeszcze potrzebujesz, uporządkowaną tak, aby wymagania wstępne zawsze były na początku."
 
 #: toto/academy/templates/academy/personal_path_form.html:33
 #, python-format
 msgid "Creating a new path will archive your current path \"%(title)s\"."
-msgstr ""
+msgstr "Utworzenie nowej ścieżki zarchiwizuje Twoją obecną ścieżkę \"%(title)s\"."
 
 #: toto/academy/templates/academy/personal_path_form.html:55
 msgid "or"
-msgstr ""
+msgstr "lub"
 
 #: toto/academy/templates/academy/personal_path_form.html:72
 msgid "Build my path"
-msgstr ""
+msgstr "Zbuduj moją ścieżkę"
 
 #: toto/academy/templates/academy/personal_path_list.html:4
 msgid "My Path"
-msgstr ""
+msgstr "Moja ścieżka"
 
 #: toto/academy/templates/academy/personal_path_list.html:18
 msgid ""
 "Pick a skill goal and follow an ordered path that closes your skill gaps."
-msgstr ""
+msgstr "Wybierz cel — umiejętność — i podążaj uporządkowaną ścieżką, która uzupełni Twoje braki."
 
 #: toto/academy/templates/academy/personal_path_list.html:27
 msgid "New path"
-msgstr ""
+msgstr "Nowa ścieżka"
 
 #: toto/academy/templates/academy/personal_path_list.html:32
 #: toto/academy/templates/academy/student_progress.html:23
 msgid "No community profile is connected to this account yet."
-msgstr ""
+msgstr "Do tego konta nie jest jeszcze podłączony żaden profil społecznościowy."
 
 #: toto/academy/templates/academy/personal_path_list.html:65
 msgid "No active path. Create one to get started."
-msgstr ""
+msgstr "Brak aktywnej ścieżki. Utwórz ją, aby zacząć."
 
 #: toto/academy/templates/academy/personal_path_list.html:89
 #, python-format
 msgid "All %(total)s steps completed"
-msgstr ""
+msgstr "Ukończono wszystkie kroki (%(total)s)"
 
 #: toto/academy/templates/academy/personal_path_list.html:99
 msgid "Archived"
-msgstr ""
+msgstr "Zarchiwizowane"
 
 #: toto/academy/templates/academy/profile_plugins/skills.html:17
 msgid "Skill Badges"
-msgstr ""
+msgstr "Odznaki umiejętności"
 
 #: toto/academy/templates/academy/profile_plugins/skills.html:36
 #: toto/academy/templates/academy/student_progress.html:138
 #: toto/academy/templates/academy/teacher_detail.html:168
 msgid "Certificates"
-msgstr ""
+msgstr "Certyfikaty"
 
 #: toto/academy/templates/academy/skill_forest.html:16
 msgid "Skill Forest"
-msgstr ""
+msgstr "Las umiejętności"
 
 #: toto/academy/templates/academy/skill_forest.html:17
 msgid "Separate skill trees grouped by domain."
-msgstr ""
+msgstr "Osobne drzewa umiejętności pogrupowane według dziedziny."
 
 #: toto/academy/templates/academy/skill_forest.html:44
 msgid "Open Tree"
-msgstr ""
+msgstr "Otwórz drzewo"
 
 #: toto/academy/templates/academy/skill_forest.html:56
 msgid "No skill trees available yet."
-msgstr ""
+msgstr "Brak dostępnych drzew umiejętności."
 
 #: toto/academy/templates/academy/skill_tree_detail.html:16
 msgid "Skill forest"
-msgstr ""
+msgstr "Las umiejętności"
 
 #: toto/academy/templates/academy/skill_tree_detail.html:44
 #: toto/academy/templates/academy/student_progress.html:73
 msgid "Selected Skill"
-msgstr ""
+msgstr "Wybrana umiejętność"
 
 #: toto/academy/templates/academy/skill_tree_detail.html:50
 msgid "Select a skill to see connected courses."
-msgstr ""
+msgstr "Wybierz umiejętność, aby zobaczyć powiązane kursy."
 
 #: toto/academy/templates/academy/skill_tree_detail.html:104
 msgid "No skills in this tree yet."
-msgstr ""
+msgstr "W tym drzewie nie ma jeszcze umiejętności."
 
 #: toto/academy/templates/academy/student_home.html:13
 #, python-format
 msgid "Welcome back, %(name)s"
-msgstr ""
+msgstr "Witaj ponownie, %(name)s"
 
 #: toto/academy/templates/academy/student_home.html:13
 msgid "Welcome"
-msgstr ""
+msgstr "Witaj"
 
 #: toto/academy/templates/academy/student_home.html:16
 msgid "Pick up where you left off."
-msgstr ""
+msgstr "Wróć do przerwanej nauki."
 
 #: toto/academy/templates/academy/student_home.html:20
 #, python-format
 msgid "Continue “%(title)s”"
-msgstr ""
+msgstr "Kontynuuj „%(title)s”"
 
 #: toto/academy/templates/academy/student_home.html:23
 msgid "Ready to start? Here’s a great first course."
-msgstr ""
+msgstr "Chcesz zacząć? Oto świetny kurs na początek."
 
 #: toto/academy/templates/academy/student_home.html:27
 #, python-format
 msgid "Start “%(title)s”"
-msgstr ""
+msgstr "Rozpocznij „%(title)s”"
 
 #: toto/academy/templates/academy/student_home.html:30
 msgid "Browse the catalog to find your first course."
-msgstr ""
+msgstr "Przejrzyj katalog, aby znaleźć swój pierwszy kurs."
 
 #: toto/academy/templates/academy/student_home.html:34
 #: toto/academy/templates/academy/student_home.html:75
 msgid "Browse courses"
-msgstr ""
+msgstr "Przeglądaj kursy"
 
 #: toto/academy/templates/academy/student_home.html:38
 msgid "Connect a profile to track your progress and earn certificates."
-msgstr ""
+msgstr "Podłącz profil, aby śledzić swoje postępy i zdobywać certyfikaty."
 
 #: toto/academy/templates/academy/student_home.html:46
 msgid "My courses"
-msgstr ""
+msgstr "Moje kursy"
 
 #: toto/academy/templates/academy/student_home.html:47
 msgid "Browse all"
-msgstr ""
+msgstr "Przeglądaj wszystkie"
 
 #: toto/academy/templates/academy/student_home.html:56
 msgid "done"
-msgstr ""
+msgstr "ukończono"
 
 #: toto/academy/templates/academy/student_progress.html:32
 msgid "Earned"
-msgstr ""
+msgstr "Zdobyte"
 
 #: toto/academy/templates/academy/student_progress.html:42
 msgid "Available"
-msgstr ""
+msgstr "Dostępne"
 
 #: toto/academy/templates/academy/student_progress.html:47
 msgid "Locked"
-msgstr ""
+msgstr "Zablokowane"
 
 #: toto/academy/templates/academy/student_progress.html:75
 msgid "Progression"
-msgstr ""
+msgstr "Postępy"
 
 #: toto/academy/templates/academy/student_progress.html:77
 msgid "Select a skill to see its status and linked course."
-msgstr ""
+msgstr "Wybierz umiejętność, aby zobaczyć jej status i powiązany kurs."
 
 #: toto/academy/templates/academy/student_progress.html:88
 msgid "Enrolled Courses"
-msgstr ""
+msgstr "Zapisane kursy"
 
 #: toto/academy/templates/academy/student_progress.html:102
 msgid "No enrolled courses yet."
-msgstr ""
+msgstr "Brak zapisanych kursów."
 
 #: toto/academy/templates/academy/student_progress.html:112
 msgid "Earned Skills"
-msgstr ""
+msgstr "Zdobyte umiejętności"
 
 #: toto/academy/templates/academy/student_progress.html:128
 msgid "No earned skills yet."
-msgstr ""
+msgstr "Brak zdobytych umiejętności."
 
 #: toto/academy/templates/academy/student_progress.html:167
 msgid "No certificates yet."
-msgstr ""
+msgstr "Brak certyfikatów."
 
 #: toto/academy/templates/academy/teacher_detail.html:45
 msgid "Experience"
-msgstr ""
+msgstr "Doświadczenie"
 
 #: toto/academy/templates/academy/teacher_detail.html:104
 msgid "External course"
-msgstr ""
+msgstr "Kurs zewnętrzny"
 
 #: toto/academy/templates/academy/teacher_detail.html:111
 msgid "No courses assigned yet."
-msgstr ""
+msgstr "Nie przypisano jeszcze żadnych kursów."
 
 #: toto/academy/templates/academy/teacher_detail.html:132
 msgid "No modules assigned directly."
-msgstr ""
+msgstr "Nie przypisano bezpośrednio żadnych modułów."
 
 #: toto/academy/templates/academy/teacher_detail.html:157
 msgid "Open course"
-msgstr ""
+msgstr "Otwórz kurs"
 
 #: toto/academy/templates/academy/teacher_detail.html:161
 msgid "No lessons assigned directly."
-msgstr ""
+msgstr "Nie przypisano bezpośrednio żadnych lekcji."
 
 #: toto/academy/templates/academy/teacher_detail.html:194
 msgid "No certificates listed yet."
-msgstr ""
+msgstr "Nie wymieniono jeszcze żadnych certyfikatów."
 
 #: toto/backoffice/nav.py:17
 msgid "Tasks"
-msgstr ""
+msgstr "Zadania"
 
 #: toto/backoffice/nav.py:22
 msgid ""
 "Write and organise quiz tasks: single/multiple choice and open answers, with "
 "worked solutions and live math."
-msgstr ""
+msgstr "Twórz i porządkuj zadania quizowe: jedno- i wielokrotnego wyboru oraz z odpowiedzią otwartą, z rozwiązaniami krok po kroku i podglądem wzorów matematycznych na żywo."
 
 #: toto/backoffice/nav.py:32
 msgid "Author courses, modules and lessons."
-msgstr ""
+msgstr "Twórz kursy, moduły i lekcje."
 
 #: toto/backoffice/nav.py:36
 msgid "Skills & badges"
-msgstr ""
+msgstr "Umiejętności i odznaki"
 
 #: toto/backoffice/nav.py:41
 msgid ""
 "Build the skill tree: groups, badges and prerequisites that course modules "
 "unlock."
-msgstr ""
+msgstr "Zbuduj drzewo umiejętności: grupy, odznaki i wymagania wstępne odblokowywane przez moduły kursów."
 
 #: toto/backoffice/nav.py:51
 msgid "Curate lesson notes and study materials."
-msgstr ""
+msgstr "Zarządzaj notatkami do lekcji i materiałami do nauki."
 
 #: toto/backoffice/nav.py:60
 msgid "Manage the bibliography and references."
-msgstr ""
+msgstr "Zarządzaj bibliografią i źródłami."
 
 #: toto/backoffice/nav.py:67
 msgid "Sheets"
-msgstr ""
+msgstr "Arkusze"
 
 #: toto/backoffice/nav.py:72
 msgid "Build spreadsheets and edit them right in your browser."
-msgstr ""
+msgstr "Twórz arkusze kalkulacyjne i edytuj je bezpośrednio w przeglądarce."
 
 #: toto/backoffice/nav.py:76
 msgid "People"
-msgstr ""
+msgstr "Osoby"
 
 #: toto/backoffice/nav.py:81
 msgid "Promote people to teachers so they can use the panel."
-msgstr ""
+msgstr "Awansuj osoby na nauczycieli, aby mogły korzystać z panelu autorskiego."
 
 #: toto/backoffice/nav.py:90
 msgid "Edit the invitation text students and teachers see on the home page."
-msgstr ""
+msgstr "Edytuj tekst zaproszenia, który uczniowie i nauczyciele widzą na stronie głównej."
 
 #: toto/backoffice/templates/backoffice/_generic_confirm_delete.html:12
 msgid "This cannot be undone."
-msgstr ""
+msgstr "Tej operacji nie można cofnąć."
 
 #: toto/backoffice/templates/backoffice/_nav.html:14
 #: toto/backoffice/templates/backoffice/dashboard.html:16
 msgid "Coming soon"
-msgstr ""
+msgstr "Wkrótce"
 
 #: toto/backoffice/templates/backoffice/_nav.html:16
 msgid "Soon"
-msgstr ""
+msgstr "Wkrótce"
 
 #: toto/backoffice/templates/backoffice/base.html:29
 msgid "Teacher back office"
-msgstr ""
+msgstr "Panel autorski nauczyciela"
 
 #: toto/backoffice/templates/backoffice/dashboard.html:25
 #: toto/quizzes/backoffice_views.py:25
 msgid "Open"
-msgstr ""
+msgstr "Otwórz"
 
 #: toto/backoffice/templates/backoffice/dashboard.html:29
 msgid "Not available yet"
-msgstr ""
+msgstr "Jeszcze niedostępne"
 
 #: toto/competence/backoffice_views.py:62
 msgid "Skill group created."
-msgstr ""
+msgstr "Utworzono grupę umiejętności."
 
 #: toto/competence/backoffice_views.py:65
 msgid "New skill group"
-msgstr ""
+msgstr "Nowa grupa umiejętności"
 
 #: toto/competence/backoffice_views.py:65
 msgid "Create group"
-msgstr ""
+msgstr "Utwórz grupę"
 
 #: toto/competence/backoffice_views.py:76
 msgid "Skill group saved."
-msgstr ""
+msgstr "Zapisano grupę umiejętności."
 
 #: toto/competence/backoffice_views.py:79
 msgid "Edit skill group"
-msgstr ""
+msgstr "Edytuj grupę umiejętności"
 
 #: toto/competence/backoffice_views.py:79
 msgid "Save group"
-msgstr ""
+msgstr "Zapisz grupę"
 
 #: toto/competence/backoffice_views.py:91
 msgid "Cannot delete: a badge in this group is used by a course module."
-msgstr ""
+msgstr "Nie można usunąć: odznaka z tej grupy jest używana przez moduł kursu."
 
 #: toto/competence/backoffice_views.py:93
 msgid "Skill group deleted."
-msgstr ""
+msgstr "Usunięto grupę umiejętności."
 
 #: toto/competence/backoffice_views.py:96
 msgid "Delete skill group"
-msgstr ""
+msgstr "Usuń grupę umiejętności"
 
 #: toto/competence/backoffice_views.py:97
 msgid "This deletes the group and all its badges. This cannot be undone."
-msgstr ""
+msgstr "Spowoduje to usunięcie grupy i wszystkich jej odznak. Tej operacji nie można cofnąć."
 
 #: toto/competence/backoffice_views.py:109
 msgid "Badge created."
-msgstr ""
+msgstr "Utworzono odznakę."
 
 #: toto/competence/backoffice_views.py:112
 msgid "Create badge"
-msgstr ""
+msgstr "Utwórz odznakę"
 
 #: toto/competence/backoffice_views.py:123
 msgid "Badge saved."
-msgstr ""
+msgstr "Zapisano odznakę."
 
 #: toto/competence/backoffice_views.py:126
 #: toto/competence/templates/competence/backoffice/overview.html:53
 msgid "Edit badge"
-msgstr ""
+msgstr "Edytuj odznakę"
 
 #: toto/competence/backoffice_views.py:126
 msgid "Save badge"
-msgstr ""
+msgstr "Zapisz odznakę"
 
 #: toto/competence/backoffice_views.py:138
 msgid "Cannot delete: this badge is unlocked by a course module."
-msgstr ""
+msgstr "Nie można usunąć: ta odznaka jest odblokowywana przez moduł kursu."
 
 #: toto/competence/backoffice_views.py:140
 msgid "Badge deleted."
-msgstr ""
+msgstr "Usunięto odznakę."
 
 #: toto/competence/backoffice_views.py:143
 #: toto/competence/templates/competence/backoffice/overview.html:54
 msgid "Delete badge"
-msgstr ""
+msgstr "Usuń odznakę"
 
 #: toto/competence/forms.py:17 toto/quizzes/forms.py:31
 msgid "e.g. Klasa 1 — zbiory liczb"
-msgstr ""
+msgstr "np. Klasa 1 — zbiory liczb"
 
 #: toto/competence/forms.py:39
 msgid "Prerequisite badges"
-msgstr ""
+msgstr "Wymagane odznaki"
 
 #: toto/competence/forms.py:40
 msgid "Badges a student must earn before this one."
-msgstr ""
+msgstr "Odznaki, które uczeń musi zdobyć przed tą odznaką."
 
 #: toto/competence/templates/competence/backoffice/overview.html:6
 msgid "New group"
-msgstr ""
+msgstr "Nowa grupa"
 
 #: toto/competence/templates/competence/backoffice/overview.html:25
 msgid "Move group up"
-msgstr ""
+msgstr "Przenieś grupę w górę"
 
 #: toto/competence/templates/competence/backoffice/overview.html:26
 msgid "Move group down"
-msgstr ""
+msgstr "Przenieś grupę w dół"
 
 #: toto/competence/templates/competence/backoffice/overview.html:27
 msgid "Edit group"
-msgstr ""
+msgstr "Edytuj grupę"
 
 #: toto/competence/templates/competence/backoffice/overview.html:28
 msgid "Delete group"
-msgstr ""
+msgstr "Usuń grupę"
 
 #: toto/competence/templates/competence/backoffice/overview.html:51
 msgid "Move badge up"
-msgstr ""
+msgstr "Przenieś odznakę w górę"
 
 #: toto/competence/templates/competence/backoffice/overview.html:52
 msgid "Move badge down"
-msgstr ""
+msgstr "Przenieś odznakę w dół"
 
 #: toto/competence/templates/competence/backoffice/overview.html:58
 msgid "No badges in this group yet."
-msgstr ""
+msgstr "W tej grupie nie ma jeszcze odznak."
 
 #: toto/competence/templates/competence/backoffice/overview.html:64
 msgid "No skill groups yet. Create a group, then add badges."
-msgstr ""
+msgstr "Brak grup umiejętności. Utwórz grupę, a następnie dodaj odznaki."
 
 #: toto/competence/templates/competence/profile_plugins/experiences.html:31
 msgid "No experiences yet."
-msgstr ""
+msgstr "Brak doświadczeń."
 
 #: toto/library/backoffice_views.py:25
 #: toto/library/templates/library/item_detail.html:30
 msgid "Book"
-msgstr ""
+msgstr "Książka"
 
 #: toto/library/backoffice_views.py:26
 #: toto/library/templates/library/item_detail.html:30
 msgid "Article"
-msgstr ""
+msgstr "Artykuł"
 
 #: toto/library/backoffice_views.py:27
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 #: toto/library/backoffice_views.py:58
 msgid "Reference added."
-msgstr ""
+msgstr "Dodano źródło."
 
 #: toto/library/backoffice_views.py:61
 #, python-format
 msgid "New %(type)s"
-msgstr ""
+msgstr "Nowe: %(type)s"
 
 #: toto/library/backoffice_views.py:62
 msgid "Create"
-msgstr ""
+msgstr "Utwórz"
 
 #: toto/library/backoffice_views.py:74
 msgid "Reference saved."
-msgstr ""
+msgstr "Zapisano źródło."
 
 #: toto/library/backoffice_views.py:77
 #, python-format
 msgid "Edit %(type)s"
-msgstr ""
+msgstr "Edytuj: %(type)s"
 
 #: toto/library/backoffice_views.py:89
 msgid "Reference deleted."
-msgstr ""
+msgstr "Usunięto źródło."
 
 #: toto/library/backoffice_views.py:92
 msgid "Delete reference"
-msgstr ""
+msgstr "Usuń źródło"
 
 #: toto/library/backoffice_views.py:104
 msgid "Collection created."
-msgstr ""
+msgstr "Utworzono kolekcję."
 
 #: toto/library/backoffice_views.py:107
 #: toto/library/templates/library/backoffice/reference_list.html:49
 msgid "New collection"
-msgstr ""
+msgstr "Nowa kolekcja"
 
 #: toto/library/backoffice_views.py:107
 msgid "Create collection"
-msgstr ""
+msgstr "Utwórz kolekcję"
 
 #: toto/library/backoffice_views.py:119
 msgid "Collection saved."
-msgstr ""
+msgstr "Kolekcja zapisana."
 
 #: toto/library/backoffice_views.py:122
 msgid "Edit collection"
-msgstr ""
+msgstr "Edytuj kolekcję"
 
 #: toto/library/backoffice_views.py:122
 msgid "Save collection"
-msgstr ""
+msgstr "Zapisz kolekcję"
 
 #: toto/library/backoffice_views.py:133
 msgid "Collection deleted."
-msgstr ""
+msgstr "Kolekcja usunięta."
 
 #: toto/library/backoffice_views.py:136
 msgid "Delete collection"
-msgstr ""
+msgstr "Usuń kolekcję"
 
 #: toto/library/templates/admin/library_bib_export_console.html:6
 msgid "Export"
-msgstr ""
+msgstr "Eksportuj"
 
 #: toto/library/templates/admin/library_bib_export_console.html:28
 msgid "Back to collection"
-msgstr ""
+msgstr "Wróć do kolekcji"
 
 #: toto/library/templates/admin/library_bib_export_console.html:32
 msgid "Preview"
-msgstr ""
+msgstr "Podgląd"
 
 #: toto/library/templates/library/article_list.html:18
 msgid "Title, journal, abstract…"
-msgstr ""
+msgstr "Tytuł, czasopismo, streszczenie…"
 
 #: toto/library/templates/library/article_list.html:30
 #: toto/library/templates/library/book_list.html:30
 msgid "Filter"
-msgstr ""
+msgstr "Filtruj"
 
 #: toto/library/templates/library/article_list.html:36
 #: toto/library/templates/library/book_list.html:36
 msgid "Tags"
-msgstr ""
+msgstr "Tagi"
 
 #: toto/library/templates/library/article_list.html:39
 #: toto/library/templates/library/book_list.html:40
 #: toto/palimpsest/templates/palimpsest/page_list.html:64
 msgid "All"
-msgstr ""
+msgstr "Wszystkie"
 
 #: toto/library/templates/library/article_list.html:62
 msgid "All Articles"
-msgstr ""
+msgstr "Wszystkie artykuły"
 
 #: toto/library/templates/library/article_list.html:103
 #: toto/library/templates/library/item_detail.html:146
 msgid "DOI"
-msgstr ""
+msgstr "DOI"
 
 #: toto/library/templates/library/article_list.html:109
 #: toto/library/templates/library/book_list.html:105
 #: toto/library/templates/library/item_detail.html:82
 msgid "File"
-msgstr ""
+msgstr "Plik"
 
 #: toto/library/templates/library/article_list.html:115
 #: toto/library/templates/library/book_list.html:111
 msgid "View"
-msgstr ""
+msgstr "Zobacz"
 
 #: toto/library/templates/library/article_list.html:125
 msgid "No articles found"
-msgstr ""
+msgstr "Nie znaleziono artykułów"
 
 #: toto/library/templates/library/article_list.html:126
 #: toto/library/templates/library/book_list.html:122
 msgid "Try a different search or clear the filter."
-msgstr ""
+msgstr "Spróbuj innego wyszukiwania lub wyczyść filtr."
 
 #: toto/library/templates/library/backoffice/reference_list.html:9
 msgid "Add reference:"
-msgstr ""
+msgstr "Dodaj źródło:"
 
 #: toto/library/templates/library/backoffice/reference_list.html:39
 msgid "No references yet. Add a book, article, audio or video."
-msgstr ""
+msgstr "Nie ma jeszcze żadnych źródeł. Dodaj książkę, artykuł, audio lub wideo."
 
 #: toto/library/templates/library/backoffice/reference_list.html:48
 msgid "Collections"
-msgstr ""
+msgstr "Kolekcje"
 
 #: toto/library/templates/library/backoffice/reference_list.html:54
 msgid "items"
-msgstr ""
+msgstr "elementów"
 
 #: toto/library/templates/library/backoffice/reference_list.html:59
 msgid "No collections yet."
-msgstr ""
+msgstr "Nie ma jeszcze żadnych kolekcji."
 
 #: toto/library/templates/library/base.html:13
 msgid "Knowledge Base"
-msgstr ""
+msgstr "Baza wiedzy"
 
 #: toto/library/templates/library/book_list.html:18
 msgid "Title, ISBN, abstract…"
-msgstr ""
+msgstr "Tytuł, ISBN, streszczenie…"
 
 #: toto/library/templates/library/book_list.html:64
 msgid "All Books"
-msgstr ""
+msgstr "Wszystkie książki"
 
 #: toto/library/templates/library/book_list.html:121
 msgid "No books found"
-msgstr ""
+msgstr "Nie znaleziono książek"
 
 #: toto/library/templates/library/item_detail.html:18
 msgid "Back to Books"
-msgstr ""
+msgstr "Wróć do książek"
 
 #: toto/library/templates/library/item_detail.html:18
 msgid "Back to Articles"
-msgstr ""
+msgstr "Wróć do artykułów"
 
 #: toto/library/templates/library/item_detail.html:56
 msgid "Abstract"
-msgstr ""
+msgstr "Streszczenie"
 
 #: toto/library/templates/library/item_detail.html:89
 msgid "Open file"
-msgstr ""
+msgstr "Otwórz plik"
 
 #: toto/library/templates/library/item_detail.html:105
 msgid "Publisher"
-msgstr ""
+msgstr "Wydawnictwo"
 
 #: toto/library/templates/library/item_detail.html:111
 msgid "Edition"
-msgstr ""
+msgstr "Wydanie"
 
 #: toto/library/templates/library/item_detail.html:117
 msgid "ISBN"
-msgstr ""
+msgstr "ISBN"
 
 #: toto/library/templates/library/item_detail.html:124
 msgid "Journal"
-msgstr ""
+msgstr "Czasopismo"
 
 #: toto/library/templates/library/item_detail.html:130
 msgid "Volume / Issue"
-msgstr ""
+msgstr "Tom / numer"
 
 #: toto/library/templates/library/item_detail.html:138
 msgid "Pages"
-msgstr ""
+msgstr "Strony"
 
 #: toto/library/templates/library/item_detail.html:161
 msgid "External link"
-msgstr ""
+msgstr "Link zewnętrzny"
 
 #: toto/palimpsest/backoffice_views.py:32
 msgid "Edit page"
-msgstr ""
+msgstr "Edytuj stronę"
 
 #: toto/palimpsest/backoffice_views.py:32
 #: toto/palimpsest/templates/palimpsest/backoffice/page_list.html:9
 msgid "New page"
-msgstr ""
+msgstr "Nowa strona"
 
 #: toto/palimpsest/backoffice_views.py:33
 msgid "Save page"
-msgstr ""
+msgstr "Zapisz stronę"
 
 #: toto/palimpsest/backoffice_views.py:33
 msgid "Create page"
-msgstr ""
+msgstr "Utwórz stronę"
 
 #: toto/palimpsest/backoffice_views.py:44
 msgid "Page created. Add sections to it."
-msgstr ""
+msgstr "Strona utworzona. Dodaj do niej sekcje."
 
 #: toto/palimpsest/backoffice_views.py:55
 msgid "Page saved."
-msgstr ""
+msgstr "Strona zapisana."
 
 #: toto/palimpsest/backoffice_views.py:65
 msgid "Page deleted."
-msgstr ""
+msgstr "Strona usunięta."
 
 #: toto/palimpsest/backoffice_views.py:68
 msgid "Delete page"
-msgstr ""
+msgstr "Usuń stronę"
 
 #: toto/palimpsest/backoffice_views.py:69
 msgid "This deletes the page and all its sections."
-msgstr ""
+msgstr "Spowoduje to usunięcie strony i wszystkich jej sekcji."
 
 #: toto/palimpsest/backoffice_views.py:83
 msgid "Section added."
-msgstr ""
+msgstr "Sekcja dodana."
 
 #: toto/palimpsest/backoffice_views.py:86
 msgid "New section"
-msgstr ""
+msgstr "Nowa sekcja"
 
 #: toto/palimpsest/backoffice_views.py:86
 #: toto/palimpsest/templates/palimpsest/backoffice/page_form.html:42
 msgid "Add section"
-msgstr ""
+msgstr "Dodaj sekcję"
 
 #: toto/palimpsest/backoffice_views.py:100
 msgid "Section saved."
-msgstr ""
+msgstr "Sekcja zapisana."
 
 #: toto/palimpsest/backoffice_views.py:103
 #: toto/palimpsest/templates/palimpsest/page_detail.html:141
 msgid "Edit section"
-msgstr ""
+msgstr "Edytuj sekcję"
 
 #: toto/palimpsest/backoffice_views.py:103
 msgid "Save section"
-msgstr ""
+msgstr "Zapisz sekcję"
 
 #: toto/palimpsest/backoffice_views.py:115
 msgid "Section deleted."
-msgstr ""
+msgstr "Sekcja usunięta."
 
 #: toto/palimpsest/backoffice_views.py:118
 #: toto/palimpsest/templates/palimpsest/page_detail.html:146
 #: toto/palimpsest/templates/palimpsest/section_confirm_delete.html:21
 msgid "Delete section"
-msgstr ""
+msgstr "Usuń sekcję"
 
 #: toto/palimpsest/backoffice_views.py:118
 msgid "(untitled section)"
-msgstr ""
+msgstr "(sekcja bez tytułu)"
 
 #: toto/palimpsest/backoffice_views.py:128
 msgid "Tag created."
-msgstr ""
+msgstr "Tag utworzony."
 
 #: toto/palimpsest/backoffice_views.py:131
 #: toto/palimpsest/templates/palimpsest/backoffice/page_list.html:6
 msgid "New tag"
-msgstr ""
+msgstr "Nowy tag"
 
 #: toto/palimpsest/backoffice_views.py:131
 msgid "Create tag"
-msgstr ""
+msgstr "Utwórz tag"
 
 #: toto/palimpsest/templates/palimpsest/backoffice/page_form.html:9
 msgid "All pages"
-msgstr ""
+msgstr "Wszystkie strony"
 
 #: toto/palimpsest/templates/palimpsest/backoffice/page_form.html:46
 msgid "(untitled)"
-msgstr ""
+msgstr "(bez tytułu)"
 
 #: toto/palimpsest/templates/palimpsest/backoffice/page_form.html:51
 #: toto/palimpsest/templates/palimpsest/page_detail.html:166
 msgid "No sections yet."
-msgstr ""
+msgstr "Nie ma jeszcze żadnych sekcji."
 
 #: toto/palimpsest/templates/palimpsest/backoffice/page_list.html:22
 msgid "private"
-msgstr ""
+msgstr "prywatna"
 
 #: toto/palimpsest/templates/palimpsest/backoffice/page_list.html:33
 msgid "No pages yet. Create your first note page."
-msgstr ""
+msgstr "Nie ma jeszcze żadnych stron. Utwórz swoją pierwszą stronę notatek."
 
 #: toto/palimpsest/templates/palimpsest/page_confirm_delete.html:21
 #: toto/palimpsest/templates/palimpsest/page_detail.html:185
 msgid "Delete piece"
-msgstr ""
+msgstr "Usuń tekst"
 
 #: toto/palimpsest/templates/palimpsest/page_confirm_delete.html:23
 msgid "This removes the piece and every section inside it."
-msgstr ""
+msgstr "Spowoduje to usunięcie tekstu wraz ze wszystkimi sekcjami w jego wnętrzu."
 
 #: toto/palimpsest/templates/palimpsest/page_detail.html:170
 msgid "Add the first section"
-msgstr ""
+msgstr "Dodaj pierwszą sekcję"
 
 #: toto/palimpsest/templates/palimpsest/page_detail.html:181
 #: toto/palimpsest/templates/palimpsest/page_form.html:15
 #: toto/palimpsest/templates/palimpsest/page_list.html:24
 msgid "Blog"
-msgstr ""
+msgstr "Blog"
 
 #: toto/palimpsest/templates/palimpsest/page_form.html:20
 msgid "Writing desk"
-msgstr ""
+msgstr "Warsztat pisarski"
 
 #: toto/palimpsest/templates/palimpsest/page_form.html:25
 msgid ""
 "Shape the piece metadata here. Add and arrange the actual writing as "
 "sections."
-msgstr ""
+msgstr "Tutaj ustalasz metadane tekstu. Właściwą treść dodajesz i układasz w sekcjach."
 
 #: toto/palimpsest/templates/palimpsest/page_list.html:21
 msgid "Close publishing"
-msgstr ""
+msgstr "Publikowanie w bliskim gronie"
 
 #: toto/palimpsest/templates/palimpsest/page_list.html:26
 msgid ""
 "Essays, field notes, and sectioned drafts from the people already close "
 "enough to matter."
-msgstr ""
+msgstr "Eseje, notatki z terenu i podzielone na sekcje szkice od osób, które są już wystarczająco blisko, by się liczyć."
 
 #: toto/palimpsest/templates/palimpsest/page_list.html:35
 msgid "New piece"
-msgstr ""
+msgstr "Nowy tekst"
 
 #: toto/palimpsest/templates/palimpsest/page_list.html:39
 msgid "Tag"
-msgstr ""
+msgstr "Tag"
 
 #: toto/palimpsest/templates/palimpsest/page_list.html:47
 msgid "Search Blog"
-msgstr ""
+msgstr "Przeszukaj blog"
 
 #: toto/palimpsest/templates/palimpsest/page_list.html:49
 msgid "Search the archive..."
-msgstr ""
+msgstr "Przeszukaj archiwum..."
 
 #: toto/palimpsest/templates/palimpsest/page_list.html:60
 msgid "Blog tags"
-msgstr ""
+msgstr "Tagi bloga"
 
 #: toto/palimpsest/templates/palimpsest/page_list.html:130
 msgid "Private"
-msgstr ""
+msgstr "Prywatne"
 
 #: toto/palimpsest/templates/palimpsest/page_list.html:170
 msgid "No pieces found."
-msgstr ""
+msgstr "Nie znaleziono tekstów."
 
 #: toto/palimpsest/templates/palimpsest/page_list.html:181
 msgid "Newer"
-msgstr ""
+msgstr "Nowsze"
 
 #: toto/palimpsest/templates/palimpsest/page_list.html:189
 msgid "Older"
-msgstr ""
+msgstr "Starsze"
 
 #: toto/palimpsest/templates/palimpsest/section_confirm_delete.html:23
 msgid "This removes only this section from the piece."
-msgstr ""
+msgstr "Spowoduje to usunięcie z tekstu tylko tej sekcji."
 
 #: toto/palimpsest/templates/palimpsest/section_form.html:35
 msgid "Section editor"
-msgstr ""
+msgstr "Edytor sekcji"
 
 #: toto/palimpsest/templates/palimpsest/section_form.html:40
 msgid ""
 "Write one self-contained section. Sections stay modular, movable, and "
 "attributable."
-msgstr ""
+msgstr "Napisz jedną samodzielną sekcję. Sekcje pozostają modułowe, przestawialne i przypisane do autora."
 
 #: toto/quizzes/backoffice_views.py:26
 #: toto/quizzes/templates/quizzes/quiz_detail.html:95
 #: toto/quizzes/templates/quizzes/quiz_metrics.html:89
 msgid "Multiple choice"
-msgstr ""
+msgstr "Wielokrotny wybór"
 
 #: toto/quizzes/backoffice_views.py:26
 msgid "Single choice"
-msgstr ""
+msgstr "Jednokrotny wybór"
 
 #: toto/quizzes/backoffice_views.py:51
 msgid "Quiz created. Now add some questions."
-msgstr ""
+msgstr "Quiz utworzony. Dodaj teraz zadania."
 
 #: toto/quizzes/backoffice_views.py:57
 #: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:8
 msgid "New quiz"
-msgstr ""
+msgstr "Nowy quiz"
 
 #: toto/quizzes/backoffice_views.py:58
 msgid "Create quiz"
-msgstr ""
+msgstr "Utwórz quiz"
 
 #: toto/quizzes/backoffice_views.py:70
 msgid "Quiz saved."
-msgstr ""
+msgstr "Quiz zapisany."
 
 #: toto/quizzes/backoffice_views.py:77
 msgid "Edit quiz"
-msgstr ""
+msgstr "Edytuj quiz"
 
 #: toto/quizzes/backoffice_views.py:78
 msgid "Save quiz"
-msgstr ""
+msgstr "Zapisz quiz"
 
 #: toto/quizzes/backoffice_views.py:88
 msgid "Quiz deleted."
-msgstr ""
+msgstr "Quiz usunięty."
 
 #: toto/quizzes/backoffice_views.py:166
 msgid "Question added."
-msgstr ""
+msgstr "Zadanie dodane."
 
 #: toto/quizzes/backoffice_views.py:172
 #: toto/quizzes/templates/quizzes/backoffice/question_list.html:9
 msgid "New question"
-msgstr ""
+msgstr "Nowe zadanie"
 
 #: toto/quizzes/backoffice_views.py:173
 msgid "Create question"
-msgstr ""
+msgstr "Utwórz zadanie"
 
 #: toto/quizzes/backoffice_views.py:189
 msgid "Question saved."
-msgstr ""
+msgstr "Zadanie zapisane."
 
 #: toto/quizzes/backoffice_views.py:195
 msgid "Edit question"
-msgstr ""
+msgstr "Edytuj zadanie"
 
 #: toto/quizzes/backoffice_views.py:196
 msgid "Save question"
-msgstr ""
+msgstr "Zapisz zadanie"
 
 #: toto/quizzes/backoffice_views.py:206
 msgid "Question deleted."
-msgstr ""
+msgstr "Zadanie usunięte."
 
 #: toto/quizzes/forms.py:32
 msgid "optional-custom-url"
-msgstr ""
+msgstr "opcjonalny-wlasny-adres-url"
 
 #: toto/quizzes/forms.py:35
 msgid "A short description of this task pool."
-msgstr ""
+msgstr "Krótki opis tej puli zadań."
 
 #: toto/quizzes/forms.py:71
 msgid "Single choice (one correct answer)"
-msgstr ""
+msgstr "Jednokrotny wybór (jedna poprawna odpowiedź)"
 
 #: toto/quizzes/forms.py:72
 msgid "Multiple choice (several correct)"
-msgstr ""
+msgstr "Wielokrotny wybór (kilka poprawnych)"
 
 #: toto/quizzes/forms.py:73
 msgid "Open answer (typed)"
-msgstr ""
+msgstr "Odpowiedź otwarta (wpisywana)"
 
 #: toto/quizzes/forms.py:78
 msgid "Answer format"
-msgstr ""
+msgstr "Format odpowiedzi"
 
 #: toto/quizzes/forms.py:89
 msgid "Worked solution — the full reasoning, with formulas and pictures."
-msgstr ""
+msgstr "Rozwiązanie krok po kroku — pełne rozumowanie, ze wzorami i rysunkami."
 
 #: toto/quizzes/forms.py:91
 msgid ""
 "Shown after any practice submission and in the graded review. Falls back to "
 "the plain explanation when empty."
-msgstr ""
+msgstr "Pokazywane po każdym przesłaniu odpowiedzi w trybie ćwiczeń oraz w ocenionym przeglądzie. Gdy jest puste, wyświetla się zamiast niego zwykłe wyjaśnienie."
 
 #: toto/quizzes/forms.py:101
 msgid "Question stem. Use $…$ for inline math, $$…$$ for display math."
-msgstr ""
+msgstr "Treść zadania. Użyj $…$ dla wzorów w tekście, $$…$$ dla wzorów w osobnej linii."
 
 #: toto/quizzes/forms.py:105
 msgid "Optional hint shown in a modal on the practice page."
-msgstr ""
+msgstr "Opcjonalna wskazówka pokazywana w oknie na stronie ćwiczeń."
 
 #: toto/quizzes/forms.py:109
 msgid "Optional plain-text fallback shown when no rich solution is set."
-msgstr ""
+msgstr "Opcjonalny tekst zapasowy pokazywany, gdy nie ustawiono rozwiązania krok po kroku."
 
 #: toto/quizzes/forms.py:111
 msgid "minutes"
-msgstr ""
+msgstr "minut"
 
 #: toto/quizzes/forms.py:161
 msgid "Answer text (math with $…$ allowed)"
-msgstr ""
+msgstr "Treść odpowiedzi (wzory w $…$ dozwolone)"
 
 #: toto/quizzes/forms.py:254
 msgid "Add at least one answer option."
-msgstr ""
+msgstr "Dodaj co najmniej jeden wariant odpowiedzi."
 
 #: toto/quizzes/forms.py:258
 msgid "A choice question needs at least two options."
-msgstr ""
+msgstr "Zadanie wyboru wymaga co najmniej dwóch wariantów odpowiedzi."
 
 #: toto/quizzes/forms.py:262
 msgid "Mark exactly one option correct for a single-choice question."
-msgstr ""
+msgstr "W zadaniu jednokrotnego wyboru zaznacz dokładnie jeden poprawny wariant odpowiedzi."
 
 #: toto/quizzes/forms.py:264
 msgid "Mark at least one option correct."
-msgstr ""
+msgstr "Zaznacz co najmniej jeden poprawny wariant odpowiedzi."
 
 #: toto/quizzes/templates/quizzes/_hint_modal.html:9
 msgid "Show hint"
-msgstr ""
+msgstr "Pokaż wskazówkę"
 
 #: toto/quizzes/templates/quizzes/_hint_modal.html:23
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:70
 msgid "Hint"
-msgstr ""
+msgstr "Wskazówka"
 
 #: toto/quizzes/templates/quizzes/_hint_modal.html:27
 msgid "Close"
-msgstr ""
+msgstr "Zamknij"
 
 #: toto/quizzes/templates/quizzes/_hint_modal.html:40
 msgid "Got it"
-msgstr ""
+msgstr "Rozumiem"
 
 #: toto/quizzes/templates/quizzes/_solution_card.html:12
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:63
 msgid "Worked solution"
-msgstr ""
+msgstr "Rozwiązanie krok po kroku"
 
 #: toto/quizzes/templates/quizzes/backoffice/_answer_row.html:8
 msgid "Correct"
-msgstr ""
+msgstr "Poprawna"
 
 #: toto/quizzes/templates/quizzes/backoffice/_answer_row.html:12
 msgid "Accepted answer"
-msgstr ""
+msgstr "Uznawana odpowiedź"
 
 #: toto/quizzes/templates/quizzes/backoffice/_answer_row.html:17
 msgid "Advanced: traits"
-msgstr ""
+msgstr "Zaawansowane: cechy"
 
 #: toto/quizzes/templates/quizzes/backoffice/_answer_row.html:22
 msgid "— trait —"
-msgstr ""
+msgstr "— cecha —"
 
 #: toto/quizzes/templates/quizzes/backoffice/_answer_row.html:29
 msgid "Add trait"
-msgstr ""
+msgstr "Dodaj cechę"
 
 #: toto/quizzes/templates/quizzes/backoffice/_answer_row.html:36
 msgid "Remove answer"
-msgstr ""
+msgstr "Usuń odpowiedź"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_confirm_delete.html:7
 msgid "Delete question"
-msgstr ""
+msgstr "Usuń zadanie"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_confirm_delete.html:9
 msgid "This removes the question and its answers. This cannot be undone."
-msgstr ""
+msgstr "Spowoduje to usunięcie zadania i jego odpowiedzi. Tej operacji nie można cofnąć."
 
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:32
 msgid "Question stem"
-msgstr ""
+msgstr "Treść zadania"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:34
 msgid ""
 "Tip: wrap math in $…$ (inline) or $$…$$ (display). It renders live on the "
 "right."
-msgstr ""
+msgstr "Wskazówka: umieść wzory w $…$ (w tekście) lub $$…$$ (w osobnej linii). Podgląd renderuje się na żywo po prawej."
 
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:52
 msgid "Accepted answers"
-msgstr ""
+msgstr "Uznawane odpowiedzi"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:52
 msgid "Answer options"
-msgstr ""
+msgstr "Warianty odpowiedzi"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:53
 msgid "Mark exactly one correct"
-msgstr ""
+msgstr "Zaznacz dokładnie jeden poprawny"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:54
 msgid "Mark all correct options"
-msgstr ""
+msgstr "Zaznacz wszystkie poprawne warianty odpowiedzi"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:55
 msgid "Each row is an accepted answer"
-msgstr ""
+msgstr "Każdy wiersz to jedna uznawana odpowiedź"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:58
 msgid "Add answer"
-msgstr ""
+msgstr "Dodaj odpowiedź"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:65
 msgid "Rich solution shown after a submission. You can embed images here."
-msgstr ""
+msgstr "Rozwiązanie krok po kroku pokazywane po wysłaniu odpowiedzi. Możesz tu osadzać obrazy."
 
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:74
 msgid "Plain explanation"
-msgstr ""
+msgstr "Wyjaśnienie tekstowe"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:81
 msgid "Time limit (min)"
-msgstr ""
+msgstr "Limit czasu (min)"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:85
 msgid "Order"
-msgstr ""
+msgstr "Kolejność"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:107
 msgid "Live preview"
-msgstr ""
+msgstr "Podgląd na żywo"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_form.html:110
 msgid "Math renders as you type."
-msgstr ""
+msgstr "Wzory renderują się podczas pisania."
 
 #: toto/quizzes/templates/quizzes/backoffice/question_list.html:6
 msgid "Quiz settings"
-msgstr ""
+msgstr "Ustawienia quizu"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_list.html:16
 msgid "All quizzes"
-msgstr ""
+msgstr "Wszystkie quizy"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_list.html:51
 msgid "accepted answer(s)"
-msgstr ""
+msgstr "uznawanych odpowiedzi"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_list.html:53
 msgid "options"
-msgstr ""
+msgstr "wariantów odpowiedzi"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_list.html:53
 msgid "correct"
-msgstr ""
+msgstr "poprawnych"
 
 #: toto/quizzes/templates/quizzes/backoffice/question_list.html:66
 msgid "No questions yet. Add the first one."
-msgstr ""
+msgstr "Nie ma jeszcze zadań. Dodaj pierwsze."
 
 #: toto/quizzes/templates/quizzes/backoffice/quiz_confirm_delete.html:7
 msgid "Delete quiz"
-msgstr ""
+msgstr "Usuń quiz"
 
 #: toto/quizzes/templates/quizzes/backoffice/quiz_confirm_delete.html:8
 #, python-format
 msgid ""
 "Delete “%(title)s” and all of its questions and answers? This cannot be "
 "undone."
-msgstr ""
+msgstr "Usunąć „%(title)s” wraz ze wszystkimi zadaniami i odpowiedziami? Tej operacji nie można cofnąć."
 
 #: toto/quizzes/templates/quizzes/backoffice/quiz_form.html:25
 msgid "Leave blank to generate from the title."
-msgstr ""
+msgstr "Zostaw puste, aby wygenerować z tytułu."
 
 #: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:19
 msgid "Title"
-msgstr ""
+msgstr "Tytuł"
 
 #: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:20
 #: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:42
 #: toto/quizzes/templates/quizzes/quiz_metrics.html:63
 msgid "Questions"
-msgstr ""
+msgstr "Zadania"
 
 #: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:30
 #: toto/quizzes/templates/quizzes/quiz_list.html:43
 msgid "Official"
-msgstr ""
+msgstr "Oficjalny"
 
 #: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:49
 msgid "No quizzes yet. Create your first task pool."
-msgstr ""
+msgstr "Nie ma jeszcze quizów. Utwórz swoją pierwszą pulę zadań."
 
 #: toto/quizzes/templates/quizzes/practice.html:4
 msgid "Practice"
-msgstr ""
+msgstr "Ćwiczenia"
 
 #: toto/quizzes/templates/quizzes/practice.html:28
 msgid "Solved"
-msgstr ""
+msgstr "Rozwiązane"
 
 #: toto/quizzes/templates/quizzes/practice.html:29
 msgid "To solve"
-msgstr ""
+msgstr "Do rozwiązania"
 
 #: toto/quizzes/templates/quizzes/practice.html:43
 msgid "Correct — nice progress!"
-msgstr ""
+msgstr "Poprawnie — świetne postępy!"
 
 #: toto/quizzes/templates/quizzes/practice.html:47
 msgid "Not quite — try again in a moment."
-msgstr ""
+msgstr "Niezupełnie — spróbuj ponownie za chwilę."
 
 #: toto/quizzes/templates/quizzes/practice.html:48
 msgid "This task goes back into your pool. Here is how to solve it:"
-msgstr ""
+msgstr "To zadanie wraca do Twojej puli. Oto jak je rozwiązać:"
 
 #: toto/quizzes/templates/quizzes/practice.html:52
 msgid "Answer"
-msgstr ""
+msgstr "Odpowiedź"
 
 #: toto/quizzes/templates/quizzes/practice.html:66
 msgid "Continue"
-msgstr ""
+msgstr "Dalej"
 
 #: toto/quizzes/templates/quizzes/practice.html:82
 msgid "Type your answer"
-msgstr ""
+msgstr "Wpisz swoją odpowiedź"
 
 #: toto/quizzes/templates/quizzes/practice.html:101
 msgid "Check answer"
-msgstr ""
+msgstr "Sprawdź odpowiedź"
 
 #: toto/quizzes/templates/quizzes/practice.html:109
 msgid "All tasks solved!"
-msgstr ""
+msgstr "Wszystkie zadania rozwiązane!"
 
 #: toto/quizzes/templates/quizzes/practice.html:110
 msgid "You have completed every task in this section."
-msgstr ""
+msgstr "Masz już za sobą wszystkie zadania w tej sekcji."
 
 #: toto/quizzes/templates/quizzes/practice.html:113
 msgid "Back to the section"
-msgstr ""
+msgstr "Wróć do sekcji"
 
 #: toto/quizzes/templates/quizzes/quiz_detail.html:33
 msgid "Quiz"
-msgstr ""
+msgstr "Quiz"
 
 #: toto/quizzes/templates/quizzes/quiz_detail.html:49
 msgid "Edit questions"
-msgstr ""
+msgstr "Edytuj zadania"
 
 #: toto/quizzes/templates/quizzes/quiz_detail.html:68
 msgid "Your answers are shown below. Each quiz can only be submitted once."
-msgstr ""
+msgstr "Poniżej znajdują się Twoje odpowiedzi. Każdy quiz można wysłać tylko raz."
 
 #: toto/quizzes/templates/quizzes/quiz_detail.html:179
 msgid "Select all that apply"
-msgstr ""
+msgstr "Zaznacz wszystkie pasujące"
 
 #: toto/quizzes/templates/quizzes/quiz_detail.html:181
 msgid "Select one answer"
-msgstr ""
+msgstr "Zaznacz jedną odpowiedź"
 
 #: toto/quizzes/templates/quizzes/quiz_detail.html:198
 msgid "No answers configured."
-msgstr ""
+msgstr "Nie skonfigurowano odpowiedzi."
 
 #: toto/quizzes/templates/quizzes/quiz_detail.html:209
 msgid "Back"
-msgstr ""
+msgstr "Wróć"
 
 #: toto/quizzes/templates/quizzes/quiz_detail.html:213
 msgid "Submit quiz"
-msgstr ""
+msgstr "Wyślij quiz"
 
 #: toto/quizzes/templates/quizzes/quiz_list.html:51
 msgid "Start"
-msgstr ""
+msgstr "Rozpocznij"
 
 #: toto/quizzes/templates/quizzes/quiz_list.html:56
 msgid "No published quizzes yet."
-msgstr ""
+msgstr "Nie ma jeszcze opublikowanych quizów."
 
 #: toto/quizzes/templates/quizzes/quiz_metrics.html:30
 msgid "Quiz Metrics"
-msgstr ""
+msgstr "Statystyki quizu"
 
 #: toto/quizzes/templates/quizzes/quiz_metrics.html:44
 msgid "View quiz"
-msgstr ""
+msgstr "Zobacz quiz"
 
 #: toto/quizzes/templates/quizzes/quiz_metrics.html:51
 msgid "Attempts"
-msgstr ""
+msgstr "Podejścia"
 
 #: toto/quizzes/templates/quizzes/quiz_metrics.html:69
 msgid "Owner"
-msgstr ""
+msgstr "Właściciel"
 
 #: toto/quizzes/templates/quizzes/quiz_metrics.html:130
 msgid "No questions in this quiz yet."
-msgstr ""
+msgstr "W tym quizie nie ma jeszcze zadań."
 
 #: toto/quizzes/templates/quizzes/quiz_metrics.html:138
 msgid "Trait distribution"
-msgstr ""
+msgstr "Rozkład cech"
 
 #: toto/quizzes/templates/quizzes/quiz_metrics.html:139
 msgid "Cumulative trait scores from all completed attempts."
-msgstr ""
+msgstr "Skumulowane wyniki cech ze wszystkich ukończonych podejść."
 
 #: toto/subscriptions/apps.py:9
 #: toto/subscriptions/templates/subscriptions/plan_list.html:4
 msgid "Subscriptions"
-msgstr ""
+msgstr "Subskrypcje"
 
 #: toto/subscriptions/gates.py:67
 #, python-format
 msgid "A %(name)s subscription is required. Subscribe to continue."
-msgstr ""
+msgstr "Wymagana jest subskrypcja %(name)s. Wykup subskrypcję, aby kontynuować."
 
 #: toto/subscriptions/templates/subscriptions/my_subscription.html:4
 #: toto/subscriptions/templates/subscriptions/my_subscription.html:17
 #: toto/subscriptions/templates/subscriptions/plan_list.html:27
 msgid "My subscription"
-msgstr ""
+msgstr "Moja subskrypcja"
 
 #: toto/subscriptions/templates/subscriptions/my_subscription.html:22
 msgid "Current plan"
-msgstr ""
+msgstr "Bieżący plan"
 
 #: toto/subscriptions/templates/subscriptions/my_subscription.html:27
 #, python-format
 msgid "Valid until %(until)s"
-msgstr ""
+msgstr "Ważny do %(until)s"
 
 #: toto/subscriptions/templates/subscriptions/my_subscription.html:32
 msgid "You have no active plan."
-msgstr ""
+msgstr "Nie masz aktywnego planu."
 
 #: toto/subscriptions/templates/subscriptions/my_subscription.html:33
 msgid "See plans"
-msgstr ""
+msgstr "Zobacz plany"
 
 #: toto/subscriptions/templates/subscriptions/my_subscription.html:39
 msgid "Your discount codes"
-msgstr ""
+msgstr "Twoje kody rabatowe"
 
 #: toto/subscriptions/templates/subscriptions/my_subscription.html:50
 msgid "No discount codes yet."
-msgstr ""
+msgstr "Nie masz jeszcze kodów rabatowych."
 
 #: toto/subscriptions/templates/subscriptions/my_subscription.html:56
 msgid "History"
-msgstr ""
+msgstr "Historia"
 
 #: toto/subscriptions/templates/subscriptions/plan_list.html:17
 msgid "Plans"
-msgstr ""
+msgstr "Plany"
 
 #: toto/subscriptions/templates/subscriptions/plan_list.html:19
 msgid "Longer plans unlock a bigger loyalty discount."
-msgstr ""
+msgstr "Dłuższe plany odblokowują większy rabat lojalnościowy."
 
 #: toto/subscriptions/templates/subscriptions/plan_list.html:24
 #, python-format
@@ -2859,33 +2858,33 @@ msgstr ""
 
 #: toto/subscriptions/templates/subscriptions/plan_list.html:38
 msgid "mo."
-msgstr ""
+msgstr "mies."
 
 #: toto/subscriptions/templates/subscriptions/plan_list.html:43
 #, python-format
 msgid "Unlocks a %(pct)s%% loyalty discount"
-msgstr ""
+msgstr "Odblokowuje rabat lojalnościowy %(pct)s%%"
 
 #: toto/subscriptions/templates/subscriptions/plan_list.html:50
 msgid "Choose plan"
-msgstr ""
+msgstr "Wybierz plan"
 
 #: toto/subscriptions/templates/subscriptions/plan_list.html:55
 msgid "No plans are available right now."
-msgstr ""
+msgstr "Obecnie nie ma dostępnych planów."
 
 #: toto/vod/apps.py:9
 msgid "Video on Demand"
-msgstr ""
+msgstr "Wideo na żądanie"
 
 #: toto/vod/templates/vod/vault_file_play.html:17
 msgid "Back to vault"
-msgstr ""
+msgstr "Wróć do magazynu"
 
 #: toto/vod/templates/vod/vault_file_play.html:47
 msgid "File not available"
-msgstr ""
+msgstr "Plik niedostępny"
 
 #: toto/vod/templates/vod/vault_file_play.html:49
 msgid "This file cannot be streamed directly. Try downloading it instead."
-msgstr ""
+msgstr "Tego pliku nie można odtwarzać bezpośrednio. Spróbuj zamiast tego go pobrać."

@@ -104,3 +104,126 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.85rem;
 }
+
+/* ---- the formula dialog -------------------------------------------------
+   Rendered into <body>, so it inherits nothing from the field. Colours are
+   resolved from the page (currentColor + a neutral surface) rather than a
+   theme variable, because the widget is embedded in host applications whose
+   palettes it does not know. */
+
+.cy-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.cy-modal {
+  width: min(40rem, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.35);
+}
+
+.cy-modal-title {
+  margin: 0 0 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+}
+
+/* The preview is the point of the dialog, so it leads and it is big. */
+.cy-modal-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 5.5rem;
+  padding: 1rem;
+  border: 1px solid rgba(127, 127, 127, 0.35);
+  border-radius: 0.5rem;
+  font-size: 1.15rem;
+  overflow-x: auto;
+}
+
+.cy-modal-preview.is-empty::before {
+  content: "The formula appears here as you type.";
+  font-size: 0.8rem;
+  opacity: 0.45;
+}
+
+.cy-modal-error {
+  min-height: 1.25rem;
+  margin: 0.4rem 0 0;
+  font-size: 0.75rem;
+  color: #ef4444;
+}
+
+.cy-modal-input {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgba(127, 127, 127, 0.45);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: inherit;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85rem;
+  resize: vertical;
+}
+
+.cy-modal-help { margin-top: 0.75rem; }
+
+.cy-modal-help-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.3rem;
+}
+
+.cy-modal-help-label {
+  width: 5.5rem;
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.5;
+}
+
+.cy-modal-chip {
+  padding: 0.15rem 0.45rem;
+  border: 1px solid rgba(127, 127, 127, 0.35);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.cy-modal-chip:hover { background: rgba(127, 127, 127, 0.18); }
+
+.cy-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.cy-modal-ok {
+  border-color: rgba(127, 127, 127, 0.5);
+  background: rgba(127, 127, 127, 0.2);
+  font-weight: 600;
+}
+
+.cy-modal-ok[disabled] { opacity: 0.45; cursor: not-allowed; }
