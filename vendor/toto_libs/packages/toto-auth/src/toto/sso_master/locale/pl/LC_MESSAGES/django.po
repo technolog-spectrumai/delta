@@ -1,0 +1,228 @@
+# pl catalogue for this toto app.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-05 10:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: templates/admin/sso_master/ssorelyingparty/change_form.html:8
+msgid "Test Login"
+msgstr "Testowe logowanie"
+
+#: templates/sso/admin_test_result.html:8
+msgid "SSO Client Test"
+msgstr "Test klienta SSO"
+
+#: templates/sso/admin_test_result.html:12
+msgid "Error:"
+msgstr "Błąd:"
+
+#: templates/sso/admin_test_result.html:14
+msgid "Back"
+msgstr "Wróć"
+
+#: templates/sso/admin_test_result.html:17
+msgid "Authorization code flow completed successfully for"
+msgstr "Przepływ kodu autoryzacji zakończony pomyślnie dla"
+
+#: templates/sso/admin_test_result.html:21
+msgid "User Claims"
+msgstr "Oświadczenia użytkownika"
+
+#: templates/sso/admin_test_result.html:24
+msgid "Claim"
+msgstr "Oświadczenie"
+
+#: templates/sso/admin_test_result.html:24
+msgid "Value"
+msgstr "Wartość"
+
+#: templates/sso/admin_test_result.html:33
+msgid "Token Info"
+msgstr "Informacje o tokenie"
+
+#: templates/sso/consent.html:31
+msgid "Authorization request"
+msgstr "Żądanie autoryzacji"
+
+#: templates/sso/consent.html:64 templates/sso/consent_standalone.html:20
+msgid "Allow"
+msgstr "Zezwól"
+
+#: templates/sso/consent.html:69 templates/sso/consent_standalone.html:21
+msgid "Deny"
+msgstr "Odmów"
+
+#: templates/sso/consent_standalone.html:11
+msgid "This application wants to sign you in and access these identity claims:"
+msgstr "Ta aplikacja chce Cię zalogować i uzyskać dostęp do następujących oświadczeń tożsamości:"
+
+#: templates/sso/login.html:82
+msgid "Secure sign-in"
+msgstr "Bezpieczne logowanie"
+
+#: templates/sso/login.html:96 templates/sso/password_reset.html:120
+msgid "Sign in"
+msgstr "Zaloguj się"
+
+#: templates/sso/login.html:97
+msgid "Enter your account credentials to continue."
+msgstr "Wprowadź dane logowania do swojego konta, aby kontynuować."
+
+#: templates/sso/login.html:111
+msgid "Sign in failed"
+msgstr "Logowanie nie powiodło się"
+
+#: templates/sso/login.html:120 templates/sso/password_reset_complete.html:44
+msgid "Sign In"
+msgstr "Zaloguj się"
+
+#: templates/sso/login.html:130
+msgid "Don't have an account?"
+msgstr "Nie masz konta?"
+
+#: templates/sso/login.html:135
+msgid "Apply for membership"
+msgstr "Złóż wniosek o członkostwo"
+
+#: templates/sso/password_reset.html:48
+msgid "Reset your password."
+msgstr "Zresetuj swoje hasło."
+
+#: templates/sso/password_reset.html:50
+msgid ""
+"Enter the email address associated with your account and we'll send you a "
+"link to reset your password."
+msgstr "Wprowadź adres e-mail powiązany z Twoim kontem, a wyślemy Ci link do zresetowania hasła."
+
+#: templates/sso/password_reset.html:62
+msgid "Secure reset"
+msgstr "Bezpieczny reset"
+
+#: templates/sso/password_reset.html:63
+msgid ""
+"The reset link expires after 24 hours. If you don't receive an email, check "
+"your spam folder."
+msgstr "Link do resetowania wygasa po 24 godzinach. Jeśli nie otrzymasz wiadomości e-mail, sprawdź folder ze spamem."
+
+#: templates/sso/password_reset.html:73
+msgid "Forgot your password?"
+msgstr "Nie pamiętasz hasła?"
+
+#: templates/sso/password_reset.html:74
+msgid "Enter your email to receive a reset link."
+msgstr "Wprowadź swój adres e-mail, aby otrzymać link do resetowania."
+
+#: templates/sso/password_reset.html:92
+msgid "Email address"
+msgstr "Adres e-mail"
+
+#: templates/sso/password_reset.html:100
+msgid "you@example.com"
+msgstr "ty@przyklad.pl"
+
+#: templates/sso/password_reset.html:115
+msgid "Send Reset Link"
+msgstr "Wyślij link do resetowania"
+
+#: templates/sso/password_reset.html:118
+msgid "Remembered your password?"
+msgstr "Pamiętasz już hasło?"
+
+#: templates/sso/password_reset_complete.html:35
+msgid "Password updated!"
+msgstr "Hasło zaktualizowane!"
+
+#: templates/sso/password_reset_complete.html:36
+msgid "Your password has been set. You can now sign in with your new password."
+msgstr "Twoje hasło zostało ustawione. Możesz teraz zalogować się przy użyciu nowego hasła."
+
+#: templates/sso/password_reset_confirm.html:48
+msgid "Set a new password."
+msgstr "Ustaw nowe hasło."
+
+#: templates/sso/password_reset_confirm.html:50
+msgid "Choose a strong, unique password that you don't use elsewhere."
+msgstr "Wybierz silne, unikalne hasło, którego nie używasz nigdzie indziej."
+
+#: templates/sso/password_reset_confirm.html:62
+msgid "Password tips"
+msgstr "Wskazówki dotyczące hasła"
+
+#: templates/sso/password_reset_confirm.html:64
+msgid "At least 8 characters"
+msgstr "Co najmniej 8 znaków"
+
+#: templates/sso/password_reset_confirm.html:65
+msgid "Mix of letters, numbers, and symbols"
+msgstr "Kombinacja liter, cyfr i symboli"
+
+#: templates/sso/password_reset_confirm.html:66
+msgid "Avoid common words or personal info"
+msgstr "Unikaj popularnych słów i danych osobowych"
+
+#: templates/sso/password_reset_confirm.html:79
+msgid "Create new password"
+msgstr "Utwórz nowe hasło"
+
+#: templates/sso/password_reset_confirm.html:80
+msgid "Enter and confirm your new password below."
+msgstr "Wprowadź i potwierdź nowe hasło poniżej."
+
+#: templates/sso/password_reset_confirm.html:99
+msgid "New password"
+msgstr "Nowe hasło"
+
+#: templates/sso/password_reset_confirm.html:115
+msgid "Confirm new password"
+msgstr "Potwierdź nowe hasło"
+
+#: templates/sso/password_reset_confirm.html:149
+msgid "Set New Password"
+msgstr "Ustaw nowe hasło"
+
+#: templates/sso/password_reset_confirm.html:162
+msgid "Link expired or invalid"
+msgstr "Link wygasł lub jest nieprawidłowy"
+
+#: templates/sso/password_reset_confirm.html:176
+msgid "Request a New Link"
+msgstr "Poproś o nowy link"
+
+#: templates/sso/password_reset_done.html:35
+msgid "Check your email"
+msgstr "Sprawdź swoją skrzynkę e-mail"
+
+#: templates/sso/password_reset_done.html:47
+msgid "Didn't receive it?"
+msgstr "Wiadomość nie dotarła?"
+
+#: templates/sso/password_reset_done.html:49
+msgid "Check your spam or junk folder."
+msgstr "Sprawdź folder ze spamem lub niechcianą pocztą."
+
+#: templates/sso/password_reset_done.html:50
+msgid "Make sure you entered the correct email address."
+msgstr "Upewnij się, że wpisany adres e-mail jest poprawny."
+
+#: templates/sso/password_reset_done.html:54
+msgid "Try again"
+msgstr "Spróbuj ponownie"
+
+#: templates/sso/password_reset_done.html:65
+msgid "Back to Sign In"
+msgstr "Wróć do logowania"
