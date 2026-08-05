@@ -18,7 +18,14 @@
           class="rounded-2xl border p-6 shadow-sm">
       {% csrf_token %}
       <p :class="darkMode ? 'text-accent-dark' : 'text-accent-light'"
-         class="text-xs font-semibold uppercase tracking-wide">{% trans "Delete section" %}</p>
+         class="text-xs font-semibold uppercase tracking-wide">{% trans "Delete section" %}
+        {% translate "Deleting a section" as help_title %}
+        {% blocktranslate asvar help_body %}Deleting permanently removes this section and its text; there is no undo.
+
+The rest of the piece is untouched: other sections stay, and later ones simply move up one position. If this was its author's only section, the piece's byline updates accordingly.
+
+To keep the text but move it within the piece, edit the section and change its Order instead.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}</p>
       <h1 class="mt-2 break-words text-3xl font-bold">{{ section.title|default:"Untitled section" }}</h1>
       <p class="mt-3 text-sm leading-6 opacity-75">{% trans "This removes only this section from the piece." %}</p>
       <div class="mt-6 flex flex-wrap justify-end gap-3">

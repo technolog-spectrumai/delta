@@ -43,7 +43,13 @@
   {% if course_rows %}
   <section class="space-y-3">
     <div class="flex items-center justify-between">
-      <h3 class="text-lg font-bold"><i class="fa-solid fa-book-open-reader"></i> {% trans "My courses" %}</h3>
+      <h3 class="flex items-center gap-2 text-lg font-bold"><i class="fa-solid fa-book-open-reader"></i> {% trans "My courses" %}
+        {% translate "How progress is counted" as help_title %}
+        {% blocktranslate asvar help_body %}Each bar counts the modules whose skill you have already earned, out of the course's total modules. Skills are awarded by your teacher as you complete modules, so the bar moves when a badge lands on your profile — not when you watch a lesson.
+
+A course shows as done once a teacher marks your enrolment complete; that pins the bar at full and issues your certificate. The Continue button above always points at your most recently joined course that is not yet finished.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}
+      </h3>
       <a href="{% url 'academy:course-list' %}" class="text-sm underline hover:opacity-80">{% trans "Browse all" %} →</a>
     </div>
     <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

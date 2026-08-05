@@ -18,7 +18,14 @@
           class="rounded-2xl border p-6 shadow-sm">
       {% csrf_token %}
       <p :class="darkMode ? 'text-accent-dark' : 'text-accent-light'"
-         class="text-xs font-semibold uppercase tracking-wide">{% trans "Delete piece" %}</p>
+         class="text-xs font-semibold uppercase tracking-wide">{% trans "Delete piece" %}
+        {% translate "Deleting a piece" as help_title %}
+        {% blocktranslate asvar help_body %}Deleting removes the piece and every section written inside it. This cannot be undone — there is no trash to restore from.
+
+The piece's URL stops working, so links and bookmarks to it break. If a course module uses this page as its notes, the module itself remains but loses the notes link.
+
+Tags are never deleted along with the piece.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}</p>
       <h1 class="mt-2 break-words text-3xl font-bold">{{ page.title }}</h1>
       <p class="mt-3 text-sm leading-6 opacity-75">{% trans "This removes the piece and every section inside it." %}</p>
       <div class="mt-6 flex flex-wrap justify-end gap-3">

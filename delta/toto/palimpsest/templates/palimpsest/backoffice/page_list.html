@@ -7,6 +7,13 @@
   <a href="{% url 'backoffice_notes:page-create' %}"
      :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
      class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90"><i class="fa-solid fa-plus"></i> {% trans "New page" %}</a>
+  {% translate "Pages and tags" as help_title %}
+  {% blocktranslate asvar help_body %}Pages are note articles: each one appears on the public blog and can be attached to a course module as its notes or handout. "New page" creates the page first; you add its sections from the edit screen.
+
+Pages marked with a lock are private — hidden from visitors who are not logged in, but still visible to signed-in students.
+
+"New tag" adds a label readers can filter the blog by; the same tags are used by library references. A tag cannot be renamed or removed from here once created, so pick the name carefully.{% endblocktranslate %}
+  {% include "includes/_help.html" with title=help_title body=help_body %}
 </div>
 {% endblock %}
 

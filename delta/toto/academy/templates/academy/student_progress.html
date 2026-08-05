@@ -15,7 +15,13 @@
       <div class="space-y-2">
         <a href="{% url 'academy:course-list' %}" class="text-sm underline hover:opacity-80">{% trans "Courses" %}</a>
 
-        <h1 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="text-3xl font-bold">{% trans "My Progress" %}</h1>
+        <h1 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="flex items-center gap-2 text-3xl font-bold">{% trans "My Progress" %}
+          {% translate "Reading the skill map" as help_title %}
+          {% blocktranslate asvar help_body %}The map shows every skill tree and colours each skill by your standing. Earned — the skill is already on your profile. Available — every prerequisite is earned, so you could start it now. Current — it is available and you are enrolled in a course whose module teaches it. Locked — at least one prerequisite is still missing.
+
+Tap any skill to see its description and the courses that teach it in the panel beside the map. Skills are awarded by teachers as you complete course modules, so nothing on this page is edited directly.{% endblocktranslate %}
+          {% include "includes/_help.html" with title=help_title body=help_body %}
+        </h1>
 
         {% if person %}
           <p class="opacity-75">{{ person.display_name }}</p>

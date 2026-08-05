@@ -26,6 +26,11 @@
        class="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold shadow-sm transition hover:opacity-90">
       <i class="fa-solid fa-right-to-bracket"></i>{% trans "Sign in to enrol" %}</a>
   {% endif %}
+  {% translate "Enrolling in this course" as help_title %}
+  {% blocktranslate asvar help_body %}Enrolling unlocks the course media — lesson videos, notes and presentations stay locked until you enrol — and adds the course to My Learning and My Progress, where your progress is tracked module by module. You need a connected community profile, and if this platform sells an Academy subscription an active one may be required; otherwise enrolment is free.
+
+Enrolling is safe to try: nothing is graded or scheduled, and there is no penalty for stopping. When you finish, a teacher marks the course complete and a certificate is issued to your profile.{% endblocktranslate %}
+  {% include "includes/_help.html" with title=help_title body=help_body %}
   {% if user.is_authenticated %}
     <a href="{% url 'academy:student-progress' %}"
        :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
@@ -127,7 +132,13 @@
   {% endif %}
 
   <div class="space-y-5">
-    <h2 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="text-2xl font-bold">{% trans "Modules" %}</h2>
+    <h2 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="flex items-center gap-2 text-2xl font-bold">{% trans "Modules" %}
+      {% translate "Modules, skills and the certificate" as help_title %}
+      {% blocktranslate asvar help_body %}Each module teaches exactly one skill — the badge shown on its header is what completing the module earns. The prerequisites listed inside a module are the skills that badge builds on, so it is best to earn those first. Lessons are the material; attached quizzes are task pools you practise until every task is solved.
+
+Your teacher awards the module's badge once you have worked through it. Completing the whole course is what earns the certificate.{% endblocktranslate %}
+      {% include "includes/_help.html" with title=help_title body=help_body %}
+    </h2>
 
     {% for module in modules %}
       <article x-data="{ open: true }"

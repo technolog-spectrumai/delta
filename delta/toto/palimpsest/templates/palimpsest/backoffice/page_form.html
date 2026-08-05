@@ -8,6 +8,13 @@
   <div class="flex flex-wrap items-center gap-3">
     <a href="{% url 'backoffice_notes:page-list' %}" class="text-sm underline hover:opacity-80"><i class="fa-solid fa-arrow-left"></i> {% trans "All pages" %}</a>
     <h2 class="text-lg font-bold"><i class="fa-solid fa-file-lines"></i> {{ title }}</h2>
+    {% translate "Page settings" as help_title %}
+    {% blocktranslate asvar help_body %}A page is a note or article that lives on the public blog and can also be attached to a course module as its notes or handout.
+
+The page is visible as soon as it is saved — there is no separate publish step. Ticking Private hides it from visitors who are not logged in; any signed-in student can still open it.
+
+Leave Slug blank to generate it from the title. The slug becomes the page URL, so changing it later breaks existing links. The description is the short deck shown in blog listings, and tags let readers filter the blog — the same tag set is shared with library references.{% endblocktranslate %}
+    {% include "includes/_help.html" with title=help_title body=help_body %}
   </div>
 
   <form method="post"
@@ -38,7 +45,15 @@
     <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
              class="max-w-3xl space-y-3 rounded-2xl border p-5 shadow-sm">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold"><i class="fa-solid fa-align-left"></i> {% trans "Sections" %}</h3>
+        <h3 class="font-bold"><i class="fa-solid fa-align-left"></i> {% trans "Sections" %}
+          {% translate "Sections and their order" as help_title %}
+          {% blocktranslate asvar help_body %}Sections hold the actual content of the page; the form above only sets its metadata.
+
+Sections are shown in the order given by each section's Order number, lowest first, and new sections are placed at the end by default. To reorder, edit a section and change its number — the list here renumbers itself.
+
+Deleting a section permanently removes its text; the rest of the page is untouched.{% endblocktranslate %}
+          {% include "includes/_help.html" with title=help_title body=help_body %}
+        </h3>
         <a href="{% url 'backoffice_notes:section-create' pk=page.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-plus"></i> {% trans "Add section" %}</a>
       </div>
       {% for section in sections %}

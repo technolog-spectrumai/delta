@@ -203,6 +203,11 @@
         {% endfor %}
 
         <div class="flex flex-wrap items-center justify-end gap-3 pt-2">
+          {% translate "Submitting this quiz" as help_title %}
+          {% blocktranslate asvar help_body %}This page is the official, one-shot take of the quiz — not practice. You get exactly one submission: once you press Submit, your answers are recorded permanently and the quiz cannot be retaken or corrected.
+
+After submitting, this page switches to review mode: your picks are marked right or wrong, the correct answers are highlighted, and worked solutions appear under each question. Questions left blank are recorded as unanswered, so check everything before you submit.{% endblocktranslate %}
+          {% include "includes/_help.html" with title=help_title body=help_body %}
           <a href="{{ back_url }}"
              :class="darkMode ? 'border-accent-1 bg-primary-bg-dark' : 'border-accent-2 bg-primary-bg-light'"
              class="inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition hover:opacity-85">

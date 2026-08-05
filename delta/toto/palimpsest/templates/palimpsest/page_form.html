@@ -21,6 +21,15 @@
       <h1 class="mt-2 flex items-center gap-3 text-3xl font-bold">
         <i class="{{ icon|default:'fa-solid fa-feather-pointed' }}"></i>
         {{ title }}
+        {% block palimpsest_form_help %}
+          {% translate "Piece settings" as help_title %}
+          {% blocktranslate asvar help_body %}This form sets the piece's metadata; the writing itself is added afterwards as sections.
+
+The piece appears on the blog as soon as it is created — there is no draft state. Ticking Private hides it from readers who are not logged in; anyone signed in can still open it.
+
+Leave Slug blank to generate it from the title. The slug becomes the piece's URL, so changing it later breaks existing links. The description is the short deck shown in listings and used as the excerpt, and tags let readers filter the blog.{% endblocktranslate %}
+          {% include "includes/_help.html" with title=help_title body=help_body %}
+        {% endblock %}
       </h1>
       <p class="mt-2 text-sm opacity-70">{% trans "Shape the piece metadata here. Add and arrange the actual writing as sections." %}</p>
     </header>

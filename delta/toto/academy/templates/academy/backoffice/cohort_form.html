@@ -6,6 +6,15 @@
   <div class="flex flex-wrap items-center gap-3">
     <a href="{% url 'backoffice_courses:roster' pk=course.pk %}" class="text-sm underline hover:opacity-80"><i class="fa-solid fa-arrow-left"></i> {{ course.title }}</a>
     <h2 class="text-lg font-bold"><i class="fa-solid fa-people-group"></i> {{ title }}</h2>
+    {% translate "Cohort settings" as help_title %}
+    {% blocktranslate asvar help_body %}A cohort is a named group of students within this course — a class or an edition.
+
+Capacity is optional: when set, adding members stops at that number until you raise it. Start and end dates are informational scheduling — they lock nothing. Unticking Active only labels the cohort as inactive in lists; members keep their course access.
+
+Adding a member below also enrols them in the course. Removing a member only takes them out of the cohort — their course enrolment stays; use the roster page to unenrol.
+
+All of these settings can be changed again later.{% endblocktranslate %}
+    {% include "includes/_help.html" with title=help_title body=help_body %}
   </div>
 
   <form method="post"
@@ -38,11 +47,20 @@
       <div class="flex flex-wrap items-center justify-between gap-2">
         <h3 class="font-bold"><i class="fa-solid fa-users"></i> {% trans "Members" %} ({{ members|length }}{% if cohort.capacity %}/{{ cohort.capacity }}{% endif %})</h3>
         {% if members %}
-          {% trans "Mark all members complete and issue a certificate to each?" as award_confirm %}
-          <form method="post" action="{% url 'backoffice_courses:cohort-award-certificates' pk=cohort.pk %}"
-                onsubmit="return confirm('{{ award_confirm|escapejs }}')">{% csrf_token %}
-            <button type="submit" class="inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-certificate"></i> {% trans "Award certificates" %}</button>
-          </form>
+          <div class="flex items-center gap-2">
+            {% trans "Mark all members complete and issue a certificate to each?" as award_confirm %}
+            <form method="post" action="{% url 'backoffice_courses:cohort-award-certificates' pk=cohort.pk %}"
+                  onsubmit="return confirm('{{ award_confirm|escapejs }}')">{% csrf_token %}
+              <button type="submit" class="inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-certificate"></i> {% trans "Award certificates" %}</button>
+            </form>
+            {% translate "Award certificates to the whole cohort" as help_title %}
+            {% blocktranslate asvar help_body %}One click marks the course complete for every member of this cohort and issues each of them a certificate, dated now. Members whose course was already complete are skipped and keep their original date.
+
+Certificates are issued unsigned; a teacher signs them one by one from each student's page.
+
+To undo for a single student, open their page and mark them as in progress — that clears the completion and removes the certificate, but only while it was never signed. A signed certificate is permanent.{% endblocktranslate %}
+            {% include "includes/_help.html" with title=help_title body=help_body %}
+          </div>
         {% endif %}
       </div>
       <div class="space-y-2">

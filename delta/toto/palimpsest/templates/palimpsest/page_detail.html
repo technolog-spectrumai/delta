@@ -151,9 +151,9 @@
           </header>
 
           <div class="px-5 py-5 sm:px-6">
-            {# Section bodies are written in cyprian and sanitised by
+            {% comment %} Section bodies are written in cyprian and sanitised by
                CyprianRichTextField (palimpsest/forms.py). Formulas arrive as
-               data-latex; the include at the end of the page renders them. #}
+               data-latex; the include at the end of the page renders them. {% endcomment %}
             <div class="palimpsest-prose cy-doc max-w-none">
               {{ section.html|safe }}
             </div>

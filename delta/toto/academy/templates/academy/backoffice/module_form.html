@@ -10,6 +10,17 @@
   <div class="flex flex-wrap items-center gap-3">
     <a href="{% url 'backoffice_courses:module-list' pk=course.pk %}" class="text-sm underline hover:opacity-80"><i class="fa-solid fa-arrow-left"></i> {{ course.title }}</a>
     <h2 class="text-lg font-bold"><i class="fa-solid fa-cubes"></i> {{ title }}</h2>
+    {% translate "Module settings" as help_title %}
+    {% blocktranslate asvar help_body %}A module is one unit of the course: the lessons, scripts and quizzes it groups, plus the settings here.
+
+Unlocks badge — the badge that stands for completing this module. Every module in a course must use a distinct badge, so the list hides badges already taken by this course. Quiz scores never award the badge automatically: you award it (or mark the module complete) on a student's page, and the earned badge is what fills the student's course progress. New badge creates one in place and selects it.
+
+Module exam — one official quiz that acts as this module's exam; only quizzes marked Official appear. Attached quizzes are extra practice shown with the module.
+
+Notes / handout page — an optional existing page students can read alongside the module. Lecture video URL is an external link (YouTube, Vimeo…); to host a video file, upload it on a lesson instead.
+
+Order places the module in the course — lower numbers come first.{% endblocktranslate %}
+    {% include "includes/_help.html" with title=help_title body=help_body %}
   </div>
 
   <form method="post"

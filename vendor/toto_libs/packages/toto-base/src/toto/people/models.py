@@ -53,10 +53,15 @@ class Person(DomainEntity):
         blank=True,
         help_text="Base64-encoded PNG of the person's handwritten signature.",
     )
+    # Blank means "no preference": core.middleware then leaves the language the
+    # locale machinery chose (the platform's LANGUAGE_CODE, a cookie, a session
+    # choice). The old default of "en" silently pinned every account to English
+    # on non-English hosts — a Polish platform whose every signed-in page came
+    # out English, with the catalogue loaded and ignored.
     preferred_language = models.CharField(
         max_length=10,
         choices=settings.LANGUAGES,
-        default="en",
+        default="",
         blank=True,
     )
 

@@ -21,6 +21,13 @@
     {% else %}
       <span class="rounded-full border px-2 py-0.5 text-[11px] uppercase opacity-60">{% trans "Draft" %}</span>
     {% endif %}
+    {% translate "Reordering modules" as help_title %}
+    {% blocktranslate asvar help_body %}Drag the grip or use the arrows to reorder modules. Every move is saved immediately — there is no separate save step, and you can move a module back just as easily.
+
+The order here is the order students see; the number in front of each title follows it. Reordering never touches lessons, badges or student progress.
+
+Deleting a module is different: after a confirmation it removes the module together with all its lessons and scripts.{% endblocktranslate %}
+    {% include "includes/_help.html" with title=help_title body=help_body %}
   </div>
 
   <div class="space-y-2" data-reorder-url="{% url 'backoffice_courses:module-reorder' pk=course.pk %}">
@@ -48,8 +55,8 @@
           </div>
         </div>
         <div class="flex items-center gap-2">
-          {# Module results live inside the course metrics page; the anchor
-             lands on this module's section. #}
+          {% comment %} Module results live inside the course metrics page; the anchor
+             lands on this module's section. {% endcomment %}
           <a href="{% url 'academy:course-metrics' slug=course.slug %}#module-{{ module.pk }}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"
              title="{% trans 'Quiz results for this module' %}"><i class="fa-solid fa-chart-line"></i> {% trans "Metrics" %}</a>
           <a href="{% url 'backoffice_courses:module-edit' pk=module.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-pen-to-square"></i> {% trans "Edit" %}</a>

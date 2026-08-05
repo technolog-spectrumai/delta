@@ -12,6 +12,13 @@
           <i class="{{ m.icon }}"></i>
         </span>
         <h2 class="text-lg font-bold">{{ m.label }}</h2>
+        {% if m.key == "sheets" %}
+          {% translate "Internal calculations open outside the panel" as help_title %}
+          {% blocktranslate asvar help_body %}Unlike the other modules, Internal calculations is a separate spreadsheet application: opening it leaves the authoring panel, so the panel tabs disappear until you navigate back.
+
+Access is the same as here — only teachers can enter — and spreadsheets are stored inside the sheets app itself, not in any course. Use your browser's back button to return to the panel.{% endblocktranslate %}
+          {% include "includes/_help.html" with title=help_title body=help_body %}
+        {% endif %}
         {% if not m.live %}
           <span class="ml-auto rounded-full border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide opacity-70">{% trans "Coming soon" %}</span>
         {% endif %}

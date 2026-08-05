@@ -9,8 +9,13 @@
   <div class="space-y-2">
     <a href="{% url 'academy:personal-path-list' %}" class="text-sm underline hover:opacity-80">{% trans "My Learning Paths" %}</a>
 
-    <h1 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="text-3xl font-bold">
+    <h1 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="flex flex-wrap items-center gap-2 text-3xl font-bold">
       {% trans "New Learning Path" %}
+      {% translate "Choosing a goal" as help_title %}
+      {% blocktranslate asvar help_body %}Pick exactly one goal: a single skill, or a whole skill tree if you want everything in that domain. The generator collects every skill you still miss on the way there — including prerequisites of prerequisites — and orders the steps so a skill never appears before the skills it depends on. Where a published course module teaches a skill, the step links straight to that module.
+
+You can have only one active path, so submitting archives your current path; archiving cannot be undone, though the old path stays viewable and your earned skills count towards the new one automatically.{% endblocktranslate %}
+      {% include "includes/_help.html" with title=help_title body=help_body %}
     </h1>
 
     <p class="opacity-75">

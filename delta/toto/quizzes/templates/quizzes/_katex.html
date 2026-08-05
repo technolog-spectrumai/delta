@@ -1,7 +1,7 @@
 {% load static %}
-{# Vendored KaTeX (offline-safe) + auto-render. Renders $…$ / $$…$$ math inside
+{% comment %} Vendored KaTeX (offline-safe) + auto-render. Renders $…$ / $$…$$ math inside
    any element carrying the .js-math class. Included on both student pages and
-   the back-office editor preview. #}
+   the back-office editor preview. {% endcomment %}
 <link rel="stylesheet" href="{% static 'quizzes/vendor/katex/katex.min.css' %}">
 <script defer src="{% static 'quizzes/vendor/katex/katex.min.js' %}"></script>
 <script defer src="{% static 'quizzes/vendor/katex/contrib/auto-render.min.js' %}"></script>

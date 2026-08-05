@@ -1,2 +1,12 @@
 {% extends "palimpsest/page_form.html" %}
 {% load i18n %}
+
+{% block palimpsest_form_help %}
+  {% translate "Creating a tag" as help_title %}
+  {% blocktranslate asvar help_body %}A tag is a shared label: blog pieces and their sections carry them, and library references use the same set.
+
+Readers use tags to filter the blog, so the name is public. Leave the slug blank to generate it from the name; the slug becomes part of the tag's URL.
+
+A tag cannot be renamed or deleted from here once created, so choose the name carefully.{% endblocktranslate %}
+  {% include "includes/_help.html" with title=help_title body=help_body %}
+{% endblock %}

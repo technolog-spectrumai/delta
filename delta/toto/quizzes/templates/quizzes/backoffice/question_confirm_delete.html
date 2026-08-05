@@ -4,7 +4,13 @@
 {% block backoffice_content %}
 <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
      class="max-w-xl space-y-4 rounded-2xl border p-6 shadow-sm">
-  <h2 class="flex items-center gap-2 text-xl font-bold text-warn-light"><i class="fa-solid fa-triangle-exclamation"></i> {% trans "Delete question" %}</h2>
+  <h2 class="flex items-center gap-2 text-xl font-bold text-warn-light"><i class="fa-solid fa-triangle-exclamation"></i> {% trans "Delete question" %}
+    {% translate "What deleting a question removes" as help_title %}
+    {% blocktranslate asvar help_body %}Deleting removes this question, its answer options, every answer students gave to it in submitted attempts, and each student's practice progress on it. It also disappears from the metrics report. There is no undo.
+
+The rest of the quiz is untouched: remaining questions keep their order, and students' practice totals simply shrink by one task.{% endblocktranslate %}
+    {% include "includes/_help.html" with title=help_title body=help_body %}
+  </h2>
   <p class="js-math text-sm font-medium">{{ question.text }}</p>
   <p class="text-sm opacity-70">{% trans "This removes the question and its answers. This cannot be undone." %}</p>
   <form method="post" class="flex items-center justify-end gap-3">

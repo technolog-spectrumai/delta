@@ -13,7 +13,15 @@
   <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
            class="flex items-center justify-between gap-3 rounded-2xl border p-5 shadow-sm">
     <div>
-      <h3 class="font-bold"><i class="fa-solid fa-flag-checkered"></i> {% trans "Course completion" %}</h3>
+      <h3 class="font-bold"><i class="fa-solid fa-flag-checkered"></i> {% trans "Course completion" %}
+        {% translate "Completing the course" as help_title %}
+        {% blocktranslate asvar help_body %}Mark complete stamps today's date on the enrolment and automatically issues a course certificate (unsigned at first).
+
+Mark as in progress reverses it: the date is cleared and the certificate is removed — but only while it was never signed. A cryptographically signed certificate is permanent and stays with the student.
+
+Completion is independent of the module badges below; setting one never sets the other.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}
+      </h3>
       {% if enrollment and enrollment.completed_at %}
         <p class="mt-1 text-sm text-success-light"><i class="fa-solid fa-circle-check"></i> {% trans "Completed on" %} {{ enrollment.completed_at|date:"Y-m-d" }}</p>
       {% else %}
@@ -34,7 +42,15 @@
   <!-- Module completion (badges) -->
   <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
            class="space-y-3 rounded-2xl border p-5 shadow-sm">
-    <h3 class="font-bold"><i class="fa-solid fa-list-check"></i> {% trans "Module completion" %}</h3>
+    <h3 class="font-bold"><i class="fa-solid fa-list-check"></i> {% trans "Module completion" %}
+      {% translate "Module completion and badges" as help_title %}
+      {% blocktranslate asvar help_body %}Each module is represented by its badge: Mark complete awards the badge, revoke takes it back. Both apply immediately and are fully reversible.
+
+Earned badges are what fill the student's course progress and unlock dependent badges on their skill tree. Quiz results never award a badge by themselves — module completion is decided here.
+
+A badge is platform-wide: revoking it also affects any other course or learning path that counts the same badge.{% endblocktranslate %}
+      {% include "includes/_help.html" with title=help_title body=help_body %}
+    </h3>
     <p class="text-xs opacity-60">{% trans "Completing a module awards its skill badge." %}</p>
     <div class="space-y-2">
       {% for row in module_rows %}
@@ -64,7 +80,15 @@
   <!-- Badges -->
   <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
            class="space-y-3 rounded-2xl border p-5 shadow-sm">
-    <h3 class="font-bold"><i class="fa-solid fa-award"></i> {% trans "Badges" %}</h3>
+    <h3 class="font-bold"><i class="fa-solid fa-award"></i> {% trans "Badges" %}
+      {% translate "The badge collection" as help_title %}
+      {% blocktranslate asvar help_body %}This is the student's entire badge collection across the platform, not just this course.
+
+Careful: clicking a badge chip revokes it immediately — there is no confirmation. Awarding it again restores it just as quickly, so a slip is easy to fix.
+
+The selector below can award any badge on the platform, including ones no module of this course unlocks.{% endblocktranslate %}
+      {% include "includes/_help.html" with title=help_title body=help_body %}
+    </h3>
     <div class="flex flex-wrap gap-2">
       {% for badge in earned_badges %}
         <form method="post" action="{% url 'backoffice_courses:student-revoke-badge' pk=course.pk student_pk=student.pk %}">{% csrf_token %}

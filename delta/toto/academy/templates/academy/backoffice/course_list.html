@@ -18,7 +18,15 @@
         <tr>
           <th class="px-4 py-3">{% trans "Course" %}</th>
           <th class="px-4 py-3">{% trans "Modules" %}</th>
-          <th class="px-4 py-3">{% trans "Status" %}</th>
+          <th class="px-4 py-3">{% trans "Status" %}
+            {% translate "Publishing a course" as help_title %}
+            {% blocktranslate asvar help_body %}Published means the course appears on the public course list and students can open it. A draft course is visible only in this panel and to staff accounts — everyone else gets a not-found page, even with a direct link.
+
+You publish or unpublish in Edit. The switch is reversible at any time and never touches enrolments, badges or progress.
+
+Virtual courses are curriculum items: they stay off the public list even when published, but remain reachable by direct link.{% endblocktranslate %}
+            {% include "includes/_help.html" with title=help_title body=help_body size="text-xs" %}
+          </th>
           <th class="px-4 py-3 text-right">{% trans "Actions" %}</th>
         </tr>
       </thead>

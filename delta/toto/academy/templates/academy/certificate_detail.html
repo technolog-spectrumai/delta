@@ -27,7 +27,13 @@
           <i class="fa-solid fa-certificate"></i>
         </div>
         <div>
-          <h1 class="text-2xl font-bold">{{ certificate.display_title }}</h1>
+          <h1 class="flex flex-wrap items-center gap-2 text-2xl font-bold">{{ certificate.display_title }}
+            {% translate "What this certificate proves" as help_title %}
+            {% blocktranslate asvar help_body %}This certificate records that the recipient completed the course, or passed the official exam, named on it; a course certificate is issued when a teacher marks the enrolment complete. The page is public: anyone with the link can view it, and the UUID below is the certificate's permanent identifier — quote it to have the record confirmed.
+
+An unsigned certificate rests on this platform's database alone. Once a professor signs it cryptographically it also becomes independently verifiable, and a signed certificate is never deleted.{% endblocktranslate %}
+            {% include "includes/_help.html" with title=help_title body=help_body %}
+          </h1>
           <p class="text-sm opacity-60 mt-1">{% trans "Granted" %}: {{ certificate.granted_at|date:"Y-m-d" }}</p>
         </div>
       </div>
@@ -71,6 +77,11 @@
           <i class="fa-solid fa-circle-check"
              :class="darkMode ? 'text-success-dark' : 'text-success-light'"></i>
           <span class="font-semibold text-sm">{% trans "Cryptographically signed" %}</span>
+          {% translate "How verification works" as help_title %}
+          {% blocktranslate asvar help_body %}The signing teacher's Ed25519 private key signed the canonical payload shown under Signing payload: the certificate UUID, the recipient's identity, the teacher's ID and a timestamp. Anyone holding the teacher's public key — identified by the Key ID above — can check that the signature matches that payload, without trusting this website.
+
+If they match, the certificate cannot have been altered since the moment it was signed.{% endblocktranslate %}
+          {% include "includes/_help.html" with title=help_title body=help_body %}
         </div>
 
         <dl class="text-xs space-y-1">

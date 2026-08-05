@@ -14,18 +14,18 @@ can sit on one page (a formset of sections, say) without fighting.
      data-placeholder="{{ widget.placeholder }}"
      data-upload-url="{% url 'cyprian:media_upload' %}">
 
-  {# The toolbar and host stay empty (and the host stays out of the layout)
-     until field.js mounts, so a JS-off page shows the textarea alone. #}
+  {% comment %} The toolbar and host stay empty (and the host stays out of the layout)
+     until field.js mounts, so a JS-off page shows the textarea alone. {% endcomment %}
   <div class="cy-field-toolbar" data-cy-toolbar hidden role="toolbar"
        aria-label="{{ widget.placeholder|default:'Formatting' }}"></div>
 
-  {# .cy-doc/.cy-screen carry the document typography; the editor styles its own
-     content class inside. Height is a widget concern, not a document one. #}
+  {% comment %} .cy-doc/.cy-screen carry the document typography; the editor styles its own
+     content class inside. Height is a widget concern, not a document one. {% endcomment %}
   <div class="cy-field-host cy-doc cy-screen" data-cy-host hidden
        style="min-height: {{ widget.min_height }}"></div>
 
-  {# NOT hidden here: with JavaScript off this textarea is the field, and it
-     must be usable. field.js hides it only once an editor has mounted. #}
+  {% comment %} NOT hidden here: with JavaScript off this textarea is the field, and it
+     must be usable. field.js hides it only once an editor has mounted. {% endcomment %}
   <textarea name="{{ widget.name }}"
             id="{{ widget.attrs.id }}"
             data-cy-input

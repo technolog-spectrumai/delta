@@ -10,9 +10,14 @@
     <div class="space-y-2">
       <a href="{% url 'academy:student-progress' %}" class="text-sm underline hover:opacity-80">{% trans "My Progress" %}</a>
 
-      <h1 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="text-3xl font-bold">
+      <h1 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="flex flex-wrap items-center gap-2 text-3xl font-bold">
         <i class="fa-solid fa-route"></i>
         {% trans "My Learning Paths" %}
+        {% translate "What a learning path is" as help_title %}
+        {% blocktranslate asvar help_body %}A path turns one skill goal into an ordered to-do list: every skill you have not earned yet on the way to the goal, arranged so prerequisites always come first. Steps tick themselves off whenever you earn the matching skill anywhere on the platform, so a path never lags behind your real progress.
+
+You keep one active path at a time — starting a new one archives the current one. A path moves to Completed when every step is done; Archived paths stay listed below, read-only.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}
       </h1>
 
       <p class="opacity-75">{% trans "Pick a skill goal and follow an ordered path that closes your skill gaps." %}</p>

@@ -11,7 +11,15 @@
   <!-- Enrol a student -->
   <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
            class="space-y-3 rounded-2xl border p-5 shadow-sm">
-    <h3 class="font-bold"><i class="fa-solid fa-user-plus"></i> {% trans "Enrol a student" %}</h3>
+    <h3 class="font-bold"><i class="fa-solid fa-user-plus"></i> {% trans "Enrol a student" %}
+      {% translate "Enrolling students" as help_title %}
+      {% blocktranslate asvar help_body %}Search any person by name or e-mail and press Enrol. That creates their student record if needed and puts them on this course's roster — from then on they can use the enrolled-only material, such as lesson notes and their PDF versions.
+
+Enrolling is safe to repeat: someone already on the roster is simply shown as enrolled.
+
+People you add to a cohort further down are enrolled in the course automatically.{% endblocktranslate %}
+      {% include "includes/_help.html" with title=help_title body=help_body %}
+    </h3>
     <form method="get" class="flex flex-wrap gap-2">
       <input type="text" name="q" value="{{ query }}" placeholder="{% trans 'Search by name or email' %}"
              class="w-full max-w-sm rounded-lg border px-3 py-2 text-sm" :class="darkMode ? 'border-accent-1 bg-primary-bg-dark text-text-main-dark placeholder:text-text-main-dark/45' : 'border-accent-2 bg-primary-bg-light text-text-main-light placeholder:text-text-main-light/45'">
@@ -42,7 +50,15 @@
   <!-- Enrolled students -->
   <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
            class="space-y-3 rounded-2xl border p-5 shadow-sm">
-    <h3 class="font-bold"><i class="fa-solid fa-user-graduate"></i> {% trans "Enrolled students" %} ({{ rows|length }})</h3>
+    <h3 class="font-bold"><i class="fa-solid fa-user-graduate"></i> {% trans "Enrolled students" %} ({{ rows|length }})
+      {% translate "Unenrolling a student" as help_title %}
+      {% blocktranslate asvar help_body %}Unenrol takes the student off the roster at once — there is no confirmation. Their access to enrolled-only material ends and the enrolment record is deleted, including the completion date if the course was marked complete.
+
+Badges they earned and any certificate already issued are kept; only the roster entry goes. Re-enrolling later starts a fresh enrolment.
+
+Manage opens the student's page for this course: completion, module badges and the certificate.{% endblocktranslate %}
+      {% include "includes/_help.html" with title=help_title body=help_body %}
+    </h3>
     <div class="space-y-2">
       {% for row in rows %}
         <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'" class="flex items-center justify-between gap-3 rounded-lg border p-3">
@@ -70,7 +86,15 @@
   <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
            class="space-y-3 rounded-2xl border p-5 shadow-sm">
     <div class="flex items-center justify-between">
-      <h3 class="font-bold"><i class="fa-solid fa-people-group"></i> {% trans "Cohorts" %}</h3>
+      <h3 class="font-bold"><i class="fa-solid fa-people-group"></i> {% trans "Cohorts" %}
+        {% translate "Cohorts" as help_title %}
+        {% blocktranslate asvar help_body %}A cohort is a named group inside this course — a class or an edition. Adding a member also enrols them in the course; removing a member from a cohort does not unenrol them.
+
+Capacity, when set, caps the member count: a full cohort refuses new members until you raise the limit. Inactive is just a label — it blocks nothing.
+
+The certificate button on a cohort is the heavy one: after a confirmation it marks the course complete for every member and issues each of them a certificate in one step.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}
+      </h3>
       <a href="{% url 'backoffice_courses:cohort-create' pk=course.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-plus"></i> {% trans "New cohort" %}</a>
     </div>
     <div class="space-y-2">

@@ -14,6 +14,17 @@
   <div class="flex flex-wrap items-center gap-3">
     <a href="{% url 'backoffice_courses:module-edit' pk=module.pk %}" class="text-sm underline hover:opacity-80"><i class="fa-solid fa-arrow-left"></i> {{ module.title }}</a>
     <h2 class="flex items-center gap-2 text-xl font-bold"><i class="{{ icon }}"></i> {{ title }}</h2>
+    {% translate "Lesson settings" as help_title %}
+    {% blocktranslate asvar help_body %}A lesson bundles what a student studies in one sitting: a video, notes and practice quizzes.
+
+Lesson video — upload the actual file (MP4/WebM). It is stored privately and played to students; for an external link (YouTube, Vimeo…) use the module's Lecture video URL instead of uploading here.
+
+Lesson notes (PDF) — a ready-made file students download or print. It is separate from the authored notes document lower on this page, which you write in the built-in editor; a lesson can offer both.
+
+On edit, leaving an upload blank keeps the current file, and ticking Remove drops it without a replacement.
+
+Attached quizzes appear with the lesson as practice; Order places the lesson within its module — lower numbers come first.{% endblocktranslate %}
+    {% include "includes/_help.html" with title=help_title body=help_body %}
   </div>
 
   {% if form.non_field_errors %}<div class="rounded-xl border border-warn-light/40 bg-warn-light/10 p-3 text-sm">{{ form.non_field_errors }}</div>{% endif %}
@@ -95,7 +106,15 @@
   <!-- Authored lesson notes (cyprian document) -->
   <section class="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-current/15 p-4">
     <div class="min-w-0">
-      <h3 class="font-bold"><i class="fa-solid fa-feather-pointed"></i> {% trans "Lesson notes (document)" %}</h3>
+      <h3 class="font-bold"><i class="fa-solid fa-feather-pointed"></i> {% trans "Lesson notes (document)" %}
+        {% translate "Two kinds of notes" as help_title %}
+        {% blocktranslate asvar help_body %}The PDF upload in the form above is a finished file you made elsewhere. This document is authored here, in the platform's writer — real pages with formulas and images — and enrolled students read it online or download it as a PDF generated from the same document.
+
+The button creates the document the first time and then opens the editor. The file belongs to the teacher who first opened it; only that owner can edit it.
+
+The two are independent: a lesson can offer the uploaded PDF, the authored document, or both.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}
+      </h3>
       <p class="text-xs opacity-60">{% trans "Written notes with real pages, formulas and images — students read them online or as a PDF. Separate from the uploaded PDF above." %}</p>
     </div>
     {% comment %} A cyprian document, created on demand and opened in the

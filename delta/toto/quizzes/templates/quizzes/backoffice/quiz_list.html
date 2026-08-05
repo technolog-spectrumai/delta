@@ -40,8 +40,8 @@
             <td class="px-4 py-3">
               <div class="flex items-center justify-end gap-2">
                 <a href="{% url 'backoffice_quizzes:question-list' pk=quiz.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-list-check"></i> {% trans "Questions" %}</a>
-                {# Only once somebody has answered: an empty metrics page teaches nothing
-                   and reads as a broken link. #}
+                {% comment %} Only once somebody has answered: an empty metrics page teaches nothing
+                   and reads as a broken link. {% endcomment %}
                 {% if quiz.completed_attempt_count %}
                   <a href="{% url 'quizzes:quiz-metrics' pk=quiz.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"
                      title="{% trans 'Answer distribution per question' %}"><i class="fa-solid fa-chart-column"></i> {% trans "Metrics" %} ({{ quiz.completed_attempt_count }})</a>

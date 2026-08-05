@@ -5,6 +5,13 @@
 <div class="space-y-6">
   <div class="flex flex-wrap items-center gap-3">
     <h2 class="text-lg font-bold"><i class="fa-solid fa-chalkboard-user"></i> {% trans "Teachers" %}</h2>
+    {% translate "Promoting and removing teachers" as help_title %}
+    {% blocktranslate asvar help_body %}Promoting makes a person a teacher: they can enter this entire panel and manage every course, quiz, student and cohort — teacher access is not scoped to particular courses. Only people with a login account appear in the search; a teacher tagged "no login" cannot enter the panel until an account is linked.
+
+Remove only switches access off. The person keeps their teacher record, their ownership of courses, modules and lessons, their cohorts and any certificates they signed — and Restore brings access back with one click.
+
+Two caveats: you cannot remove yourself, and a person with staff status keeps panel access until their staff flag is removed in the admin.{% endblocktranslate %}
+    {% include "includes/_help.html" with title=help_title body=help_body %}
   </div>
 
   <!-- Current teachers -->

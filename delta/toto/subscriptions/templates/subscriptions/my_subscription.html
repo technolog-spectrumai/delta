@@ -19,7 +19,15 @@
     </header>
 
     <div>
-      <h2 class="mb-2 text-lg font-semibold">{% trans "Current plan" %}</h2>
+      <h2 class="mb-2 flex items-center gap-2 text-lg font-semibold">{% trans "Current plan" %}
+        {% translate "Your plan and its expiry" as help_title %}
+        {% blocktranslate asvar help_body %}An active plan gives you access to the courses that require a subscription, until the date shown. On that date the plan expires by itself and those courses close until you subscribe again — nothing else about your account changes and your progress is kept.
+
+You do not have to wait for expiry to renew: subscribing again while a plan is active adds the new period after the current end date, so no remaining time is lost.
+
+Every past subscription stays listed under History with its final status — active, expired or canceled.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}
+      </h2>
       {% if active_subscription %}
         <div class="rounded-lg border border-green-500/40 bg-green-500/10 p-4">
           <p class="text-lg font-bold">{{ active_subscription.plan.name }}</p>
@@ -36,7 +44,13 @@
     </div>
 
     <div>
-      <h2 class="mb-2 text-lg font-semibold">{% trans "Your discount codes" %}</h2>
+      <h2 class="mb-2 flex items-center gap-2 text-lg font-semibold">{% trans "Your discount codes" %}
+        {% translate "Discount codes" as help_title %}
+        {% blocktranslate asvar help_body %}These are your personal one-time coupons. You receive one automatically each time you subscribe to a plan that carries a loyalty discount; the percentage shows how much the code takes off.
+
+Each code works once: after it is used, or after its expiry date passes, it disappears from this list. Codes are tied to your account.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}
+      </h2>
       {% if discount_codes %}
         <ul class="space-y-2">
           {% for code in discount_codes %}

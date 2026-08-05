@@ -27,7 +27,14 @@
       {# Progress: solved / total for this section (spec F-06). #}
       <div>
         <div class="flex items-center justify-between text-sm">
-          <span class="font-semibold">{% trans "Solved" %}: {{ stats.solved }} / {{ stats.total }}</span>
+          <span class="inline-flex items-center gap-2">
+            <span class="font-semibold">{% trans "Solved" %}: {{ stats.solved }} / {{ stats.total }}</span>
+            {% translate "How the practice pool works" as help_title %}
+            {% blocktranslate asvar help_body %}Practice serves this section's tasks one at a time, skipping the ones you have already solved. Answer correctly and the task leaves your pool for good — it will not be asked again. Answer wrong and the task returns to the pool for a later retry, and the worked solution is shown right away so you can learn from it.
+
+The bar counts solved tasks out of the total; the section is complete when every task is solved. Progress is saved as you go, so you can leave and pick up where you stopped.{% endblocktranslate %}
+            {% include "includes/_help.html" with title=help_title body=help_body %}
+          </span>
           <span class="opacity-70">{% trans "To solve" %}: {{ stats.remaining }}</span>
         </div>
         <div class="mt-1 h-2 w-full overflow-hidden rounded-full bg-black/10 dark:bg-white/10">

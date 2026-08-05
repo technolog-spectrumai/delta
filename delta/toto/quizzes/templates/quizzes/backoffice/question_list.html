@@ -15,6 +15,11 @@
   <div class="flex flex-wrap items-center gap-3">
     <a href="{% url 'backoffice_quizzes:quiz-list' %}" class="text-sm underline hover:opacity-80"><i class="fa-solid fa-arrow-left"></i> {% trans "All quizzes" %}</a>
     <h2 class="text-lg font-bold">{{ quiz.title }}</h2>
+    {% translate "Working with the question list" as help_title %}
+    {% blocktranslate asvar help_body %}Reorder questions with the drag handle or the up/down arrows. The new order is saved immediately — there is no separate save step — and positions are renumbered 1, 2, 3… This is the order students meet the questions in, both on the quiz page and in practice.
+
+A Metrics button appears next to a question once at least one finished attempt has answered it; the number in brackets is how many answers were recorded. It opens the quiz metrics report scrolled to that question, showing how often each option was picked.{% endblocktranslate %}
+    {% include "includes/_help.html" with title=help_title body=help_body %}
     {% if quiz.is_published %}
       <span class="rounded-full border px-2 py-0.5 text-[11px] uppercase text-success-light">{% trans "Published" %}</span>
     {% else %}
@@ -57,8 +62,8 @@
         </div>
 
         <div class="flex items-center gap-2">
-          {# Only when this question has actually been answered — the metrics
-                 page groups by question, so the anchor lands on it. #}
+          {% comment %} Only when this question has actually been answered — the metrics
+                 page groups by question, so the anchor lands on it. {% endcomment %}
               {% if row.answered %}
                 <a href="{% url 'quizzes:quiz-metrics' pk=quiz.pk %}#question-{{ row.q.pk }}"
                    class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"

@@ -10,9 +10,14 @@
     <div class="space-y-2">
       <a href="{% url 'academy:personal-path-list' %}" class="text-sm underline hover:opacity-80">{% trans "My Learning Paths" %}</a>
 
-      <h1 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="text-3xl font-bold">
+      <h1 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="flex flex-wrap items-center gap-2 text-3xl font-bold">
         {% if path.goal_badge %}<i class="{{ path.goal_badge.icon }}"></i>{% else %}<i class="fa-solid fa-diagram-project"></i>{% endif %}
         {{ path.title }}
+        {% translate "How steps complete" as help_title %}
+        {% blocktranslate asvar help_body %}Skill steps marked auto complete on their own the moment you earn that skill — they cannot be ticked by hand. Module steps link to the course module that teaches the skill; use Mark done to track them yourself and Undo to revert, except when the skill behind the step is already earned — then it stays done. Tasks are your own additions and can be ticked, unticked or deleted freely.
+
+The path becomes Completed when every step is done, and reopens automatically if new steps appear.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}
       </h1>
 
       <p class="opacity-75">
@@ -43,6 +48,11 @@
             {% trans "Archive" %}
           </button>
         </form>
+        {% translate "Regenerate and archive" as help_title %}
+        {% blocktranslate asvar help_body %}Regenerate throws away the pending auto-generated steps and rebuilds them against your current skills — useful after you earned skills outside this path or the skill tree changed. Completed steps and your own tasks are always kept.
+
+Archive removes the path from your active list and freezes it: its buttons disappear and there is no un-archive. Nothing you earned is lost — skills live on your profile, not in the path — and you can always build a new path to the same goal.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}
       </div>
     {% endif %}
   </div>

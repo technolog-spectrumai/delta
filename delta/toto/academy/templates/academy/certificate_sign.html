@@ -24,6 +24,11 @@
       <h2 class="text-xl font-bold flex items-center gap-2">
         <i class="fa-solid fa-signature" :class="darkMode ? 'text-accent-dark' : 'text-accent-light'"></i>
         {% trans "Sign Certificate" %}
+        {% translate "What signing does" as help_title %}
+        {% blocktranslate asvar help_body %}Signing attaches your personal academic attestation to this certificate: your Ed25519 key signs the certificate UUID, the recipient's identity, your teacher ID and a timestamp, and the signature is stored with the certificate for anyone to verify against your public key.
+
+There is no un-sign, and a signed certificate is never deleted — even if the course completion is later withdrawn — so review the recipient and course before submitting. Your strongbox password only decrypts your private key in memory for this one operation; if you have no signing key yet, one is provisioned on your first signature.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}
       </h2>
 
       {% if not teacher %}

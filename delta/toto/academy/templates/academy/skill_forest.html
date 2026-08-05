@@ -13,7 +13,13 @@
 
     <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
       <div class="space-y-2">
-        <h1 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="text-3xl font-bold">{% trans "Skill Forest" %}</h1>
+        <h1 :class="darkMode ? 'text-accent-dark' : 'text-accent-light'" class="flex items-center gap-2 text-3xl font-bold">{% trans "Skill Forest" %}
+          {% translate "How skills unlock" as help_title %}
+          {% blocktranslate asvar help_body %}Every tree is one domain of skills; the arrows point from a prerequisite to the skill that builds on it. A skill unlocks — becomes available to start — once you have earned everything that points at it, and it is earned when your teacher awards it, normally after you complete the course module that teaches it.
+
+The previews are clickable: tap a tree to open its full page and see which courses teach each skill. Your own standing per skill is shown on the My Progress map.{% endblocktranslate %}
+          {% include "includes/_help.html" with title=help_title body=help_body %}
+        </h1>
         <p class="opacity-75">{% trans "Separate skill trees grouped by domain." %}</p>
       </div>
 

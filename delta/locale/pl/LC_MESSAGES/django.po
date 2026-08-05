@@ -2888,3 +2888,9 @@ msgstr "Plik niedostępny"
 #: toto/vod/templates/vod/vault_file_play.html:49
 msgid "This file cannot be streamed directly. Try downloading it instead."
 msgstr "Tego pliku nie można odtwarzać bezpośrednio. Spróbuj zamiast tego go pobrać."
+
+msgid "Internal calculations"
+msgstr "Obliczenia wewnętrzne"
+
+msgid "Calculation sheets for your own working — edit them right in your browser."
+msgstr "Arkusze kalkulacyjne do własnych obliczeń — edytuj je bezpośrednio w przeglądarce."

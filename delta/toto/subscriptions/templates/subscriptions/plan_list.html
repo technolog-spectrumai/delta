@@ -15,6 +15,13 @@
       </a>
       <h1 class="flex items-center gap-3 text-3xl font-bold">
         <i class="fa-solid fa-id-card"></i> {% trans "Plans" %}
+        {% translate "Choosing a plan" as help_title %}
+        {% blocktranslate asvar help_body %}A plan grants time-limited access to the subscription-gated courses. Confirming a plan activates it immediately for the period shown — there is no online payment step yet.
+
+If you already have an active plan, the new period is added after your current end date, so no remaining time is ever lost by subscribing early.
+
+Plans marked with a loyalty discount also add a one-time discount code to your profile the moment you subscribe. You can review your access and codes any time under My subscription.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}
       </h1>
       <p class="text-sm opacity-70">{% trans "Longer plans unlock a bigger loyalty discount." %}</p>
     </header>

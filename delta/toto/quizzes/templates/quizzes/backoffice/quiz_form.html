@@ -6,7 +6,15 @@
       :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
       class="max-w-3xl space-y-5 rounded-2xl border p-6 shadow-sm">
   {% csrf_token %}
-  <h2 class="flex items-center gap-2 text-xl font-bold"><i class="{{ icon }}"></i> {{ title }}</h2>
+  <h2 class="flex items-center gap-2 text-xl font-bold"><i class="{{ icon }}"></i> {{ title }}
+    {% translate "Quiz settings" as help_title %}
+    {% blocktranslate asvar help_body %}A quiz is a pool of tasks students practise until every one is solved.
+
+Published — students can see and open it; unpublished quizzes are visible only here.
+Official — marks it as a module exam: it can be attached to a module as its exam, and completing it counts towards the certificate.
+Order — where it appears in lists; lower numbers come first.{% endblocktranslate %}
+    {% include "includes/_help.html" with title=help_title body=help_body %}
+  </h2>
 
   {% if form.non_field_errors %}
     <div class="rounded-xl border border-warn-light/40 bg-warn-light/10 p-4 text-sm">{{ form.non_field_errors }}</div>

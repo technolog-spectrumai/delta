@@ -7,6 +7,13 @@
   <!-- Add reference toolbar -->
   <div class="flex flex-wrap items-center gap-2">
     <span class="text-sm font-semibold opacity-70">{% trans "Add reference:" %}</span>
+    {% translate "Reference types" as help_title %}
+    {% blocktranslate asvar help_body %}Pick the type that matches the source; each type adds its own fields on top of the shared ones (title, authors, year, DOI, URL, abstract, tags). Books carry publisher, edition and ISBN; articles carry journal, volume, issue and pages; audio and video carry platform and duration.
+
+Students browse books and articles in the public library and can search by title, author and abstract — plus ISBN for books and journal for articles. Audio and video references have no public page; they surface only through collections and exports.
+
+Enter ISBN and DOI exactly as printed: they go straight into the BibTeX export. Saved changes are visible to students immediately, and deleting a reference also removes it from every collection that lists it.{% endblocktranslate %}
+    {% include "includes/_help.html" with title=help_title body=help_body %}
     {% for t in types %}
       <a href="{% url 'backoffice_library:reference-create' kind=t.kind %}"
          class="inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-semibold hover:opacity-85">
@@ -45,7 +52,15 @@
   <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
            class="space-y-3 rounded-2xl border p-5 shadow-sm">
     <div class="flex items-center justify-between">
-      <h3 class="font-bold"><i class="fa-solid fa-layer-group"></i> {% trans "Collections" %}</h3>
+      <h3 class="font-bold"><i class="fa-solid fa-layer-group"></i> {% trans "Collections" %}
+        {% translate "What collections are for" as help_title %}
+        {% blocktranslate asvar help_body %}A collection is a named reading list that can mix all four reference types; the description is a short note on what it gathers.
+
+Collections are an internal tool — students never see them on the site. Their main use is export: the admin console can turn a collection into a BibTeX (.bib) file stored in the Vault.
+
+Deleting a collection removes only the grouping; the references in it are kept.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}
+      </h3>
       <a href="{% url 'backoffice_library:collection-create' %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-plus"></i> {% trans "New collection" %}</a>
     </div>
     {% for collection in collections %}

@@ -4,7 +4,13 @@
 {% block backoffice_content %}
 <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
      class="max-w-xl space-y-4 rounded-2xl border p-6 shadow-sm">
-  <h2 class="flex items-center gap-2 text-xl font-bold text-warn-light"><i class="fa-solid fa-triangle-exclamation"></i> {% trans "Delete quiz" %}</h2>
+  <h2 class="flex items-center gap-2 text-xl font-bold text-warn-light"><i class="fa-solid fa-triangle-exclamation"></i> {% trans "Delete quiz" %}
+    {% translate "What deleting a quiz removes" as help_title %}
+    {% blocktranslate asvar help_body %}Deleting removes the quiz itself, every question and answer option in it, all student attempts together with the answers they submitted, and every student's practice progress on these tasks. The metrics history disappears with the attempts. Nothing is archived and there is no undo.
+
+If you only want to hide the quiz from students, uncheck Published in the quiz settings instead — that keeps all data and can be reversed at any time.{% endblocktranslate %}
+    {% include "includes/_help.html" with title=help_title body=help_body %}
+  </h2>
   <p class="text-sm">{% blocktrans with title=quiz.title %}Delete “{{ title }}” and all of its questions and answers? This cannot be undone.{% endblocktrans %}</p>
   <form method="post" class="flex items-center justify-end gap-3">
     {% csrf_token %}

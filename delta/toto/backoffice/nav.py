@@ -63,13 +63,16 @@ _MODULES = [
         # Unlike its siblings this links out of the shell: primula is a whole
         # vendored app, not a backoffice_* URL module. Its routes are wrapped in
         # teacher_required (delta/primula_urls.py), so the audience is the same.
+        # "Internal calculations", not "Sheets": on a school platform "arkusze"
+        # collides head-on with arkusze maturalne (exam sheets), and a teacher
+        # scanning the panel must not wonder which one this is.
         "key": "sheets",
-        "label": _("Sheets"),
+        "label": _("Internal calculations"),
         "icon": "fa-solid fa-table-cells",
         "url_name": "primula:index",
         "live": True,
         "app": "toto.primula",
-        "blurb": _("Build spreadsheets and edit them right in your browser."),
+        "blurb": _("Calculation sheets for your own working — edit them right in your browser."),
     },
     {
         "key": "people",

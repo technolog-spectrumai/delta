@@ -25,7 +25,19 @@ Rich forms (Trix, formsets) use their own template instead.
 
   <div class="flex flex-wrap items-center gap-3">
     {% if back_url %}<a href="{{ back_url }}" class="text-sm underline hover:opacity-80"><i class="fa-solid fa-arrow-left"></i> {{ back_label }}</a>{% endif %}
-    <h2 class="flex items-center gap-2 text-xl font-bold"><i class="{{ icon|default:'fa-solid fa-pen-to-square' }}"></i> {{ title }}</h2>
+    <h2 class="flex items-center gap-2 text-xl font-bold"><i class="{{ icon|default:'fa-solid fa-pen-to-square' }}"></i> {{ title }}
+      {% if active_module == "welcome" %}
+        {% comment %} The welcome editor has no template of its own, so its help point lives
+           here, keyed on the module — this partial gets no global help. {% endcomment %}
+        {% translate "Editing the welcome page" as help_title %}
+        {% blocktranslate asvar help_body %}This form edits the public landing page — the first thing visitors see before signing in. Saving publishes the new text immediately.
+
+Every field comes as a PL/EN pair and visitors see the variant matching their language. A blank variant falls back to the other language, and if both are blank a built-in default appears — so filling in only one language is safe.
+
+Headline is the large title, Subtitle the line beneath it, and Invitation the introductory paragraph below both (its line breaks are kept). The Student and Teacher button fields label the two big entry cards at the bottom; the teacher card leads to this panel, or to sign-in for visitors without access.{% endblocktranslate %}
+        {% include "includes/_help.html" with title=help_title body=help_body %}
+      {% endif %}
+    </h2>
   </div>
 
   {% if form.non_field_errors %}

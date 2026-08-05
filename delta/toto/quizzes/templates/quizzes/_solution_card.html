@@ -13,9 +13,9 @@
       </p>
     </header>
     <div class="px-5 py-4">
-      {# Written in cyprian's editor and SANITISED on the way in by
+      {% comment %} Written in cyprian's editor and SANITISED on the way in by
          CyprianRichTextField (quizzes/forms.py) — not merely trusted. Formulas
-         arrive as data-latex and are rendered by the include below. #}
+         arrive as data-latex and are rendered by the include below. {% endcomment %}
       <div class="quiz-prose cy-doc max-w-none text-sm">{{ question.solution|safe }}</div>
     </div>
   </article>

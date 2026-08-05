@@ -1,0 +1,65 @@
+{% load i18n %}
+{% comment %}
+A help point: the subtle question mark that opens the owl's explanation modal.
+
+Sits next to anything a user must decide, maintain, edit or submit. The trigger
+is deliberately quiet — a low-opacity Font Awesome question mark that does not
+compete with the control it explains — and the modal is where the owl gets to
+talk in full sentences.
+
+Params:
+  title — REQUIRED, the modal heading
+  body  — REQUIRED, the explanation (plain text; newlines are kept)
+  size  — trigger size class, default "text-sm"
+
+Both must arrive ALREADY TRANSLATED, which keeps the strings extractable:
+
+  {% translate "Publishing a course" as help_title %}
+  {% blocktranslate asvar help_body %}Long explanation…{% endblocktranslate %}
+  {% include "includes/_help.html" with title=help_title body=help_body %}
+
+Self-contained Alpine scope: any number of help points share a page. Escape and
+an outside click both close it — help must never be work to get rid of.
+{% endcomment %}
+<span class="inline-flex" x-data="{ helpOpen: false }" @keydown.escape.window="helpOpen = false">
+  <button type="button" @click="helpOpen = true"
+          class="inline-flex items-center justify-center opacity-40 transition hover:opacity-90 focus:opacity-90 focus:outline-none {{ size|default:'text-sm' }}"
+          aria-label="{% translate 'Help' %}: {{ title }}">
+    <i class="fa-regular fa-circle-question"></i>
+  </button>
+
+  {% comment %}No x-teleport: the fixed overlay escapes any container visually,
+  and the bundled Alpine is core-only — same pattern as quizzes/_hint_modal.html.{% endcomment %}
+  <div x-show="helpOpen" x-cloak
+         @keydown.escape.window="helpOpen = false"
+         class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/60" @click="helpOpen = false"></div>
+
+      <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark text-text-main-dark' : 'border-accent-2 bg-bubble-bg-light text-text-main-light'"
+           class="relative w-full max-w-md overflow-hidden rounded-2xl border shadow-lg">
+        <header :class="darkMode ? 'bg-sunken-dark' : 'bg-sunken-light'"
+                class="flex items-center gap-3 border-b border-current/10 px-5 py-3">
+          {% include "includes/_owl.html" with size="h-8 w-8" %}
+          <p :class="darkMode ? 'text-accent-dark' : 'text-accent-light'"
+             class="min-w-0 flex-1 truncate text-xs font-semibold uppercase tracking-wide">
+            {{ title }}
+          </p>
+          <button type="button" @click="helpOpen = false"
+                  class="opacity-60 transition hover:opacity-100"
+                  aria-label="{% translate 'Close' %}">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </header>
+
+        <div class="whitespace-pre-line px-5 py-4 text-sm leading-relaxed">{{ body }}</div>
+
+        <footer class="px-5 pb-4">
+          <button type="button" @click="helpOpen = false"
+            :class="darkMode ? 'bg-accent-dark text-primary-bg-dark' : 'bg-accent-light text-primary-bg-light'"
+            class="rounded px-4 py-2 text-sm font-semibold transition hover:opacity-90">
+            {% translate "Got it" %}
+          </button>
+        </footer>
+      </div>
+  </div>
+</span>
