@@ -1,0 +1,398 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-05 10:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/memo/_formula_help.html:15
+msgid "How do I write this?"
+msgstr ""
+
+#: templates/memo/_formula_help.html:16
+msgid "Hide the reference"
+msgstr ""
+
+#: templates/memo/_formula_help.html:41
+msgid "Insert"
+msgstr ""
+
+#: templates/memo/_formula_help.html:56
+msgid ""
+"Click any row to drop it in at the cursor. This is ordinary\n"
+"      LaTeX maths — anything KaTeX understands will work."
+msgstr ""
+
+#: templates/memo/_slide.html:24 templates/memo/edit.html:285
+#: templates/memo/edit.html:457
+msgid "Slide title"
+msgstr ""
+
+#: templates/memo/_slide.html:86
+msgid "Legacy HTML slide"
+msgstr ""
+
+#: templates/memo/edit.html:42 templates/memo/present.html:72
+msgid "All presentations"
+msgstr ""
+
+#: templates/memo/edit.html:49
+msgid "Untitled presentation"
+msgstr ""
+
+#: templates/memo/edit.html:54
+msgid "Undo"
+msgstr ""
+
+#: templates/memo/edit.html:58
+msgid "Redo"
+msgstr ""
+
+#: templates/memo/edit.html:66
+msgid "Dark deck"
+msgstr ""
+
+#: templates/memo/edit.html:69
+msgid "Light deck"
+msgstr ""
+
+#: templates/memo/edit.html:76
+msgid "Font"
+msgstr ""
+
+#: templates/memo/edit.html:101
+msgid "Save"
+msgstr ""
+
+#: templates/memo/edit.html:107 templates/memo/index.html:108
+msgid "Present"
+msgstr ""
+
+#: templates/memo/edit.html:114
+msgid "More"
+msgstr ""
+
+#: templates/memo/edit.html:123
+msgid "Export PDF"
+msgstr ""
+
+#: templates/memo/edit.html:128
+msgid "Export archive"
+msgstr ""
+
+#: templates/memo/edit.html:138
+msgid "Delete presentation"
+msgstr ""
+
+#: templates/memo/edit.html:148
+msgid ""
+"This deck changed somewhere else since you opened it —\n"
+"        another tab, or another device. Reload to take that version, or "
+"overwrite\n"
+"        it with what is on screen."
+msgstr ""
+
+#: templates/memo/edit.html:154
+msgid "Reload"
+msgstr ""
+
+#: templates/memo/edit.html:158
+msgid "Overwrite"
+msgstr ""
+
+#: templates/memo/edit.html:171
+msgid "Slides"
+msgstr ""
+
+#: templates/memo/edit.html:224
+msgid "Move up"
+msgstr ""
+
+#: templates/memo/edit.html:226
+msgid "Move down"
+msgstr ""
+
+#: templates/memo/edit.html:228
+msgid "Duplicate"
+msgstr ""
+
+#: templates/memo/edit.html:230 templates/memo/edit.html:417
+msgid "Delete slide"
+msgstr ""
+
+#: templates/memo/edit.html:244 templates/memo/edit.html:449
+msgid "New slide"
+msgstr ""
+
+#: templates/memo/edit.html:321 templates/memo/index.html:111
+#: templates/memo/present.html:70
+msgid "Edit"
+msgstr ""
+
+#: templates/memo/edit.html:326
+msgid "Clear"
+msgstr ""
+
+#: templates/memo/edit.html:387
+msgid "Empty — click to fill"
+msgstr ""
+
+#: templates/memo/edit.html:388
+msgid "Pick what goes here"
+msgstr ""
+
+#: templates/memo/edit.html:413
+msgid "Duplicate slide"
+msgstr ""
+
+#: templates/memo/edit.html:459
+msgid "Untitled slide"
+msgstr ""
+
+#: templates/memo/edit.html:463
+msgid ""
+"Shown on the slide, in the filmstrip and in the outline. You can leave it "
+"empty."
+msgstr ""
+
+#: templates/memo/edit.html:468
+msgid "Layout"
+msgstr ""
+
+#: templates/memo/edit.html:486 templates/memo/edit.html:689
+#: templates/memo/index.html:269
+msgid "Cancel"
+msgstr ""
+
+#: templates/memo/edit.html:490
+msgid "Add slide"
+msgstr ""
+
+#: templates/memo/edit.html:529
+msgid "Bold"
+msgstr ""
+
+#: templates/memo/edit.html:530
+msgid "Italic"
+msgstr ""
+
+#: templates/memo/edit.html:531
+msgid "Underline"
+msgstr ""
+
+#: templates/memo/edit.html:532
+msgid "Strikethrough"
+msgstr ""
+
+#: templates/memo/edit.html:533
+msgid "Code"
+msgstr ""
+
+#: templates/memo/edit.html:544
+msgid "Link"
+msgstr ""
+
+#: templates/memo/edit.html:555
+msgid "Bulleted list"
+msgstr ""
+
+#: templates/memo/edit.html:556
+msgid "Numbered list"
+msgstr ""
+
+#: templates/memo/edit.html:557
+msgid "Quote"
+msgstr ""
+
+#: templates/memo/edit.html:571
+msgid "Size"
+msgstr ""
+
+#: templates/memo/edit.html:574
+msgid "Big"
+msgstr ""
+
+#: templates/memo/edit.html:575
+msgid "Medium"
+msgstr ""
+
+#: templates/memo/edit.html:576
+msgid "Small"
+msgstr ""
+
+#: templates/memo/edit.html:586
+msgid "One item per line"
+msgstr ""
+
+#: templates/memo/edit.html:588
+msgid "One item per line. Blank lines are dropped."
+msgstr ""
+
+#: templates/memo/edit.html:600
+msgid "Language (optional) — python, sql, …"
+msgstr ""
+
+#: templates/memo/edit.html:612
+#, python-brace-format
+msgid "e.g. \\frac{a}{b} or E = mc^2"
+msgstr ""
+
+#: templates/memo/edit.html:635
+msgid "Describe the picture (alt text)"
+msgstr ""
+
+#: templates/memo/edit.html:639
+msgid "Fit inside the box"
+msgstr ""
+
+#: templates/memo/edit.html:640
+msgid "Fill the box"
+msgstr ""
+
+#: templates/memo/edit.html:643
+msgid "Upload"
+msgstr ""
+
+#: templates/memo/edit.html:650
+msgid "Search pictures in your buckets"
+msgstr ""
+
+#: templates/memo/edit.html:665
+msgid "Nothing here yet. Upload an image to a vault bucket first."
+msgstr ""
+
+#: templates/memo/edit.html:676
+msgid "Hand-written markup from an older deck. It is sanitised on save."
+msgstr ""
+
+#: templates/memo/edit.html:685
+msgid "Clear this box"
+msgstr ""
+
+#: templates/memo/edit.html:693
+msgid "Done"
+msgstr ""
+
+#: templates/memo/index.html:5 templates/memo/index.html:53
+msgid "Presentations"
+msgstr ""
+
+#: templates/memo/index.html:25 templates/memo/index.html:117
+msgid "Delete"
+msgstr ""
+
+#: templates/memo/index.html:26
+msgid "This cannot be undone."
+msgstr ""
+
+#: templates/memo/index.html:54
+msgid "Self-contained presentations stored as vault files."
+msgstr ""
+
+#: templates/memo/index.html:61 templates/memo/index.html:137
+#: templates/memo/index.html:219
+msgid "New presentation"
+msgstr ""
+
+#: templates/memo/index.html:65 templates/memo/index.html:141
+#: templates/memo/index.html:203
+msgid "Import"
+msgstr ""
+
+#: templates/memo/index.html:68
+msgid "Vault"
+msgstr ""
+
+#: templates/memo/index.html:89
+msgid "Empty"
+msgstr ""
+
+#: templates/memo/index.html:102
+#, python-format
+msgid "%(n)s slide"
+msgid_plural "%(n)s slides"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/memo/index.html:131
+msgid "No presentations yet."
+msgstr ""
+
+#: templates/memo/index.html:158
+msgid "Import a presentation"
+msgstr ""
+
+#: templates/memo/index.html:167
+msgid "Exported archive"
+msgstr ""
+
+#: templates/memo/index.html:172
+msgid ""
+"A .zip written by Export archive. It always lands as a\n"
+"            new presentation — nothing you already have is replaced."
+msgstr ""
+
+#: templates/memo/index.html:178 templates/memo/index.html:241
+msgid "Bucket"
+msgstr ""
+
+#: templates/memo/index.html:182 templates/memo/index.html:245
+msgid "Personal (default)"
+msgstr ""
+
+#: templates/memo/index.html:190 templates/memo/index.html:254
+msgid "Folder"
+msgstr ""
+
+#: templates/memo/index.html:194
+msgid "Bucket root"
+msgstr ""
+
+#: templates/memo/index.html:229
+msgid "Filename"
+msgstr ""
+
+#: templates/memo/index.html:232
+msgid "my-talk"
+msgstr ""
+
+#: templates/memo/index.html:255
+msgid "optional"
+msgstr ""
+
+#: templates/memo/index.html:259
+msgid "— root of bucket —"
+msgstr ""
+
+#: templates/memo/index.html:273
+msgid "Create"
+msgstr ""
+
+#: templates/memo/present.html:69
+msgid "Edit this deck"
+msgstr ""
+
+#: templates/memo/present.html:73
+msgid "All"
+msgstr ""
+
+#: templates/memo/present.html:90
+msgid "This presentation has no slides yet."
+msgstr ""
+
+#: views.py:245
+msgid "Link address"
+msgstr ""
