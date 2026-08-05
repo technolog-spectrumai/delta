@@ -192,6 +192,14 @@ class Command(IngressCommand):
 
         self.stdout.write("  🎓  academy: demo maths course tree + skill DAG seeded (Nauka).")
 
+        # The participation layer — fake students, cohorts, progress, badges,
+        # answered quizzes — so a tester sees the platform inhabited rather
+        # than empty. Separate module: the course tree above is the CONTENT
+        # fixture and rarely changes; the people are the DEMO fixture and can
+        # be tuned freely without touching it.
+        from toto.academy.demo_people import seed as seed_demo_people
+        seed_demo_people(stdout=self.stdout)
+
     def _ensure_quiz(self, mspec, owner_person):
         quiz, created = Quiz.objects.get_or_create(
             slug=mspec["quiz_slug"],
