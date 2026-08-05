@@ -1,0 +1,251 @@
+# pl catalogue for this toto app.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-05 10:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: templates/events/base.html:27
+msgid "Dashboard"
+msgstr "Pulpit"
+
+#: templates/events/base.html:33
+msgid "Toto Studio"
+msgstr "Toto Studio"
+
+#: templates/events/base.html:37
+msgid "Events"
+msgstr "Wydarzenia"
+
+#: templates/events/base.html:48
+msgid "Calendar"
+msgstr "Kalendarz"
+
+#: templates/events/base.html:56
+msgid "My invites"
+msgstr "Moje zaproszenia"
+
+#: templates/events/base.html:63 views.py:125
+msgid "New event"
+msgstr "Nowe wydarzenie"
+
+#: templates/events/calendar.html:5
+msgid "Event Calendar"
+msgstr "Kalendarz wydarzeń"
+
+#: templates/events/calendar.html:46
+msgid "Total"
+msgstr "Łącznie"
+
+#: templates/events/calendar.html:50 templates/events/calendar.html:60
+msgid "Upcoming"
+msgstr "Nadchodzące"
+
+#: templates/events/calendar.html:54
+msgid "Past"
+msgstr "Minione"
+
+#: templates/events/calendar.html:71
+#: templates/events/profile_plugins/upcoming_events.html:61
+msgid "No upcoming events."
+msgstr "Brak nadchodzących wydarzeń."
+
+#: templates/events/event_detail.html:11 templates/events/event_form.html:15
+msgid "Back to calendar"
+msgstr "Wróć do kalendarza"
+
+#: templates/events/event_detail.html:31
+msgid "Plan & invite"
+msgstr "Zaplanuj i zaproś"
+
+#: templates/events/event_detail.html:42
+msgid "Your invite"
+msgstr "Twoje zaproszenie"
+
+#: templates/events/event_detail.html:46 templates/events/event_plan.html:101
+#: templates/events/event_plan.html:251 templates/events/my_invites.html:112
+#: templates/events/my_invites.html:125
+msgid "Accepted"
+msgstr "Zaakceptowane"
+
+#: templates/events/event_detail.html:50 templates/events/event_plan.html:105
+#: templates/events/event_plan.html:255 templates/events/my_invites.html:136
+#: templates/events/my_invites.html:148
+msgid "Declined"
+msgstr "Odrzucone"
+
+#: templates/events/event_detail.html:57 templates/events/my_invites.html:79
+msgid "Accept"
+msgstr "Zaakceptuj"
+
+#: templates/events/event_detail.html:62 templates/events/my_invites.html:90
+msgid "Decline"
+msgstr "Odrzuć"
+
+#: templates/events/event_detail.html:76
+msgid "Start"
+msgstr "Początek"
+
+#: templates/events/event_detail.html:84
+msgid "End"
+msgstr "Koniec"
+
+#: templates/events/event_detail.html:96
+msgid "Description"
+msgstr "Opis"
+
+#: templates/events/event_detail.html:127
+msgid "Public"
+msgstr "Publiczne"
+
+#: templates/events/event_detail.html:132
+msgid "Private"
+msgstr "Prywatne"
+
+#: templates/events/event_form.html:32
+msgid "Date"
+msgstr "Data"
+
+#: templates/events/event_form.html:36
+msgid "Time"
+msgstr "Godzina"
+
+#: templates/events/event_form.html:62
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: templates/events/event_form.html:69
+msgid "Save event"
+msgstr "Zapisz wydarzenie"
+
+#: templates/events/event_plan.html:4
+msgid "Plan"
+msgstr "Zaplanuj"
+
+#: templates/events/event_plan.html:40 templates/events/event_plan.html:226
+msgid "Available"
+msgstr "Dostępny"
+
+#: templates/events/event_plan.html:40 templates/events/event_plan.html:230
+msgid "Unavailable"
+msgstr "Niedostępny"
+
+#: templates/events/event_plan.html:40 templates/events/event_plan.html:235
+msgid "Busy"
+msgstr "Zajęty"
+
+#: templates/events/event_plan.html:40 templates/events/event_plan.html:240
+msgid "Free"
+msgstr "Wolny"
+
+#: templates/events/event_plan.html:55
+msgid "Event"
+msgstr "Wydarzenie"
+
+#: templates/events/event_plan.html:89
+msgid "Back to event"
+msgstr "Wróć do wydarzenia"
+
+#: templates/events/event_plan.html:97
+msgid "Responses"
+msgstr "Odpowiedzi"
+
+#: templates/events/event_plan.html:109 templates/events/event_plan.html:259
+msgid "Pending"
+msgstr "Oczekujące"
+
+#: templates/events/event_plan.html:119
+msgid "Add participants"
+msgstr "Dodaj uczestników"
+
+#: templates/events/event_plan.html:126
+msgid "Filter people..."
+msgstr "Filtruj osoby..."
+
+#: templates/events/event_plan.html:160 templates/events/event_plan.html:218
+msgid "View availability"
+msgstr "Zobacz dostępność"
+
+#: templates/events/event_plan.html:172
+msgid "Send invites"
+msgstr "Wyślij zaproszenia"
+
+#: templates/events/event_plan.html:180
+msgid "All people have been invited."
+msgstr "Wszystkie osoby zostały zaproszone."
+
+#: templates/events/event_plan.html:190
+msgid "Participants"
+msgstr "Uczestnicy"
+
+#: templates/events/event_plan.html:191
+msgid "invited"
+msgstr "zaproszonych"
+
+#: templates/events/event_plan.html:200
+msgid "No participants yet. Add people from the sidebar."
+msgstr "Brak uczestników. Dodaj osoby z panelu bocznego."
+
+#: templates/events/event_plan.html:304
+msgid "Loading..."
+msgstr "Ładowanie..."
+
+#: templates/events/event_plan.html:306
+msgid "Availability for"
+msgstr "Dostępność osoby"
+
+#: templates/events/event_plan.html:342
+msgid "Entries overlapping event"
+msgstr "Wpisy pokrywające się z wydarzeniem"
+
+#: templates/events/event_plan.html:363
+msgid "No availability entries overlap with the event window."
+msgstr "Żadne wpisy dostępności nie pokrywają się z oknem wydarzenia."
+
+#: templates/events/my_invites.html:4
+msgid "My Invites"
+msgstr "Moje zaproszenia"
+
+#: templates/events/my_invites.html:15
+msgid "No person profile linked to your account"
+msgstr "Brak profilu osoby powiązanego z Twoim kontem"
+
+#: templates/events/my_invites.html:16
+msgid ""
+"Ask an admin to link your user account to a person profile so you can "
+"receive event invites."
+msgstr "Poproś administratora o powiązanie Twojego konta użytkownika z profilem osoby, aby móc otrzymywać zaproszenia na wydarzenia."
+
+#: templates/events/my_invites.html:24
+msgid "Awaiting response"
+msgstr "Oczekuje na odpowiedź"
+
+#: templates/events/my_invites.html:67
+msgid "Invited"
+msgstr "Zaproszono"
+
+#: templates/events/my_invites.html:104
+msgid "No pending invites."
+msgstr "Brak oczekujących zaproszeń."
+
+#: templates/events/profile_plugins/upcoming_events.html:8
+msgid "Organising"
+msgstr "Organizujesz"
+
+#: templates/events/profile_plugins/upcoming_events.html:36
+msgid "Attending"
+msgstr "Bierzesz udział"
