@@ -1,0 +1,17 @@
+{% load static %}
+{% comment %}
+The Delta owl, as a badge.
+
+Params (all optional):
+  size   — Tailwind size classes, default "h-7 w-7"
+  title  — tooltip text
+
+Always sits on a dark circle: the artwork is light-on-transparent, so on a light
+page it would otherwise disappear. Giving it the circle in BOTH themes also
+keeps the mascot recognisable as one thing rather than two.
+{% endcomment %}
+<span class="inline-flex shrink-0 items-center justify-center rounded-full bg-slate-900 ring-1 ring-black/10 {{ size|default:'h-7 w-7' }}"
+      {% if title %}title="{{ title }}"{% endif %}>
+  <img src="{% static 'owl.png' %}" alt="" aria-hidden="true"
+       class="h-[70%] w-[70%] object-contain" />
+</span>

@@ -20,7 +20,9 @@
     <header class="space-y-3">
       <a href="{% url 'quizzes:quiz-detail' quiz.pk %}"
          class="inline-flex items-center gap-2 text-sm underline hover:opacity-80">
-        <i class="fa-solid fa-arrow-left"></i> {{ quiz.title }}
+        <i class="fa-solid fa-arrow-left"></i>
+        {% include "includes/_owl.html" with size="h-6 w-6" %}
+        {{ quiz.title }}
       </a>
       {# Progress: solved / total for this section (spec F-06). #}
       <div>

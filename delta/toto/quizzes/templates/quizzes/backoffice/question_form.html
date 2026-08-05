@@ -37,7 +37,10 @@
 
       <!-- Stem -->
       <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="space-y-2 rounded-2xl border p-4 shadow-sm">
-        <label for="{{ form.text.id_for_label }}" class="block text-sm font-semibold">{% trans "Question stem" %}</label>
+        <label for="{{ form.text.id_for_label }}" class="flex items-center gap-2 text-sm font-semibold">
+          {% trans "Question stem" %}
+          {% include "includes/_owl_hint.html" with text="Plain text, kept as typed. For mathematics write $x^2$ for inline formulas and $$…$$ for a displayed one — they are rendered for the student." %}
+        </label>
         {{ form.text }}
         <p class="text-xs opacity-60">{% trans "Tip: wrap math in $…$ (inline) or $$…$$ (display). It renders live on the right." %}</p>
         {% if form.text.errors %}<p class="text-sm text-warn-light">{{ form.text.errors }}</p>{% endif %}
@@ -45,7 +48,10 @@
 
       <!-- Answer format -->
       <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="space-y-2 rounded-2xl border p-4 shadow-sm">
-        <span class="block text-sm font-semibold">{{ form.answer_format.label }}</span>
+        <span class="flex items-center gap-2 text-sm font-semibold">
+          {{ form.answer_format.label }}
+          {% include "includes/_owl_hint.html" with text="Single choice — exactly one option is correct, shown as radio buttons. Multiple choice — the student may tick several, and every correct one must be ticked. Open answer — the student types, and the options below are the accepted spellings." %}
+        </span>
         <div class="flex flex-wrap gap-4 text-sm" @change="format = $event.target.value">
           {% for radio in form.answer_format %}
             <label class="inline-flex items-center gap-2">{{ radio.tag }} <span>{{ radio.choice_label }}</span></label>
@@ -68,7 +74,10 @@
 
       <!-- Worked solution -->
       <div :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'" class="space-y-2 rounded-2xl border p-4 shadow-sm">
-        <label for="{{ form.solution.id_for_label }}" class="block text-sm font-semibold">{% trans "Worked solution" %}</label>
+        <label for="{{ form.solution.id_for_label }}" class="flex items-center gap-2 text-sm font-semibold">
+          {% trans "Worked solution" %}
+          {% include "includes/_owl_hint.html" with text="The full reasoning, shown after a student answers. This is a rich editor: headings, lists, pictures and formulas. Use the ∑ button for a formula — it previews as you type." %}
+        </label>
         {{ form.solution }}
         <p class="text-xs opacity-60">{% trans "Rich solution shown after a submission. You can embed images here." %}</p>
       </div>

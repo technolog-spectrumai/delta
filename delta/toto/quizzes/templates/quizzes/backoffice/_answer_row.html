@@ -16,6 +16,9 @@
       <details class="text-xs">
         <summary class="cursor-pointer opacity-60 hover:opacity-100">{% trans "Advanced: traits" %}</summary>
         <div x-data="traitPanel()" class="mt-2 space-y-2">
+        <span class="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wide opacity-60">
+          {% include "includes/_owl_hint.html" with label="Traits" size="h-5 w-5" text="Traits let one option feed a skill profile: pick the trait this answer says something about and how strongly it counts. Leave it empty unless the quiz is a diagnostic." %}
+        </span>
           <template x-for="(r, i) in rows" :key="i">
             <div class="flex items-center gap-2">
               <select x-model="r.trait" @change="sync()" class="rounded border px-2 py-1" :class="darkMode ? 'border-accent-1 bg-primary-bg-dark text-text-main-dark placeholder:text-text-main-dark/45' : 'border-accent-2 bg-primary-bg-light text-text-main-light placeholder:text-text-main-light/45'">

@@ -1,0 +1,49 @@
+{% load i18n %}
+{% load static %}
+{% comment %}
+The owl that explains something — delta's answer to the paperclip, minus the
+interrupting. It never speaks unless asked: the owl sits quietly next to the
+thing it can explain, and only opens when clicked.
+
+Params:
+  text     — REQUIRED, the explanation (plain text; newlines are kept)
+  label    — the bubble's heading, default "Hint"
+  size     — owl size classes, default "h-7 w-7"
+  position — "right" (default) or "left", whichever side has room
+
+Usage:
+  {% include "includes/_owl_hint.html" with text="Why this matters…" %}
+
+Self-contained: its own Alpine scope, so any number can share a page. Closing on
+Escape and on an outside click is what stops the mascot from becoming a
+nuisance — the lesson the paperclip never learned.
+{% endcomment %}
+<span class="relative inline-flex" x-data="{ owlOpen: false }" @keydown.escape.window="owlOpen = false">
+  <button type="button"
+          @click="owlOpen = !owlOpen"
+          :aria-expanded="owlOpen ? 'true' : 'false'"
+          class="inline-flex shrink-0 items-center justify-center rounded-full bg-slate-900 ring-1 ring-black/10 transition hover:scale-110 focus:outline-none focus:ring-2 focus:ring-current/40 {{ size|default:'h-7 w-7' }}"
+          aria-label="{{ label|default:_('Hint') }}">
+    {# The image is decorative; the button carries the accessible name. #}
+    <img src="{% static 'owl.png' %}" alt="" aria-hidden="true"
+         class="h-[70%] w-[70%] object-contain" />
+  </button>
+
+  <span x-show="owlOpen" x-cloak x-transition.opacity
+        @click.outside="owlOpen = false"
+        :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark text-text-main-dark' : 'border-accent-2 bg-bubble-bg-light text-text-main-light'"
+        class="absolute top-full z-40 mt-2 w-64 rounded-2xl border p-3 text-left text-xs leading-relaxed shadow-lg
+               {% if position == 'left' %}right-0{% else %}left-0{% endif %}"
+        role="tooltip">
+    {# The tail, drawn as a rotated square so it inherits the bubble's border. #}
+    <span :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+          class="absolute -top-1.5 h-3 w-3 rotate-45 border-l border-t
+                 {% if position == 'left' %}right-4{% else %}left-4{% endif %}"></span>
+
+    <span :class="darkMode ? 'text-accent-dark' : 'text-accent-light'"
+          class="mb-1 block text-[10px] font-semibold uppercase tracking-wide">
+      {{ label|default:_("Hint") }}
+    </span>
+    <span class="block whitespace-pre-line">{{ text }}</span>
+  </span>
+</span>
