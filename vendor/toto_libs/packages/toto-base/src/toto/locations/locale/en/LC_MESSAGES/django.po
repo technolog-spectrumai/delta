@@ -1,0 +1,756 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-05 10:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: plugins/field_plugins.py:79 templates/locations/address_form.html:20
+#: templates/locations/base.html:24 templates/locations/locations.html:405
+#: templates/locations/locations.html:443
+#: templates/locations/route_detail.html:27
+#: templates/locations/route_search.html:37
+#: templates/locations/zone_detail.html:24
+msgid "Locations"
+msgstr ""
+
+#: plugins/field_plugins.py:83 plugins/field_plugins.py:87
+#: templates/locations/zone_detail.html:128
+msgid "Addresses"
+msgstr ""
+
+#: plugins/field_plugins.py:84 plugins/field_plugins.py:88
+msgid "Territories"
+msgstr ""
+
+#: plugins/field_plugins.py:87
+msgid "with geometry"
+msgstr ""
+
+#: plugins/field_plugins.py:88 plugins/field_plugins.py:89
+#: plugins/field_plugins.py:90
+msgid "defined"
+msgstr ""
+
+#: plugins/field_plugins.py:89
+msgid "Zones"
+msgstr ""
+
+#: plugins/field_plugins.py:90 templates/locations/base.html:34
+#: templates/locations/zone_detail.html:64
+#: templates/locations/zone_detail.html:107
+msgid "Routes"
+msgstr ""
+
+#: templates/locations/address_form.html:5
+msgid "Add Address"
+msgstr ""
+
+#: templates/locations/address_form.html:32
+#: templates/locations/locations.html:705
+msgid "Address"
+msgstr ""
+
+#: templates/locations/address_form.html:37
+#: templates/locations/locations.html:719
+#: templates/locations/locations.html:860
+msgid "Add address"
+msgstr ""
+
+#: templates/locations/address_form.html:41
+msgid ""
+"Save a reusable location that can be used in route search, events, visits, "
+"and Kanban missions."
+msgstr ""
+
+#: templates/locations/address_form.html:67
+msgid "Country"
+msgstr ""
+
+#: templates/locations/address_form.html:77
+msgid "State / Province"
+msgstr ""
+
+#: templates/locations/address_form.html:87
+msgid "Locality"
+msgstr ""
+
+#: templates/locations/address_form.html:97
+msgid "Street / Place"
+msgstr ""
+
+#: templates/locations/address_form.html:107
+msgid "Building"
+msgstr ""
+
+#: templates/locations/address_form.html:117
+msgid "Apartment"
+msgstr ""
+
+#: templates/locations/address_form.html:142
+msgid "Coordinates"
+msgstr ""
+
+#: templates/locations/address_form.html:144
+msgid ""
+"Optional, but required for this address to appear on the map and be used "
+"directly in route search."
+msgstr ""
+
+#: templates/locations/address_form.html:152
+#: templates/locations/locations.html:835
+#: templates/locations/route_search.html:158
+#: templates/locations/route_search.html:221
+msgid "Latitude"
+msgstr ""
+
+#: templates/locations/address_form.html:162
+#: templates/locations/locations.html:840
+#: templates/locations/route_search.html:171
+#: templates/locations/route_search.html:234
+msgid "Longitude"
+msgstr ""
+
+#: templates/locations/address_form.html:179
+#: templates/locations/locations.html:852
+#: templates/locations/locations.html:1012
+msgid "Cancel"
+msgstr ""
+
+#: templates/locations/address_form.html:189
+msgid "Save address"
+msgstr ""
+
+#: templates/locations/base.html:29
+msgid "Map"
+msgstr ""
+
+#: templates/locations/base.html:42 templates/locations/route_detail.html:332
+msgid "Travels"
+msgstr ""
+
+#: templates/locations/base.html:47
+msgid "Visits"
+msgstr ""
+
+#: templates/locations/base.html:54
+msgid "Weather"
+msgstr ""
+
+#: templates/locations/location_detail.html:39
+msgid "Back to map"
+msgstr ""
+
+#: templates/locations/location_detail.html:52
+#: templates/locations/locations_sidebar.html:257
+#: templates/locations/partials/location_sidebar.html:264
+msgid "Details"
+msgstr ""
+
+#: templates/locations/location_detail.html:72
+msgid "No geometry to preview."
+msgstr ""
+
+#: templates/locations/location_detail.html:84
+msgid "Note"
+msgstr ""
+
+#: templates/locations/location_detail.html:92
+#: templates/locations/route_detail.html:397
+msgid "Free-text note…"
+msgstr ""
+
+#: templates/locations/location_detail.html:97
+#: templates/locations/route_detail.html:402
+msgid "Save note"
+msgstr ""
+
+#: templates/locations/location_detail.html:111
+msgid "Metadata"
+msgstr ""
+
+#: templates/locations/location_detail.html:126
+msgid "Save"
+msgstr ""
+
+#: templates/locations/location_detail.html:139
+msgid ""
+"Edit as JSON or YAML — switching converts automatically. Stored as a JSON "
+"object on this location."
+msgstr ""
+
+#: templates/locations/location_detail.html:214
+msgid "Conversion failed."
+msgstr ""
+
+#: templates/locations/location_detail.html:221
+msgid "Conversion failed:"
+msgstr ""
+
+#: templates/locations/location_detail.html:236
+msgid "Saved."
+msgstr ""
+
+#: templates/locations/location_detail.html:237
+msgid "Save failed."
+msgstr ""
+
+#: templates/locations/location_detail.html:239
+msgid "Save failed:"
+msgstr ""
+
+#: templates/locations/locations.html:403
+msgid "Spatial overview"
+msgstr ""
+
+#: templates/locations/locations.html:407
+msgid ""
+"Browse territories, routes, travels, and addresses in one focused map "
+"workspace."
+msgstr ""
+
+#: templates/locations/locations.html:416
+msgid "Total"
+msgstr ""
+
+#: templates/locations/locations.html:423
+msgid "Mapped"
+msgstr ""
+
+#: templates/locations/locations.html:430
+msgid "Types"
+msgstr ""
+
+#: templates/locations/locations.html:450
+msgid "Fit map"
+msgstr ""
+
+#: templates/locations/locations.html:492
+msgid "Travels &amp; Visits"
+msgstr ""
+
+#: templates/locations/locations.html:508
+msgid "Recent Travels"
+msgstr ""
+
+#: templates/locations/locations.html:540
+msgid "View all travels"
+msgstr ""
+
+#: templates/locations/locations.html:551
+msgid "Recent Visits"
+msgstr ""
+
+#: templates/locations/locations.html:587
+msgid "View all visits"
+msgstr ""
+
+#: templates/locations/locations.html:604
+msgid "Move map to location"
+msgstr ""
+
+#: templates/locations/locations.html:619
+msgid "Move map to ..."
+msgstr ""
+
+#: templates/locations/locations.html:634
+msgid "Searching map..."
+msgstr ""
+
+#: templates/locations/locations.html:643
+msgid "No location found."
+msgstr ""
+
+#: templates/locations/locations.html:698
+#: templates/locations/locations.html:787
+msgid "Legend"
+msgstr ""
+
+#: templates/locations/locations.html:701
+msgid "Territory"
+msgstr ""
+
+#: templates/locations/locations.html:702
+msgid "Zone"
+msgstr ""
+
+#: templates/locations/locations.html:703
+msgid "Route Chain"
+msgstr ""
+
+#: templates/locations/locations.html:704
+msgid "Route"
+msgstr ""
+
+#: templates/locations/locations.html:706
+msgid "Travel"
+msgstr ""
+
+#: templates/locations/locations.html:707
+msgid "Visit"
+msgstr ""
+
+#: templates/locations/locations.html:725
+msgid "Import layer"
+msgstr ""
+
+#: templates/locations/locations.html:741
+msgid "Overlay display"
+msgstr ""
+
+#: templates/locations/locations.html:749
+msgid "Close overlay display settings"
+msgstr ""
+
+#: templates/locations/locations.html:757
+msgid "Opacity"
+msgstr ""
+
+#: templates/locations/locations.html:773
+msgid "Value labels"
+msgstr ""
+
+#: templates/locations/locations.html:774
+msgid "Show numeric labels in overlay polygons."
+msgstr ""
+
+#: templates/locations/locations.html:812
+msgid "Map point"
+msgstr ""
+
+#: templates/locations/locations.html:815
+msgid "Add address here?"
+msgstr ""
+
+#: templates/locations/locations.html:817
+msgid "Save this clicked map position as a reusable address."
+msgstr ""
+
+#: templates/locations/locations.html:878
+msgid "Import Layer from GeoJSON"
+msgstr ""
+
+#: templates/locations/locations.html:890
+msgid "Upload file"
+msgstr ""
+
+#: templates/locations/locations.html:897
+msgid "From Vault"
+msgstr ""
+
+#: templates/locations/locations.html:907
+msgid "GeoJSON file"
+msgstr ""
+
+#: templates/locations/locations.html:911
+msgid "Click to select a .geojson file"
+msgstr ""
+
+#: templates/locations/locations.html:919
+#: templates/locations/locations.html:958
+msgid "Password"
+msgstr ""
+
+#: templates/locations/locations.html:920
+msgid "(only if file is encrypted)"
+msgstr ""
+
+#: templates/locations/locations.html:923
+msgid "Leave blank for unencrypted files"
+msgstr ""
+
+#: templates/locations/locations.html:932
+msgid "Filter by title or bucket…"
+msgstr ""
+
+#: templates/locations/locations.html:938
+msgid "No JSON files found in Vault."
+msgstr ""
+
+#: templates/locations/locations.html:961
+msgid "Enter password to decrypt"
+msgstr ""
+
+#: templates/locations/locations.html:971
+msgid "Layer name"
+msgstr ""
+
+#: templates/locations/locations.html:971
+msgid "(optional override)"
+msgstr ""
+
+#: templates/locations/locations.html:973
+msgid "Use name from file"
+msgstr ""
+
+#: templates/locations/locations.html:989
+msgid "Import complete"
+msgstr ""
+
+#: templates/locations/locations.html:995
+msgid "polygons"
+msgstr ""
+
+#: templates/locations/locations.html:1003
+msgid "Reload map to see layers"
+msgstr ""
+
+#: templates/locations/locations.html:1035
+msgid "Importing…"
+msgstr ""
+
+#: templates/locations/locations.html:1035
+msgid "Import"
+msgstr ""
+
+#: templates/locations/locations.html:1181
+msgid "Select a layer to see its legend."
+msgstr ""
+
+#: templates/locations/locations.html:1186
+msgid "This layer has no polygons yet."
+msgstr ""
+
+#: templates/locations/locations.html:1272
+msgid "Center marker"
+msgstr ""
+
+#: templates/locations/locations.html:1368
+msgid "Review"
+msgstr ""
+
+#: templates/locations/locations.html:1370
+msgid "View"
+msgstr ""
+
+#: templates/locations/locations.html:1372
+msgid "Zoom"
+msgstr ""
+
+#: templates/locations/locations_sidebar.html:13
+#: templates/locations/partials/location_sidebar.html:13
+msgid "Location index"
+msgstr ""
+
+#: templates/locations/locations_sidebar.html:24
+#: templates/locations/partials/location_sidebar.html:24
+msgid "Close locations panel"
+msgstr ""
+
+#: templates/locations/locations_sidebar.html:30
+#: templates/locations/partials/location_sidebar.html:30
+msgid "Search locations"
+msgstr ""
+
+#: templates/locations/locations_sidebar.html:36
+#: templates/locations/partials/location_sidebar.html:45
+msgid "Search by name or type"
+msgstr ""
+
+#: templates/locations/locations_sidebar.html:64
+#: templates/locations/partials/location_sidebar.html:73
+msgid "Fit all"
+msgstr ""
+
+#: templates/locations/locations_sidebar.html:71
+#: templates/locations/partials/location_sidebar.html:80
+msgid "Reset"
+msgstr ""
+
+#: templates/locations/locations_sidebar.html:86
+#: templates/locations/partials/location_sidebar.html:95
+msgid "Visible on map"
+msgstr ""
+
+#: templates/locations/locations_sidebar.html:87
+#: templates/locations/partials/location_sidebar.html:96
+msgid "Hide zones, addresses, routes, or other feature types."
+msgstr ""
+
+#: templates/locations/locations_sidebar.html:100
+#: templates/locations/partials/location_sidebar.html:109
+msgid "Show all feature types"
+msgstr ""
+
+#: templates/locations/locations_sidebar.html:108
+#: templates/locations/partials/location_sidebar.html:117
+msgid "Hide all feature types"
+msgstr ""
+
+#: templates/locations/locations_sidebar.html:146
+#: templates/locations/partials/location_sidebar.html:155
+msgid "Layers"
+msgstr ""
+
+#: templates/locations/locations_sidebar.html:162
+#: templates/locations/partials/location_sidebar.html:171
+msgid "Configure layer"
+msgstr ""
+
+#: templates/locations/locations_sidebar.html:178
+#: templates/locations/partials/location_sidebar.html:187
+msgid "No overlay"
+msgstr ""
+
+#: templates/locations/locations_sidebar.html:206
+#: templates/locations/partials/location_sidebar.html:215
+msgid "No locations match this filter."
+msgstr ""
+
+#: templates/locations/route_detail.html:5
+msgid "Route Review"
+msgstr ""
+
+#: templates/locations/route_detail.html:35
+msgid "Route review"
+msgstr ""
+
+#: templates/locations/route_detail.html:44
+#, python-format
+msgid "Part of %(name)s"
+msgstr ""
+
+#: templates/locations/route_detail.html:46
+msgid "Standalone route"
+msgstr ""
+
+#: templates/locations/route_detail.html:51
+msgid ""
+"Route map, travel scores, participant notes, endpoint reviews, and linked "
+"events."
+msgstr ""
+
+#: templates/locations/route_detail.html:63
+msgid "Add travel"
+msgstr ""
+
+#: templates/locations/route_detail.html:82
+msgid "Travel reviews"
+msgstr ""
+
+#: templates/locations/route_detail.html:84
+msgid "Scores, timing, participants, and notes from travels on this route."
+msgstr ""
+
+#: templates/locations/route_detail.html:108
+msgid "Travel score"
+msgstr ""
+
+#: templates/locations/route_detail.html:110
+msgid "Unscored travel"
+msgstr ""
+
+#: templates/locations/route_detail.html:123
+#: templates/locations/route_detail.html:262
+#, python-format
+msgid "Reviewed %(date)s"
+msgstr ""
+
+#: templates/locations/route_detail.html:142
+#: templates/locations/route_detail.html:281
+msgid "No score"
+msgstr ""
+
+#: templates/locations/route_detail.html:169
+msgid "No travel notes."
+msgstr ""
+
+#: templates/locations/route_detail.html:179
+msgid "No travels recorded for this route yet."
+msgstr ""
+
+#: templates/locations/route_detail.html:191
+msgid "Endpoint reviews"
+msgstr ""
+
+#: templates/locations/route_detail.html:193
+msgid "Address reviews from the route start and end points."
+msgstr ""
+
+#: templates/locations/route_detail.html:238
+msgid "Unknown visitor"
+msgstr ""
+
+#: templates/locations/route_detail.html:255
+#, python-format
+msgid "Visited %(date)s"
+msgstr ""
+
+#: templates/locations/route_detail.html:292
+msgid "No written review."
+msgstr ""
+
+#: templates/locations/route_detail.html:302
+msgid "No endpoint reviews yet."
+msgstr ""
+
+#: templates/locations/route_detail.html:316
+msgid "Route summary"
+msgstr ""
+
+#: templates/locations/route_detail.html:318
+msgid "Endpoints, scores, and recorded activity."
+msgstr ""
+
+#: templates/locations/route_detail.html:343
+msgid "Average"
+msgstr ""
+
+#: templates/locations/route_detail.html:359
+#, python-format
+msgid "%(score)s stars"
+msgstr ""
+
+#: templates/locations/route_detail.html:375
+msgid "No route scores yet."
+msgstr ""
+
+#: templates/locations/route_detail.html:385
+msgid "Route notes"
+msgstr ""
+
+#: templates/locations/route_detail.html:387
+msgid "Free-text notes about this route."
+msgstr ""
+
+#: templates/locations/route_detail.html:412
+msgid "Endpoints"
+msgstr ""
+
+#: templates/locations/route_detail.html:414
+msgid "Start and end addresses connected to this route."
+msgstr ""
+
+#: templates/locations/route_detail.html:422
+msgid "Start"
+msgstr ""
+
+#: templates/locations/route_detail.html:433
+#: templates/locations/route_detail.html:452
+msgid "Not set"
+msgstr ""
+
+#: templates/locations/route_detail.html:441
+msgid "End"
+msgstr ""
+
+#: templates/locations/route_detail.html:464
+msgid "Events on this route"
+msgstr ""
+
+#: templates/locations/route_detail.html:466
+msgid "Sessions, walks, briefings, or programs connected to this route."
+msgstr ""
+
+#: templates/locations/route_detail.html:511
+msgid "Organizer:"
+msgstr ""
+
+#: templates/locations/route_detail.html:523
+msgid "No events linked to this route yet."
+msgstr ""
+
+#: templates/locations/route_search.html:5
+#: templates/locations/route_search.html:49
+msgid "Route Search"
+msgstr ""
+
+#: templates/locations/route_search.html:44
+msgid "Traversable path"
+msgstr ""
+
+#: templates/locations/route_search.html:53
+msgid "Search a real route between two saved addresses or manual WGS84 points."
+msgstr ""
+
+#: templates/locations/route_search.html:62
+msgid "Mode"
+msgstr ""
+
+#: templates/locations/route_search.html:104
+msgid "Selected mode"
+msgstr ""
+
+#: templates/locations/route_search.html:119
+msgid "Use my location as start"
+msgstr ""
+
+#: templates/locations/route_search.html:129
+msgid "Start point"
+msgstr ""
+
+#: templates/locations/route_search.html:132
+#: templates/locations/route_search.html:195
+msgid "Saved address"
+msgstr ""
+
+#: templates/locations/route_search.html:142
+#: templates/locations/route_search.html:205
+msgid "Manual coordinates"
+msgstr ""
+
+#: templates/locations/route_search.html:192
+msgid "End point"
+msgstr ""
+
+#: templates/locations/route_search.html:264
+msgid "Search route"
+msgstr ""
+
+#: templates/locations/route_search.html:304
+msgid "Route name"
+msgstr ""
+
+#: templates/locations/route_search.html:320
+msgid "Add route"
+msgstr ""
+
+#: templates/locations/route_search.html:341
+msgid "Map clicks are disabled here. Add addresses from the locations map."
+msgstr ""
+
+#: templates/locations/zone_detail.html:28
+msgid "Zone detail"
+msgstr ""
+
+#: templates/locations/zone_detail.html:44
+msgid "Zone activity"
+msgstr ""
+
+#: templates/locations/zone_detail.html:49
+#: templates/locations/zone_detail.html:82
+msgid "Events"
+msgstr ""
+
+#: templates/locations/zone_detail.html:54
+msgid "Campaigns"
+msgstr ""
+
+#: templates/locations/zone_detail.html:59
+msgid "Missions"
+msgstr ""
+
+#: templates/locations/zone_detail.html:99
+msgid "No events linked to this zone."
+msgstr ""
+
+#: templates/locations/zone_detail.html:120
+msgid "No routes linked to this zone."
+msgstr ""
+
+#: templates/locations/zone_detail.html:138
+msgid "No addresses linked through missions."
+msgstr ""
