@@ -1,0 +1,147 @@
+# pl catalogue for this toto app.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-05 10:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: templates/primula/edit.html:5
+msgid "Primula"
+msgstr "Primula"
+
+#: templates/primula/edit.html:33
+msgid "All sheets"
+msgstr "Wszystkie arkusze"
+
+#: templates/primula/edit.html:42 templates/primula/index.html:63
+#: templates/primula/versions.html:5 templates/primula/versions.html:18
+msgid "Versions"
+msgstr "Wersje"
+
+#: templates/primula/edit.html:48
+msgid "Save"
+msgstr "Zapisz"
+
+#: templates/primula/edit.html:50
+msgid "Read only"
+msgstr "Tylko do odczytu"
+
+#: templates/primula/edit.html:131
+msgid "Saving…"
+msgstr "Zapisywanie…"
+
+#: templates/primula/edit.html:140
+msgid "Saved"
+msgstr "Zapisano"
+
+#: templates/primula/edit.html:140 templates/primula/index.html:56
+msgid "versions"
+msgstr "wersje"
+
+#: templates/primula/edit.html:142 templates/primula/edit.html:145
+msgid "Save failed"
+msgstr "Zapis nie powiódł się"
+
+#: templates/primula/index.html:5 templates/primula/index.html:26
+msgid "Primula Sheets"
+msgstr "Arkusze Primula"
+
+#: templates/primula/index.html:27
+msgid "Spreadsheets stored as vault files, edited in your browser."
+msgstr "Arkusze kalkulacyjne przechowywane jako pliki w magazynie, edytowane w Twojej przeglądarce."
+
+#: templates/primula/index.html:33 templates/primula/index.html:85
+#: templates/primula/index.html:101
+msgid "New sheet"
+msgstr "Nowy arkusz"
+
+#: templates/primula/index.html:35
+msgid "Vault"
+msgstr "Magazyn"
+
+#: templates/primula/index.html:61
+msgid "Open"
+msgstr "Otwórz"
+
+#: templates/primula/index.html:66
+msgid "Delete this sheet and all its versions?"
+msgstr "Usunąć ten arkusz i wszystkie jego wersje?"
+
+#: templates/primula/index.html:70
+msgid "Delete"
+msgstr "Usuń"
+
+#: templates/primula/index.html:81
+msgid "No sheets yet."
+msgstr "Nie ma jeszcze arkuszy."
+
+#: templates/primula/index.html:110
+msgid "Filename"
+msgstr "Nazwa pliku"
+
+#: templates/primula/index.html:113
+msgid "budget"
+msgstr "budżet"
+
+#: templates/primula/index.html:121
+msgid "Bucket"
+msgstr "Kubełek"
+
+#: templates/primula/index.html:125
+msgid "Personal (default)"
+msgstr "Osobisty (domyślny)"
+
+#: templates/primula/index.html:133
+msgid "Folder"
+msgstr "Folder"
+
+#: templates/primula/index.html:134
+msgid "optional"
+msgstr "opcjonalnie"
+
+#: templates/primula/index.html:138
+msgid "— root of bucket —"
+msgstr "— główny folder kubełka —"
+
+#: templates/primula/index.html:148
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: templates/primula/index.html:152
+msgid "Create"
+msgstr "Utwórz"
+
+#: templates/primula/versions.html:22
+msgid "Back to sheet"
+msgstr "Wróć do arkusza"
+
+#: templates/primula/versions.html:39
+msgid "bytes"
+msgstr "bajtów"
+
+#: templates/primula/versions.html:44
+msgid ""
+"Restore this version? The current sheet is saved as a new version first."
+msgstr "Przywrócić tę wersję? Bieżący arkusz zostanie najpierw zapisany jako nowa wersja."
+
+#: templates/primula/versions.html:50
+msgid "Restore"
+msgstr "Przywróć"
+
+#: templates/primula/versions.html:60
+msgid "No saved versions yet."
+msgstr "Nie ma jeszcze zapisanych wersji."

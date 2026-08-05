@@ -1,0 +1,146 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-05 10:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/primula/edit.html:5
+msgid "Primula"
+msgstr ""
+
+#: templates/primula/edit.html:33
+msgid "All sheets"
+msgstr ""
+
+#: templates/primula/edit.html:42 templates/primula/index.html:63
+#: templates/primula/versions.html:5 templates/primula/versions.html:18
+msgid "Versions"
+msgstr ""
+
+#: templates/primula/edit.html:48
+msgid "Save"
+msgstr ""
+
+#: templates/primula/edit.html:50
+msgid "Read only"
+msgstr ""
+
+#: templates/primula/edit.html:131
+msgid "Saving…"
+msgstr ""
+
+#: templates/primula/edit.html:140
+msgid "Saved"
+msgstr ""
+
+#: templates/primula/edit.html:140 templates/primula/index.html:56
+msgid "versions"
+msgstr ""
+
+#: templates/primula/edit.html:142 templates/primula/edit.html:145
+msgid "Save failed"
+msgstr ""
+
+#: templates/primula/index.html:5 templates/primula/index.html:26
+msgid "Primula Sheets"
+msgstr ""
+
+#: templates/primula/index.html:27
+msgid "Spreadsheets stored as vault files, edited in your browser."
+msgstr ""
+
+#: templates/primula/index.html:33 templates/primula/index.html:85
+#: templates/primula/index.html:101
+msgid "New sheet"
+msgstr ""
+
+#: templates/primula/index.html:35
+msgid "Vault"
+msgstr ""
+
+#: templates/primula/index.html:61
+msgid "Open"
+msgstr ""
+
+#: templates/primula/index.html:66
+msgid "Delete this sheet and all its versions?"
+msgstr ""
+
+#: templates/primula/index.html:70
+msgid "Delete"
+msgstr ""
+
+#: templates/primula/index.html:81
+msgid "No sheets yet."
+msgstr ""
+
+#: templates/primula/index.html:110
+msgid "Filename"
+msgstr ""
+
+#: templates/primula/index.html:113
+msgid "budget"
+msgstr ""
+
+#: templates/primula/index.html:121
+msgid "Bucket"
+msgstr ""
+
+#: templates/primula/index.html:125
+msgid "Personal (default)"
+msgstr ""
+
+#: templates/primula/index.html:133
+msgid "Folder"
+msgstr ""
+
+#: templates/primula/index.html:134
+msgid "optional"
+msgstr ""
+
+#: templates/primula/index.html:138
+msgid "— root of bucket —"
+msgstr ""
+
+#: templates/primula/index.html:148
+msgid "Cancel"
+msgstr ""
+
+#: templates/primula/index.html:152
+msgid "Create"
+msgstr ""
+
+#: templates/primula/versions.html:22
+msgid "Back to sheet"
+msgstr ""
+
+#: templates/primula/versions.html:39
+msgid "bytes"
+msgstr ""
+
+#: templates/primula/versions.html:44
+msgid ""
+"Restore this version? The current sheet is saved as a new version first."
+msgstr ""
+
+#: templates/primula/versions.html:50
+msgid "Restore"
+msgstr ""
+
+#: templates/primula/versions.html:60
+msgid "No saved versions yet."
+msgstr ""
