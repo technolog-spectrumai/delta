@@ -1,0 +1,2891 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-05 06:20+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+#: delta/settings.py:498 toto/academy/templates/academy/base.html:25
+#: toto/backoffice/templates/backoffice/base.html:25
+#: toto/subscriptions/templates/subscriptions/my_subscription.html:14
+#: toto/subscriptions/templates/subscriptions/plan_list.html:14
+msgid "Dashboard"
+msgstr ""
+
+#: delta/settings.py:499
+msgid "My Profile"
+msgstr ""
+
+#: delta/settings.py:504
+msgid "Nauka"
+msgstr ""
+
+#: delta/settings.py:504
+msgid "Courses, lessons and practice tasks — high-school maths and matura."
+msgstr ""
+
+#: delta/settings.py:505
+msgid "Zadania"
+msgstr ""
+
+#: delta/settings.py:505
+msgid "Practice task pools — solve until every task in a section is done."
+msgstr ""
+
+#: delta/settings.py:506 toto/academy/templates/academy/student_home.html:78
+msgid "My progress"
+msgstr ""
+
+#: delta/settings.py:506
+msgid "See how many tasks you have solved in each section."
+msgstr ""
+
+#: delta/settings.py:507 toto/academy/templates/academy/student_home.html:81
+msgid "My path"
+msgstr ""
+
+#: delta/settings.py:507
+msgid ""
+"Your personalized learning path — ordered steps to close your skill gaps."
+msgstr ""
+
+#: delta/settings.py:508
+#: toto/academy/templates/academy/skill_tree_detail.html:61
+#: toto/academy/templates/academy/student_home.html:84
+msgid "Skills"
+msgstr ""
+
+#: delta/settings.py:508
+msgid "The skill tree — badges you earn as you complete modules."
+msgstr ""
+
+#: delta/settings.py:510 toto/academy/templates/academy/course_detail.html:217
+msgid "Notatki"
+msgstr ""
+
+#: delta/settings.py:510
+msgid "Lesson notes and articles from your teachers."
+msgstr ""
+
+#: delta/settings.py:511
+msgid "Storage"
+msgstr ""
+
+#: delta/settings.py:511
+msgid "Your files and downloadable PDF notes in encrypted storage."
+msgstr ""
+
+#: delta/settings.py:513
+msgid "SocialHub"
+msgstr ""
+
+#: delta/settings.py:513
+msgid "Meet other students and stay connected."
+msgstr ""
+
+#: delta/settings.py:514
+msgid "Events"
+msgstr ""
+
+#: delta/settings.py:514
+msgid "Upcoming lessons, deadlines and events."
+msgstr ""
+
+#: delta/settings.py:523
+msgid "Dokumenty"
+msgstr ""
+
+#: delta/settings.py:523
+msgid "Write documents with real pages and export them as a finished PDF."
+msgstr ""
+
+#: delta/settings.py:524
+msgid "Prezentacje"
+msgstr ""
+
+#: delta/settings.py:524
+msgid "Build slide decks and present them full-screen."
+msgstr ""
+
+#: delta/settings.py:528 toto/library/templates/library/base.html:26
+#: toto/library/templates/library/book_list.html:4
+#: toto/library/templates/library/book_list.html:55
+#: toto/library/templates/library/book_list.html:64
+msgid "Books"
+msgstr ""
+
+#: delta/settings.py:528
+msgid "Recommended books and reference materials."
+msgstr ""
+
+#: delta/settings.py:529 toto/library/templates/library/article_list.html:4
+#: toto/library/templates/library/article_list.html:53
+#: toto/library/templates/library/article_list.html:62
+#: toto/library/templates/library/base.html:32
+msgid "Articles"
+msgstr ""
+
+#: delta/settings.py:529
+msgid "Curated articles and further reading."
+msgstr ""
+
+#: delta/settings.py:533
+msgid "Subscription"
+msgstr ""
+
+#: delta/settings.py:533
+msgid "Your active course, its validity and your discount codes."
+msgstr ""
+
+#: delta/settings.py:537
+msgid "Learning"
+msgstr ""
+
+#: delta/settings.py:538
+msgid "Materials"
+msgstr ""
+
+#: delta/settings.py:539
+msgid "Account"
+msgstr ""
+
+#: templates/oya/home.html:24
+msgid "Browse courses, learn and earn badges."
+msgstr ""
+
+#: templates/oya/home.html:34
+msgid "Open the authoring panel."
+msgstr ""
+
+#: templates/oya/home.html:42
+msgid "Sign in to author lessons."
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:28
+msgid "Published (visible to students)"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:29
+msgid "Virtual (curriculum item, hidden from the public list)"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:59
+msgid "Unlocks badge"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:60
+msgid "Notes / handout page"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:61
+msgid "Module exam (official quiz)"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:62 toto/academy/backoffice_forms.py:125
+msgid "Attached quizzes"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:63
+msgid "Lecture video URL"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:110
+msgid "Lesson video"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:111
+msgid "Voice-narrated MP4/WebM. Leave blank to keep the current file."
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:115
+msgid "Lesson notes (PDF)"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:116
+msgid "Downloadable / printable PDF notes."
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:119
+msgid "Remove current video"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:120
+msgid "Remove current notes"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:153
+msgid "Please upload a video file (MP4, WebM, …)."
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:159
+msgid "Please upload a PDF file."
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:200
+#: toto/academy/templates/academy/backoffice/script_form.html:85
+msgid "Content"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:206
+msgid "Section heading (optional)"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:238
+#: toto/academy/templates/academy/course_metrics.html:100
+#: toto/academy/templates/academy/personal_path_list.html:38
+msgid "Active"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:241
+msgid "optional"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:281
+msgid "Headline (PL)"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:281
+msgid "Headline (EN)"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:282
+msgid "Subtitle (PL)"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:282
+msgid "Subtitle (EN)"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:283
+msgid "Invitation text (PL)"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:283
+msgid "Invitation text (EN)"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:284
+msgid "Student button (PL)"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:284
+msgid "Student button (EN)"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:285
+msgid "Teacher button (PL)"
+msgstr ""
+
+#: toto/academy/backoffice_forms.py:285
+msgid "Teacher button (EN)"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:92
+msgid "Course created. Now add its modules."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:95
+#: toto/academy/templates/academy/backoffice/course_list.html:8
+msgid "New course"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:95
+msgid "Create course"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:106
+msgid "Course saved."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:109
+msgid "Edit course"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:109
+msgid "Save course"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:120
+msgid "Course deleted."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:123
+msgid "Delete course"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:124
+msgid "This deletes the course with all its modules, lessons and scripts."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:143
+msgid "Edit module"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:143
+#: toto/academy/templates/academy/backoffice/module_list.html:10
+msgid "New module"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:144
+msgid "Save module"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:144
+msgid "Create module"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:162
+msgid "Module created."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:173
+msgid "Module saved."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:184
+msgid "Module deleted."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:187
+msgid "Delete module"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:188
+msgid "This deletes the module with its lessons and scripts."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:239
+msgid "Lesson added."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:243
+msgid "New lesson"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:243
+#: toto/academy/templates/academy/backoffice/module_form.html:97
+msgid "Add lesson"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:256
+msgid "Lesson saved."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:260
+msgid "Edit lesson"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:260
+msgid "Save lesson"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:271
+msgid "Lesson deleted."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:274
+msgid "Delete lesson"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:302
+msgid "Script added."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:306
+msgid "New script"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:306
+msgid "Create script"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:319
+msgid "Script saved."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:323
+msgid "Edit script"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:323
+msgid "Save script"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:363
+#, python-format
+msgid "This file belongs to %(owner)s — only its owner can edit it."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:420
+msgid "Script deleted."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:423
+msgid "Delete script"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:485 toto/academy/backoffice_views.py:570
+msgid "Person not found."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:487
+#, python-format
+msgid "Enrolled %(name)s."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:489
+#, python-format
+msgid "%(name)s is already enrolled."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:499
+msgid "Student unenrolled."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:508
+msgid "Edit cohort"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:508
+#: toto/academy/templates/academy/backoffice/roster.html:74
+msgid "New cohort"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:509
+msgid "Save cohort"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:509
+msgid "Create cohort"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:533
+msgid "Cohort created."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:544
+msgid "Cohort saved."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:555
+msgid "Cohort deleted."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:558
+msgid "Delete cohort"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:559
+msgid "This removes the cohort and its membership list (enrolments are kept)."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:575
+#, python-format
+msgid "Cohort is full (capacity %(n)s)."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:579
+#, python-format
+msgid "Added %(name)s to the cohort."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:589
+msgid "Removed from the cohort."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:616
+#, python-format
+msgid "Issued %(n)d certificate(s); %(m)d member(s) were already complete."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:619
+msgid "This cohort has no members yet."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:668
+msgid "Marked complete — a certificate was issued."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:683
+msgid "Marked as in progress."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:693
+msgid "Badge not found."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:696
+#, python-format
+msgid "Awarded “%(b)s”."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:705
+msgid "Badge revoked."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:747
+#, python-format
+msgid ""
+"%(name)s has no login account yet, so they cannot enter the panel until one "
+"is linked."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:750
+#, python-format
+msgid "%(name)s is now a teacher."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:763
+msgid "Welcome page updated."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:766 toto/backoffice/nav.py:85
+msgid "Welcome page"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:766 toto/library/backoffice_views.py:78
+msgid "Save"
+msgstr ""
+
+#: toto/academy/backoffice_views.py:776
+msgid "You cannot remove your own teacher access."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:783
+#, python-format
+msgid ""
+"%(name)s still has staff access; remove their staff status in the admin to "
+"fully revoke panel access."
+msgstr ""
+
+#: toto/academy/backoffice_views.py:786
+#, python-format
+msgid "%(name)s is no longer a teacher."
+msgstr ""
+
+#: toto/academy/forms.py:15
+msgid "Target skill"
+msgstr ""
+
+#: toto/academy/forms.py:16
+msgid "A single skill badge to work toward."
+msgstr ""
+
+#: toto/academy/forms.py:21
+msgid "Target skill tree"
+msgstr ""
+
+#: toto/academy/forms.py:22
+msgid "A whole skill tree to master."
+msgstr ""
+
+#: toto/academy/forms.py:36
+msgid "Pick exactly one goal: a target skill or a whole skill tree."
+msgstr ""
+
+#: toto/academy/forms.py:45
+msgid "You have already earned everything on this goal."
+msgstr ""
+
+#: toto/academy/forms.py:52
+msgid "Task"
+msgstr ""
+
+#: toto/academy/forms.py:56
+msgid "Note"
+msgstr ""
+
+#: toto/academy/models.py:781
+msgid "Learn mathematics with Delta"
+msgstr ""
+
+#: toto/academy/models.py:782
+msgid "Guided courses, hands-on tasks and real feedback."
+msgstr ""
+
+#: toto/academy/models.py:784
+msgid ""
+"Delta is a maths e-learning platform. Explore courses, earn skill badges and "
+"track your progress — or sign in as a teacher to author lessons."
+msgstr ""
+
+#: toto/academy/models.py:787
+msgid "I’m a student"
+msgstr ""
+
+#: toto/academy/models.py:788
+msgid "I’m a teacher"
+msgstr ""
+
+#: toto/academy/templates/academy/_recommendation_cards.html:6
+msgid "Suggested goals"
+msgstr ""
+
+#: toto/academy/templates/academy/_recommendation_cards.html:10
+msgid "Starting a new goal archives your current path."
+msgstr ""
+
+#: toto/academy/templates/academy/_recommendation_cards.html:36
+msgid "Ready to start"
+msgstr ""
+
+#: toto/academy/templates/academy/_recommendation_cards.html:42
+#, python-format
+msgid "Unlocks %(count)s skills"
+msgstr ""
+
+#: toto/academy/templates/academy/_recommendation_cards.html:48
+#, python-format
+msgid "Continues %(group)s"
+msgstr ""
+
+#: toto/academy/templates/academy/_recommendation_cards.html:54
+msgid "Popular with similar students"
+msgstr ""
+
+#: toto/academy/templates/academy/_recommendation_cards.html:70
+msgid "Build path"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/cohort_form.html:30
+#: toto/academy/templates/academy/backoffice/lesson_form.html:73
+#: toto/academy/templates/academy/backoffice/module_form.html:84
+#: toto/academy/templates/academy/backoffice/script_form.html:100
+#: toto/backoffice/templates/backoffice/_generic_confirm_delete.html:17
+#: toto/backoffice/templates/backoffice/_generic_form.html:54
+#: toto/palimpsest/templates/palimpsest/backoffice/page_form.html:32
+#: toto/palimpsest/templates/palimpsest/page_confirm_delete.html:27
+#: toto/palimpsest/templates/palimpsest/page_form.html:72
+#: toto/palimpsest/templates/palimpsest/section_confirm_delete.html:27
+#: toto/palimpsest/templates/palimpsest/section_form.html:89
+#: toto/quizzes/templates/quizzes/backoffice/question_confirm_delete.html:14
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:93
+#: toto/quizzes/templates/quizzes/backoffice/quiz_confirm_delete.html:13
+#: toto/quizzes/templates/quizzes/backoffice/quiz_form.html:49
+msgid "Cancel"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/cohort_form.html:39
+msgid "Members"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/cohort_form.html:41
+#: toto/academy/templates/academy/backoffice/roster.html:86
+msgid "Mark all members complete and issue a certificate to each?"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/cohort_form.html:44
+msgid "Award certificates"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/cohort_form.html:53
+#: toto/academy/templates/academy/backoffice/roster.html:56
+msgid "Manage"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/cohort_form.html:56
+#: toto/academy/templates/academy/backoffice/people_list.html:34
+msgid "Remove"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/cohort_form.html:61
+msgid "No members yet."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/cohort_form.html:66
+#: toto/academy/templates/academy/backoffice/roster.html:16
+msgid "Search by name or email"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/cohort_form.html:68
+#: toto/academy/templates/academy/backoffice/people_list.html:57
+#: toto/academy/templates/academy/backoffice/roster.html:18
+#: toto/library/templates/library/article_list.html:15
+#: toto/library/templates/library/book_list.html:15
+msgid "Search"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/cohort_form.html:69
+#: toto/academy/templates/academy/backoffice/people_list.html:58
+#: toto/academy/templates/academy/backoffice/roster.html:19
+msgid "Clear"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/cohort_form.html:77
+msgid "In cohort"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/cohort_form.html:81
+msgid "Add"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/cohort_form.html:86
+#: toto/academy/templates/academy/backoffice/roster.html:36
+msgid "No people match."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/course_list.html:19
+#: toto/academy/templates/academy/certificate_detail.html:46
+msgid "Course"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/course_list.html:20
+#: toto/academy/templates/academy/backoffice/course_list.html:42
+#: toto/academy/templates/academy/course_detail.html:130
+#: toto/academy/templates/academy/course_metrics.html:51
+#: toto/academy/templates/academy/teacher_detail.html:118
+msgid "Modules"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/course_list.html:21
+#: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:21
+msgid "Status"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/course_list.html:22
+#: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:22
+msgid "Actions"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/course_list.html:30
+msgid "Virtual"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/course_list.html:35
+#: toto/academy/templates/academy/backoffice/module_list.html:20
+#: toto/quizzes/templates/quizzes/backoffice/question_list.html:19
+#: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:35
+msgid "Published"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/course_list.html:37
+#: toto/academy/templates/academy/backoffice/module_list.html:22
+#: toto/quizzes/templates/quizzes/backoffice/question_list.html:21
+#: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:37
+msgid "Draft"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/course_list.html:43
+#: toto/academy/templates/academy/backoffice/module_list.html:51
+#: toto/library/templates/library/backoffice/reference_list.html:33
+#: toto/palimpsest/templates/palimpsest/backoffice/page_list.html:27
+#: toto/palimpsest/templates/palimpsest/page_detail.html:96
+#: toto/quizzes/templates/quizzes/backoffice/question_list.html:60
+#: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:43
+msgid "Edit"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/course_list.html:44
+#: toto/academy/templates/academy/backoffice/module_list.html:52
+#: toto/backoffice/templates/backoffice/_generic_confirm_delete.html:18
+#: toto/library/templates/library/backoffice/reference_list.html:34
+#: toto/palimpsest/templates/palimpsest/backoffice/page_list.html:28
+#: toto/palimpsest/templates/palimpsest/page_confirm_delete.html:30
+#: toto/palimpsest/templates/palimpsest/section_confirm_delete.html:30
+#: toto/quizzes/templates/quizzes/backoffice/question_confirm_delete.html:15
+#: toto/quizzes/templates/quizzes/backoffice/question_list.html:61
+#: toto/quizzes/templates/quizzes/backoffice/quiz_confirm_delete.html:14
+#: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:44
+msgid "Delete"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/course_list.html:49
+msgid "No courses yet. Create your first course."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/lesson_form.html:35
+#: toto/academy/templates/academy/backoffice/lesson_form.html:49
+#: toto/academy/templates/academy/student_progress.html:37
+msgid "Current"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/lesson_form.html:85
+msgid "Presentation lecture"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/lesson_form.html:86
+msgid ""
+"Optional slide deck (formulas, SVG, images, captions) students can watch "
+"alongside the video."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/lesson_form.html:92
+msgid "Edit deck"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/lesson_form.html:92
+msgid "Add a deck"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/lesson_form.html:99
+msgid "Lesson notes (document)"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/lesson_form.html:100
+msgid ""
+"Written notes with real pages, formulas and images — students read them "
+"online or as a PDF. Separate from the uploaded PDF above."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/lesson_form.html:107
+msgid "Edit notes"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/lesson_form.html:107
+msgid "Write notes"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_form.html:36
+#: toto/competence/backoffice_views.py:112
+#: toto/competence/templates/competence/backoffice/overview.html:9
+msgid "New badge"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_form.html:38
+msgid "Badge title"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_form.html:46
+msgid "Create & select"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_form.html:49
+msgid "Each module unlocks a distinct badge on completion."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_form.html:67
+msgid "Hold Ctrl/Cmd to select several."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_form.html:96
+#: toto/academy/templates/academy/course_detail.html:184
+#: toto/academy/templates/academy/teacher_detail.html:137
+msgid "Lessons"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_form.html:103
+#: toto/academy/templates/academy/backoffice/module_list.html:32
+#: toto/academy/templates/academy/backoffice/script_form.html:77
+#: toto/competence/templates/competence/backoffice/overview.html:21
+#: toto/competence/templates/competence/backoffice/overview.html:38
+#: toto/quizzes/templates/quizzes/backoffice/question_list.html:31
+msgid "Drag to reorder"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_form.html:104
+#: toto/academy/templates/academy/backoffice/module_list.html:35
+#: toto/quizzes/templates/quizzes/backoffice/question_list.html:36
+msgid "Move up"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_form.html:105
+#: toto/academy/templates/academy/backoffice/module_list.html:39
+#: toto/quizzes/templates/quizzes/backoffice/question_list.html:42
+msgid "Move down"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_form.html:112
+#: toto/academy/templates/academy/course_detail.html:238
+msgid "No lessons yet."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_form.html:121
+#: toto/academy/templates/academy/course_detail.html:268
+msgid "Scripts"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_form.html:122
+msgid "Add script"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_form.html:127
+#: toto/palimpsest/templates/palimpsest/backoffice/page_list.html:21
+msgid "sections"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_form.html:132
+msgid "No scripts yet."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_list.html:6
+msgid "Course settings"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_list.html:7
+#: toto/academy/templates/academy/backoffice/roster.html:8
+msgid "Students & cohorts"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_list.html:17
+msgid "All courses"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_list.html:46
+msgid "lessons"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_list.html:47
+msgid "exam"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/module_list.html:57
+msgid "No modules yet. Add the first module."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/people_list.html:7
+#: toto/academy/templates/academy/backoffice/people_list.html:13
+msgid "Teachers"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/people_list.html:14
+msgid ""
+"Teachers can enter this panel. Removing a teacher keeps their course "
+"ownership and signatures — it only revokes access, and can be restored."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/people_list.html:23
+msgid "active"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/people_list.html:25
+msgid "removed"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/people_list.html:27
+msgid "no login"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/people_list.html:31
+msgid "Remove teacher access for this person?"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/people_list.html:38
+msgid "Restore"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/people_list.html:45
+msgid "No teachers yet."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/people_list.html:53
+msgid "Add a teacher"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/people_list.html:55
+msgid "Search by name, email or username"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/people_list.html:66
+msgid "Promote"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/people_list.html:70
+msgid ""
+"No people with a login account match — only login-linked people can become "
+"teachers."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/roster.html:14
+msgid "Enrol a student"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/roster.html:27
+#: toto/academy/templates/academy/course_detail.html:14
+#: toto/academy/templates/academy/course_metrics.html:39
+msgid "Enrolled"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/roster.html:31
+#: toto/academy/templates/academy/course_detail.html:20
+#: toto/academy/templates/academy/course_detail.html:336
+msgid "Enrol"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/roster.html:45
+msgid "Enrolled students"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/roster.html:52
+msgid "completed"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/roster.html:59
+msgid "Unenrol"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/roster.html:64
+msgid "No students enrolled yet."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/roster.html:73
+#: toto/academy/templates/academy/course_detail.html:94
+#: toto/academy/templates/academy/course_metrics.html:57
+#: toto/academy/templates/academy/course_metrics.html:80
+msgid "Cohorts"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/roster.html:81
+msgid "members"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/roster.html:82
+msgid "inactive"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/roster.html:89
+msgid "Award certificates to all members"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/roster.html:97
+msgid "No cohorts yet."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/script_form.html:68
+#: toto/palimpsest/templates/palimpsest/backoffice/page_form.html:41
+msgid "Sections"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/script_form.html:69
+msgid ""
+"Fill in as many sections as you need; blank ones are ignored. Add more by "
+"saving and editing again."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/script_form.html:78
+#: toto/palimpsest/templates/palimpsest/page_detail.html:92
+msgid "Section"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/script_form.html:81
+msgid "Section heading"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/script_form.html:87
+msgid ""
+"Markdown + LaTeX — $…$ for inline math, $$…$$ for display. The preview "
+"renders it live."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/script_form.html:90
+msgid "Delete this section"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:16
+#: toto/academy/templates/academy/course_metrics.html:117
+msgid "Course completion"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:18
+msgid "Completed on"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:20
+msgid "In progress"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:25
+msgid "Mark as in progress"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:29
+#: toto/academy/templates/academy/backoffice/student_detail.html:54
+msgid "Mark complete"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:37
+msgid "Module completion"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:38
+msgid "Completing a module awards its skill badge."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:49
+#: toto/academy/templates/academy/course_metrics.html:45
+#: toto/academy/templates/academy/personal_path_detail.html:100
+#: toto/academy/templates/academy/personal_path_list.html:72
+#: toto/quizzes/templates/quizzes/quiz_metrics.html:57
+msgid "Completed"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:49
+msgid "revoke"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:59
+msgid "This course has no modules yet."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:67
+msgid "Badges"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:72
+msgid "Revoke"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:77
+msgid "No badges earned yet."
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:83
+msgid "— award any badge —"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:86
+msgid "Award"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:93
+#: toto/academy/templates/academy/certificate_sign.html:61
+msgid "Certificate"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:97
+msgid "Signed"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:99
+msgid "Issued (not yet signed)"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:103
+msgid "View certificate"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:105
+msgid "Sign"
+msgstr ""
+
+#: toto/academy/templates/academy/backoffice/student_detail.html:109
+msgid "Mark the course complete to issue a certificate."
+msgstr ""
+
+#: toto/academy/templates/academy/base.html:30
+msgid "Knowledge & Learning"
+msgstr ""
+
+#: toto/academy/templates/academy/base.html:34
+#: toto/palimpsest/templates/palimpsest/page_list.html:18
+#: toto/quizzes/templates/quizzes/quiz_list.html:18
+msgid "Academy"
+msgstr ""
+
+#: toto/academy/templates/academy/base.html:49
+#: toto/academy/templates/academy/skill_forest.html:20
+#: toto/academy/templates/academy/skill_tree_detail.html:25
+#: toto/academy/templates/academy/student_progress.html:16
+#: toto/academy/templates/academy/teacher_detail.html:15
+#: toto/academy/templates/academy/teacher_detail.html:80
+#: toto/backoffice/nav.py:27
+msgid "Courses"
+msgstr ""
+
+#: toto/academy/templates/academy/base.html:56
+#: toto/academy/templates/academy/course_detail.html:244
+#: toto/quizzes/templates/quizzes/quiz_list.html:21
+#: toto/quizzes/templates/quizzes/quiz_list.html:23
+msgid "Quizzes"
+msgstr ""
+
+#: toto/academy/templates/academy/base.html:64 toto/backoffice/nav.py:55
+#: toto/library/templates/library/base.html:17
+msgid "Library"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_detail.html:18
+#: toto/academy/templates/academy/course_detail.html:33
+#: toto/academy/templates/academy/course_list.html:12
+#: toto/academy/templates/academy/personal_path_list.html:11
+#: toto/academy/templates/academy/student_progress.html:18
+msgid "My Progress"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_detail.html:31
+msgid "Granted"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_detail.html:41
+#: toto/academy/templates/academy/certificate_sign.html:65
+msgid "Recipient"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_detail.html:56
+msgid "Exam"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_detail.html:61
+msgid "UUID"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_detail.html:73
+#: toto/academy/templates/academy/student_progress.html:154
+msgid "Cryptographically signed"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_detail.html:78
+msgid "Signed by"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_detail.html:88
+msgid "Key ID"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_detail.html:98
+msgid "Signature"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_detail.html:105
+msgid "Signing payload"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_detail.html:115
+msgid "Not yet cryptographically signed by a professor."
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_detail.html:123
+#: toto/academy/templates/academy/certificate_sign.html:4
+#: toto/academy/templates/academy/certificate_sign.html:26
+#: toto/academy/templates/academy/certificate_sign.html:151
+msgid "Sign Certificate"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:32
+msgid "Only teachers (professors) can cryptographically sign certificates."
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:41
+msgid "Already signed"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:43
+msgid "By"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:50
+msgid "Cryptographic signature"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:53
+msgid "Key"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:69
+msgid "Signing as"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:73
+msgid "Signing key"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:80
+msgid "None — will be provisioned on sign"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:91
+msgid "How signing works"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:94
+msgid ""
+"Your strongbox password is used to decrypt your Ed25519 private key in "
+"memory. The key signs a canonical payload (certificate UUID + recipient "
+"identity + your teacher ID + timestamp). The signature is stored with the "
+"certificate — verifiable by anyone using only the public key."
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:105
+msgid "Strongbox"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:121
+msgid "Password for strongbox"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:123
+msgid "Strongbox password"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:131
+msgid "Enter your strongbox password"
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:132
+msgid "Used only to decrypt your private key in memory. Never stored."
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:138
+msgid ""
+"No strongbox found. You need to set up a Gervazy strongbox before you can "
+"sign."
+msgstr ""
+
+#: toto/academy/templates/academy/certificate_sign.html:144
+msgid ""
+"By submitting, I confirm I have reviewed this certificate and that my "
+"signature constitutes a valid academic attestation."
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:27
+msgid "Sign in to enrol"
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:39
+#: toto/quizzes/templates/quizzes/quiz_detail.html:55
+msgid "Metrics"
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:72
+msgid "Relevant Skill Trees"
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:95
+msgid "Active groups taking this course."
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:151
+msgid "Notes / article / handout"
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:157
+msgid "Lecture video"
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:173
+msgid "Prerequisites"
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:205
+msgid "Notes (PDF)"
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:211
+msgid "Presentation"
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:228
+msgid "Enrol to watch this lesson."
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:233
+msgid "Enrol to watch the presentation."
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:259
+msgid "Take quiz"
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:282
+#: toto/palimpsest/templates/palimpsest/page_list.html:114
+msgid "Read"
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:291
+msgid "No modules yet."
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:301
+msgid "All Lessons"
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:302
+msgid "Complete lesson overview for this course."
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:326
+#: toto/academy/templates/academy/teacher_detail.html:150
+#: toto/library/backoffice_views.py:28
+msgid "Video"
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:333
+#: toto/academy/templates/academy/teacher_detail.html:154
+#: toto/backoffice/nav.py:46
+msgid "Notes"
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:341
+msgid "No lessons available."
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:352
+msgid "Course Badges"
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:353
+msgid "Skills unlocked by completing modules in this course."
+msgstr ""
+
+#: toto/academy/templates/academy/course_detail.html:371
+msgid "No badges connected to this course."
+msgstr ""
+
+#: toto/academy/templates/academy/course_list.html:18
+msgid "Explore available learning tracks and unlock skill badges."
+msgstr ""
+
+#: toto/academy/templates/academy/course_list.html:47
+msgid "Open Course"
+msgstr ""
+
+#: toto/academy/templates/academy/course_list.html:52
+msgid "No courses available yet."
+msgstr ""
+
+#: toto/academy/templates/academy/course_metrics.html:26
+msgid "Course Metrics"
+msgstr ""
+
+#: toto/academy/templates/academy/course_metrics.html:66
+msgid "Enrollment overview"
+msgstr ""
+
+#: toto/academy/templates/academy/course_metrics.html:176
+#: toto/library/templates/library/item_detail.html:100
+msgid "Details"
+msgstr ""
+
+#: toto/academy/templates/academy/course_metrics.html:185
+msgid "No published quizzes in this course yet."
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_detail.html:11
+#: toto/academy/templates/academy/personal_path_form.html:10
+#: toto/academy/templates/academy/personal_path_list.html:15
+msgid "My Learning Paths"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_detail.html:20
+#: toto/academy/templates/academy/personal_path_list.html:61
+#, python-format
+msgid "%(done)s of %(total)s steps completed"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_detail.html:31
+msgid ""
+"Rebuild pending steps against your current skills. Completed steps and your "
+"tasks are kept."
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_detail.html:33
+msgid "Regenerate"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_detail.html:43
+msgid "Archive"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_detail.html:89
+#, python-format
+msgid ""
+"From course \"%(course)s\" — completing it earns the skill \"%(badge)s\"."
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_detail.html:107
+msgid "Completes automatically when you earn this skill."
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_detail.html:109
+msgid "auto"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_detail.html:118
+msgid "Undo"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_detail.html:118
+msgid "Mark done"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_detail.html:128
+msgid "Remove this task"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_detail.html:136
+msgid "This path has no steps. Regenerate it to rebuild them."
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_detail.html:148
+msgid "Add your own task"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_detail.html:169
+msgid "Add task"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_form.html:4
+#: toto/academy/templates/academy/personal_path_form.html:13
+msgid "New Learning Path"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_form.html:17
+msgid ""
+"Pick a goal — a single skill or a whole skill tree. Your path will contain "
+"every skill you still need, ordered so prerequisites always come first."
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_form.html:33
+#, python-format
+msgid "Creating a new path will archive your current path \"%(title)s\"."
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_form.html:55
+msgid "or"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_form.html:72
+msgid "Build my path"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_list.html:4
+msgid "My Path"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_list.html:18
+msgid ""
+"Pick a skill goal and follow an ordered path that closes your skill gaps."
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_list.html:27
+msgid "New path"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_list.html:32
+#: toto/academy/templates/academy/student_progress.html:23
+msgid "No community profile is connected to this account yet."
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_list.html:65
+msgid "No active path. Create one to get started."
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_list.html:89
+#, python-format
+msgid "All %(total)s steps completed"
+msgstr ""
+
+#: toto/academy/templates/academy/personal_path_list.html:99
+msgid "Archived"
+msgstr ""
+
+#: toto/academy/templates/academy/profile_plugins/skills.html:17
+msgid "Skill Badges"
+msgstr ""
+
+#: toto/academy/templates/academy/profile_plugins/skills.html:36
+#: toto/academy/templates/academy/student_progress.html:138
+#: toto/academy/templates/academy/teacher_detail.html:168
+msgid "Certificates"
+msgstr ""
+
+#: toto/academy/templates/academy/skill_forest.html:16
+msgid "Skill Forest"
+msgstr ""
+
+#: toto/academy/templates/academy/skill_forest.html:17
+msgid "Separate skill trees grouped by domain."
+msgstr ""
+
+#: toto/academy/templates/academy/skill_forest.html:44
+msgid "Open Tree"
+msgstr ""
+
+#: toto/academy/templates/academy/skill_forest.html:56
+msgid "No skill trees available yet."
+msgstr ""
+
+#: toto/academy/templates/academy/skill_tree_detail.html:16
+msgid "Skill forest"
+msgstr ""
+
+#: toto/academy/templates/academy/skill_tree_detail.html:44
+#: toto/academy/templates/academy/student_progress.html:73
+msgid "Selected Skill"
+msgstr ""
+
+#: toto/academy/templates/academy/skill_tree_detail.html:50
+msgid "Select a skill to see connected courses."
+msgstr ""
+
+#: toto/academy/templates/academy/skill_tree_detail.html:104
+msgid "No skills in this tree yet."
+msgstr ""
+
+#: toto/academy/templates/academy/student_home.html:13
+#, python-format
+msgid "Welcome back, %(name)s"
+msgstr ""
+
+#: toto/academy/templates/academy/student_home.html:13
+msgid "Welcome"
+msgstr ""
+
+#: toto/academy/templates/academy/student_home.html:16
+msgid "Pick up where you left off."
+msgstr ""
+
+#: toto/academy/templates/academy/student_home.html:20
+#, python-format
+msgid "Continue “%(title)s”"
+msgstr ""
+
+#: toto/academy/templates/academy/student_home.html:23
+msgid "Ready to start? Here’s a great first course."
+msgstr ""
+
+#: toto/academy/templates/academy/student_home.html:27
+#, python-format
+msgid "Start “%(title)s”"
+msgstr ""
+
+#: toto/academy/templates/academy/student_home.html:30
+msgid "Browse the catalog to find your first course."
+msgstr ""
+
+#: toto/academy/templates/academy/student_home.html:34
+#: toto/academy/templates/academy/student_home.html:75
+msgid "Browse courses"
+msgstr ""
+
+#: toto/academy/templates/academy/student_home.html:38
+msgid "Connect a profile to track your progress and earn certificates."
+msgstr ""
+
+#: toto/academy/templates/academy/student_home.html:46
+msgid "My courses"
+msgstr ""
+
+#: toto/academy/templates/academy/student_home.html:47
+msgid "Browse all"
+msgstr ""
+
+#: toto/academy/templates/academy/student_home.html:56
+msgid "done"
+msgstr ""
+
+#: toto/academy/templates/academy/student_progress.html:32
+msgid "Earned"
+msgstr ""
+
+#: toto/academy/templates/academy/student_progress.html:42
+msgid "Available"
+msgstr ""
+
+#: toto/academy/templates/academy/student_progress.html:47
+msgid "Locked"
+msgstr ""
+
+#: toto/academy/templates/academy/student_progress.html:75
+msgid "Progression"
+msgstr ""
+
+#: toto/academy/templates/academy/student_progress.html:77
+msgid "Select a skill to see its status and linked course."
+msgstr ""
+
+#: toto/academy/templates/academy/student_progress.html:88
+msgid "Enrolled Courses"
+msgstr ""
+
+#: toto/academy/templates/academy/student_progress.html:102
+msgid "No enrolled courses yet."
+msgstr ""
+
+#: toto/academy/templates/academy/student_progress.html:112
+msgid "Earned Skills"
+msgstr ""
+
+#: toto/academy/templates/academy/student_progress.html:128
+msgid "No earned skills yet."
+msgstr ""
+
+#: toto/academy/templates/academy/student_progress.html:167
+msgid "No certificates yet."
+msgstr ""
+
+#: toto/academy/templates/academy/teacher_detail.html:45
+msgid "Experience"
+msgstr ""
+
+#: toto/academy/templates/academy/teacher_detail.html:104
+msgid "External course"
+msgstr ""
+
+#: toto/academy/templates/academy/teacher_detail.html:111
+msgid "No courses assigned yet."
+msgstr ""
+
+#: toto/academy/templates/academy/teacher_detail.html:132
+msgid "No modules assigned directly."
+msgstr ""
+
+#: toto/academy/templates/academy/teacher_detail.html:157
+msgid "Open course"
+msgstr ""
+
+#: toto/academy/templates/academy/teacher_detail.html:161
+msgid "No lessons assigned directly."
+msgstr ""
+
+#: toto/academy/templates/academy/teacher_detail.html:194
+msgid "No certificates listed yet."
+msgstr ""
+
+#: toto/backoffice/nav.py:17
+msgid "Tasks"
+msgstr ""
+
+#: toto/backoffice/nav.py:22
+msgid ""
+"Write and organise quiz tasks: single/multiple choice and open answers, with "
+"worked solutions and live math."
+msgstr ""
+
+#: toto/backoffice/nav.py:32
+msgid "Author courses, modules and lessons."
+msgstr ""
+
+#: toto/backoffice/nav.py:36
+msgid "Skills & badges"
+msgstr ""
+
+#: toto/backoffice/nav.py:41
+msgid ""
+"Build the skill tree: groups, badges and prerequisites that course modules "
+"unlock."
+msgstr ""
+
+#: toto/backoffice/nav.py:51
+msgid "Curate lesson notes and study materials."
+msgstr ""
+
+#: toto/backoffice/nav.py:60
+msgid "Manage the bibliography and references."
+msgstr ""
+
+#: toto/backoffice/nav.py:67
+msgid "Sheets"
+msgstr ""
+
+#: toto/backoffice/nav.py:72
+msgid "Build spreadsheets and edit them right in your browser."
+msgstr ""
+
+#: toto/backoffice/nav.py:76
+msgid "People"
+msgstr ""
+
+#: toto/backoffice/nav.py:81
+msgid "Promote people to teachers so they can use the panel."
+msgstr ""
+
+#: toto/backoffice/nav.py:90
+msgid "Edit the invitation text students and teachers see on the home page."
+msgstr ""
+
+#: toto/backoffice/templates/backoffice/_generic_confirm_delete.html:12
+msgid "This cannot be undone."
+msgstr ""
+
+#: toto/backoffice/templates/backoffice/_nav.html:14
+#: toto/backoffice/templates/backoffice/dashboard.html:16
+msgid "Coming soon"
+msgstr ""
+
+#: toto/backoffice/templates/backoffice/_nav.html:16
+msgid "Soon"
+msgstr ""
+
+#: toto/backoffice/templates/backoffice/base.html:29
+msgid "Teacher back office"
+msgstr ""
+
+#: toto/backoffice/templates/backoffice/dashboard.html:25
+#: toto/quizzes/backoffice_views.py:25
+msgid "Open"
+msgstr ""
+
+#: toto/backoffice/templates/backoffice/dashboard.html:29
+msgid "Not available yet"
+msgstr ""
+
+#: toto/competence/backoffice_views.py:62
+msgid "Skill group created."
+msgstr ""
+
+#: toto/competence/backoffice_views.py:65
+msgid "New skill group"
+msgstr ""
+
+#: toto/competence/backoffice_views.py:65
+msgid "Create group"
+msgstr ""
+
+#: toto/competence/backoffice_views.py:76
+msgid "Skill group saved."
+msgstr ""
+
+#: toto/competence/backoffice_views.py:79
+msgid "Edit skill group"
+msgstr ""
+
+#: toto/competence/backoffice_views.py:79
+msgid "Save group"
+msgstr ""
+
+#: toto/competence/backoffice_views.py:91
+msgid "Cannot delete: a badge in this group is used by a course module."
+msgstr ""
+
+#: toto/competence/backoffice_views.py:93
+msgid "Skill group deleted."
+msgstr ""
+
+#: toto/competence/backoffice_views.py:96
+msgid "Delete skill group"
+msgstr ""
+
+#: toto/competence/backoffice_views.py:97
+msgid "This deletes the group and all its badges. This cannot be undone."
+msgstr ""
+
+#: toto/competence/backoffice_views.py:109
+msgid "Badge created."
+msgstr ""
+
+#: toto/competence/backoffice_views.py:112
+msgid "Create badge"
+msgstr ""
+
+#: toto/competence/backoffice_views.py:123
+msgid "Badge saved."
+msgstr ""
+
+#: toto/competence/backoffice_views.py:126
+#: toto/competence/templates/competence/backoffice/overview.html:53
+msgid "Edit badge"
+msgstr ""
+
+#: toto/competence/backoffice_views.py:126
+msgid "Save badge"
+msgstr ""
+
+#: toto/competence/backoffice_views.py:138
+msgid "Cannot delete: this badge is unlocked by a course module."
+msgstr ""
+
+#: toto/competence/backoffice_views.py:140
+msgid "Badge deleted."
+msgstr ""
+
+#: toto/competence/backoffice_views.py:143
+#: toto/competence/templates/competence/backoffice/overview.html:54
+msgid "Delete badge"
+msgstr ""
+
+#: toto/competence/forms.py:17 toto/quizzes/forms.py:31
+msgid "e.g. Klasa 1 — zbiory liczb"
+msgstr ""
+
+#: toto/competence/forms.py:39
+msgid "Prerequisite badges"
+msgstr ""
+
+#: toto/competence/forms.py:40
+msgid "Badges a student must earn before this one."
+msgstr ""
+
+#: toto/competence/templates/competence/backoffice/overview.html:6
+msgid "New group"
+msgstr ""
+
+#: toto/competence/templates/competence/backoffice/overview.html:25
+msgid "Move group up"
+msgstr ""
+
+#: toto/competence/templates/competence/backoffice/overview.html:26
+msgid "Move group down"
+msgstr ""
+
+#: toto/competence/templates/competence/backoffice/overview.html:27
+msgid "Edit group"
+msgstr ""
+
+#: toto/competence/templates/competence/backoffice/overview.html:28
+msgid "Delete group"
+msgstr ""
+
+#: toto/competence/templates/competence/backoffice/overview.html:51
+msgid "Move badge up"
+msgstr ""
+
+#: toto/competence/templates/competence/backoffice/overview.html:52
+msgid "Move badge down"
+msgstr ""
+
+#: toto/competence/templates/competence/backoffice/overview.html:58
+msgid "No badges in this group yet."
+msgstr ""
+
+#: toto/competence/templates/competence/backoffice/overview.html:64
+msgid "No skill groups yet. Create a group, then add badges."
+msgstr ""
+
+#: toto/competence/templates/competence/profile_plugins/experiences.html:31
+msgid "No experiences yet."
+msgstr ""
+
+#: toto/library/backoffice_views.py:25
+#: toto/library/templates/library/item_detail.html:30
+msgid "Book"
+msgstr ""
+
+#: toto/library/backoffice_views.py:26
+#: toto/library/templates/library/item_detail.html:30
+msgid "Article"
+msgstr ""
+
+#: toto/library/backoffice_views.py:27
+msgid "Audio"
+msgstr ""
+
+#: toto/library/backoffice_views.py:58
+msgid "Reference added."
+msgstr ""
+
+#: toto/library/backoffice_views.py:61
+#, python-format
+msgid "New %(type)s"
+msgstr ""
+
+#: toto/library/backoffice_views.py:62
+msgid "Create"
+msgstr ""
+
+#: toto/library/backoffice_views.py:74
+msgid "Reference saved."
+msgstr ""
+
+#: toto/library/backoffice_views.py:77
+#, python-format
+msgid "Edit %(type)s"
+msgstr ""
+
+#: toto/library/backoffice_views.py:89
+msgid "Reference deleted."
+msgstr ""
+
+#: toto/library/backoffice_views.py:92
+msgid "Delete reference"
+msgstr ""
+
+#: toto/library/backoffice_views.py:104
+msgid "Collection created."
+msgstr ""
+
+#: toto/library/backoffice_views.py:107
+#: toto/library/templates/library/backoffice/reference_list.html:49
+msgid "New collection"
+msgstr ""
+
+#: toto/library/backoffice_views.py:107
+msgid "Create collection"
+msgstr ""
+
+#: toto/library/backoffice_views.py:119
+msgid "Collection saved."
+msgstr ""
+
+#: toto/library/backoffice_views.py:122
+msgid "Edit collection"
+msgstr ""
+
+#: toto/library/backoffice_views.py:122
+msgid "Save collection"
+msgstr ""
+
+#: toto/library/backoffice_views.py:133
+msgid "Collection deleted."
+msgstr ""
+
+#: toto/library/backoffice_views.py:136
+msgid "Delete collection"
+msgstr ""
+
+#: toto/library/templates/admin/library_bib_export_console.html:6
+msgid "Export"
+msgstr ""
+
+#: toto/library/templates/admin/library_bib_export_console.html:28
+msgid "Back to collection"
+msgstr ""
+
+#: toto/library/templates/admin/library_bib_export_console.html:32
+msgid "Preview"
+msgstr ""
+
+#: toto/library/templates/library/article_list.html:18
+msgid "Title, journal, abstract…"
+msgstr ""
+
+#: toto/library/templates/library/article_list.html:30
+#: toto/library/templates/library/book_list.html:30
+msgid "Filter"
+msgstr ""
+
+#: toto/library/templates/library/article_list.html:36
+#: toto/library/templates/library/book_list.html:36
+msgid "Tags"
+msgstr ""
+
+#: toto/library/templates/library/article_list.html:39
+#: toto/library/templates/library/book_list.html:40
+#: toto/palimpsest/templates/palimpsest/page_list.html:64
+msgid "All"
+msgstr ""
+
+#: toto/library/templates/library/article_list.html:62
+msgid "All Articles"
+msgstr ""
+
+#: toto/library/templates/library/article_list.html:103
+#: toto/library/templates/library/item_detail.html:146
+msgid "DOI"
+msgstr ""
+
+#: toto/library/templates/library/article_list.html:109
+#: toto/library/templates/library/book_list.html:105
+#: toto/library/templates/library/item_detail.html:82
+msgid "File"
+msgstr ""
+
+#: toto/library/templates/library/article_list.html:115
+#: toto/library/templates/library/book_list.html:111
+msgid "View"
+msgstr ""
+
+#: toto/library/templates/library/article_list.html:125
+msgid "No articles found"
+msgstr ""
+
+#: toto/library/templates/library/article_list.html:126
+#: toto/library/templates/library/book_list.html:122
+msgid "Try a different search or clear the filter."
+msgstr ""
+
+#: toto/library/templates/library/backoffice/reference_list.html:9
+msgid "Add reference:"
+msgstr ""
+
+#: toto/library/templates/library/backoffice/reference_list.html:39
+msgid "No references yet. Add a book, article, audio or video."
+msgstr ""
+
+#: toto/library/templates/library/backoffice/reference_list.html:48
+msgid "Collections"
+msgstr ""
+
+#: toto/library/templates/library/backoffice/reference_list.html:54
+msgid "items"
+msgstr ""
+
+#: toto/library/templates/library/backoffice/reference_list.html:59
+msgid "No collections yet."
+msgstr ""
+
+#: toto/library/templates/library/base.html:13
+msgid "Knowledge Base"
+msgstr ""
+
+#: toto/library/templates/library/book_list.html:18
+msgid "Title, ISBN, abstract…"
+msgstr ""
+
+#: toto/library/templates/library/book_list.html:64
+msgid "All Books"
+msgstr ""
+
+#: toto/library/templates/library/book_list.html:121
+msgid "No books found"
+msgstr ""
+
+#: toto/library/templates/library/item_detail.html:18
+msgid "Back to Books"
+msgstr ""
+
+#: toto/library/templates/library/item_detail.html:18
+msgid "Back to Articles"
+msgstr ""
+
+#: toto/library/templates/library/item_detail.html:56
+msgid "Abstract"
+msgstr ""
+
+#: toto/library/templates/library/item_detail.html:89
+msgid "Open file"
+msgstr ""
+
+#: toto/library/templates/library/item_detail.html:105
+msgid "Publisher"
+msgstr ""
+
+#: toto/library/templates/library/item_detail.html:111
+msgid "Edition"
+msgstr ""
+
+#: toto/library/templates/library/item_detail.html:117
+msgid "ISBN"
+msgstr ""
+
+#: toto/library/templates/library/item_detail.html:124
+msgid "Journal"
+msgstr ""
+
+#: toto/library/templates/library/item_detail.html:130
+msgid "Volume / Issue"
+msgstr ""
+
+#: toto/library/templates/library/item_detail.html:138
+msgid "Pages"
+msgstr ""
+
+#: toto/library/templates/library/item_detail.html:161
+msgid "External link"
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:32
+msgid "Edit page"
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:32
+#: toto/palimpsest/templates/palimpsest/backoffice/page_list.html:9
+msgid "New page"
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:33
+msgid "Save page"
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:33
+msgid "Create page"
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:44
+msgid "Page created. Add sections to it."
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:55
+msgid "Page saved."
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:65
+msgid "Page deleted."
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:68
+msgid "Delete page"
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:69
+msgid "This deletes the page and all its sections."
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:83
+msgid "Section added."
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:86
+msgid "New section"
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:86
+#: toto/palimpsest/templates/palimpsest/backoffice/page_form.html:42
+msgid "Add section"
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:100
+msgid "Section saved."
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:103
+#: toto/palimpsest/templates/palimpsest/page_detail.html:141
+msgid "Edit section"
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:103
+msgid "Save section"
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:115
+msgid "Section deleted."
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:118
+#: toto/palimpsest/templates/palimpsest/page_detail.html:146
+#: toto/palimpsest/templates/palimpsest/section_confirm_delete.html:21
+msgid "Delete section"
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:118
+msgid "(untitled section)"
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:128
+msgid "Tag created."
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:131
+#: toto/palimpsest/templates/palimpsest/backoffice/page_list.html:6
+msgid "New tag"
+msgstr ""
+
+#: toto/palimpsest/backoffice_views.py:131
+msgid "Create tag"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/backoffice/page_form.html:9
+msgid "All pages"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/backoffice/page_form.html:46
+msgid "(untitled)"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/backoffice/page_form.html:51
+#: toto/palimpsest/templates/palimpsest/page_detail.html:166
+msgid "No sections yet."
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/backoffice/page_list.html:22
+msgid "private"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/backoffice/page_list.html:33
+msgid "No pages yet. Create your first note page."
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_confirm_delete.html:21
+#: toto/palimpsest/templates/palimpsest/page_detail.html:185
+msgid "Delete piece"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_confirm_delete.html:23
+msgid "This removes the piece and every section inside it."
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_detail.html:170
+msgid "Add the first section"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_detail.html:181
+#: toto/palimpsest/templates/palimpsest/page_form.html:15
+#: toto/palimpsest/templates/palimpsest/page_list.html:24
+msgid "Blog"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_form.html:20
+msgid "Writing desk"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_form.html:25
+msgid ""
+"Shape the piece metadata here. Add and arrange the actual writing as "
+"sections."
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_list.html:21
+msgid "Close publishing"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_list.html:26
+msgid ""
+"Essays, field notes, and sectioned drafts from the people already close "
+"enough to matter."
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_list.html:35
+msgid "New piece"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_list.html:39
+msgid "Tag"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_list.html:47
+msgid "Search Blog"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_list.html:49
+msgid "Search the archive..."
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_list.html:60
+msgid "Blog tags"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_list.html:130
+msgid "Private"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_list.html:170
+msgid "No pieces found."
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_list.html:181
+msgid "Newer"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/page_list.html:189
+msgid "Older"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/section_confirm_delete.html:23
+msgid "This removes only this section from the piece."
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/section_form.html:35
+msgid "Section editor"
+msgstr ""
+
+#: toto/palimpsest/templates/palimpsest/section_form.html:40
+msgid ""
+"Write one self-contained section. Sections stay modular, movable, and "
+"attributable."
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:26
+#: toto/quizzes/templates/quizzes/quiz_detail.html:95
+#: toto/quizzes/templates/quizzes/quiz_metrics.html:89
+msgid "Multiple choice"
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:26
+msgid "Single choice"
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:51
+msgid "Quiz created. Now add some questions."
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:57
+#: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:8
+msgid "New quiz"
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:58
+msgid "Create quiz"
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:70
+msgid "Quiz saved."
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:77
+msgid "Edit quiz"
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:78
+msgid "Save quiz"
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:88
+msgid "Quiz deleted."
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:166
+msgid "Question added."
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:172
+#: toto/quizzes/templates/quizzes/backoffice/question_list.html:9
+msgid "New question"
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:173
+msgid "Create question"
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:189
+msgid "Question saved."
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:195
+msgid "Edit question"
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:196
+msgid "Save question"
+msgstr ""
+
+#: toto/quizzes/backoffice_views.py:206
+msgid "Question deleted."
+msgstr ""
+
+#: toto/quizzes/forms.py:32
+msgid "optional-custom-url"
+msgstr ""
+
+#: toto/quizzes/forms.py:35
+msgid "A short description of this task pool."
+msgstr ""
+
+#: toto/quizzes/forms.py:71
+msgid "Single choice (one correct answer)"
+msgstr ""
+
+#: toto/quizzes/forms.py:72
+msgid "Multiple choice (several correct)"
+msgstr ""
+
+#: toto/quizzes/forms.py:73
+msgid "Open answer (typed)"
+msgstr ""
+
+#: toto/quizzes/forms.py:78
+msgid "Answer format"
+msgstr ""
+
+#: toto/quizzes/forms.py:89
+msgid "Worked solution — the full reasoning, with formulas and pictures."
+msgstr ""
+
+#: toto/quizzes/forms.py:91
+msgid ""
+"Shown after any practice submission and in the graded review. Falls back to "
+"the plain explanation when empty."
+msgstr ""
+
+#: toto/quizzes/forms.py:101
+msgid "Question stem. Use $…$ for inline math, $$…$$ for display math."
+msgstr ""
+
+#: toto/quizzes/forms.py:105
+msgid "Optional hint shown in a modal on the practice page."
+msgstr ""
+
+#: toto/quizzes/forms.py:109
+msgid "Optional plain-text fallback shown when no rich solution is set."
+msgstr ""
+
+#: toto/quizzes/forms.py:111
+msgid "minutes"
+msgstr ""
+
+#: toto/quizzes/forms.py:161
+msgid "Answer text (math with $…$ allowed)"
+msgstr ""
+
+#: toto/quizzes/forms.py:254
+msgid "Add at least one answer option."
+msgstr ""
+
+#: toto/quizzes/forms.py:258
+msgid "A choice question needs at least two options."
+msgstr ""
+
+#: toto/quizzes/forms.py:262
+msgid "Mark exactly one option correct for a single-choice question."
+msgstr ""
+
+#: toto/quizzes/forms.py:264
+msgid "Mark at least one option correct."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/_hint_modal.html:9
+msgid "Show hint"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/_hint_modal.html:23
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:70
+msgid "Hint"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/_hint_modal.html:27
+msgid "Close"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/_hint_modal.html:40
+msgid "Got it"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/_solution_card.html:12
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:63
+msgid "Worked solution"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/_answer_row.html:8
+msgid "Correct"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/_answer_row.html:12
+msgid "Accepted answer"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/_answer_row.html:17
+msgid "Advanced: traits"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/_answer_row.html:22
+msgid "— trait —"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/_answer_row.html:29
+msgid "Add trait"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/_answer_row.html:36
+msgid "Remove answer"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_confirm_delete.html:7
+msgid "Delete question"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_confirm_delete.html:9
+msgid "This removes the question and its answers. This cannot be undone."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:32
+msgid "Question stem"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:34
+msgid ""
+"Tip: wrap math in $…$ (inline) or $$…$$ (display). It renders live on the "
+"right."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:52
+msgid "Accepted answers"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:52
+msgid "Answer options"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:53
+msgid "Mark exactly one correct"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:54
+msgid "Mark all correct options"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:55
+msgid "Each row is an accepted answer"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:58
+msgid "Add answer"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:65
+msgid "Rich solution shown after a submission. You can embed images here."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:74
+msgid "Plain explanation"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:81
+msgid "Time limit (min)"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:85
+msgid "Order"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:107
+msgid "Live preview"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_form.html:110
+msgid "Math renders as you type."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_list.html:6
+msgid "Quiz settings"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_list.html:16
+msgid "All quizzes"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_list.html:51
+msgid "accepted answer(s)"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_list.html:53
+msgid "options"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_list.html:53
+msgid "correct"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/question_list.html:66
+msgid "No questions yet. Add the first one."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/quiz_confirm_delete.html:7
+msgid "Delete quiz"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/quiz_confirm_delete.html:8
+#, python-format
+msgid ""
+"Delete “%(title)s” and all of its questions and answers? This cannot be "
+"undone."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/quiz_form.html:25
+msgid "Leave blank to generate from the title."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:19
+msgid "Title"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:20
+#: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:42
+#: toto/quizzes/templates/quizzes/quiz_metrics.html:63
+msgid "Questions"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:30
+#: toto/quizzes/templates/quizzes/quiz_list.html:43
+msgid "Official"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/backoffice/quiz_list.html:49
+msgid "No quizzes yet. Create your first task pool."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/practice.html:4
+msgid "Practice"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/practice.html:28
+msgid "Solved"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/practice.html:29
+msgid "To solve"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/practice.html:43
+msgid "Correct — nice progress!"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/practice.html:47
+msgid "Not quite — try again in a moment."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/practice.html:48
+msgid "This task goes back into your pool. Here is how to solve it:"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/practice.html:52
+msgid "Answer"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/practice.html:66
+msgid "Continue"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/practice.html:82
+msgid "Type your answer"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/practice.html:101
+msgid "Check answer"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/practice.html:109
+msgid "All tasks solved!"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/practice.html:110
+msgid "You have completed every task in this section."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/practice.html:113
+msgid "Back to the section"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_detail.html:33
+msgid "Quiz"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_detail.html:49
+msgid "Edit questions"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_detail.html:68
+msgid "Your answers are shown below. Each quiz can only be submitted once."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_detail.html:179
+msgid "Select all that apply"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_detail.html:181
+msgid "Select one answer"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_detail.html:198
+msgid "No answers configured."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_detail.html:209
+msgid "Back"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_detail.html:213
+msgid "Submit quiz"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_list.html:51
+msgid "Start"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_list.html:56
+msgid "No published quizzes yet."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_metrics.html:30
+msgid "Quiz Metrics"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_metrics.html:44
+msgid "View quiz"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_metrics.html:51
+msgid "Attempts"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_metrics.html:69
+msgid "Owner"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_metrics.html:130
+msgid "No questions in this quiz yet."
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_metrics.html:138
+msgid "Trait distribution"
+msgstr ""
+
+#: toto/quizzes/templates/quizzes/quiz_metrics.html:139
+msgid "Cumulative trait scores from all completed attempts."
+msgstr ""
+
+#: toto/subscriptions/apps.py:9
+#: toto/subscriptions/templates/subscriptions/plan_list.html:4
+msgid "Subscriptions"
+msgstr ""
+
+#: toto/subscriptions/gates.py:67
+#, python-format
+msgid "A %(name)s subscription is required. Subscribe to continue."
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/my_subscription.html:4
+#: toto/subscriptions/templates/subscriptions/my_subscription.html:17
+#: toto/subscriptions/templates/subscriptions/plan_list.html:27
+msgid "My subscription"
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/my_subscription.html:22
+msgid "Current plan"
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/my_subscription.html:27
+#, python-format
+msgid "Valid until %(until)s"
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/my_subscription.html:32
+msgid "You have no active plan."
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/my_subscription.html:33
+msgid "See plans"
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/my_subscription.html:39
+msgid "Your discount codes"
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/my_subscription.html:50
+msgid "No discount codes yet."
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/my_subscription.html:56
+msgid "History"
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/plan_list.html:17
+msgid "Plans"
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/plan_list.html:19
+msgid "Longer plans unlock a bigger loyalty discount."
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/plan_list.html:24
+#, python-format
+msgid ""
+"\n"
+"          You have an active plan: <strong>%(plan)s</strong>, valid until "
+"%(until)s.\n"
+"        "
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/plan_list.html:38
+msgid "mo."
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/plan_list.html:43
+#, python-format
+msgid "Unlocks a %(pct)s%% loyalty discount"
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/plan_list.html:50
+msgid "Choose plan"
+msgstr ""
+
+#: toto/subscriptions/templates/subscriptions/plan_list.html:55
+msgid "No plans are available right now."
+msgstr ""
+
+#: toto/vod/apps.py:9
+msgid "Video on Demand"
+msgstr ""
+
+#: toto/vod/templates/vod/vault_file_play.html:17
+msgid "Back to vault"
+msgstr ""
+
+#: toto/vod/templates/vod/vault_file_play.html:47
+msgid "File not available"
+msgstr ""
+
+#: toto/vod/templates/vod/vault_file_play.html:49
+msgid "This file cannot be streamed directly. Try downloading it instead."
+msgstr ""

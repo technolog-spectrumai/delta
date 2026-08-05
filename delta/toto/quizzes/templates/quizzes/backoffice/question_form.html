@@ -4,10 +4,18 @@
 
 {% block backoffice_start_script %}
 {% include "quizzes/_katex.html" %}
+{# No _cyprian_formulas.html here: this page EDITS the solution rather than
+   displaying it, and the widget renders its own formulas as you type. #}
 {{ form.media }}
+{# NOT deferred, and deliberately before Alpine runs. The bundled Alpine ends
+   with `queueMicrotask(() => Alpine.start())`, so it starts in the microtask
+   right after its own deferred script — BEFORE any other deferred script on the
+   page. This file declares the answerEditor()/traitPanel() globals that x-data
+   resolves, so deferring it means Alpine walks the DOM first and every
+   expression on this page dies with "answerEditor is not defined". A classic
+   script here runs during parsing, which is early enough. #}
+<script src="{% static 'quizzes/js/quiz_editor.js' %}"></script>
 <style>
-  trix-toolbar .trix-button-row { flex-wrap: wrap; }
-  trix-editor { min-height: 12rem; border-radius: .5rem; border-color: rgba(128,128,128,.35); padding: 1rem; }
   .katex { font-size: 1.05em; }
 </style>
 {% endblock %}
@@ -114,6 +122,4 @@
 </div>
 {% endblock %}
 
-{% block backoffice_end_script %}
-<script defer src="{% static 'quizzes/js/quiz_editor.js' %}"></script>
-{% endblock %}
+{# quiz_editor.js moved to backoffice_start_script — see the note there. #}
