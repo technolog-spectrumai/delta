@@ -1,0 +1,40 @@
+{% comment %}
+One embedded cyprian editor.
+
+The textarea IS the form field — it posts, it re-renders with the submitted
+value after a validation error, and it is what the browser falls back to with
+JavaScript off. field.js hides it, mounts an editor on the host below, and
+writes the HTML back into it on every change.
+
+Every id derives from the widget's own id, never a literal, so several of these
+can sit on one page (a formset of sections, say) without fighting.
+{% endcomment %}
+<div class="cy-field" data-cy-field
+     data-input="{{ widget.attrs.id }}"
+     data-placeholder="{{ widget.placeholder }}"
+     data-upload-url="{% url 'cyprian:media_upload' %}">
+
+  {# The toolbar and host stay empty (and the host stays out of the layout)
+     until field.js mounts, so a JS-off page shows the textarea alone. #}
+  <div class="cy-field-toolbar" data-cy-toolbar hidden role="toolbar"
+       aria-label="{{ widget.placeholder|default:'Formatting' }}"></div>
+
+  {# .cy-doc/.cy-screen carry the document typography; the editor styles its own
+     content class inside. Height is a widget concern, not a document one. #}
+  <div class="cy-field-host cy-doc cy-screen" data-cy-host hidden
+       style="min-height: {{ widget.min_height }}"></div>
+
+  {# NOT hidden here: with JavaScript off this textarea is the field, and it
+     must be usable. field.js hides it only once an editor has mounted. #}
+  <textarea name="{{ widget.name }}"
+            id="{{ widget.attrs.id }}"
+            data-cy-input
+            {% for name, value in widget.attrs.items %}{% if name != 'id' and value is not False %}{{ name }}{% if value is not True %}="{{ value|stringformat:'s' }}"{% endif %} {% endif %}{% endfor %}>{% if widget.value %}{{ widget.value }}{% endif %}</textarea>
+
+  <noscript>
+    <p class="cy-field-noscript">
+      The rich-text editor needs JavaScript. The field above holds the HTML
+      source and can be edited directly.
+    </p>
+  </noscript>
+</div>

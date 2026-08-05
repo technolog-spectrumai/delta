@@ -6,7 +6,6 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from trix_editor.fields import TrixEditorField
 
 from toto.core.models import Platform
 from toto.people.models import Person
@@ -99,8 +98,24 @@ class QuizSolutionModelTests(TestCase):
         question.full_clean()
 
         self.assertEqual(question.solution, "")
+        # A plain TextField since the editor moved to cyprian: the editing
+        # surface is the form's business, so swapping editors must never be a
+        # migration. What the column owes is "blank HTML is fine".
         field = QuizQuestion._meta.get_field("solution")
-        self.assertIsInstance(field, TrixEditorField)
+        self.assertIsInstance(field, models.TextField)
+        self.assertTrue(field.blank)
+
+    def test_the_solution_form_field_sanitises(self):
+        # The rich field is where teacher HTML is scrubbed — it never was
+        # before, when the field was Trix and the value was stored raw.
+        from toto.quizzes.forms import QuestionForm
+
+        field = QuestionForm().fields["solution"]
+        self.assertEqual(
+            field.clean("<p>keep<script>alert(1)</script></p>"),
+            field.clean("<p>keep</p>"),
+        )
+        self.assertNotIn("script", field.clean("<p>x<script>y</script></p>").lower())
 
     def test_has_hint_property(self):
         quiz = Quiz.objects.create(title="H", slug="h")

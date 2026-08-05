@@ -1,6 +1,6 @@
 from django import forms
-from trix_editor.widgets import TrixEditorWidget
 
+from toto.cyprian.forms import CyprianRichTextField
 from toto.verbena.forms import apply_oya_field_styles
 
 from .models import Page, Section, Tag
@@ -29,12 +29,20 @@ class PageForm(forms.ModelForm):
 
 
 class SectionForm(forms.ModelForm):
+    # A lecture note's body, written in cyprian's editor: the same surface as a
+    # lesson's notes document and a task's worked solution. The field class
+    # sanitises on the way in — this content used to be stored and rendered raw.
+    content = CyprianRichTextField(
+        required=False,
+        placeholder="Write the note — headings, lists, formulas, pictures.",
+        min_height="22rem",
+    )
+
     class Meta:
         model = Section
         fields = ["title", "content", "author", "order", "tags"]
         widgets = {
             "title": forms.TextInput(attrs={"placeholder": "Section heading, optional"}),
-            "content": TrixEditorWidget(),
             "order": forms.NumberInput(attrs={"min": 0}),
             "tags": forms.SelectMultiple(),
         }

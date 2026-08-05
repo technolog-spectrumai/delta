@@ -15,9 +15,9 @@ from django.forms.models import BaseInlineFormSet, inlineformset_factory
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from trix_editor.widgets import TrixEditorWidget
 
 from toto.backoffice.utils import add_math_preview
+from toto.cyprian.forms import CyprianRichTextField
 from toto.verbena.forms import apply_oya_checkbox_styles, apply_oya_field_styles
 
 from .models import Quiz, QuizAnswer, QuizAnswerTrait, QuizQuestion, QuizTrait
@@ -79,6 +79,19 @@ class QuestionForm(forms.ModelForm):
         widget=forms.RadioSelect,
     )
 
+    # The worked solution is the one rich field in a task, and it is edited in
+    # cyprian's editor — the same one the lesson notes use, so a teacher meets
+    # one writing surface across the panel. Declared explicitly rather than
+    # through Meta.widgets: the field class carries the sanitiser, which the
+    # model's TextField knows nothing about.
+    solution = CyprianRichTextField(
+        required=False,
+        placeholder=_("Worked solution — the full reasoning, with formulas and pictures."),
+        min_height="18rem",
+        help_text=_("Shown after any practice submission and in the graded "
+                    "review. Falls back to the plain explanation when empty."),
+    )
+
     class Meta:
         model = QuizQuestion
         fields = ["text", "solution", "hint", "explanation", "max_time", "order"]
@@ -87,7 +100,6 @@ class QuestionForm(forms.ModelForm):
                 "rows": 3,
                 "placeholder": _("Question stem. Use $…$ for inline math, $$…$$ for display math."),
             }),
-            "solution": TrixEditorWidget(),
             "hint": forms.Textarea(attrs={
                 "rows": 2,
                 "placeholder": _("Optional hint shown in a modal on the practice page."),

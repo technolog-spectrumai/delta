@@ -3,7 +3,6 @@ import re
 from django.db import models
 from django.utils import timezone
 
-from trix_editor.fields import TrixEditorField
 
 from toto.people.models import Person
 
@@ -108,7 +107,10 @@ class QuizQuestion(models.Model):
                   "rows marked is_correct.",
     )
     explanation = models.TextField(blank=True)
-    solution = TrixEditorField(
+    # Rich HTML, written in cyprian's editor (see quizzes/forms.py). A plain
+    # TextField on purpose: the editing surface belongs to the form, not to the
+    # column, so swapping editors is a form change and never a migration.
+    solution = models.TextField(
         blank=True,
         help_text=(
             "Rich worked solution (WYSIWYG). Shown after any practice "

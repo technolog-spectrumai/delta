@@ -310,7 +310,9 @@ const EXTENSIONS = (options) => [
   Table.configure({ resizable: false }),
   TableRow, TableHeader, TableCell,
   CyInk, CySize, Formula, Callout, PageBreak,
-  Placeholder.configure({ placeholder: "Write something" }),
+  // An embedded field says what it is for; the full-page editor keeps the
+  // generic prompt by passing nothing.
+  Placeholder.configure({ placeholder: options.placeholder || "Write something" }),
   Pagination.configure({
     pageHeight: options.pageHeight || (() => 0),
     onPages: options.onPages || null,
