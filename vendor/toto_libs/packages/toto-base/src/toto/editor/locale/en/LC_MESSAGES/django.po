@@ -1,0 +1,81 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-05 10:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/editor/file_display.html:45
+msgid "Vault"
+msgstr ""
+
+#: templates/editor/file_display.html:75
+msgid "Toggle read-only"
+msgstr ""
+
+#: templates/editor/file_display.html:79
+msgid "Toggle live sync"
+msgstr ""
+
+#: templates/editor/file_display.html:86 templates/editor/file_display.html:90
+msgid "Save"
+msgstr ""
+
+#: templates/editor/file_display.html:97
+msgid "Compile to PDF"
+msgstr ""
+
+#: templates/editor/file_display.html:101
+#: templates/editor/file_display.html:325
+msgid "Compile"
+msgstr ""
+
+#: templates/editor/file_display.html:104
+msgid "View PDF"
+msgstr ""
+
+#: templates/editor/file_display.html:106
+msgid "PDF"
+msgstr ""
+
+#: templates/editor/file_display.html:116
+msgid "Delete file"
+msgstr ""
+
+#: templates/editor/file_display.html:120
+#: templates/editor/file_display.html:158
+msgid "Delete"
+msgstr ""
+
+#: templates/editor/file_display.html:144
+msgid "Delete file?"
+msgstr ""
+
+#: templates/editor/file_display.html:147
+msgid "This will permanently delete"
+msgstr ""
+
+#: templates/editor/file_display.html:148
+msgid "This cannot be undone."
+msgstr ""
+
+#: templates/editor/file_display.html:153
+msgid "Cancel"
+msgstr ""
+
+#: templates/editor/file_display.html:325
+msgid "Compiling…"
+msgstr ""
