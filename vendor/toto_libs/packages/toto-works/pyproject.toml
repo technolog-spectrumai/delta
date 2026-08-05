@@ -18,7 +18,7 @@ build-backend = "setuptools.build_meta"
 # media helpers — a plain intra-package import, not a distribution edge.
 # primula (vendored in 1.10, teachers-only on delta) needs only toto-base too.
 name = "toto-works"
-version = "1.11"
+version = "1.12"
 description = "toto vault-backed slide decks (memo), documents (cyprian) and sheets (primula)"
 readme = "README.md"
 license = { text = "MIT" }
@@ -26,7 +26,7 @@ requires-python = ">=3.10"
 # Versions are lockstep across the whole toto suite and are rewritten only by
 # scripts/release.py — never edit them by hand.
 dependencies = [
-    "toto-base==1.11",
+    "toto-base==1.12",
 ]
 
 [tool.setuptools.packages.find]
@@ -41,4 +41,8 @@ namespaces = true
 "*" = [
     "templates/**/*",
     "static/**/*",
+    # Per-app translation catalogues. Without this line the wheels silently
+    # ship an English-only platform: Django discovers app-level locale/ dirs,
+    # but only if they made it into site-packages.
+    "locale/**/*",
 ]

@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 # cluster that cannot be layered apart: core, gervazy, people, locations
 # and events form one irreducible foreign-key/import cycle.
 name = "toto-base"
-version = "1.11"
+version = "1.12"
 description = "toto foundation: core platform, identity, storage and the host API"
 readme = "README.md"
 license = { text = "MIT" }
@@ -34,6 +34,10 @@ namespaces = true
     "templates/**/*",
     "static/**/*",
     "graph/*.yaml",
+    # Per-app translation catalogues. Without this line the wheels silently
+    # ship an English-only platform: Django discovers app-level locale/ dirs,
+    # but only if they made it into site-packages.
+    "locale/**/*",
 ]
 
 [tool.setuptools.exclude-package-data]

@@ -23,10 +23,10 @@
 # this repo under delta/toto/ as a namespace portion (revived from
 # toto_libs limbo/ — see vendor/toto_libs/README.md "Future-host outlook").
 # They need no pin — they version with delta.
-toto-base==1.11
-toto-auth==1.11
+toto-base==1.12
+toto-auth==1.12
 # memo (slide decks) + cyprian (documents) + primula (sheets, teachers-only) —
 # delta's trimmed copy of the suite's toto-works wheel; see
 # vendor/toto_libs/packages/toto-works/README.md for what the trim drops and
 # why this wheel differs from the portal's.
-toto-works==1.11
+toto-works==1.12

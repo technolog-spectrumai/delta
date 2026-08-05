@@ -36,6 +36,24 @@ class PolishCatalogueTests(SimpleTestCase):
                 with self.subTest(source=source):
                     self.assertEqual(translation.gettext(source), expected)
 
+    # A spread over the VENDORED apps' own catalogues — these ship inside the
+    # wheels (package-data "locale/**/*" since 1.12), so this test failing in
+    # the gate means the wheel build dropped them, not that a translation is
+    # missing from the repo.
+    VENDORED_SAMPLES = {
+        "File Vault": "Magazyn plików",
+        "Bucket": "Kubełek",
+        "Copy files": "Kopiuj pliki",
+        "Community": "Społeczność",
+        "Delete presentation": "Usuń prezentację",
+    }
+
+    def test_the_vendored_apps_are_translated_too(self):
+        with translation.override("pl"):
+            for source, expected in self.VENDORED_SAMPLES.items():
+                with self.subTest(source=source):
+                    self.assertEqual(translation.gettext(source), expected)
+
     def test_english_is_untouched(self):
         with translation.override("en"):
             self.assertEqual(translation.gettext("Dashboard"), "Dashboard")
