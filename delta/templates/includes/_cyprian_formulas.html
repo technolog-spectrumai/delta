@@ -1,0 +1,30 @@
+{% load static %}
+{% comment %}
+Render the formulas in cyprian-written HTML.
+
+Cyprian stores a formula as `<div class="cy-formula" data-latex="…">` and the
+sanitiser keeps ONLY that attribute — the rendered KaTeX markup (MathML,
+positioning classes, inline styles) is stripped on the way into the database, by
+design. So anywhere such content is displayed, the formula has to be rendered
+from its source at view time, or the reader sees nothing.
+
+Unconditional on purpose: unlike the editor's version this does not skip nodes
+that already contain `.katex`, because content coming from the server never does.
+
+Include once per page that renders cyprian HTML. It is independent of the
+`$…$` auto-render in quizzes/_katex.html, which handles a different notation in
+plain-text fields; a page may need both.
+{% endcomment %}
+<script defer src="{% static 'vendor/katex/katex.min.js' %}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!window.katex) return;
+    document.querySelectorAll(".cy-formula[data-latex]").forEach(function (node) {
+      try {
+        window.katex.render(node.getAttribute("data-latex") || "", node, {
+          displayMode: true, throwOnError: false, errorColor: "#ef4444"
+        });
+      } catch (e) { /* leave the source showing */ }
+    });
+  });
+</script>

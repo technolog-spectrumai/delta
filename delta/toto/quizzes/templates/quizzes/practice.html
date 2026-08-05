@@ -6,6 +6,8 @@
 {% block quizzes_start_script %}
 {% include "quizzes/_solution_prose_style.html" %}
 {% include "quizzes/_katex.html" %}
+  {# cyprian-written solutions carry formulas as data-latex #}
+  {% include "includes/_cyprian_formulas.html" %}
 <style>[x-cloak] { display: none !important; }</style>
 {% endblock %}
 

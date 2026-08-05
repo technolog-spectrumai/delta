@@ -13,8 +13,10 @@
       </p>
     </header>
     <div class="px-5 py-4">
-      {# Solution HTML is trusted staff input (admin trix editor / escaped migration). #}
-      <div class="quiz-prose max-w-none text-sm">{{ question.solution|safe }}</div>
+      {# Written in cyprian's editor and SANITISED on the way in by
+         CyprianRichTextField (quizzes/forms.py) — not merely trusted. Formulas
+         arrive as data-latex and are rendered by the include below. #}
+      <div class="quiz-prose cy-doc max-w-none text-sm">{{ question.solution|safe }}</div>
     </div>
   </article>
 {% endif %}
