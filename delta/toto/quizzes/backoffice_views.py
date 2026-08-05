@@ -6,7 +6,7 @@ inside the back-office shell (nav + platform chrome).
 """
 
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
@@ -17,7 +17,7 @@ from toto.backoffice.shell import backoffice_render
 from toto.backoffice.utils import apply_reorder
 
 from .forms import QuestionForm, QuizForm, build_answer_formset
-from .models import Quiz, QuizQuestion, QuizTrait
+from .models import Quiz, QuizAttemptAnswer, QuizQuestion, QuizTrait
 
 
 def _format_label(question):
@@ -31,7 +31,16 @@ def _format_label(question):
 @teacher_required
 def quiz_list(request):
     quizzes = (
-        Quiz.objects.annotate(question_count=Count("questions"))
+        Quiz.objects.annotate(
+            question_count=Count("questions", distinct=True),
+            # Finished attempts only: the metrics page counts completed ones, so
+            # a link offered on any other basis would open an empty report.
+            completed_attempt_count=Count(
+                "attempts",
+                filter=Q(attempts__completed_at__isnull=False),
+                distinct=True,
+            ),
+        )
         .order_by("order", "title")
     )
     return backoffice_render(
@@ -98,6 +107,14 @@ def quiz_delete(request, pk):
 @teacher_required
 def question_list(request, pk):
     quiz = get_object_or_404(Quiz, pk=pk)
+    # How many finished attempts answered each question — the "if anyone
+    # answered" test for showing a metrics link at all.
+    answered = dict(
+        QuizAttemptAnswer.objects
+        .filter(attempt__quiz=quiz, attempt__completed_at__isnull=False)
+        .values_list("question")
+        .annotate(n=Count("id"))
+    )
     rows = []
     for question in quiz.questions.prefetch_related("answers").order_by("order", "id"):
         answers = list(question.answers.all())
@@ -106,10 +123,12 @@ def question_list(request, pk):
             "format": _format_label(question),
             "num_options": len(answers),
             "num_correct": sum(1 for a in answers if a.is_correct),
+            "answered": answered.get(question.pk, 0),
         })
     return backoffice_render(request, "quizzes/backoffice/question_list.html", {
         "quiz": quiz,
         "rows": rows,
+        "quiz_answered": sum(answered.values()),
     }, active="quizzes")
 
 

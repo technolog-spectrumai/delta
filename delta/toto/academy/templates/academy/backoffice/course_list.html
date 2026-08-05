@@ -26,7 +26,9 @@
         {% for course in courses %}
           <tr :class="darkMode ? 'border-accent-1' : 'border-accent-2'" class="border-t">
             <td class="px-4 py-3">
-              <a href="{% url 'backoffice_courses:module-list' pk=course.pk %}" class="font-semibold hover:underline">{{ course.title }}</a>
+              <a href="{% url 'academy:course-metrics' slug=course.slug %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"
+             title="{% trans 'Enrolments, completion and per-module quiz results' %}"><i class="fa-solid fa-chart-line"></i> {% trans "Metrics" %}</a>
+          <a href="{% url 'backoffice_courses:module-list' pk=course.pk %}" class="font-semibold hover:underline">{{ course.title }}</a>
               {% if course.is_virtual %}<span class="ml-2 rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide opacity-70">{% trans "Virtual" %}</span>{% endif %}
             </td>
             <td class="px-4 py-3">{{ course.n_modules }}</td>

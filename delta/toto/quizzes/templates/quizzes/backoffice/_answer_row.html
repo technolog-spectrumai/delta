@@ -18,11 +18,11 @@
         <div x-data="traitPanel()" class="mt-2 space-y-2">
           <template x-for="(r, i) in rows" :key="i">
             <div class="flex items-center gap-2">
-              <select x-model="r.trait" @change="sync()" class="rounded border px-2 py-1 text-black">
+              <select x-model="r.trait" @change="sync()" class="rounded border px-2 py-1" :class="darkMode ? 'border-accent-1 bg-primary-bg-dark text-text-main-dark placeholder:text-text-main-dark/45' : 'border-accent-2 bg-primary-bg-light text-text-main-light placeholder:text-text-main-light/45'">
                 <option value="">{% trans "— trait —" %}</option>
                 {% for t in traits %}<option value="{{ t.id }}">{{ t.title }}</option>{% endfor %}
               </select>
-              <input type="number" min="1" x-model="r.weight" @input="sync()" class="w-16 rounded border px-2 py-1 text-black">
+              <input type="number" min="1" x-model="r.weight" @input="sync()" class="w-16 rounded border px-2 py-1" :class="darkMode ? 'border-accent-1 bg-primary-bg-dark text-text-main-dark placeholder:text-text-main-dark/45' : 'border-accent-2 bg-primary-bg-light text-text-main-light placeholder:text-text-main-light/45'">
               <button type="button" @click="removeRow(i)" class="opacity-60 hover:text-warn-light"><i class="fa-solid fa-xmark"></i></button>
             </div>
           </template>

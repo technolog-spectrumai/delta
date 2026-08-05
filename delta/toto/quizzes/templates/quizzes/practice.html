@@ -80,7 +80,7 @@
         {% if question.question_type == "open" %}
           <input type="text" name="open_answer" autocomplete="off" required
                  placeholder="{% trans 'Type your answer' %}"
-                 class="w-full rounded-md border px-4 py-2 text-black" />
+                 class="w-full rounded-md border px-4 py-2" / :class="darkMode ? 'border-accent-1 bg-primary-bg-dark text-text-main-dark placeholder:text-text-main-dark/45' : 'border-accent-2 bg-primary-bg-light text-text-main-light placeholder:text-text-main-light/45'">
         {% else %}
           <div class="space-y-2">
             {% for answer in answers %}

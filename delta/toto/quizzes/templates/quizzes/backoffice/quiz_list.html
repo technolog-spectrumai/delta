@@ -40,6 +40,12 @@
             <td class="px-4 py-3">
               <div class="flex items-center justify-end gap-2">
                 <a href="{% url 'backoffice_quizzes:question-list' pk=quiz.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-list-check"></i> {% trans "Questions" %}</a>
+                {# Only once somebody has answered: an empty metrics page teaches nothing
+                   and reads as a broken link. #}
+                {% if quiz.completed_attempt_count %}
+                  <a href="{% url 'quizzes:quiz-metrics' pk=quiz.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"
+                     title="{% trans 'Answer distribution per question' %}"><i class="fa-solid fa-chart-column"></i> {% trans "Metrics" %} ({{ quiz.completed_attempt_count }})</a>
+                {% endif %}
                 <a href="{% url 'backoffice_quizzes:quiz-edit' pk=quiz.pk %}" class="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:opacity-85"><i class="fa-solid fa-pen-to-square"></i> {% trans "Edit" %}</a>
                 <a href="{% url 'backoffice_quizzes:quiz-delete' pk=quiz.pk %}" class="rounded-lg border border-warn-light/40 px-3 py-1.5 text-xs font-semibold text-warn-light hover:opacity-85" aria-label="{% trans 'Delete' %}"><i class="fa-solid fa-trash"></i></a>
               </div>

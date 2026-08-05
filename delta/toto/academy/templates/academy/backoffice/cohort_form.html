@@ -64,7 +64,7 @@
 
       <form method="get" class="flex flex-wrap gap-2 pt-2">
         <input type="text" name="q" value="{{ query }}" placeholder="{% trans 'Search by name or email' %}"
-               class="w-full max-w-sm rounded-lg border px-3 py-2 text-sm text-black">
+               class="w-full max-w-sm rounded-lg border px-3 py-2 text-sm" :class="darkMode ? 'border-accent-1 bg-primary-bg-dark text-text-main-dark placeholder:text-text-main-dark/45' : 'border-accent-2 bg-primary-bg-light text-text-main-light placeholder:text-text-main-light/45'">
         <button type="submit" class="rounded-lg border px-3 py-2 text-sm font-semibold hover:opacity-85">{% trans "Search" %}</button>
         {% if query %}<a href="{% url 'backoffice_courses:cohort-edit' pk=cohort.pk %}" class="rounded-lg border px-3 py-2 text-sm hover:opacity-85">{% trans "Clear" %}</a>{% endif %}
       </form>

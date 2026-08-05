@@ -79,7 +79,8 @@
     </div>
     <form method="post" action="{% url 'backoffice_courses:student-award-badge' pk=course.pk student_pk=student.pk %}" class="flex flex-wrap items-center gap-2 pt-1">
       {% csrf_token %}
-      <select name="badge" class="rounded-lg border px-3 py-2 text-sm text-black">
+      <select name="badge" class="rounded-lg border px-3 py-2 text-sm"
+              :class="darkMode ? 'border-accent-1 bg-primary-bg-dark text-text-main-dark' : 'border-accent-2 bg-primary-bg-light text-text-main-light'">
         <option value="">{% trans "— award any badge —" %}</option>
         {% for badge in other_badges %}<option value="{{ badge.pk }}">{{ badge.group.title }} / {{ badge.title }}</option>{% endfor %}
       </select>

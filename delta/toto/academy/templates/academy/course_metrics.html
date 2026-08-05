@@ -146,8 +146,10 @@
     <!-- Per-module quiz stats -->
     {% for ms in module_stats %}
       {% if ms.quiz_rows %}
-        <section :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
-                 class="rounded-2xl border shadow-sm overflow-hidden">
+        {# Anchored so the panel's per-module "Metrics" link lands here. #}
+        <section id="module-{{ ms.module.pk }}"
+                 :class="darkMode ? 'border-accent-1 bg-bubble-bg-dark' : 'border-accent-2 bg-bubble-bg-light'"
+                 class="scroll-mt-24 rounded-2xl border shadow-sm overflow-hidden">
 
           <div :class="darkMode ? 'border-accent-1 bg-sunken-dark' : 'border-accent-2 bg-sunken-light'"
                class="border-b p-5">

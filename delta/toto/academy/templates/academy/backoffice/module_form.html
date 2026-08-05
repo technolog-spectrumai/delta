@@ -35,8 +35,8 @@
       <div x-data="{ open: false }" class="text-xs">
         <button type="button" @click="open = !open" class="underline opacity-70 hover:opacity-100"><i class="fa-solid fa-plus"></i> {% trans "New badge" %}</button>
         <div x-show="open" x-cloak class="mt-2 flex flex-wrap items-center gap-2 rounded-lg border border-current/20 p-2">
-          <input type="text" name="qc_title" placeholder="{% trans 'Badge title' %}" class="rounded border px-2 py-1 text-black">
-          <select name="qc_group" class="rounded border px-2 py-1 text-black">
+          <input type="text" name="qc_title" placeholder="{% trans 'Badge title' %}" class="rounded border px-2 py-1" :class="darkMode ? 'border-accent-1 bg-primary-bg-dark text-text-main-dark placeholder:text-text-main-dark/45' : 'border-accent-2 bg-primary-bg-light text-text-main-light placeholder:text-text-main-light/45'">
+          <select name="qc_group" class="rounded border px-2 py-1" :class="darkMode ? 'border-accent-1 bg-primary-bg-dark text-text-main-dark placeholder:text-text-main-dark/45' : 'border-accent-2 bg-primary-bg-light text-text-main-light placeholder:text-text-main-light/45'">
             {% for g in skill_groups %}<option value="{{ g.id }}">{{ g.title }}</option>{% endfor %}
           </select>
           <button type="button"
