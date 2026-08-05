@@ -1,0 +1,429 @@
+# pl catalogue for this toto app.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-05 10:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: templates/cyprian/_body.html:25
+msgid "Contents"
+msgstr "Spis treści"
+
+#: templates/cyprian/edit.html:30 templates/cyprian/read.html:21
+msgid "All documents"
+msgstr "Wszystkie dokumenty"
+
+#: templates/cyprian/edit.html:45
+msgid "Undo"
+msgstr "Cofnij"
+
+#: templates/cyprian/edit.html:49
+msgid "Redo"
+msgstr "Ponów"
+
+#: templates/cyprian/edit.html:63
+msgid "Document"
+msgstr "Dokument"
+
+#: templates/cyprian/edit.html:70
+msgid "Source"
+msgstr "Źródło"
+
+#: templates/cyprian/edit.html:83
+msgid "Page setup"
+msgstr "Ustawienia strony"
+
+#: templates/cyprian/edit.html:92
+msgid "Margins"
+msgstr "Marginesy"
+
+#: templates/cyprian/edit.html:104
+msgid "Typeface"
+msgstr "Krój pisma"
+
+#: templates/cyprian/edit.html:122
+msgid "Cover page"
+msgstr "Strona tytułowa"
+
+#: templates/cyprian/edit.html:126
+msgid "Contents page"
+msgstr "Strona ze spisem treści"
+
+#: templates/cyprian/edit.html:132
+msgid "words"
+msgstr "słów"
+
+#: templates/cyprian/edit.html:133
+msgid "pages"
+msgstr "stron"
+
+#: templates/cyprian/edit.html:141 templates/cyprian/edit.html:557
+msgid "Save"
+msgstr "Zapisz"
+
+#: templates/cyprian/edit.html:147 templates/cyprian/index.html:91
+msgid "Read"
+msgstr "Czytaj"
+
+#: templates/cyprian/edit.html:151
+msgid "More"
+msgstr "Więcej"
+
+#: templates/cyprian/edit.html:159
+msgid "Download PDF"
+msgstr "Pobierz PDF"
+
+#: templates/cyprian/edit.html:170
+msgid "Save PDF to the vault"
+msgstr "Zapisz PDF w magazynie"
+
+#: templates/cyprian/edit.html:175
+msgid "Save HTML to the vault"
+msgstr "Zapisz HTML w magazynie"
+
+#: templates/cyprian/edit.html:184
+msgid "Delete document"
+msgstr "Usuń dokument"
+
+#: templates/cyprian/edit.html:193
+msgid ""
+"This document changed somewhere else since you opened it.\n"
+"        Reload to take that version, or overwrite it with what is on screen."
+msgstr ""
+"Ten dokument został zmieniony gdzie indziej, odkąd go otworzyłeś.\n"
+"        Odśwież, aby przyjąć tamtą wersję, albo nadpisz ją tym, co widzisz na ekranie."
+
+#: templates/cyprian/edit.html:197
+msgid "Reload"
+msgstr "Wczytaj ponownie"
+
+#: templates/cyprian/edit.html:199
+msgid "Overwrite"
+msgstr "Nadpisz"
+
+#: templates/cyprian/edit.html:220
+msgid "Heading"
+msgstr "Nagłówek"
+
+#: templates/cyprian/edit.html:226
+msgid "Bold"
+msgstr "Pogrubienie"
+
+#: templates/cyprian/edit.html:228
+msgid "Italic"
+msgstr "Kursywa"
+
+#: templates/cyprian/edit.html:230
+msgid "Underline"
+msgstr "Podkreślenie"
+
+#: templates/cyprian/edit.html:232
+msgid "Strikethrough"
+msgstr "Przekreślenie"
+
+#: templates/cyprian/edit.html:234
+msgid "Inline code"
+msgstr "Kod w tekście"
+
+#: templates/cyprian/edit.html:244 templates/cyprian/edit.html:611
+msgid "Image"
+msgstr "Obraz"
+
+#: templates/cyprian/edit.html:246 templates/cyprian/edit.html:611
+msgid "Formula"
+msgstr "Wzór"
+
+#: templates/cyprian/edit.html:251
+msgid "Bulleted list"
+msgstr "Lista punktowana"
+
+#: templates/cyprian/edit.html:254
+msgid "Numbered list"
+msgstr "Lista numerowana"
+
+#: templates/cyprian/edit.html:257
+msgid "Quote"
+msgstr "Cytat"
+
+#: templates/cyprian/edit.html:260
+msgid "Code block"
+msgstr "Blok kodu"
+
+#: templates/cyprian/edit.html:286
+msgid "Default colour"
+msgstr "Kolor domyślny"
+
+#: templates/cyprian/edit.html:291
+msgid "Link"
+msgstr "Link"
+
+#: templates/cyprian/edit.html:294
+msgid "Table"
+msgstr "Tabela"
+
+#: templates/cyprian/edit.html:298
+msgid "Callout"
+msgstr "Wyróżnienie"
+
+#: templates/cyprian/edit.html:313
+msgid "New paragraph"
+msgstr "Nowy akapit"
+
+#: templates/cyprian/edit.html:315
+msgid "Divider"
+msgstr "Separator"
+
+#: templates/cyprian/edit.html:317
+msgid "Page break"
+msgstr "Podział strony"
+
+#: templates/cyprian/edit.html:328
+msgid "Column before"
+msgstr "Kolumna przed"
+
+#: templates/cyprian/edit.html:331
+msgid "Column after"
+msgstr "Kolumna po"
+
+#: templates/cyprian/edit.html:334
+msgid "Delete column"
+msgstr "Usuń kolumnę"
+
+#: templates/cyprian/edit.html:337
+msgid "Row above"
+msgstr "Wiersz powyżej"
+
+#: templates/cyprian/edit.html:340
+msgid "Row below"
+msgstr "Wiersz poniżej"
+
+#: templates/cyprian/edit.html:343
+msgid "Delete row"
+msgstr "Usuń wiersz"
+
+#: templates/cyprian/edit.html:346
+msgid "Header row"
+msgstr "Wiersz nagłówka"
+
+#: templates/cyprian/edit.html:349
+msgid "Delete table"
+msgstr "Usuń tabelę"
+
+#: templates/cyprian/edit.html:403
+msgid "The document as it is stored — one XML file."
+msgstr "Dokument tak, jak jest przechowywany — jeden plik XML."
+
+#: templates/cyprian/edit.html:408
+msgid "Revert"
+msgstr "Przywróć"
+
+#: templates/cyprian/edit.html:414
+msgid "Apply"
+msgstr "Zastosuj"
+
+#: templates/cyprian/edit.html:448
+msgid "Export PDF"
+msgstr "Eksportuj PDF"
+
+#: templates/cyprian/edit.html:448
+msgid "Save as HTML"
+msgstr "Zapisz jako HTML"
+
+#: templates/cyprian/edit.html:456 views.py:358
+msgid "File name"
+msgstr "Nazwa pliku"
+
+#: templates/cyprian/edit.html:461
+msgid "An existing file of this name in the chosen folder is replaced."
+msgstr "Istniejący plik o tej nazwie w wybranym folderze zostanie zastąpiony."
+
+#: templates/cyprian/edit.html:467
+msgid "Watermark"
+msgstr "Znak wodny"
+
+#: templates/cyprian/edit.html:470
+msgid "None"
+msgstr "Brak"
+
+#: templates/cyprian/edit.html:471
+msgid "Text"
+msgstr "Tekst"
+
+#: templates/cyprian/edit.html:472
+msgid "Picture"
+msgstr "Obraz"
+
+#: templates/cyprian/edit.html:484
+msgid "DRAFT, CONFIDENTIAL, a recipient…"
+msgstr "WERSJA ROBOCZA, POUFNE, odbiorca…"
+
+#: templates/cyprian/edit.html:487
+msgid "Drawn faintly across every page."
+msgstr "Delikatnie naniesiony w poprzek każdej strony."
+
+#: templates/cyprian/edit.html:500
+msgid "Search images in your buckets"
+msgstr "Szukaj obrazów w swoich kubełkach"
+
+#: templates/cyprian/edit.html:512
+msgid "No images in your buckets yet."
+msgstr "W Twoich kubełkach nie ma jeszcze obrazów."
+
+#: templates/cyprian/edit.html:514
+msgid "Loading…"
+msgstr "Wczytywanie…"
+
+#: templates/cyprian/edit.html:522
+msgid "Save into"
+msgstr "Zapisz w"
+
+#: templates/cyprian/edit.html:536 templates/cyprian/index.html:162
+msgid "Bucket root"
+msgstr "Główny folder kubełka"
+
+#: templates/cyprian/edit.html:553 templates/cyprian/edit.html:681
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: templates/cyprian/edit.html:573
+msgid "saved"
+msgstr "zapisano"
+
+#: templates/cyprian/edit.html:580
+msgid "It is in the vault, beside this document."
+msgstr "Jest w magazynie, obok tego dokumentu."
+
+#: templates/cyprian/edit.html:622
+#, python-brace-format
+msgid "e.g. \\frac{a}{b}"
+msgstr "np. \\frac{a}{b}"
+
+#: templates/cyprian/edit.html:635
+msgid "Describe the picture (alt text)"
+msgstr "Opisz obraz (tekst alternatywny)"
+
+#: templates/cyprian/edit.html:645
+msgid "Left"
+msgstr "Do lewej"
+
+#: templates/cyprian/edit.html:646
+msgid "Centre"
+msgstr "Środek"
+
+#: templates/cyprian/edit.html:647
+msgid "Right"
+msgstr "Do prawej"
+
+#: templates/cyprian/edit.html:650
+msgid "Upload"
+msgstr "Wgraj"
+
+#: templates/cyprian/edit.html:657
+msgid "Search images and SVGs in your buckets"
+msgstr "Szukaj obrazów i plików SVG w swoich kubełkach"
+
+#: templates/cyprian/edit.html:672
+msgid "Nothing here yet. Upload an image to a vault bucket first."
+msgstr "Nie ma tu jeszcze nic. Najpierw wgraj obraz do kubełka w magazynie."
+
+#: templates/cyprian/edit.html:685
+msgid "Insert"
+msgstr "Wstaw"
+
+#: templates/cyprian/index.html:4 templates/cyprian/index.html:46
+msgid "Documents"
+msgstr "Dokumenty"
+
+#: templates/cyprian/index.html:16 templates/cyprian/index.html:100
+msgid "Delete"
+msgstr "Usuń"
+
+#: templates/cyprian/index.html:17
+msgid "This cannot be undone."
+msgstr "Tego nie można cofnąć."
+
+#: templates/cyprian/index.html:49
+msgid ""
+"Write something long. One file, real pages, and a PDF that looks finished."
+msgstr "Napisz coś długiego. Jeden plik, prawdziwe strony i PDF, który wygląda na skończony."
+
+#: templates/cyprian/index.html:56 templates/cyprian/index.html:130
+msgid "New document"
+msgstr "Nowy dokument"
+
+#: templates/cyprian/index.html:86
+#, python-format
+msgid "%(n)s heading"
+msgid_plural "%(n)s headings"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/cyprian/index.html:94
+msgid "Write"
+msgstr "Pisz"
+
+#: templates/cyprian/index.html:113
+msgid "Nothing written yet."
+msgstr "Jeszcze nic nie napisano."
+
+#: templates/cyprian/index.html:116
+msgid "Start a document"
+msgstr "Rozpocznij dokument"
+
+#: templates/cyprian/index.html:137
+msgid "Filename"
+msgstr "Nazwa pliku"
+
+#: templates/cyprian/index.html:140
+msgid "quarterly-report"
+msgstr "raport-kwartalny"
+
+#: templates/cyprian/index.html:147
+msgid "Bucket"
+msgstr "Kubełek"
+
+#: templates/cyprian/index.html:151
+msgid "Personal (default)"
+msgstr "Osobisty (domyślny)"
+
+#: templates/cyprian/index.html:158
+msgid "Folder"
+msgstr "Folder"
+
+#: templates/cyprian/index.html:171
+msgid "Start writing"
+msgstr "Zacznij pisać"
+
+#: templates/cyprian/read.html:25
+#, python-format
+msgid "%(n)s word"
+msgid_plural "%(n)s words"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/cyprian/read.html:26
+#, python-format
+msgid "%(m)s min read"
+msgstr "%(m)s min czytania"
+
+#: templates/cyprian/read.html:32
+msgid "PDF"
+msgstr "PDF"
+
+#: templates/cyprian/read.html:39
+msgid "Edit"
+msgstr "Edytuj"
